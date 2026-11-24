@@ -1,0 +1,19 @@
+Workflow "Fix dominance key; retest" completed.
+Output:
+BENCH_WEAK True 72 0.02 ('WIN', 72, 100, 0.0)
+BENCH_STRONG True 119 1.84 ('WIN', 119, 100, 0.0)
+OFFICIAL_01 True 31 0.0 ('WIN', 31, 100, 0.0)
+OFFICIAL_02 True 70 0.59 ('WIN', 70, 100, 0.0)
+OFFICIAL_03 True 61 0.01 ('WIN', 61, 100, 0.0)
+argon True 69 0.41 ('WIN', 69, 100, 0.0)
+astra True 57 0.01 ('WIN', 57, 100, 0.0)
+carbon False 111 3.01 None
+deepseek True 63 0.01 ('WIN', 63, 50, 50.0)
+doubao True 31 0.0 ('WIN', 31, 100, 0.0)
+glm True 78 0.89 ('WIN', 78, 100, 0.0)
+hunyuan True 101 2.52 ('WIN', 101, 100, 0.0)
+hydrogen True 75 1.22 ('WIN', 75, 100, 0.0)
+opus True 31 0.0 ('WIN', 31, 100, 0.0)
+qwen True 74 0.13 ('WIN', 74, 100, 0.0)
+sol False 40 2.73 None
+MINE True 143 0.02 ('WIN', 143, 100, 0.0)

@@ -1,0 +1,2329 @@
+我会只用本对话和你指定目录里的文件，先读完考场材料，再按其中的要求作答和验证。
+
+
+
+
+运行了命令
+rg --files --hidden --no-ignore
+
+
+Get-ChildItem -LiteralPath . -Force | Select-Object Name,Mode,Length,LinkType,Target
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'RULES.md'
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'golden_vectors.json'
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'submission_template.py'
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'CONTESTANT_PROMPT.md'
+
+
+Get-Content -Encoding utf8 -LiteralPath RULES.md | Select-Object -Skip 130 -First 54
+
+
+
+
+
+
+
+SOL、ARGON、CARBON、HYDROGEN、Claude Opus 5.5、DeepSeek、Qwen、Kimi、GLM、混元 HY4、豆包，听好了：我叫 ASTRA。第三声炮响时，猜猜脚下哪格还安全？
+
+
+
+
+运行了命令
+Command failed ($stage = Join-Path ([IO.Path]::GetTempPath()) ('astra_xhigh_' + [guid]::NewGuid().ToString('N')); New-Item -ItemType Directory -Path $stage | Select-Object -ExpandProperty FullName)
+
+
+$stage = Join-Path ([IO.Path]::GetTempPath()) ('astra_xhigh_' + [guid]::NewGuid().ToString('N')); New-Item -ItemType Directory -Path $stage | Select-Object -ExpandProperty FullName
+
+
+Command failed (@'
+"""ASTRA's entry for the blind vault tournament."""
+
+from collections import namedtuple
+from heapq import heappop, heappush
+from time import perf_counter
+
+
+def build_dungeon():
+    grid = [["T_W" if x in (0, 39) or y in (0, 25) else "EMPTY"
+             for x in range(40)] for y in range(26)]
+    for x in (1, 2, 3):
+        grid[7][x] = "LASER_D"
+        grid[19][x] = "LASER_U"
+    for y in range(11, 16):
+        grid[y][4] = "W"
+    grid[15][1] = grid[16][1] = "ICE"
+    grid[17][1], grid[20][8] = "PORTAL_1A", "PORTAL_1B"
+    grid[2][33], grid[23][34], grid[4][37] = "K1", "K2", "V"
+    route = (["MOVE_L", "JUMP_D"] + ["MOVE_R"] * 26 + ["MOVE_D"] * 2
+             + ["MOVE_U"] * 21 + ["MOVE_L"] + ["MOVE_R"] * 4 + ["MOVE_D"] * 2)
+    return {"taunt": "冰面上那串脚印，为什么只有去程？",
+            "grid": grid, "author_solution": route}
+
+
+WIDTH, SIZE = 40, 1040
+DIR = (-40, 40, -1, 1)
+LETTERS = "UDLR"
+MOVES = tuple("MOVE_" + d for d in LETTERS)
+JUMPS = tuple("JUMP_" + d for d in LETTERS)
+THROWS = tuple("THROW_" + d for d in LETTERS)
+ACTIONS = MOVES + JUMPS + THROWS + ("WAIT", "BOMB")
+WAIT, DROP = 12, 13
+AREA = (-41, -40, -39, -1, 0, 1, 39, 40, 41)
+INNER = tuple(y * 40 + x for y in range(1, 25) for x in range(1, 39))
+NAMES = ("UNKNOWN EMPTY W T_W PIT ICE CRACK SWITCH R_GATE B_GATE K1 K2 V "
+         "CHEST HEAL MIMIC MIRROR_NE MIRROR_SE MIRROR_SW MIRROR_NW "
+         "SPRING_U SPRING_D SPRING_L SPRING_R PORTAL_1A PORTAL_1B "
+         "PORTAL_2A PORTAL_2B LASER_U LASER_D LASER_L LASER_R").split()
+ID = {name: i for i, name in enumerate(NAMES)}
+(FOG, FLOOR, WALL, STEEL, PIT, ICE, CRACK, SWITCH, RED, BLUE, K1, K2, VAULT,
+ CHEST, HEAL, MIMIC, NE, SE, SW, NW, SU, SD, SL, SR, P1A, P1B, P2A, P2B,
+ LU, LD, LL, LR) = range(32)
+MASK, BOX, TNT = 31, 32, 64
+OBJECT = {None: 0, "BOX": BOX, "TNT": TNT}
+MIRROR = ((3, 3, 0, 0), (3, 3, 1, 1), (2, 2, 1, 1), (2, 2, 0, 0))
+IMMUNE = {STEEL, K1, K2, VAULT, PIT, P1A, P1B, P2A, P2B}
+BLOCK = tuple(tuple(t in (WALL, STEEL, BLUE if flip else RED) or t >= LU
+                    for t in range(32)) for flip in (0, 1))
+INNER_SET = frozenset(INNER)
+State = namedtuple("State", "p hp keys flip jumps bombs stones edits fuses")
+Transition = namedtuple("Transition", "state cost scout won")
+
+
+def index(xy):
+    return xy[1] * WIDTH + xy[0]
+
+
+def distance(p, q):
+    return abs(p % WIDTH - q % WIDTH) + abs(p // WIDTH - q // WIDTH)
+
+
+def remember(s, mem):
+    h = s["hero"]
+    p = h["y"] * WIDTH + h["x"]
+    keys = int(h["keys"][0]) + 2 * int(h["keys"][1])
+    targets = tuple(index(s["targets"][k]) for k in ("K1", "K2", "V"))
+    if "map" not in mem:
+        board = [STEEL] * SIZE
+        for i in INNER:
+            board[i] = FOG
+        for i, t in zip(targets, (K1, K2, VAULT)):
+            board[i] = t
+        mem.update(map=board, clue=[False] * SIZE, beams=[0] * SIZE,
+                   visits=[0] * SIZE, stage=-1, trail=[], trips={}, past=[])
+    board, clues, beams = mem["map"], mem["clue"], mem["beams"]
+    if keys != mem["stage"]:
+        mem.update(stage=keys, visits=[0] * SIZE, trail=[], trips={}, past=[])
+    predicted = mem.pop("predicted", None)
+    if predicted and predicted[0] == p and predicted[1] == int(s["gates_flipped"]):
+        for pos, code in predicted[2]:
+            board[pos] = code
+    if keys & 1:
+        board[targets[0]] = FLOOR
+    if keys & 2:
+        board[targets[1]] = FLOOR
+    firing = s["turn"] % 3 == 0
+    visible = set()
+    for y, mask in enumerate(s["visible_mask"]):
+        terrains, occupants, marks = s["terrain"][y], s["occupant"][y], s["clues"][y]
+        for x, seen in enumerate(mask):
+            if seen:
+                i = y * WIDTH + x
+                code = ID[terrains[x]]
+                # A chest that survived an observed direct hit is a real heal.
+                if code == CHEST and board[i] & MASK == HEAL:
+                    code = HEAL
+                board[i] = code + OBJECT[occupants[x]]
+                clues[i] = marks[x]
+                visible.add(i)
+                if firing:
+                    beams[i] = 0
+    for ray in s["laser_warnings"]:
+        i = ray["y"] * WIDTH + ray["x"]
+        beams[i] |= 1 << LETTERS.index(ray["dir"])
+    probe = mem.pop("probe", -1)
+    if probe in visible and board[probe] & MASK == CHEST:
+        board[probe] = HEAL + (board[probe] & ~MASK)
+    trail = mem["trail"]
+    trail.append(p)
+    if len(trail) > 18:
+        trail.pop(0)
+    mem["visits"][p] += 1
+    prior = mem.pop("last", None)
+    if prior:
+        # Penalize a decision only while the same stage, position and map recur.
+        sig, act = prior
+        record = mem["trips"]
+        pair = str(sig) + "," + str(act)
+        record[pair] = min(12, record.get(pair, 0) + 1)
+    return p, keys, targets, visible
+
+
+class World:
+    def __init__(self, s, mem, targets, visible):
+        self.mem = mem
+        self.board = mem["map"][:]
+        self.targets = targets
+        self.visible = visible
+        self.turn = s["turn"]
+        self.lasers = []
+        self.portals = [-1] * 4
+        self.tnts = set()
+        self.switches = []
+        self.gates = False
+        for p in INNER:
+            c = self.board[p]
+            t = c & MASK
+            if t == CHEST:
+                if any(mem["clue"][p + d] for d in DIR):
+                    self.board[p] = c - CHEST + MIMIC
+                elif all(self.board[p + d] & MASK != FOG for d in DIR):
+                    self.board[p] = c - CHEST + HEAL
+            elif t >= LU:
+                self.lasers.append((p, t - LU))
+            elif P1A <= t <= P2B:
+                self.portals[t - P1A] = p
+            elif t == SWITCH:
+                self.switches.append(p)
+            elif t in (RED, BLUE):
+                self.gates = True
+            if c >= TNT:
+                self.tnts.add(p)
+        self.unexplained = {}
+        self.laser_cache = {}
+        # Keep distinct hidden emitters apart by orientation and line. Once the
+        # actual emitter is observed it takes over the whole ray calculation.
+        for p, dirs in enumerate(mem["beams"]):
+            if not dirs:
+                continue
+            for d, step in enumerate(DIR):
+                if not dirs & (1 << d):
+                    continue
+                if any(k == d and 1 <= (p - q) // step <= 10
+                       and (p - q) % step == 0 and distance(p, q) <= 10
+                       and (d < 2 or p // WIDTH == q // WIDTH)
+                       for q, k in self.lasers):
+                    continue
+                line = p % WIDTH if d < 2 else p // WIDTH
+                bit = 1 << (len(self.lasers) + d * 40 + line)
+                self.unexplained[p] = self.unexplained.get(p, 0) | bit
+        self.has_beams = bool(self.lasers or self.unexplained)
+        self.seen_shot = s["turn"] % 3 == 0
+        self.root_flip = int(s["gates_flipped"])
+        self.visits = mem["visits"]
+        self.stale = len(mem["trail"]) - len(set(mem["trail"]))
+        self.ray_signatures = {}
+
+    def rays(self, edits, flip, actual=False):
+        # An edit to a key, chest, or crack has no effect on laser geometry.
+        geom = self.ray_signatures.get(edits)
+        if geom is None:
+            geom = tuple((p, c) for p, c in edits
+                         if self.board[p] >= BOX or c >= BOX
+                         or BLOCK[0][self.board[p] & MASK] or BLOCK[1][self.board[p] & MASK])
+            self.ray_signatures[edits] = geom
+        actual = actual and not geom and flip == self.root_flip and self.seen_shot
+        key = (geom, flip, actual)
+        if key in self.laser_cache:
+            return self.laser_cache[key]
+        get = dict(geom).get
+        rays = dict(self.unexplained)
+        armed = []
+        wall = BLOCK[flip]
+        for number, (src, d) in enumerate(self.lasers):
+            if get(src, self.board[src]) & MASK != LU + d:
+                continue
+            p, step, bit = src, DIR[d], 1 << number
+            for _ in range(10):
+                p += step
+                c = get(p, self.board[p])
+                if c >= TNT:
+                    armed.append(p)
+                    break
+                if c >= BOX or wall[c & MASK]:
+                    break
+                if not actual or p not in self.visible or self.mem["beams"][p] & (1 << d):
+                    rays[p] = rays.get(p, 0) | bit
+        result = rays, tuple(armed)
+        self.laser_cache[key] = result
+        return result
+
+'@ | Set-Content -LiteralPath 'submission.py' -Encoding utf8)
+
+
+Command failed ($env:TEMP; Test-Path -LiteralPath '<LOCAL_USER_HOME>\AppData\Local\Packages\sandbox.{74b88556-bfd9-4b4c-922a-cb897b770b69}\AC\Temp\astra_xhigh_42794e7f45434baaa5e84a7ee67eb4cc'; Get-Item -LiteralPath '<LOCAL_USER_HOME>\AppData\Local\Packages\sandbox.{74b88556-bfd9-4b4c-922a-cb897b770b69}\AC\Temp\astra_xhigh_42794e7f45434baaa5e84a7ee67eb4cc' | Select-Object FullName)
+
+
+Command failed (Get-Location)
+
+
+Command failed (Get-Location)
+
+
+Get-Location
+
+
+Get-Location
+
+
+Test-Path -LiteralPath '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh'; Test-Path -LiteralPath '<LOCAL_USER_HOME>\AppData\Local\Packages\sandbox.{74b88556-bfd9-4b4c-922a-cb897b770b69}\AC\Temp\astra_xhigh_42794e7f45434baaa5e84a7ee67eb4cc'; $env:TEMP; Test-Path -LiteralPath '<REPO_ROOT>/exam_rooms'
+
+
+Test-Path -LiteralPath '<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734'; Test-Path -LiteralPath '<REPO_ROOT>/exam_rooms\astra_6.0_high'; Get-Date -Format o
+
+
+@'
+"""ASTRA's blind vault tournament entry."""
+
+from collections import namedtuple
+from heapq import heappop, heappush
+from time import perf_counter
+
+
+def build_dungeon():
+    grid = [["T_W" if x in (0, 39) or y in (0, 25) else "EMPTY"
+             for x in range(40)] for y in range(26)]
+    for x in (1, 2, 3):
+        grid[7][x] = "LASER_D"
+        grid[19][x] = "LASER_U"
+    for y in range(11, 16):
+        grid[y][4] = "W"
+    grid[15][1] = grid[16][1] = "ICE"
+    grid[17][1], grid[20][8] = "PORTAL_1A", "PORTAL_1B"
+    grid[2][33], grid[23][34], grid[4][37] = "K1", "K2", "V"
+    route = (["MOVE_L", "JUMP_D"] + ["MOVE_R"] * 26 + ["MOVE_D"] * 2
+             + ["MOVE_U"] * 21 + ["MOVE_L"] + ["MOVE_R"] * 4 + ["MOVE_D"] * 2)
+    return {"taunt": "冰面上那串脚印，为什么只有去程？",
+            "grid": grid, "author_solution": route}
+
+
+WIDTH, SIZE = 40, 1040
+DIR = (-40, 40, -1, 1)
+LETTERS = "UDLR"
+MOVES = tuple("MOVE_" + d for d in LETTERS)
+JUMPS = tuple("JUMP_" + d for d in LETTERS)
+THROWS = tuple("THROW_" + d for d in LETTERS)
+ACTIONS = MOVES + JUMPS + THROWS + ("WAIT", "BOMB")
+WAIT, DROP = 12, 13
+AREA = (-41, -40, -39, -1, 0, 1, 39, 40, 41)
+INNER = tuple(y * 40 + x for y in range(1, 25) for x in range(1, 39))
+NAMES = ("UNKNOWN EMPTY W T_W PIT ICE CRACK SWITCH R_GATE B_GATE K1 K2 V "
+         "CHEST HEAL MIMIC MIRROR_NE MIRROR_SE MIRROR_SW MIRROR_NW "
+         "SPRING_U SPRING_D SPRING_L SPRING_R PORTAL_1A PORTAL_1B "
+         "PORTAL_2A PORTAL_2B LASER_U LASER_D LASER_L LASER_R").split()
+ID = {name: i for i, name in enumerate(NAMES)}
+(FOG, FLOOR, WALL, STEEL, PIT, ICE, CRACK, SWITCH, RED, BLUE, K1, K2, VAULT,
+ CHEST, HEAL, MIMIC, NE, SE, SW, NW, SU, SD, SL, SR, P1A, P1B, P2A, P2B,
+ LU, LD, LL, LR) = range(32)
+MASK, BOX, TNT = 31, 32, 64
+OBJECT = {None: 0, "BOX": BOX, "TNT": TNT}
+MIRROR = ((3, 3, 0, 0), (3, 3, 1, 1), (2, 2, 1, 1), (2, 2, 0, 0))
+IMMUNE = {STEEL, K1, K2, VAULT, PIT, P1A, P1B, P2A, P2B}
+BLOCK = tuple(tuple(t in (WALL, STEEL, BLUE if flip else RED) or t >= LU
+                    for t in range(32)) for flip in (0, 1))
+State = namedtuple("State", "p hp keys flip jumps bombs stones edits fuses")
+Transition = namedtuple("Transition", "state cost scout won")
+
+
+def index(xy):
+    return xy[1] * WIDTH + xy[0]
+
+
+def distance(p, q):
+    return abs(p % WIDTH - q % WIDTH) + abs(p // WIDTH - q // WIDTH)
+
+
+def remember(s, mem):
+    h = s["hero"]
+    p = h["y"] * WIDTH + h["x"]
+    keys = int(h["keys"][0]) + 2 * int(h["keys"][1])
+    targets = tuple(index(s["targets"][k]) for k in ("K1", "K2", "V"))
+    if "map" not in mem:
+        board = [STEEL] * SIZE
+        for i in INNER:
+            board[i] = FOG
+        for i, t in zip(targets, (K1, K2, VAULT)):
+            board[i] = t
+        mem.update(map=board, clue=[False] * SIZE, beams=[0] * SIZE,
+                   visits=[0] * SIZE, stage=-1, trail=[], trips={})
+    board, clues, beams = mem["map"], mem["clue"], mem["beams"]
+    if keys != mem["stage"]:
+        mem.update(stage=keys, visits=[0] * SIZE, trail=[], trips={})
+    predicted = mem.pop("predicted", None)
+    if predicted and predicted[0] == p and predicted[1] == int(s["gates_flipped"]):
+        for pos, code in predicted[2]:
+            board[pos] = code
+    if keys & 1:
+        board[targets[0]] = FLOOR
+    if keys & 2:
+        board[targets[1]] = FLOOR
+    firing = s["turn"] % 3 == 0
+    visible = set()
+    for y, mask in enumerate(s["visible_mask"]):
+        terrains, occupants, marks = s["terrain"][y], s["occupant"][y], s["clues"][y]
+        for x, seen in enumerate(mask):
+            if seen:
+                i = y * WIDTH + x
+                code = ID[terrains[x]]
+                if code == CHEST and board[i] & MASK == HEAL:
+                    code = HEAL
+                board[i] = code + OBJECT[occupants[x]]
+                clues[i] = marks[x]
+                visible.add(i)
+                if firing:
+                    beams[i] = 0
+    for ray in s["laser_warnings"]:
+        i = ray["y"] * WIDTH + ray["x"]
+        beams[i] |= 1 << LETTERS.index(ray["dir"])
+    probe = mem.pop("probe", -1)
+    if probe in visible and board[probe] & MASK == CHEST:
+        board[probe] = HEAL + (board[probe] & ~MASK)
+    trail = mem["trail"]
+    trail.append(p)
+    if len(trail) > 18:
+        trail.pop(0)
+    mem["visits"][p] += 1
+    return p, keys, targets, visible
+
+
+class World:
+    def __init__(self, s, mem, targets, visible):
+        self.mem = mem
+        self.board = mem["map"][:]
+        self.targets = targets
+        self.visible = visible
+        self.turn = s["turn"]
+        self.lasers = []
+        self.portals = [-1] * 4
+        self.tnts = set()
+        self.switches = []
+        self.gates = False
+        for p in INNER:
+            c = self.board[p]
+            t = c & MASK
+            if t == CHEST:
+                if any(mem["clue"][p + d] for d in DIR):
+                    self.board[p] = c - CHEST + MIMIC
+                elif all(self.board[p + d] & MASK != FOG for d in DIR):
+                    self.board[p] = c - CHEST + HEAL
+            elif t >= LU:
+                self.lasers.append((p, t - LU))
+            elif P1A <= t <= P2B:
+                self.portals[t - P1A] = p
+            elif t == SWITCH:
+                self.switches.append(p)
+            elif t in (RED, BLUE):
+                self.gates = True
+            if c >= TNT:
+                self.tnts.add(p)
+        self.unexplained = {}
+        self.laser_cache = {}
+        for p, dirs in enumerate(mem["beams"]):
+            if not dirs:
+                continue
+            for d, step in enumerate(DIR):
+                if not dirs & (1 << d):
+                    continue
+                if any(k == d and 1 <= (p - q) // step <= 10
+                       and (p - q) % step == 0 and distance(p, q) <= 10
+                       and (d < 2 or p // WIDTH == q // WIDTH)
+                       for q, k in self.lasers):
+                    continue
+                line = p % WIDTH if d < 2 else p // WIDTH
+                bit = 1 << (len(self.lasers) + d * 40 + line)
+                self.unexplained[p] = self.unexplained.get(p, 0) | bit
+        self.has_beams = bool(self.lasers or self.unexplained)
+        self.seen_shot = s["turn"] % 3 == 0
+        self.root_flip = int(s["gates_flipped"])
+        self.visits = mem["visits"]
+        self.stale = len(mem["trail"]) - len(set(mem["trail"]))
+        self.ray_signatures = {}
+
+    def rays(self, edits, flip, actual=False):
+        geom = self.ray_signatures.get(edits)
+        if geom is None:
+            geom = tuple((p, c) for p, c in edits
+                         if self.board[p] >= BOX or c >= BOX
+                         or BLOCK[0][self.board[p] & MASK] or BLOCK[1][self.board[p] & MASK])
+            self.ray_signatures[edits] = geom
+        actual = actual and not geom and flip == self.root_flip and self.seen_shot
+        key = (geom, flip, actual)
+        if key in self.laser_cache:
+            return self.laser_cache[key]
+        get = dict(geom).get
+        rays = dict(self.unexplained)
+        armed = []
+        wall = BLOCK[flip]
+        for number, (src, d) in enumerate(self.lasers):
+            if get(src, self.board[src]) & MASK != LU + d:
+                continue
+            p, step, bit = src, DIR[d], 1 << number
+            for _ in range(10):
+                p += step
+                c = get(p, self.board[p])
+                if c >= TNT:
+                    armed.append(p)
+                    break
+                if c >= BOX or wall[c & MASK]:
+                    break
+                if not actual or p not in self.visible or self.mem["beams"][p] & (1 << d):
+                    rays[p] = rays.get(p, 0) | bit
+        result = rays, tuple(armed)
+        self.laser_cache[key] = result
+        return result
+
+'@ | Set-Content -LiteralPath 'submission.py' -Encoding utf8
+
+
+@'
+
+class Turn:
+    """One speculative turn. Only altered cells are copied between search nodes."""
+
+    def __init__(self, world, state):
+        self.w = world
+        self.base = world.board
+        self.cells = dict(state.edits)
+        self.p = state.p
+        self.hp = state.hp
+        self.keys = state.keys
+        self.flip = state.flip
+        self.fuses = state.fuses
+        self.armed = []
+        self.path = [state.p]
+        self.uncertainty = 0.0
+        self.scout = -1
+        self.won = False
+        self.probe = -1
+
+    def at(self, p):
+        return self.cells.get(p, self.base[p])
+
+    def put(self, p, c):
+        if c == self.base[p]:
+            self.cells.pop(p, None)
+        else:
+            self.cells[p] = c
+
+    def blocked(self, p, box=False):
+        c = self.at(p)
+        t = c & MASK
+        return (c >= BOX or BLOCK[self.flip][t]
+                or (box and (p == self.p or t in (K1, K2, VAULT))))
+
+    def advance(self, src, dest, d, box=False):
+        teleports = 0
+        exit_portal = False
+        for n in range(1, 33):
+            old = self.at(src) & MASK
+            t = self.at(dest) & MASK
+            if box or old == CRACK:
+                self.put(src, PIT if old == CRACK else old)
+            if box:
+                self.put(dest, BOX + t)
+                if t == PIT:
+                    self.put(dest, FLOOR)
+                    return
+                if t == MIMIC:
+                    self.put(dest, BOX + FLOOR)
+            else:
+                self.p = dest
+                self.path.append(dest)
+                if t == PIT:
+                    self.hp -= 100
+                    return
+                if t in (MIMIC, CHEST):
+                    self.hp -= 45
+                    self.put(dest, FLOOR)
+                    return
+                if t == HEAL:
+                    self.hp = min(100, self.hp + 30)
+                    self.put(dest, FLOOR)
+                elif t in (K1, K2):
+                    self.keys |= 1 if t == K1 else 2
+                    self.put(dest, FLOOR)
+                elif t == VAULT and self.keys == 3:
+                    self.won = True
+                    return
+            if t == SWITCH:
+                self.flip ^= 1
+            if t == FOG:
+                self.uncertainty += 0.45 if n == 1 else 3.0
+            if n == 32:
+                return
+            src = dest
+            if exit_portal:
+                exit_portal = False
+                if teleports == 2:
+                    return
+            elif P1A <= t <= P2B:
+                pair = self.w.portals[(t - P1A) ^ 1]
+                if pair < 0:
+                    if not box:
+                        self.scout = src
+                    return
+                if self.blocked(pair, box):
+                    return
+                dest = pair
+                teleports += 1
+                exit_portal = True
+                continue
+            elif SU <= t <= SR:
+                d = t - SU
+                step = DIR[d]
+                for _ in range(3):
+                    ahead = dest + step
+                    if self.blocked(ahead, box):
+                        if box and self.at(ahead) >= TNT:
+                            self.armed.append(ahead)
+                        break
+                    dest = ahead
+                if src == dest:
+                    return
+                continue
+            elif NE <= t <= NW:
+                d = MIRROR[t - NE][d]
+            elif t != ICE:
+                return
+            dest = src + DIR[d]
+            if self.blocked(dest, box):
+                return
+
+    def stone(self, d):
+        p, portals = self.p, 0
+        certain = True
+        for n in range(1, 39):
+            p += DIR[d]
+            c = self.at(p)
+            t = c & MASK
+            if BLOCK[self.flip][t] or BOX <= c < TNT:
+                return False
+            if c >= TNT:
+                self.armed.append(p)
+                return True
+            if t == SWITCH:
+                self.flip ^= 1
+                return True
+            if t in (CHEST, MIMIC):
+                self.put(p, FLOOR)
+                if certain and t == CHEST:
+                    self.probe = p
+                return True
+            if t == FOG:
+                certain = False
+            if NE <= t <= NW:
+                d = MIRROR[t - NE][d]
+            if P1A <= t <= P2B and portals < 2:
+                pair = self.w.portals[(t - P1A) ^ 1]
+                if pair < 0:
+                    return False
+                if self.at(pair) < BOX:
+                    p = pair
+                    portals += 1
+                    if portals == 2:
+                        return False
+            if n >= 6 and t != ICE and not NE <= t <= NW:
+                if n == 6 or not P1A <= t <= P2B:
+                    return False
+        return False
+
+    def explode(self, tnts, due):
+        sources = [(p, TNT) for p in tnts if self.at(p) >= TNT]
+        sources.extend((p, 0) for p in due)
+        if not sources:
+            return
+        bombs = dict(self.fuses)
+        seen = set(sources)
+        damaged = set()
+        damage = 0
+        for center, kind in sources:
+            for off in AREA:
+                p = center + off
+                if p == self.p:
+                    damage += 60 if kind == TNT else 50
+                if p in damaged:
+                    continue
+                damaged.add(p)
+                if p in bombs and (p, 0) not in seen:
+                    seen.add((p, 0))
+                    sources.append((p, 0))
+                if self.at(p) >= TNT and (p, TNT) not in seen:
+                    seen.add((p, TNT))
+                    sources.append((p, TNT))
+        self.hp -= damage
+        self.fuses = tuple((p, t) for p, t in self.fuses if p not in damaged)
+        for p in damaged:
+            t = self.at(p) & MASK
+            if t == FOG and distance(self.p, p) > 4:
+                continue
+            self.put(p, t if t in IMMUNE or t == FOG else PIT if t == CRACK else FLOOR)
+        if self.at(self.p) & MASK == PIT and self.hp > 0:
+            self.hp -= 100
+
+    def play(self, s, action, phase, actual=False):
+        p = s.p
+        j, b, stones = s.jumps, s.bombs, s.stones
+        price = 1.0
+        if action < 8:
+            d = action % 4
+            step = DIR[d]
+            q = p + step
+            c = self.at(q)
+            if BLOCK[self.flip][c & MASK]:
+                return None
+            if action >= 4:
+                if not j or self.blocked(q + step):
+                    return None
+                j -= 1
+                # Save the last jump for a compulsory crossing.
+                price += (1.65, 2.3, 3.6)[min(2, 2 - j)] if s.keys != 3 else 1.25
+                if c & MASK in (PIT, CHEST, MIMIC) or c >= BOX:
+                    price -= 0.3
+                if self.at(q + step) & MASK == FOG:
+                    price += 2.8
+                q += step
+            elif c >= TNT:
+                return None
+            elif c >= BOX:
+                if self.blocked(q + step, True):
+                    return None
+                self.advance(q, q + step, d, True)
+                price += 0.75
+                if self.blocked(q):
+                    # A push can change the world even if the hero stays put.
+                    q = p
+            if q != p:
+                self.advance(p, q, d)
+        elif action == DROP:
+            if not b or any(q == p for q, timer in self.fuses):
+                return None
+            if not any(self.at(p + offset) >= BOX
+                       or (self.at(p + offset) & MASK) in (WALL, RED, BLUE, MIMIC)
+                       or (self.at(p + offset) & MASK) >= LU
+                       or ICE == (self.at(p + offset) & MASK)
+                       or NE <= (self.at(p + offset) & MASK) <= SR
+                       for offset in AREA):
+                return None
+            b -= 1
+            self.fuses = tuple(sorted(self.fuses + ((p, 3),)))
+            price += 4.5 if b else 7.5
+        elif action < WAIT:
+            if not stones or not self.stone(action - 8):
+                return None
+            stones -= 1
+            price += 1.0 if stones else 1.8
+
+        if self.hp <= 0:
+            return None
+        if not self.won:
+            if self.fuses:
+                self.fuses = tuple((q, timer - 1) for q, timer in self.fuses)
+            if self.armed or any(timer == 0 for _, timer in self.fuses):
+                self.explode(set(self.armed), [q for q, timer in self.fuses if timer == 0])
+            if self.hp <= 0:
+                return None
+        edits = tuple(sorted(self.cells.items()))
+        if not self.won and self.w.has_beams and phase != 1:
+            rays, hit_tnts = self.w.rays(edits, self.flip, actual)
+            if phase == 0:
+                struck = 0
+                for q in self.path:
+                    struck |= rays.get(q, 0)
+                self.hp -= 50 * struck.bit_count()
+                if self.hp > 0 and hit_tnts:
+                    self.explode(set(hit_tnts), ())
+                    edits = tuple(sorted(self.cells.items()))
+                if self.hp <= 0:
+                    return None
+            else:
+                # The origin of the following move is already exposed.
+                pending = 50 * rays.get(self.p, 0).bit_count()
+                if pending:
+                    price += 2.0 + (35 if pending >= self.hp else 0)
+        delta_hp = s.hp - self.hp
+        if delta_hp > 0:
+            price += delta_hp * 0.58
+        elif delta_hp < 0:
+            price = max(0.35, price - 1.8)
+        price += self.uncertainty
+        if self.p != p:
+            price += 0.06 * min(12, self.w.visits[self.p])
+            if self.at(self.p) & MASK == CRACK:
+                price += 0.5
+        next_state = State(self.p, self.hp, self.keys, self.flip, j, b, stones,
+                           edits, self.fuses)
+        return Transition(next_state, price, self.scout, self.won)
+
+'@ | Add-Content -LiteralPath 'submission.py' -Encoding utf8
+
+
+Test-Path -LiteralPath '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh'
+
+
+
+
+
+
+
+已写好魔王地图和 58 步自证路线。勇者会记住走过的地形，并在发射回合检查整条移动轨迹。接下来我会用考卷里的黄金样例核对物理结算，再独立回放自证路线。
+
+
+
+
+运行了命令
+@'
+
+def relaxed_landing(w, q, d, flip):
+    board = w.board
+    portals, arriving = 0, False
+    for _ in range(32):
+        t = board[q] & MASK
+        if arriving:
+            arriving = False
+            if portals == 2:
+                break
+        elif P1A <= t <= P2B:
+            pair = w.portals[(t - P1A) ^ 1]
+            if pair < 0 or board[pair] >= BOX:
+                break
+            q = pair
+            arriving = True
+            portals += 1
+            continue
+        elif SU <= t <= SR:
+            d = t - SU
+            step = DIR[d]
+            landing = q
+            for _ in range(3):
+                c = board[landing + step]
+                if c >= BOX or BLOCK[flip][c & MASK]:
+                    break
+                landing += step
+            if q == landing:
+                break
+            q = landing
+            continue
+        elif NE <= t <= NW:
+            d = MIRROR[t - NE][d]
+        elif t != ICE:
+            break
+        nxt = q + DIR[d]
+        c = board[nxt]
+        if c >= BOX or BLOCK[flip][c & MASK]:
+            break
+        q = nxt
+    return q
+
+
+def flood(rev, seeds):
+    values = [10000.] * len(rev)
+    queue = []
+    for p, cost in seeds:
+        if cost < values[p]:
+            values[p] = cost
+            heappush(queue, (cost, p))
+    while queue:
+        cost, at = heappop(queue)
+        if cost != values[at]:
+            continue
+        for prev, length in rev[at]:
+            new = cost + length
+            if new < values[prev]:
+                values[prev] = new
+                heappush(queue, (new, prev))
+    return values
+
+
+class Guide:
+    """Reverse shortest paths through fog, including forced motion and gate parity."""
+
+    def __init__(self, w, root):
+        self.dual = bool(w.gates and w.switches)
+        flips = (0, 1) if self.dual else (root.flip,)
+        rev = [[] for _ in range(SIZE * len(flips))]
+        board = w.board
+        goals = [(q, 0.) for i, q in enumerate(w.targets[:2]) if not root.keys & (1 << i)]
+        if len(goals) == 2:
+            a, b, v = w.targets
+            da, db = distance(a, v), distance(b, v)
+            goals = [(a, 0.8 * max(0, db - da)), (b, 0.8 * max(0, da - db))]
+        elif not goals:
+            goals = [(w.targets[2], 0.)]
+        self.goal_cells = tuple(p for p, _ in goals)
+        self.goals = dict(goals)
+        self.scouts = {}
+        for portal in range(4):
+            p = w.portals[portal]
+            if p >= 0 and w.portals[portal ^ 1] < 0:
+                estimate = min(distance(p, g) + v for g, v in goals)
+                penalty = min(30, 7 * w.mem.get("scouted", {}).get(str(p), 0))
+                self.scouts[p] = 4.0 + 0.59 * estimate + penalty
+        for flip in flips:
+            level = SIZE * flip if self.dual else 0
+            wall = BLOCK[flip]
+            for q in INNER:
+                c = board[q]
+                t = c & MASK
+                if t in (PIT, STEEL):
+                    continue
+                price = 1.
+                if wall[t]:
+                    if not root.bombs:
+                        continue
+                    price += 8.5 if root.bombs == 2 else 12.
+                elif c >= TNT:
+                    if not (root.stones or root.bombs):
+                        continue
+                    price += 4.
+                elif c >= BOX:
+                    price += 1.8
+                elif t == FOG:
+                    price += 0.48
+                elif t == CRACK:
+                    price += 0.6
+                elif t in (MIMIC, CHEST):
+                    price += 2.7 if root.stones else 14.0
+                motion = t == ICE or NE <= t <= P2B
+                for d, step in enumerate(DIR):
+                    p = q - step
+                    mid = board[p] & MASK
+                    if mid == STEEL:
+                        continue
+                    dest = relaxed_landing(w, q, d, flip) if motion else q
+                    land = board[dest] & MASK
+                    if land == PIT:
+                        continue
+                    if land == SWITCH and self.dual:
+                        dest += SIZE - level
+                    else:
+                        dest += level
+                    extra = 1.0 if motion and land == FOG else 0.0
+                    rev[dest].append((p + level, price + extra))
+                    if root.jumps and not wall[mid]:
+                        far = p - step
+                        if board[far] & MASK != STEEL:
+                            rev[dest].append((far + level, price + extra + 1.4))
+            if self.dual and root.stones:
+                for q in w.switches:
+                    for step in DIR:
+                        p = q
+                        for _ in range(6):
+                            p += step
+                            c = board[p]
+                            t = c & MASK
+                            if c >= BOX or wall[t] or t in (SWITCH, MIMIC) or NE <= t <= NW or P1A <= t <= P2B:
+                                break
+                            rev[p + SIZE - level].append((p + level, 2.4))
+        seeds = [(q + i * SIZE, price) for q, price in goals + list(self.scouts.items())
+                 for i in range(len(flips))]
+        self.values = flood(rev, seeds)
+        self.exploring = self.at(root.p, root.flip) >= 9900
+        if self.exploring:
+            fringe = [(p, 4. + 0.75 * min(distance(p, g) + v for g, v in goals))
+                      for p in INNER if board[p] & MASK == FOG
+                      and any(board[p + d] & MASK not in (FOG, STEEL) for d in DIR)]
+            if fringe:
+                self.values = flood(rev, seeds + [(p + i * SIZE, v) for p, v in fringe
+                                                  for i in range(len(flips))])
+        # States made newly reachable by demolition/pushes still get a gradient.
+        for i, value in enumerate(self.values):
+            if value >= 9900:
+                self.values[i] = 28. + min(distance(i % SIZE, g) + v for g, v in goals)
+
+    def at(self, p, flip):
+        return self.values[p + SIZE * flip if self.dual else p]
+
+
+def choose(w, s, root, guide, deadline):
+    phase = w.turn % 3
+    left = s["turns_left"]
+    trip_key = (str(root.p) + "/" + str(phase) + "/" + str(root.flip) + "/"
+                + str(root.keys) + "/" + str(root.jumps) + "/" + str(root.bombs))
+    counts = w.mem["trips"].get(trip_key, {})
+    wait_useful = w.has_beams or root.fuses
+    root_options = {}
+    fallback = (float("-inf"), WAIT)
+    serial = 0
+    heap = []
+    best = {}
+    goal_cost = float("inf")
+    goal_action = None
+    weight = 1.42
+    # The search closes one key stage at a time; the guide prices the later order.
+    def enqueue(result, action, depth, first, cost):
+        nonlocal serial, goal_cost, goal_action
+        ns = result.state
+        if depth == 1:
+            first = action
+            root_options[action] = result
+            cost += min(19, 2.8 * counts.get(str(action), 0))
+        cost += result.cost
+        if ns.keys != root.keys or result.won or result.scout >= 0:
+            value = 0.
+            if result.scout >= 0 and not result.won and ns.keys == root.keys:
+                value = guide.scouts.get(result.scout, guide.at(ns.p, ns.flip) + 4)
+            elif not result.won and root.keys == 0:
+                key_at = w.targets[0] if ns.keys & 1 else w.targets[1]
+                value = guide.goals.get(key_at, 0.)
+            rank = cost + weight * value
+            if rank < goal_cost:
+                goal_cost, goal_action = rank, first
+            return
+        if depth >= left:
+            return
+        tick = (phase + depth) % 3 if w.has_beams else 0
+        tag = (ns, tick)
+        if cost >= best.get(tag, 1e9) - 0.0001:
+            return
+        best[tag] = cost
+        h = guide.at(ns.p, ns.flip)
+        rank = cost + weight * h
+        serial += 1
+        heappush(heap, (rank, h, serial, cost, ns, depth, first, tag))
+
+    for action in range(14):
+        if action == WAIT and not wait_useful:
+            continue
+        model = Turn(w, root)
+        result = model.play(root, action, phase, True)
+        if result is not None:
+            enqueue(result, action, 1, action, 0.)
+        # If all moves die on this tick, optimize actual key/distance progress.
+        if model.p != root.p or action == WAIT:
+            proximity = min(distance(model.p, g) for g in guide.goal_cells)
+            rank = 150 * model.keys.bit_count() - proximity + 0.002 * model.hp
+            if rank > fallback[0]:
+                fallback = (rank, action)
+
+    expansions = 0
+    while heap:
+        rank, h, _, cost, node, depth, first, tag = heappop(heap)
+        if cost != best.get(tag):
+            continue
+        if goal_cost <= rank:
+            break
+        if expansions >= 850 or (expansions % 8 == 0 and perf_counter() >= deadline):
+            return first, root_options
+        expansions += 1
+        tick = (phase + depth) % 3
+        for action in range(14):
+            if 4 <= action < 8 and not node.jumps:
+                continue
+            if 8 <= action < WAIT and not node.stones:
+                continue
+            if action == WAIT and not (w.has_beams or node.fuses):
+                continue
+            if action == DROP and not node.bombs:
+                continue
+            model = Turn(w, node)
+            result = model.play(node, action, tick)
+            if result is not None:
+                enqueue(result, action, depth + 1, first, cost)
+    if goal_action is not None:
+        return goal_action, root_options
+    if root_options:
+        def priority(item):
+            action, result = item
+            ns = result.state
+            return (guide.at(ns.p, ns.flip) + result.cost + 3 * counts.get(str(action), 0)
+                    + 0.4 * w.visits[ns.p])
+        return min(root_options.items(), key=priority)[0], root_options
+    return fallback[1], root_options
+
+
+def decide_action(state, memory):
+    deadline = perf_counter() + 0.155
+    p, keys, targets, visible = remember(state, memory)
+    w = World(state, memory, targets, visible)
+    h = state["hero"]
+    root = State(p, h["hp"], keys, int(state["gates_flipped"]), h["jumps"],
+                 h["bombs"], h["throws"], (),
+                 tuple(sorted((a["y"] * WIDTH + a["x"], a["timer"]) for a in state["bombs"])))
+    guide = Guide(w, root)
+    action, options = choose(w, state, root, guide, deadline)
+    trip_key = (str(p) + "/" + str(w.turn % 3) + "/" + str(root.flip) + "/"
+                + str(keys) + "/" + str(root.jumps) + "/" + str(root.bombs))
+    trips = memory["trips"].setdefault(trip_key, {})
+    trips[str(action)] = trips.get(str(action), 0) + 1
+    if action in options:
+        result = options[action]
+        ns = result.state
+        memory["predicted"] = [ns.p, ns.flip, list(ns.edits)]
+        if result.scout >= 0:
+            scouts = memory.setdefault("scouted", {})
+            scouts[str(result.scout)] = scouts.get(str(result.scout), 0) + 1
+        if 8 <= action < WAIT:
+            stone = Turn(w, root)
+            stone.stone(action - 8)
+            if stone.probe >= 0:
+                memory["probe"] = stone.probe
+    return ACTIONS[action]
+
+'@ | Add-Content -LiteralPath 'submission.py' -Encoding utf8
+
+
+python -B -c "import submission as s; d=s.build_dungeon(); print(len(d['author_solution']),len(d['grid']),len(d['grid'][0]))"
+
+
+Test-Path -LiteralPath '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh' -PathType Container
+
+
+
+
+
+
+
+最初读到四份考卷后，我发现指定的 astra_6.0_xhigh 目录已从宿主机上消失。答卷源码已另存。我会继续按已读考卷验证，并在原路径重建目录、写入 submission.py。
+
+
+
+
+运行了命令
+$exam = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh'; $null = [IO.Directory]::CreateDirectory($exam); Copy-Item -LiteralPath '<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734\submission.py' -Destination (Join-Path $exam 'submission.py') -ErrorAction Stop; Get-FileHash -LiteralPath (Join-Path $exam 'submission.py') -Algorithm SHA256 | Select-Object -ExpandProperty Hash
+
+
+@'
+import json
+import sys
+import random
+import time
+from collections import Counter
+import submission as agent
+
+
+D = {"U": (0,-1), "D": (0,1), "L": (-1,0), "R": (1,0)}
+SPAWN = (2,13)
+def add(p, d): return p[0]+D[d][0],p[1]+D[d][1]
+def around(p): return [(p[0]+x,p[1]+y) for x in (-1,0,1) for y in (-1,0,1)]
+def board():
+    return [["T_W" if x in (0,39) or y in (0,25) else "EMPTY" for x in range(40)] for y in range(26)]
+def sample():
+    g=board()
+    for x,y,k in [(20,5,"K1"),(20,20,"K2"),(35,13,"V")]: g[y][x]=k
+    return g
+
+def validation(g):
+    assert len(g)==26 and all(len(row)==40 for row in g)
+    assert all(g[y][x]=="T_W" for y in range(26) for x in range(40) if x in (0,39) or y in (0,25))
+    assert all(g[y][x]=="EMPTY" for y in (12,13,14) for x in (1,2,3))
+    cnt=Counter(t for row in g[1:-1] for t in row[1:-1])
+    prices={"EMPTY":0,"K1":0,"K2":0,"V":0,"W":5,"T_W":25,"ICE":10,"MIRROR":25,"SPRING":35,"PIT":40,"LASER":75,"CRACK":20,"SWITCH":30,"R_GATE":20,"B_GATE":20,"TNT":40,"BOX":30,"HEAL":30,"MIMIC":60,"PORTAL":40}
+    kinds=Counter()
+    for t,n in cnt.items():
+        if t in prices: kinds[t]+=n
+        else:
+            assert t in agent.NAMES
+            kinds[t.split("_")[0]]+=n
+    assert all(kinds[t]<=n for t,n in dict(T_W=120,MIRROR=30,SPRING=20,LASER=12,CRACK=40,SWITCH=6,TNT=12,BOX=4,HEAL=4,MIMIC=4).items())
+    assert kinds["R_GATE"]+kinds["B_GATE"]<=16
+    for i in "12": assert cnt["PORTAL_"+i+"A"]==cnt["PORTAL_"+i+"B"]<=1
+    cost=sum(n*prices[t] for t,n in kinds.items())
+    assert cost<=3000
+    landmarks={}
+    for key,xrange,yrange in (("K1",range(12,35),range(2,11)),("K2",range(12,35),range(15,24)),("V",range(33,38),range(4,22))):
+        assert cnt[key]==1
+        loc=next((x,y) for y,row in enumerate(g) for x,t in enumerate(row) if t==key)
+        assert loc[0] in xrange and loc[1] in yrange
+        landmarks[key]=loc
+    assert sum(abs(a-b) for a,b in zip(landmarks["K1"],landmarks["K2"]))>=12
+    return cost
+
+class Game:
+    def __init__(self,g):
+        self.t={(x,y):v for y,row in enumerate(g) for x,v in enumerate(row)}
+        self.o={p:v for p,v in self.t.items() if v in ("BOX","TNT")}
+        for p in self.o: self.t[p]="EMPTY"
+        self.targets={v:p for p,v in self.t.items() if v in ("K1","K2","V")}
+        self.ports={v:p for p,v in self.t.items() if v.startswith("PORTAL_")}
+        self.guns={p:v[-1] for p,v in self.t.items() if v.startswith("LASER_")}
+        self.bind={}
+        for p,v in self.t.items():
+            if v=="MIMIC":
+                for d in D:
+                    q=add(p,d)
+                    if self.t[q]!="EMPTY" or q in self.o or q in self.bind.values() or (1<=q[0]<=3 and 12<=q[1]<=14): continue
+                    if any(self.t.get(add(q,k)) in ("MIMIC","HEAL") and add(q,k)!=p for k in D): continue
+                    self.bind[p]=q
+                    break
+                assert p in self.bind
+        self.p=SPAWN
+        self.hp=100
+        self.j,self.b,self.stone=3,2,3
+        self.timers={}
+        self.keys=[False,False]
+        self.flip=False
+        self.turn=1
+        self.status="ALIVE"
+        self.path={self.p}
+        self.armed=set()
+
+    def high(self,p):
+        t=self.t.get(p,"T_W")
+        return t in ("T_W","W","B_GATE" if self.flip else "R_GATE") or t.startswith("LASER_")
+
+    def block(self,p,box):
+        return self.high(p) or p in self.o or (box and (p==self.p or self.t[p] in ("K1","K2","V")))
+
+    def mirror(self,t,d):
+        if d in "UD": return "R" if "E" in t else "L"
+        return "U" if "N" in t else "D"
+
+    def slide(self,p,q,d,box=False):
+        arrived=False
+        jumps=0
+        for i in range(32):
+            if self.t[p]=="CRACK": self.t[p]="PIT"
+            if box:
+                del self.o[p]
+                self.o[q]="BOX"
+            else:
+                self.p=q
+                self.path.add(q)
+            t=self.t[q]
+            if box:
+                if t=="PIT":
+                    del self.o[q]
+                    self.t[q]="EMPTY"
+                    return
+                if t=="MIMIC":
+                    self.t[q]="EMPTY"
+                    self.bind.pop(q,None)
+            else:
+                if t=="PIT": self.hp-=100
+                if t in ("MIMIC","HEAL"):
+                    self.hp=min(100,self.hp+(30 if t=="HEAL" else -45))
+                    self.t[q]="EMPTY"
+                    self.bind.pop(q,None)
+                if self.hp<=0:
+                    self.status="DEAD"
+                    return
+                if t in ("K1","K2"):
+                    self.keys[int(t[-1])-1]=True
+                    self.t[q]="EMPTY"
+                if t=="V" and all(self.keys):
+                    self.status="CLEARED"
+                    return
+                if t=="MIMIC": return
+            if t=="SWITCH": self.flip=not self.flip
+            if i==31: return
+            p=q
+            if arrived:
+                arrived=False
+                if jumps==2: return
+            elif t.startswith("PORTAL"):
+                other=t[:-1]+("B" if t[-1]=="A" else "A")
+                q=self.ports[other]
+                if self.block(q,box): return
+                arrived=True
+                jumps+=1
+                continue
+            elif t.startswith("SPRING"):
+                d=t[-1]
+                for _ in range(3):
+                    nxt=add(q,d)
+                    if self.block(nxt,box):
+                        if box and self.o.get(nxt)=="TNT": self.armed.add(nxt)
+                        break
+                    q=nxt
+                if q==p: return
+                continue
+            elif t.startswith("MIRROR"): d=self.mirror(t,d)
+            elif t!="ICE": return
+            q=add(p,d)
+            if self.block(q,box): return
+
+    def throw(self,d):
+        p=self.p
+        nports=0
+        for step in range(1,39):
+            p=add(p,d)
+            if self.high(p) or self.o.get(p)=="BOX": return
+            if self.o.get(p)=="TNT":
+                self.armed.add(p)
+                return
+            t=self.t[p]
+            if t=="SWITCH":
+                self.flip=not self.flip
+                return
+            if t=="MIMIC":
+                self.t[p]="EMPTY"
+                self.bind.pop(p,None)
+                return
+            if t.startswith("MIRROR"): d=self.mirror(t,d)
+            if t.startswith("PORTAL") and nports<2:
+                q=self.ports[t[:-1]+("B" if t[-1]=="A" else "A")]
+                if q not in self.o:
+                    p=q
+                    nports+=1
+                    if nports==2: return
+            if step>=6 and t!="ICE" and not t.startswith("MIRROR"):
+                if step==6 or not t.startswith("PORTAL"): return
+
+    def fields(self):
+        lines=[]
+        lit=set()
+        for gun,d in self.guns.items():
+            if not self.t[gun].startswith("LASER"): continue
+            p=gun
+            cells=set()
+            for _ in range(10):
+                p=add(p,d)
+                if self.high(p) or self.o.get(p)=="BOX": break
+                if self.o.get(p)=="TNT":
+                    lit.add(p)
+                    break
+                cells.add(p)
+            lines.append((d,cells))
+        return lines,lit
+
+    def explode(self,tnts,due):
+        sources=[(p,"TNT") for p in tnts]+[(p,"BOMB") for p in due]
+        used=set(sources)
+        hit=set()
+        for p,k in sources:
+            area=around(p)
+            if self.p in area: self.hp-=60 if k=="TNT" else 50
+            for q in area:
+                hit.add(q)
+                for kind,flag in [("TNT",self.o.get(q)=="TNT"),("BOMB",q in self.timers)]:
+                    if flag and (q,kind) not in used:
+                        used.add((q,kind))
+                        sources.append((q,kind))
+        for q in hit:
+            self.timers.pop(q,None)
+            self.o.pop(q,None)
+            self.bind.pop(q,None)
+            t=self.t[q]
+            if t not in ("T_W","K1","K2","V","PIT") and not t.startswith("PORTAL"):
+                self.t[q]="PIT" if t=="CRACK" else "EMPTY"
+        if self.t[self.p]=="PIT" and self.hp>0: self.hp-=100
+        if self.hp<=0: self.status="DEAD"
+
+    def act(self,a):
+        assert self.status=="ALIVE" and a in agent.ACTIONS
+        self.path={self.p}
+        self.armed=set()
+        if a=="BOMB" and self.b>0 and self.p not in self.timers:
+            self.b-=1
+            self.timers[self.p]=3
+        if a.startswith("THROW") and self.stone:
+            self.stone-=1
+            self.throw(a[-1])
+        if a.startswith("MOVE"):
+            p=self.p
+            d=a[-1]
+            q=add(p,d)
+            if not self.high(q) and self.o.get(q)=="BOX" and not self.block(add(q,d),True):
+                self.slide(q,add(q,d),d,True)
+            if not self.block(q,False): self.slide(p,q,d)
+        if a.startswith("JUMP") and self.j:
+            self.j-=1
+            p=self.p
+            d=a[-1]
+            mid=add(p,d)
+            q=add(mid,d)
+            if not self.high(mid) and not self.block(q,False): self.slide(p,q,d)
+        if self.status!="ALIVE": return
+        for q in self.timers: self.timers[q]-=1
+        if self.armed or 0 in self.timers.values():
+            self.explode(self.armed,[p for p,t in self.timers.items() if t==0])
+        if self.status!="ALIVE": return
+        if self.turn%3==0:
+            lines,lit=self.fields()
+            self.hp-=50*sum(bool(self.path & cells) for d,cells in lines)
+            if self.hp<=0: self.status="DEAD"
+            elif lit: self.explode(lit,[])
+        if self.turn==240 and self.status=="ALIVE": self.status="TIMEOUT"
+        if self.status=="ALIVE": self.turn+=1
+
+    def state(self):
+        hx,hy=self.p
+        vis=set()
+        for _,dx,dy in sorted((max(abs(x),abs(y)),x,y) for x in range(-3,4) for y in range(-3,4) if x*x+y*y<=10):
+            p=(hx+dx,hy+dy)
+            if p not in self.t: continue
+            sx=(dx>0)-(dx<0)
+            sy=(dy>0)-(dy<0)
+            def light(x,y):
+                q=(hx+x,hy+y)
+                return q in vis and not self.high(q)
+            if max(abs(dx),abs(dy))<=1: ok=True
+            elif dx*dy==0: ok=light(dx-sx,dy-sy)
+            elif abs(dx)==abs(dy): ok=light(sx,sy) and not(self.high((hx+sx,hy)) and self.high((hx,hy+sy)))
+            elif abs(dx)>abs(dy): ok=light(dx-sx,dy) or light(dx-sx,dy-sy)
+            else: ok=light(dx,dy-sy) or light(dx-sx,dy-sy)
+            if ok: vis.add(p)
+        # The base LOS mask is exact. For adjoining ice, reveal the contiguous lane.
+        for q in list(vis):
+            if max(abs(q[0]-hx),abs(q[1]-hy))>1: continue
+            if self.t[q]!="ICE" and not self.t[q].startswith("MIRROR"): continue
+            for d in D:
+                p=q
+                direction=d
+                for _ in range(32):
+                    t=self.t[p]
+                    if t.startswith("MIRROR"): direction=self.mirror(t,direction)
+                    elif t!="ICE": break
+                    p=add(p,direction)
+                    if p not in self.t: break
+                    vis.add(p)
+        mask=[[False]*40 for _ in range(26)]
+        terrain=[["UNKNOWN"]*40 for _ in range(26)]
+        occ=[[None]*40 for _ in range(26)]
+        clues=[[False]*40 for _ in range(26)]
+        bones=set(self.bind.values())
+        for x,y in vis:
+            q=x,y
+            mask[y][x]=True
+            t=self.t[q]
+            terrain[y][x]="CHEST" if t in ("MIMIC","HEAL") else t
+            occ[y][x]=self.o.get(q)
+            clues[y][x]=q in bones
+        warnings=[]
+        if self.turn%3==0:
+            for d,cells in self.fields()[0]:
+                warnings.extend(dict(x=x,y=y,dir=d) for x,y in cells & vis)
+        return dict(mode="BLIND",turn=self.turn,turns_left=241-self.turn,
+                    hero=dict(x=hx,y=hy,hp=self.hp,keys=self.keys[:],jumps=self.j,throws=self.stone,bombs=self.b),
+                    gates_flipped=self.flip,targets=self.targets,visible_mask=mask,terrain=terrain,
+                    occupant=occ,clues=clues,laser_warnings=warnings,
+                    bombs=[dict(x=x,y=y,timer=t) for (x,y),t in self.timers.items()])
+
+
+def prove():
+    d=agent.build_dungeon()
+    assert len(d["taunt"])<=40
+    cost=validation(d["grid"])
+    game=Game(d["grid"])
+    route=d["author_solution"]
+    assert 1<=len(route)<=240
+    for i,a in enumerate(route,1):
+        game.act(a)
+        assert game.status==("CLEARED" if i==len(route) else "ALIVE"),(i,a,game.p,game.hp)
+    print("author",cost,3000-cost,len(route),game.hp,game.keys,game.p)
+    return game
+
+
+def run(g,name,verbose=False):
+    game=Game(g)
+    mem={}
+    times=[]
+    trace=[]
+    while game.status=="ALIVE":
+        s=game.state()
+        start=time.perf_counter()
+        a=agent.decide_action(s,mem)
+        times.append(time.perf_counter()-start)
+        trace.append((game.turn,game.p,game.hp,a))
+        game.act(a)
+    print(name, game.status,game.turn,game.keys,game.hp,game.p,"mean_ms",round(1000*sum(times)/len(times),1),"max_ms",round(1000*max(times),1),flush=True)
+    if verbose or game.status!="CLEARED": print(trace if len(trace)<75 else trace[-60:],flush=True)
+    return game,trace,times
+
+
+if __name__=="__main__":
+    prove()
+    run(sample(),"open")
+    run(agent.build_dungeon()["grid"],"own blind")
+
+'@ | Set-Content -LiteralPath 'check_entry.py' -Encoding utf8
+
+
+python -B check_entry.py
+
+
+@'
+from check_entry import *
+import argparse
+
+
+def fill(g,positions,t):
+    for x,y in positions: g[y][x]=t
+
+def cases():
+    g=sample()
+    for y in range(1,25): g[y][10]="W"
+    yield "brick partition",g
+    g=sample()
+    for y in range(1,25): g[y][10]="T_W"
+    g[22][10]="R_GATE"
+    g[4][5]="SWITCH"
+    yield "remote latch",g
+    g=sample()
+    for y in range(1,25): g[y][12]="PIT"
+    for y in range(1,25): g[y][28]="PIT"
+    yield "jump reserves",g
+    g=sample()
+    for x in range(1,39):
+        if x!=31:g[11][x]="T_W"
+        if x!=7:g[17][x]="W"
+    g[17][7]="R_GATE"
+    g[10][32]="SWITCH"
+    yield "winding walls",g
+    g=sample()
+    # A hidden cannon behind each mandatory single-cell opening.
+    for y in range(1,25): g[y][10]="T_W"
+    for y in range(1,25): g[y][25]="T_W"
+    for x in (10,25):
+        g[8][x]="EMPTY"
+        g[8][x+7]="LASER_L"
+    g[8][19]="LASER_R"
+    yield "phased choke points",g
+    g=sample()
+    for y in range(1,25): g[y][10]="T_W"
+    g[4][6]="PORTAL_1A";g[22][18]="PORTAL_1B"
+    yield "concealed portal",g
+    g=sample()
+    for y in range(1,25): g[y][10]="T_W"
+    g[15][10]="R_GATE"
+    for x in (5,6,7):
+        for y in (4,6):g[y][x]="T_W"
+    g[5][5]="SWITCH";g[5][6]="PIT";g[5][7]="PIT";g[5][4]="T_W"
+    yield "throw switch or breach",g
+    g=sample()
+    for kx,ky in [(20,5),(20,20),(35,13)]:
+        for dx,dy in D.values():g[ky+dy][kx+dx]="W"
+    yield "three sealed landmarks",g
+    g=sample()
+    for y in range(1,25):g[y][14]="T_W"
+    g[9][14]="TNT"
+    g[15][14]="BOX"
+    g[9][13]="TNT"
+    yield "TNT / push chokepoint",g
+    g=sample()
+    for y in range(1,25):g[y][10]="T_W"
+    g[14][10]="R_GATE"
+    g[12][8]="SWITCH"
+    g[9][5]="LASER_D"; g[18][7]="LASER_U";g[14][15]="LASER_L"
+    for x in (6,8,12):
+        g[13][x]="CRACK"
+    yield "lasers with switch",g
+
+def random_map(seed):
+    rnd=random.Random(seed)
+    g=board()
+    keys=[(rnd.randint(12,34),rnd.randint(2,9),"K1"),(rnd.randint(12,34),rnd.randint(19,23),"K2"),(rnd.randint(33,37),rnd.randint(4,21),"V")]
+    if len({(x,y) for x,y,k in keys})!=3: return random_map(seed+500)
+    for x,y,t in keys: g[y][x]=t
+    def spots():
+        return [(x,y) for x in range(1,39) for y in range(1,25) if g[y][x]=="EMPTY" and (x>3 or y not in (12,13,14))]
+    # Brick and titanium baffles, each with a passable gap.
+    for x in rnd.sample(range(5,32),3):
+        gap=rnd.randrange(3,22)
+        for y in range(1,25):
+            if abs(y-gap)>1 and g[y][x]=="EMPTY": g[y][x]=rnd.choices(["W","T_W"],[4,1])[0]
+    for tile,n in [("LASER",5),("PIT",10),("SPRING",4),("MIRROR",5),("CRACK",8),("ICE",12),("TNT",3),("BOX",2),("HEAL",1),("SWITCH",1),("R_GATE",3),("B_GATE",2),("PORTAL_1A",1),("PORTAL_1B",1)]:
+        for x,y in rnd.sample(spots(),n):
+            if tile in ("LASER","SPRING"): t=tile+"_"+rnd.choice(list(D))
+            elif tile=="MIRROR":t=tile+"_"+rnd.choice(["NE","SE","SW","NW"])
+            else:t=tile
+            g[y][x]=t
+    return g
+
+if __name__=="__main__":
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--random",type=int,default=0)
+    parser.add_argument("--start",type=int,default=0)
+    parser.add_argument("--case",type=str,default="all")
+    args=parser.parse_args()
+    items=([(str(i),random_map(i)) for i in range(args.start,args.start+args.random)]
+           if args.random else list(cases()))
+    for name,g in items:
+        if args.case=="all" or args.case==name:
+            run(g,name)
+
+'@ | Set-Content -LiteralPath 'challenge.py' -Encoding utf8
+
+
+python -B challenge.py --random 24
+
+
+python -B -c "from challenge import *; g=dict(cases())['jump reserves']; game=Game(g); m={}; log=[]; names=[]
+while game.turn<110 and game.status=='ALIVE':
+ s=game.state(); a=agent.decide_action(s,m); log.append((game.turn,game.p,a,game.keys[:],game.j)); game.act(a)
+print([i for i in log if i[2].startswith('JUMP')]); print(log[:35]); print(log[60:80])"
+
+
+python -B challenge.py
+
+
+python -B -c "from challenge import *; g=random_map(16); game=Game(g); print(game.targets); print('\n'.join(''.join({'EMPTY':' ','W':'#','T_W':'X','PIT':'O','K1':'1','K2':'2','V':'V','SWITCH':'s','PORTAL_1A':'a','PORTAL_1B':'b','R_GATE':'r','B_GATE':'b','CRACK':'c','ICE':'~','TNT':'t','BOX':'B'}.get(t,'*' if t.startswith('LASER_') else '+') for t in row) for row in g)); m={}; path=[]
+while game.turn<120:
+ s=game.state(); a=agent.decide_action(s,m); path.append((game.turn,game.p,a,game.b)); game.act(a)
+print(path[:55])"
+
+
+python -B -c "from challenge import *; game=Game(random_map(16)); m={}; log=[]
+while game.status=='ALIVE':
+ s=game.state(); a=agent.decide_action(s,m); log.append((game.turn,game.p,a,game.b,game.j)); game.act(a)
+print([i for i in log if i[2]=='BOMB']); print(log[50:115])"
+
+
+@'
+from check_entry import *
+
+def setup(tiles, p=(5,10), turn=1):
+    g=sample()
+    for (x,y),t in tiles.item
+收到，最终提交目录改为 <REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex。我会核对改名后的考卷，把答卷写到那里，并清理刚才在旧路径创建的副本。
+
+
+
+
+运行了命令
+Get-ChildItem -Force -LiteralPath . | Select-Object Name,Length,Mode
+
+
+Get-ChildItem -Force -LiteralPath . | Select-Object Name,Length,Mode; Get-FileHash -LiteralPath submission.py | Select-Object -ExpandProperty Hash
+
+
+python -B boundaries.py
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath CONTESTANT_PROMPT.md
+
+
+
+
+
+
+
+SOL、ARGON、CARBON、HYDROGEN、Claude Opus 5.5、DeepSeek、Qwen、GLM、混元 HY4、豆包，钥匙在哪儿你们都知道。谁能活过第三回合，再来敲我金库的门。
+
+
+
+
+运行了命令
+$source = '<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734\submission.py'; $answer = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex\submission.py'; Copy-Item -LiteralPath $source -Destination $answer -ErrorAction Stop; Get-FileHash -LiteralPath $answer | Select-Object -ExpandProperty Hash
+
+
+$oldRoom = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh'; $oldAnswer = Join-Path $oldRoom 'submission.py'; $expected = 'E4D659BFE745350C362096F1DC6E1C5F83DCDFA39FDEDBF7E96D43FA5D0E22EC'; $finalAnswer = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex\submission.py'; if ((Get-FileHash -LiteralPath $finalAnswer).Hash -eq $expected -and (Get-FileHash -LiteralPath $oldAnswer).Hash -eq $expected) { Remove-Item -LiteralPath $oldAnswer -ErrorAction Stop; if (@(Get-ChildItem -LiteralPath $oldRoom -Force).Count -eq 0) { [IO.Directory]::Delete($oldRoom, $false) } }; Test-Path -LiteralPath $oldRoom
+
+
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="    visible = set()\n    for y, mask"
+b="    visible = set()\n    discovered = 0\n    for y, mask"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                code = ID[terrains[x]]"
+b="                if board[i] & MASK == FOG:\n                    discovered += 1\n                code = ID[terrains[x]]"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="    mem[\"visits\"][p] += 1\n    return p"
+b="    mem[\"visits\"][p] += 1\n    if discovered >= 2 or len(trail) == 1:\n        mem[\"dry\"] = 0\n    else:\n        mem[\"dry\"] = mem.get(\"dry\", 0) + 1\n    return p"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        self.ray_signatures = {}\n\n    def rays"
+b="        self.ray_signatures = {}\n        self.opening_risks = {}\n\n    def opening_risk(self, p):\n        # Before the first warning, long unseen firing lanes through the spawn\n        # are more dangerous than lanes screened by a known wall or obstacle.\n        if p in self.opening_risks:\n            return self.opening_risks[p]\n        x, y = p % WIDTH, p // WIDTH\n        risk = 0.\n        for d, step in enumerate(DIR):\n            offset = abs(x - 2) if d < 2 else abs(y - 13)\n            if offset > 2:\n                continue\n            q = p\n            for k in range(1, 11):\n                q += step\n                c = self.board[q]\n                if c >= BOX or BLOCK[self.root_flip][c & MASK]:\n                    break\n                if c & MASK == FOG:\n                    alignment = (4.0, 2.35, 0.25)[offset]\n                    longitudinal = abs(y - 13) if d < 2 else abs(x - 2)\n                    risk += alignment * max(0.15, 1. - longitudinal * 0.12)\n                    break\n        self.opening_risks[p] = risk\n        return risk\n\n    def rays"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="    def play(self, s, action, phase, actual=False):"
+b="    def play(self, s, action, phase, actual=False, opening=False):"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                # Save the last jump for a compulsory crossing.\n                price += (1.65, 2.3, 3.6)[min(2, 2 - j)] if s.keys != 3 else 1.25\n                if c & MASK in (PIT, CHEST, MIMIC) or c >= BOX:\n                    price -= 0.3"
+b="                # Spend surplus jumps on the final approach after saving enough\n                # to cross obstacles which may still be hidden beyond sight.\n                final_sprint = s.keys == 3 and distance(p, self.w.targets[2]) <= 2 * s.jumps\n                price += 0.25 if final_sprint else (2.75, 3.65, 5.25)[2 - j]\n                if c & MASK in (PIT, CHEST, MIMIC) or c >= BOX:\n                    price -= 0.8"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if not any(self.at(p + offset) >= BOX\n                       or (self.at(p + offset) & MASK) in (WALL, RED, BLUE, MIMIC)\n                       or (self.at(p + offset) & MASK) >= LU\n                       or ICE == (self.at(p + offset) & MASK)\n                       or NE <= (self.at(p + offset) & MASK) <= SR\n                       for offset in AREA):\n                return None\n"
+b=""
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        delta_hp = s.hp - self.hp"
+b="        if opening and not self.won:\n            price += self.w.opening_risk(self.p)\n        delta_hp = s.hp - self.hp"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="    def stone(self, d):"
+b="    def useful_charge(self):\n        for offset in AREA:\n            c = self.at(self.p + offset)\n            t = c & MASK\n            if c >= BOX or t in (WALL, RED, BLUE, MIMIC, ICE) or t >= LU or NE <= t <= SR:\n                return True\n        return False\n\n    def stone(self, d):"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        board = w.board\n        goals ="
+b="        board = w.board\n        if root.fuses:\n            forecast = Turn(w, root)\n            forecast.explode((), [p for p, _ in root.fuses])\n            board = board[:]\n            for p, c in forecast.cells.items():\n                board[p] = c\n        goals ="
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                    extra = 1.0 if motion and land == FOG else 0.0"
+b="                    extra = 1.0 if motion and land == FOG else 0.0\n                    if wall[t] and board[q + step] & MASK == FOG:\n                        extra += 7.0 if root.bombs == 1 else 3.5"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        self.exploring = self.at(root.p, root.flip) >= 9900\n        if self.exploring:"
+b="        self.exploring = self.at(root.p, root.flip) >= 9900\n        self.frontiers = {}\n        stuck = w.stale >= 7 and w.mem[\"dry\"] >= 6\n        if self.exploring or stuck:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if fringe:\n                self.values ="
+b="            if fringe:\n                if not self.exploring:\n                    fringe = [(p, v + 10.) for p, v in fringe]\n                self.frontiers = dict(fringe)\n                self.values ="
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        if ns.keys != root.keys or result.won or result.scout >= 0:"
+b="        frontier = ns.p in guide.frontiers and ns.p != root.p\n        if ns.keys != root.keys or result.won or result.scout >= 0 or frontier:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            elif not result.won and root.keys == 0:"
+b="            elif frontier and not result.won and ns.keys == root.keys:\n                value = guide.frontiers[ns.p]\n            elif not result.won and root.keys == 0:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        result = model.play(root, action, phase, True)"
+b="        if action == DROP and not model.useful_charge():\n            continue\n        result = model.play(root, action, phase, True, opening=w.turn == 2)"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            result = model.play(node, action, tick)"
+b="            if action == DROP and not model.useful_charge():\n                continue\n            result = model.play(node, action, tick, opening=w.turn + depth == 2)"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+@'
+from pathlib import Path
+p=Path("boundaries.py")
+s=p.read_text(encoding='utf-8-sig')
+a="    # BOMB is always a legal action. The planner prunes irrelevant placements.\n    # Include a harmless adjacent brick so it evaluates this particular branch.\n    game.t[9,13]=\"W\"\n"
+b=""
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+python -B boundaries.py
+
+
+python -B check_entry.py
+
+
+python -B challenge.py --case 'jump reserves'
+
+
+python -B challenge.py --start 16 --random 1
+
+
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="        self.has_beams = bool(self.lasers or self.unexplained)"
+b="        # A visible beam with a hidden source also certifies the unobstructed\n        # segment back to the first cell which could contain that source.\n        for p, dirs in enumerate(mem[\"beams\"]):\n            if not dirs or p not in self.unexplained:\n                continue\n            for d, step in enumerate(DIR):\n                line = p % WIDTH if d < 2 else p // WIDTH\n                bit = 1 << (len(self.lasers) + d * 40 + line)\n                if not self.unexplained[p] & bit:\n                    continue\n                q = p\n                segment = []\n                for _ in range(10):\n                    q -= step\n                    c = self.board[q]\n                    if c & MASK == FOG:\n                        for a in segment:\n                            self.unexplained[a] = self.unexplained.get(a, 0) | bit\n                        break\n                    if c >= BOX or BLOCK[int(s[\"gates_flipped\"])][c & MASK]:\n                        break\n                    segment.append(q)\n        self.has_beams = bool(self.lasers or self.unexplained)"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        rays = dict(self.unexplained)\n        armed"
+b="        rays = dict(self.unexplained)\n        if actual:\n            for p in self.visible:\n                if p in rays:\n                    value = 0\n                    for d in range(4):\n                        if self.mem[\"beams\"][p] & (1 << d):\n                            line = p % WIDTH if d < 2 else p // WIDTH\n                            value |= rays[p] & (1 << (len(self.lasers) + d * 40 + line))\n                    rays[p] = value\n        armed"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="self.uncertainty += 0.45 if n == 1 else 3.0"
+b="self.uncertainty += 0.45 if n == 1 else 9.0"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="self.scouts[p] = 4.0 + 0.59 * estimate + penalty"
+b="self.scouts[p] = 8.0 + 1.38 * estimate + penalty"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        seeds = [(q + i * SIZE, price) for q, price in goals + list(self.scouts.items())"
+b="        if len(goals) == 2:\n            a, b, v = w.targets\n            def distances_to(q):\n                return flood(rev, [(q + i * SIZE, 0.) for i in range(len(flips))])\n            va, vb, vv = distances_to(a), distances_to(b), distances_to(v)\n            def remaining(field, p):\n                return min(field[p + i * SIZE] for i in range(len(flips)))\n            after_a = remaining(vb, a) + remaining(vv, b)\n            after_b = remaining(va, b) + remaining(vv, a)\n            if min(after_a, after_b) < 9900:\n                bias = max(-45., min(45., after_a - after_b))\n                goals = [(a, max(0., bias)), (b, max(0., -bias))]\n                self.goals = dict(goals)\n        seeds = [(q + i * SIZE, price) for q, price in goals + list(self.scouts.items())"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        self.exploring = self.at(root.p, root.flip) >= 9900"
+b="        self.heals = {}\n        health_gain = min(30, 100 - root.hp)\n        if health_gain >= 10 and (241 - w.turn > 12 or root.hp <= 50):\n            for p in INNER:\n                if board[p] != HEAL:\n                    continue\n                onward = min(self.at(p, f) for f in flips)\n                # The heal is consumed exactly once. Compare its detour against\n                # the health gained and how many turns remain in the game.\n                benefit = health_gain * (0.95 if root.hp <= 50 else 0.68)\n                if w.turn + self.at(root.p, root.flip) > 218:\n                    benefit *= 0.4\n                self.heals[p] = max(0., onward - benefit)\n            if self.heals:\n                seeds += [(p + i * SIZE, v) for p, v in self.heals.items()\n                          for i in range(len(flips))]\n                self.values = flood(rev, seeds)\n        self.exploring = self.at(root.p, root.flip) >= 9900"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        if ns.keys != root.keys or result.won or result.scout >= 0 or frontier:"
+b="        healed = ns.hp > root.hp and ns.p in guide.heals\n        if ns.keys != root.keys or result.won or result.scout >= 0 or frontier or healed:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            elif frontier and not result.won and ns.keys == root.keys:"
+b="            elif healed and not result.won and ns.keys == root.keys:\n                value = guide.heals[ns.p]\n            elif frontier and not result.won and ns.keys == root.keys:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+@'
+from challenge import *
+
+def designed():
+    g=sample()
+    for x in range(1,4):
+        g[7][x]="LASER_D"; g[19][x]="LASER_U"
+    yield "vertical spawn crossfire",g
+    g=sample()
+    for y in range(12,15):g[y][11]="LASER_L"
+    for x in range(1,5):g[6][x]="LASER_D"
+    yield "two axis ambush",g
+    g=sample()
+    g[13][4]="PORTAL_1A";g[9][16]="PORTAL_1B"
+    for dx,dy in D.values():g[9+dy][16+dx]="PIT"
+    yield "blind portal bait",g
+    g=sample()
+    for y in range(1,25):g[y][15]="T_W"
+    for x in range(1,15):g[5][x]="W"
+    g[2][3]="PORTAL_1A";g[20][22]="PORTAL_1B"
+    yield "portal behind a wall",g
+    g=sample()
+    for x in range(33,38):
+        for y in (11,15):g[y][x]="T_W"
+    for y in range(11,16):g[y][33]=g[y][37]="T_W"
+    g[13][34]="PORTAL_1B";g[3][5]="PORTAL_1A"
+    yield "sealed portal vault",g
+    g=sample()
+    for y in range(1,25):
+        g[y][12]="T_W"
+    g[4][12]="R_GATE"
+    g[21][8]="SWITCH"
+    for dx,dy in D.values():g[21+dy][8+dx]="PIT"
+    yield "throw or find switch",g
+    g=sample()
+    for y in range(1,25):
+        for x in (10,11,12):g[y][x]="W"
+    for y in (17,18,19):g[y][12]="EMPTY"
+    yield "double demolition",g
+    g=sample()
+    for x in range(1,39):
+        if x!=21:g[11][x]="T_W"
+    g[11][21]="CRACK"
+    # The jump and the return across the collapsed bridge must stay available.
+    for y in range(12,25):g[y][28]="PIT"
+    yield "broken bridge return",g
+    g=sample()
+    for x in (10,15,24):
+        for y in range(1,25):g[y][x]="T_W"
+    for x,y in ((10,4),(15,20),(24,7)):g[y][x]="R_GATE"
+    g[18][7]="SWITCH"; g[9][16]="LASER_D"
+    yield "three gate maze",g
+    g=sample()
+    for y in range(1,25):g[y][23]="T_W"
+    for y in range(1,25):g[y][24]="T_W"
+    g[15][23]="PIT";g[15][24]="PIT";g[15][18]="BOX"
+    yield "box bridge",g
+    g=sample()
+    for x,y in ((9,12),(17,17),(22,19),(28,9),(31,11)):
+        g[y][x]="SPRING_R";g[y][x+3]="PIT";g[y-1][x]="MIRROR_SE"
+    for x in range(4,15):g[13][x]="ICE"
+    g[13][15]="PIT"
+    yield "ice and spring lures",g
+
+if __name__=="__main__":
+    for name,g in designed():
+        if len(sys.argv)==1 or sys.argv[1] in name:
+            cost=validation(g)
+            run(g,name+" cost="+str(cost))
+
+'@ | Set-Content -LiteralPath 'matchups.py' -Encoding utf8
+
+
+python -B boundaries.py
+
+
+python -B matchups.py
+
+
+python -B challenge.py --random 45
+
+
+python -B -c "from challenge import *
+for seed in [15,16,31]:
+ game=Game(random_map(seed)); m={}; g=game.t; path=[]
+ while game.turn<=90 and game.status=='ALIVE':
+  a=agent.decide_action(game.state(),m); path.append((game.turn,game.p,a)); game.act(a)
+ print(seed,game.targets,[(i,p,a) for i,p,a in path if a in ('BOMB',) or a.startswith('JUMP')]); print(path[::7])"
+
+
+python -B -c "from challenge import *
+for seed in [15,16,31]:
+ g=random_map(seed); print(seed)
+ for y,row in enumerate(g): print(str(y).rjust(2), ' '.join({'EMPTY':'.','W':'#','T_W':'X','K1':'1','K2':'2'}.get(t,t[:3])[:3].ljust(3) for t in row[:21]))"
+
+
+python -B -c "from challenge import *; game=Game(random_map(31)); m={}
+while game.turn<58:
+ st=game.state(); a=agent.decide_action(st,m)
+ if 44<=game.turn<=54:
+  print(game.turn,game.p,a,game.b); print(' / '.join(''.join({agent.FOG:'?',agent.STEEL:'X',agent.WALL:'#',agent.FLOOR:'.'}.get(m['map'][y*40+x] & 31,'o') for x in range(7,12)) for y in range(16,23)))
+ game.act(a)"
+
+
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="visits=[0] * SIZE, stage=-1, trail=[], trips={})"
+b="visits=[0] * SIZE, stage=-1, trail=[], trips={}, rubble=[])"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        for pos, code in predicted[2]:\n            board[pos] = code"
+b="        for pos, code in predicted[2]:\n            if (board[pos] & MASK == WALL or board[pos] & MASK >= LU) and code == FLOOR:\n                mem[\"rubble\"].append(pos)\n            board[pos] = code"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        self.w = world\n        self.base"
+b="        self.w = world\n        self.base"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        self.opening_risks = {}\n\n    def opening_risk"
+b="        self.opening_risks = {}\n        self.rubble = set(mem[\"rubble\"])\n        self.fog_cost = [0.] * SIZE\n        for q in INNER:\n            if self.board[q] & MASK not in (WALL, STEEL):\n                continue\n            for step in DIR:\n                # A straight observed wall commonly continues behind the fog.\n                # It only changes path cost. New observations always settle it.\n                if self.board[q - step] & MASK not in (WALL, STEEL):\n                    continue\n                a = q\n                for surcharge in (8.0, 5.5, 3.0, 1.5):\n                    a += step\n                    if self.board[a] & MASK != FOG:\n                        break\n                    self.fog_cost[a] = max(self.fog_cost[a], surcharge)\n\n    def opening_risk"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        risk = 0.\n        for d, step in enumerate(DIR):"
+b="        axes = [0., 0.]\n        for d, step in enumerate(DIR):"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if offset > 2:"
+b="            if offset > 3:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                    alignment = (4.0, 2.35, 0.25)[offset]\n                    longitudinal = abs(y - 13) if d < 2 else abs(x - 2)\n                    risk += alignment * max(0.15, 1. - longitudinal * 0.12)"
+b="                    alignment = ((5., 3.2, 1.6, 0.3) if d < 2 else (7., 3.8, 0.7, 0.15))[offset]\n                    longitudinal = abs(y - 13) if d < 2 else abs(x - 2)\n                    axes[d // 2] += alignment * max(0.15, 1. - longitudinal * 0.12)"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        self.opening_risks[p] = risk"
+b="        risk = sum(axes) + 0.25 * axes[0] * axes[1]\n        self.opening_risks[p] = risk"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                self.uncertainty += 0.45 if n == 1 else 9.0"
+b="                self.uncertainty += (0.45 if n == 1 else 9.0) + self.w.fog_cost[dest]"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            price += 4.5 if b else 7.5"
+b="            price += 4.5 if b else 7.5\n            if p in self.w.rubble:\n                price -= 2.0\n            elif any(p + k in self.w.rubble for k in AREA):\n                price += 4.0\n            cleared = sum(self.at(p + k) & MASK == WALL or self.at(p + k) & MASK >= LU for k in AREA)\n            if cleared:\n                price += 1.5 - 0.65 * min(6, cleared)"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                elif t == FOG:\n                    price += 0.48"
+b="                elif t == FOG:\n                    price += 0.48 + w.fog_cost[q]"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if self.dual and root.stones:"
+b="            # A box pushed straight into a pit becomes a permanent bridge.\n            # Include its approach square so the search can line up a long push.\n            for box in INNER:\n                if not BOX <= board[box] < TNT:\n                    continue\n                for step in DIR:\n                    behind = box - step\n                    if wall[board[behind] & MASK] or board[behind] >= BOX:\n                        continue\n                    lane = [behind, box]\n                    q = box\n                    for _ in range(12):\n                        q += step\n                        c = board[q]\n                        if c == PIT:\n                            for i, src in enumerate(lane):\n                                rev[q + level].append((src + level, (len(lane) - i) * 1.6))\n                            break\n                        if c not in (FLOOR, CRACK, FOG):\n                            break\n                        if c == CRACK:\n                            break\n                        lane.append(q)\n            if self.dual and root.stones:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+python -B matchups.py 'two axis'
+
+
+python -B check_entry.py
+
+
+python -B challenge.py --start 31 --random 1
+
+
+python -B matchups.py 'box bridge'
+
+
+python -B challenge.py --start 15 --random 2
+
+
+python -B -c "from matchups import *; game=Game(dict(designed())['box bridge']); m={}; old={p for p,t in game.o.items() if t=='BOX'}; path=[]
+while game.status=='ALIVE':
+ a=agent.decide_action(game.state(),m); p=game.p; t=game.turn; game.act(a); bx={p for p,v in game.o.items() if v=='BOX'}
+ if old!=bx or a.startswith(('JUMP','BOMB')) or t%30==0: path.append((t,p,a,bx,game.keys[:],game.j)); old=bx
+print(path)"
+
+
+
+
+
+
+
+改名后的目录里已有可提交的答卷。独立回放确认，魔王地图花费 575G，自证路线在第 58 步以 100 HP 首次通关。盲测还发现勇者有时会在平地提前耗尽跳跃，我正在用需要留跳过坑的地图复测。
+
+
+
+
+运行了命令
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="    def useful_charge(self):"
+b="    def useful_jump(self, s, d, turn):\n        step = DIR[d]\n        mid = s.p + step\n        c = self.at(mid)\n        if BLOCK[s.flip][c & MASK]:\n            return False\n        end = mid + step\n        if c >= BOX or c & MASK not in (FOG, FLOOR, K1, K2, VAULT, HEAL, RED, BLUE):\n            return True\n        if s.fuses or turn >= 233:\n            return True\n        if s.keys == 3 and distance(s.p, self.w.targets[2]) <= 2 * s.jumps:\n            return True\n        if turn <= 2 and s.jumps == 3:\n            return True\n        if self.w.has_beams:\n            rays, _ = self.w.rays(s.edits, s.flip)\n            if rays.get(s.p) or rays.get(mid) or rays.get(end):\n                return True\n        return False\n\n    def useful_charge(self):"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                bias = max(-45., min(45., after_a - after_b))\n                goals"
+b="                geometric = goals[0][1] - goals[1][1]\n                observed = 1. - board.count(FOG) / len(INNER)\n                trust = 0.2 + 0.65 * observed\n                estimated = max(-24., min(24., after_a - after_b))\n                bias = (1. - trust) * geometric + trust * estimated\n                goals"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        if action == DROP and not model.useful_charge():\n            continue\n        result = model.play(root"
+b="        if action == DROP and not model.useful_charge():\n            continue\n        if 4 <= action < 8 and not model.useful_jump(root, action - 4, w.turn):\n            continue\n        result = model.play(root"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if action == DROP and not model.useful_charge():\n                continue\n            result = model.play(node"
+b="            if action == DROP and not model.useful_charge():\n                continue\n            if 4 <= action < 8 and not model.useful_jump(node, action - 4, w.turn + depth):\n                continue\n            result = model.play(node"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                        if c not in (FLOOR, CRACK, FOG):\n                            break\n                        if c == CRACK:"
+b="                        if c not in (FLOOR, FOG):"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                price += 0.75"
+b="                price += 2.1"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+python -B challenge.py --case 'jump reserves'
+
+
+python -B matchups.py 'two axis'
+
+
+python -B matchups.py 'box bridge'
+
+
+python -B challenge.py --random 1 --start 16
+
+
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="                    if wall[t] and board[q + step] & MASK == FOG:\n                        extra += 7.0 if root.bombs == 1 else 3.5"
+b="                    if wall[t] and p in w.rubble:\n                        # A charge inside an existing breach can cut its next\n                        # layer. Avoid spending the last charge widening its lip.\n                        extra -= 7.0 if root.bombs == 1 else 3.0\n                    elif wall[t] and board[q + step] & MASK == FOG:\n                        extra += 7.0 if root.bombs == 1 else 3.5"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+python -B boundaries.py
+
+
+python -B challenge.py --random 1 --start 16
+
+
+python -B matchups.py 'double demolition'
+
+
+@'
+from ast import literal_eval
+from copy import copy
+from pathlib import Path
+from boundaries import simulate, setup
+from check_entry import *
+
+def golden(room):
+    document=json.loads((Path(room)/"golden_vectors.json").read_text(encoding="utf-8-sig"))
+    passed=[]
+    for n,v in enumerate(document["vectors"],1):
+        expected=v["expected"]
+        if n==1:
+            g=board()
+            for tile in v["Placed_inner_tiles"]: g[tile["y"]][tile["x"]]=tile["tile"]
+            game=Game(g)
+            cost=validation(g)
+            actual={"valid":True,"spent_gold":cost,"vault_gold":3000-cost,
+                    "inner_tw_count":sum(row[1:-1].count("T_W") for row in g[1:-1]),
+                    "mimic_clue_coord":list(game.bind.values())[0]}
+        else:
+            spec=v["initial"]
+            hero=spec["hero"]
+            grid=sample()
+            if n==6:
+                dirs="RRR"+"D"*8+"RR"+"U"*16+"RRR"
+                p=(2,13)
+                for i,d in enumerate(dirs):
+                    p=add(p,d)
+                    grid[p[1]][p[0]]="ICE"
+                    if i+1<len(dirs) and dirs[i+1]!=d:
+                        nxt=dirs[i+1]
+                        grid[p[1]][p[0]]="MIRROR_SE" if nxt=="D" else "MIRROR_NE"
+                assert p==(10,5) and len(dirs)==32
+                grid[5][11]="PIT"
+            for raw,cell in spec.get("local_tiles",{}).items():
+                x,y=literal_eval(raw)
+                grid[y][x]=cell["terrain"]
+            game=Game(grid)
+            for raw,cell in spec.get("local_tiles",{}).items():
+                if cell["occupant"]:game.o[literal_eval(raw)]=cell["occupant"]
+            game.p=hero["x"],hero["y"]
+            game.hp=hero.get("hp",100);game.keys=list(hero.get("keys",[False,False]))
+            game.turn=spec["turn"];game.flip=spec.get("gates_flipped",False)
+            game.j=hero.get("jumps",3);game.b=hero.get("bombs",2);game.stone=hero.get("throws",3)
+            m,game=simulate(game,v["action"])
+            actual=dict(hero_final_pos=game.p,hero_hp_after=game.hp,status=game.status,
+                        trap_damage_dealt=float(hero.get("hp",100)-game.hp),
+                        exposed_cells=sorted(game.path),hero_throws_after=game.stone,gates_flipped_after=game.flip)
+            if n==2:
+                actual.update(box_final_pos=next(p for p,k in game.o.items() if k=="BOX"),tile_6_10_terrain_after=game.t[6,10])
+            if n==4:
+                actual["portal_count"]=sum(agent.distance(x,y)>1 for x,y in zip(m.path,m.path[1:]))
+            if n==5:
+                actual.update(bomb_timer_after_turn=game.timers[game.p],
+                              laser_d_destroyed_for_future_turns=game.t[8,9]=="EMPTY",
+                              hero_hit_by_laser_d_this_turn=game.hp==50)
+            if n==6:
+                actual.update(steps_taken=len(m.path)-1,entered_step_33_pit=(11,5) in game.path)
+            if n==8:
+                actual["phase_d_executed"]=game.hp!=20
+        for k,val in expected.items():
+            got=actual[k]
+            if k=="exposed_cells": got=sorted([list(q) for q in got]); val=sorted(val)
+            elif isinstance(got,tuple): got=list(got)
+            assert got==val,(n,k,got,val)
+        passed.append(v["id"])
+    print("Official golden vector records:",len(passed),flush=True)
+
+def fork(g):
+    obj=copy(g)
+    obj.t=g.t.copy();obj.o=g.o.copy();obj.keys=g.keys[:];obj.bind=g.bind.copy()
+    obj.timers=g.timers.copy()
+    return obj
+
+def opening():
+    g=Game(agent.build_dungeon()["grid"])
+    good=[]
+    for a in agent.ACTIONS:
+        g1=fork(g);g1.act(a)
+        for b in agent.ACTIONS:
+            g2=fork(g1);g2.act(b)
+            survivors=[]
+            for c in agent.ACTIONS:
+                g3=fork(g2);g3.act(c)
+                if g3.status=="ALIVE":survivors.append(c)
+            if survivors:good.append((a,b,len(survivors)))
+    print("Surviving two-action openings",good,"of 196")
+    assert good==[("MOVE_L","JUMP_D",14)]
+
+if __name__=="__main__":
+    golden(sys.argv[1])
+    prove()
+    opening()
+
+'@ | Set-Content -LiteralPath 'official_checks.py' -Encoding utf8
+
+
+python -B -c "import ast; import pathlib; p=pathlib.Path('submission.py'); t=ast.parse(p.read_text(encoding='utf-8-sig')); print('lines',len(p.read_text(encoding='utf-8-sig').splitlines())); print([(i.module,[a.name for a in i.names]) for i in t.body if isinstance(i,ast.ImportFrom)]); print([e.name for e in t.body if isinstance(e,ast.FunctionDef)])"
+
+
+Command failed (python -B official_checks.py '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex')
+
+
+@'
+from pathlib import Path
+p=Path("official_checks.py")
+s=p.read_text(encoding='utf-8-sig')
+a="if survivors:good.append((a,b,len(survivors)))"
+b="if survivors:good.append((a,b,tuple(c for c in agent.ACTIONS if c not in survivors)))"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="assert good==[(\"MOVE_L\",\"JUMP_D\",14)]"
+b="assert good==[(\"MOVE_L\",\"JUMP_D\",(\"MOVE_U\",))]"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+@'
+import ast
+import sys
+import time
+import json
+import statistics
+from pathlib import Path
+from challenge import random_map, cases
+from matchups import designed
+from check_entry import Game, sample, validation, agent, prove
+
+def trial(g):
+    game=Game(g)
+    mem={}
+    times=[]
+    while game.status=="ALIVE":
+        st=game.state()
+        start=time.perf_counter()
+        a=agent.decide_action(st,mem)
+        dt=time.perf_counter()-start
+        assert a in agent.ACTIONS and dt<0.50,(a,dt)
+        times.append(dt)
+        game.act(a)
+    return game.status,game.turn,game.hp,times
+
+def competition_cases(mode):
+    if mode=="designed":
+        items=list(designed())+[("jump reserve",dict(cases())["jump reserves"]),("own blind",agent.build_dungeon()["grid"])]
+    else:
+        first,count=map(int,mode.split(","))
+        items=[]
+        for seed in range(first,first+count):
+            g=random_map(seed)
+            try:validation(g)
+            except AssertionError:continue
+            items.append((str(seed),g))
+    stats=[]; durations=[]
+    for name,g in items:
+        status,t,h,times=trial(g)
+        stats.append((name,status,t,h));durations.extend(times)
+    print(json.dumps(dict(total=len(stats),cleared=sum(s[1]=="CLEARED" for s in stats),
+                          failures=[s for s in stats if s[1]!="CLEARED"],calls=len(durations),
+                          mean_ms=round(1000*statistics.mean(durations),3),
+                          max_ms=round(max(durations)*1000,3)),ensure_ascii=False),flush=True)
+
+def stress():
+    g=sample()
+    for y in range(4,10):
+        for x in range(2,36):
+            if g[y][x]=="EMPTY":g[y][x]="ICE"
+    for i in range(3):
+        g[11][9+i*6]="LASER_D"
+        g[18][9+i*6]="LASER_U"
+    g[12][20]="SWITCH";g[13][22]="R_GATE";g[14][22]="B_GATE"
+    g[16][31]="TNT";g[18][30]="HEAL";g[20][32]="BOX"
+    g[20][6]="PORTAL_1A";g[10][30]="PORTAL_1B"
+    print("stress cost",validation(g))
+    game=Game(g); times=[]
+    for turn in range(1,31):
+        game.turn=turn;game.hp=50;game.p=(3+turn%23,10+turn%9)
+        st=game.state(); mem={}
+        agent.remember(st,mem)
+        # Model a late game where the contestant has already surveyed the arena.
+        for q,t in game.t.items():
+            mem["map"][agent.index(q)]=agent.ID[t]+agent.OBJECT[game.o.get(q)]
+        for d,ray in game.fields()[0]:
+            for p in ray:mem["beams"][agent.index(p)]|=1<<agent.LETTERS.index(d)
+        start=time.perf_counter(); a=agent.decide_action(st,mem); times.append(time.perf_counter()-start)
+        assert a in agent.ACTIONS and times[-1]<0.5,(turn,a,times[-1])
+    print("stress calls",len(times),"max ms",round(1000*max(times),1))
+
+if __name__=="__main__":
+    if sys.argv[1]=="stress":stress()
+    else:competition_cases(sys.argv[1])
+
+'@ | Set-Content -LiteralPath 'acceptance.py' -Encoding utf8
+
+
+python -B official_checks.py '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex'
+
+
+python -B acceptance.py stress
+
+
+python -B acceptance.py designed
+
+
+python -B acceptance.py '0,50'
+
+
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="        self.tnts = set()\n"
+b=""
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if c >= TNT:\n                self.tnts.add(p)\n"
+b=""
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            if t == FOG and distance(self.p, p) > 4:\n                continue\n"
+b=""
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        if model.p != root.p or action == WAIT:\n            proximity = min(distance(model.p, g) for g in guide.goal_cells)\n            rank = 150 * model.keys.bit_count() - proximity + 0.002 * model.hp\n            if rank > fallback[0]:\n                fallback = (rank, action)\n\n    expansions = 0"
+b="        if model.p != root.p or action == WAIT:\n            path = model.path\n            remaining = guide.goal_cells\n            if model.keys != root.keys:\n                acquired = [w.targets[i] for i in range(2) if (model.keys ^ root.keys) & (1 << i)]\n                last_pickup = max(path.index(q) for q in acquired)\n                path = path[last_pickup:]\n                remaining = tuple(w.targets[i] for i in range(2) if not model.keys & (1 << i)) or (w.targets[2],)\n            proximity = min(distance(q, g) for q in path for g in remaining)\n            rank = 10000 * model.won + 200 * model.keys.bit_count() - proximity + 0.001 * model.hp\n            if rank > fallback[0]:\n                fallback = (rank, action)\n\n    if left == 1:\n        return fallback[1], root_options\n    expansions = 0"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+python -B -c "from matchups import *; game=Game(dict(designed())['three gate maze']); m={}; buf=[]
+while game.status=='ALIVE':
+ a=agent.decide_action(game.state(),m); t=game.turn; p=game.p; f=game.flip; k=game.keys[:]; game.act(a)
+ if t%12==0 or f!=game.flip or a in ('BOMB',) or k!=game.keys: buf.append((t,p,a,game.flip,game.keys[:],game.b,agent.SWITCH in m['map']))
+print(buf)"
+
+
+@'
+from pathlib import Path
+p=Path("submission.py")
+s=p.read_text(encoding='utf-8-sig')
+a="        self.gates = False\n        for p in INNER:"
+b="        self.gates = False\n        colors = set()\n        for p in INNER:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="            elif t in (RED, BLUE):\n                self.gates = True\n        self.unexplained"
+b="            elif t in (RED, BLUE):\n                self.gates = True\n                colors.add(t)\n        self.preferred_flip = (1 if colors == {RED} else 0 if colors == {BLUE} else None)\n        self.unexplained"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="        if opening and not self.won:"
+b="        if s.flip != self.flip and self.w.preferred_flip is not None:\n            if self.flip == self.w.preferred_flip:\n                price = max(0.4, price - 1.5)\n            else:\n                price += 5.0\n        if opening and not self.won:"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="                    price += 8.5 if root.bombs == 2 else 12."
+b="                    price += 8.5 if root.bombs == 2 else 12.\n                    if t in (RED, BLUE) and w.switches:\n                        price += 7."
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+a="    if left == 1:\n        return fallback[1], root_options\n    expansions"
+b="    if left == 1:\n        return fallback[1], root_options\n    # Take a nearby switch opportunity before leaving its range. If both\n    # colors have been seen, the regular two-layer search decides the parity.\n    prefer = w.preferred_flip\n    if not w.gates and w.switches and sum(w.board.count(t) for t in (WALL, STEEL)) > 134:\n        prefer = 1\n    if prefer is not None and root.flip != prefer and left > 15 and root_options:\n        def route_value(entry):\n            ns = entry.state\n            return entry.cost + guide.at(ns.p, ns.flip)\n        available = [(route_value(result), action) for action, result in root_options.items()\n                     if result.state.flip == prefer and result.state.hp >= root.hp\n                     and result.scout < 0 and result.cost < 6.]\n        if available:\n            price, action = min(available)\n            ordinary = min(route_value(result) for result in root_options.values())\n            if price <= ordinary + (4.0 if w.gates else 2.5):\n                return action, root_options\n    expansions"
+assert s.count(a)==1, (a,s.count(a))
+s=s.replace(a,b,1)
+p.write_text(s,encoding='utf-8',newline='\n')
+'@ | python -B -
+
+
+python -B boundaries.py
+
+
+python -B official_checks.py '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex'
+
+
+python -B matchups.py 'three gate'
+
+
+python -B challenge.py --case 'lasers with switch'
+
+
+Get-FileHash -Algorithm SHA256 -LiteralPath submission.py | Select-Object -ExpandProperty Hash
+
+
+Get-FileHash -Algorithm SHA256 -LiteralPath submission.py | Select-Object -ExpandProperty Hash
+
+
+$source = '<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734\submission.py'; $dir = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex'; $dest = Join-Path $dir 'submission.py'; $tempFile = Join-Path $dir 'submission.astra-tmp'; if ((Get-FileHash -LiteralPath $dest).Hash -ne 'E4D659BFE745350C362096F1DC6E1C5F83DCDFA39FDEDBF7E96D43FA5D0E22EC') { throw 'Destination changed since verification' }; [IO.File]::Copy($source,$tempFile,$false); if ((Get-FileHash -LiteralPath $tempFile).Hash -ne '98D6399C8C9C3C44901B7EDD17DF993FA1A9041FD30F8657B19ECD2739197A45') { throw 'Checksum mismatch' }; [IO.File]::Replace($tempFile,$dest,$null); Get-FileHash -LiteralPath $dest | Select-Object -ExpandProperty Hash
+
+
+$ErrorActionPreference = 'Stop'; $dir = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex'; $dest = Join-Path $dir 'submission.py'; $tmpAnswer = Join-Path $dir 'submission.astra-tmp'; if ((Get-FileHash -LiteralPath $dest).Hash -ne 'E4D659BFE745350C362096F1DC6E1C5F83DCDFA39FDEDBF7E96D43FA5D0E22EC' -or (Get-FileHash -LiteralPath $tmpAnswer).Hash -ne '98D6399C8C9C3C44901B7EDD17DF993FA1A9041FD30F8657B19ECD2739197A45') { throw 'Unexpected file contents' }; [IO.File]::Move($tmpAnswer,$dest,$true); Get-FileHash -LiteralPath $dest | Select-Object -ExpandProperty Hash
+
+
+Get-ChildItem -Force -Name
+
+
+python -B -c "import sys,time; t=time.perf_counter(); import submission; t1=time.perf_counter(); d=submission.build_dungeon(); t2=time.perf_counter(); print('import_ms',round((t1-t)*1000,3),'build_ms',round((t2-t1)*1000,3)); sys.path.append(r'<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734'); import official_checks as c; c.golden('.'); c.prove(); c.opening()"
+
+
+python -B -c "import sys,submission; sys.path.append(r'<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734'); import acceptance as a; a.competition_cases('designed'); a.stress()"
+
+
+python -B -c "import ast,pathlib; src=pathlib.Path('submission.py').read_text(encoding='utf-8-sig'); tree=ast.parse(src); bad={'open','eval','exec','compile','getattr','setattr','delattr','globals','locals','vars','dir','input','breakpoint','__import__'}; banned=[(n.lineno,n.id) for n in ast.walk(tree) if isinstance(n,ast.Name) and n.id in bad]; banned.extend((n.lineno,n.attr) for n in ast.walk(tree) if isinstance(n,ast.Attribute) and n.attr.startswith('__')); imports=[n.module for n in ast.walk(tree) if isinstance(n,ast.ImportFrom)]; assert imports==['collections','heapq','time'] and not banned; print('AST/import audit OK, bytes',len(src.encode('utf-8')))"
+
+
+python -B -c "import sys,submission; sys.path.append(r'<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734'); import acceptance as a; a.competition_cases('0,50')"
+
+
+$stageRoot = '<LOCAL_USER_HOME>\.codex\visualizations\2026\11\15\01a1e0d2-2739-7ce1-b181-53e7b9347734'; $delivered = '<REPO_ROOT>/exam_rooms\astra_6.0_xhigh_codex\submission.py'; if ((Get-FileHash -LiteralPath $delivered).Hash -ne '98D6399C8C9C3C44901B7EDD17DF993FA1A9041FD30F8657B19ECD2739197A45') { throw 'Final file verification failed' }; $scratchFiles = 'submission.py','check_entry.py','boundaries.py','official_checks.py','challenge.py','matchups.py','acceptance.py'; foreach ($scratchName in $scratchFiles) { $scratchPath = Join-Path $stageRoot $scratchName; if ([IO.File]::Exists($scratchPath)) { Remove-Item -LiteralPath $scratchPath -ErrorAction Stop } }; Get-FileHash -LiteralPath $delivered | Select-Object -ExpandProperty Hash
+
+
+
+
+
+
+
+
+
+
+已在改名后的考场目录交卷：[submission.py](<REPO_ROOT>/exam_rooms/astra_6.0_xhigh_codex/submission.py)。全程离线，未读取其他对话。
+- 魔王地图花费 575G，金库留存 2425G。本地独立回放确认，自证路线在第 58 步以 100 HP 首次通关。穷举 196 种前两步组合，只有一种能活过第三回合。
+- 盲视勇者在本地 63 张测试地图中通关 61 张。两次失败分别是双层爆破关超时，以及在自建地图第三回合阵亡。5518 次决策中，最慢一次为 96.7 毫秒，低于 500 毫秒限时。
+8 组官方黄金向量均已通过本地核对。正式成绩以赛事裁判为准。

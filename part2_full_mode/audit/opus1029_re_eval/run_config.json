@@ -1,0 +1,71 @@
+{
+  "original_directory": "part2_full_mode/audit\\three_waves_20261120",
+  "worker_seed": 20261115,
+  "worker_count": 1,
+  "engine_inputs": {
+    "run_tournament_full.py": "787fb662a1aa100fc12a8c3abe14054084408e1b3692b6239a20731f54384806",
+    "engine_full.py": "26feadee642040f55de1dc02706bdfbef29abd9f4c0a7c4a85b8cc376bc77ad3",
+    "official_maps_full.py": "5c3d2c2ff741c9980109bb25fe229dbd16c4659d1c93d6982706c4add73e7ce1",
+    "submission_worker_full.py": "7a0f8f70802566d0092325aae449001839138d5e2796ca07dbd3bd08674781c9",
+    "submission_sandbox_full.py": "2310f2fdb32dbec9d1e23c2aac0e8862712c85d818d9b48a99009231d0947345"
+  },
+  "waves": {
+    "wave1_40m_settled": [
+      "astra_39m",
+      "sol_39m",
+      "neon_40m",
+      "opus_40m",
+      "deepseek_14m",
+      "glm_38m",
+      "hunyuan_39m",
+      "qwen_39m",
+      "doubao_35m"
+    ],
+    "wave1_early_21m17m": [
+      "astra_21m",
+      "sol_17m",
+      "neon_40m",
+      "opus_40m",
+      "deepseek_14m",
+      "glm_38m",
+      "hunyuan_39m",
+      "qwen_39m",
+      "doubao_35m"
+    ],
+    "wave2_60m_reinforcements": [
+      "astra_39m",
+      "sol_39m",
+      "neon_54m",
+      "hunyuan_63m",
+      "hydrogen_64m",
+      "glm_68m",
+      "opus_quota",
+      "deepseek_14m",
+      "qwen_39m",
+      "doubao_35m"
+    ],
+    "wave3_final_11seats": [
+      "astra_39m",
+      "sol_39m",
+      "neon_54m",
+      "carbon_108m",
+      "hydrogen_64m",
+      "opus_quota",
+      "deepseek_95m",
+      "glm_68m",
+      "hunyuan_63m",
+      "qwen_105m",
+      "doubao_117m"
+    ]
+  },
+  "identical_opus_defense_grid_sha256": "db28dcf3d8cbefa3c5bdab1351710797a899fddafd200a72cc374a7d962774ed",
+  "identical_author_solution": true,
+  "limits": {
+    "import_sec": 1.5,
+    "build_sec": 2.0,
+    "first_turn_sec": 2.0,
+    "later_turn_sec": 0.5
+  },
+  "after_sha256": "d9239b39f24227d988508182a941338d164ef580e1d9eb0ec3ca133ae53375f2",
+  "before_sha256": "48bc1e613acadabaac0a0e48d0ceb6ea444715ad32539298dc4b83ae55e914ba"
+}

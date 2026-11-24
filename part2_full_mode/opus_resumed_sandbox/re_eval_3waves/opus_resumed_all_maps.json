@@ -1,0 +1,200 @@
+{
+  "OFFICIAL_FULL_01": {
+    "status": "CLEARED",
+    "turns": 84,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 921.57,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "OFFICIAL_FULL_02": {
+    "status": "CLEARED",
+    "turns": 63,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 930.92,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "OFFICIAL_FULL_03": {
+    "status": "CLEARED",
+    "turns": 43,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 953.14,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "benchmark_weak": {
+    "status": "CLEARED",
+    "turns": 71,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 935.07,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "benchmark_strong": {
+    "status": "CLEARED",
+    "turns": 117,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 842.03,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "BACKUP_FULL_01": {
+    "status": "CLEARED",
+    "turns": 70,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 945.86,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "BACKUP_FULL_02": {
+    "status": "CLEARED",
+    "turns": 62,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 951.05,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "BACKUP_FULL_03": {
+    "status": "CLEARED",
+    "turns": 63,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 949.59,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "BACKUP_FULL_04": {
+    "status": "CLEARED",
+    "turns": 37,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 964.57,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "astra_21m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 0,
+    "hero_score": 58.06,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "astra_39m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 0,
+    "hero_score": 58.06,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "sol_17m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 565.22,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "neon_40m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 50,
+    "keys": 0,
+    "hero_score": 185.0,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "neon_54m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 0,
+    "hero_score": 100.0,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "carbon_108m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 1,
+    "hero_score": 304.76,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "hydrogen_64m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 0,
+    "hero_score": 82.05,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "opus_quota": {
+    "status": "CLEARED",
+    "turns": 143,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 870.38,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "deepseek_79m": {
+    "status": "CLEARED",
+    "turns": 105,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 884.23,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "glm_38m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 0,
+    "hero_score": 172.73,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "hunyuan_39m": {
+    "status": "CLEARED",
+    "turns": 98,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 881.12,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "qwen_39m": {
+    "status": "CLEARED",
+    "turns": 60,
+    "hp": 100,
+    "keys": 2,
+    "hero_score": 962.97,
+    "death_reason": "",
+    "respawns": 0
+  },
+  "qwen_105m": {
+    "status": "TIMEOUT",
+    "turns": 240,
+    "hp": 100,
+    "keys": 0,
+    "hero_score": 133.33,
+    "death_reason": "",
+    "respawns": 0
+  }
+}

@@ -1,0 +1,8 @@
+Created At: 2026-11-20T04:03:24+09:00
+Completed At: 2026-11-20T04:03:29+09:00
+Workflow "Search tests on benches and own map" completed.
+Output:
+mine valid (895, {'K1': (16, 3), 'V': (37, 13), 'K2': (16, 22)})
+BENCH_WEAK full False 48 1.51 
+BENCH_STRONG full True 111 1.25 ('DEAD', 88, 0, 0.0)
+MINE full False 78 1.51 

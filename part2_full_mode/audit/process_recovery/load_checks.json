@@ -1,0 +1,215 @@
+{
+  "sol": {
+    "request_window_start_jst": "2026-11-19T20:22:12+09:00",
+    "inferred_40min_jst": "2026-11-19T21:02:12+09:00",
+    "candidate_count": 0,
+    "within_window": {},
+    "current": {
+      "sha256": "cecd94856c7e7804a12f672c1c6222a8973d502b9f1e4054d686ad4e7ab3a6e6",
+      "worker_result": "OK",
+      "static_reason": null
+    }
+  },
+  "carbon": {
+    "request_window_start_jst": "2026-11-19T20:10:14+09:00",
+    "inferred_40min_jst": "2026-11-19T20:50:14+09:00",
+    "candidate_count": 0,
+    "within_window": {},
+    "current": {
+      "sha256": "329a5198407c235993f585b6107b77176ce87c3cd0585b3712046a303b673afc",
+      "worker_result": "OK",
+      "static_reason": null
+    }
+  },
+  "hydrogen": {
+    "request_window_start_jst": "2026-11-19T20:24:19+09:00",
+    "inferred_40min_jst": "2026-11-19T21:04:19+09:00",
+    "candidate_count": 0,
+    "within_window": {},
+    "current": {
+      "sha256": "8f1f2da955c2db02a037f2906de639a1fc2b80fc811f143623fba7e7628956d6",
+      "worker_result": "OK",
+      "static_reason": null
+    }
+  },
+  "deepseek_tools": {
+    "request_window_start_jst": "2026-11-19T20:17:25.311000+09:00",
+    "inferred_40min_jst": "2026-11-19T20:57:25.311000+09:00",
+    "candidate_count": 5,
+    "within_window": {
+      "first": {
+        "file": "deepseek_tools/01_seq311_submission.py",
+        "time_jst": "2026-11-19T20:24:53.181+09:00",
+        "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=311; tool/result seq=312",
+        "kind": "Logged successful direct tool write; known chain only",
+        "sha256": "1914b1e08a98fa1518122e8bc93f4fc6a42ab16659b24876cbe22c80ce1e5160",
+        "elapsed_seconds_from_request": 447.87,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Reflective or I/O builtin denied"
+      },
+      "last": {
+        "file": "deepseek_tools/05_seq520_submission.py",
+        "time_jst": "2026-11-19T20:31:41.670+09:00",
+        "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=520; tool/result seq=521",
+        "kind": "Logged successful direct tool edit; known chain only",
+        "sha256": "31c89f26dd49a33de3b540e6210bbba057d07fc3cc8b1a46c027835461fac188",
+        "elapsed_seconds_from_request": 856.359,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Reflective or I/O builtin denied"
+      }
+    },
+    "current": {
+      "sha256": "bc1bad22325ac226a66be35ead372937f0c9d60a2ffe5875b5cc367cd2776468",
+      "worker_result": "RuntimeError: ValueError",
+      "static_reason": "Reflective or I/O builtin denied"
+    }
+  },
+  "glm": {
+    "request_window_start_jst": "2026-11-19T20:11:16.908000+09:00",
+    "inferred_40min_jst": "2026-11-19T20:51:16.908000+09:00",
+    "candidate_count": 30,
+    "within_window": {
+      "first": {
+        "file": "glm/01_seq775_2_submission.py",
+        "time_jst": "2026-11-19T20:24:28.866+09:00",
+        "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=775 content[2]",
+        "kind": "replayed successful write",
+        "sha256": "6b88ed9c98fd285346b8833c24fd4d46ce06e05e58eea2916254f8328dd5be61",
+        "dunder_nodes": [
+          [
+            181,
+            "__slots__",
+            "Store"
+          ]
+        ],
+        "elapsed_seconds_from_request": 791.958,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Reflective or I/O builtin denied"
+      },
+      "last": {
+        "file": "glm/30_seq1339_0_submission.py",
+        "time_jst": "2026-11-19T20:49:32.773+09:00",
+        "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1339 content[0]",
+        "kind": "replayed successful edit",
+        "sha256": "105ec025a641a5d66a648d48816050694561bb1504ede4dfe305a5829d365a32",
+        "dunder_nodes": [
+          [
+            182,
+            "__slots__",
+            "Store"
+          ]
+        ],
+        "elapsed_seconds_from_request": 2295.865,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Reflective or I/O builtin denied"
+      }
+    },
+    "current": {
+      "sha256": "a3362cd2eba6620922bda0b6c482364ab617e5dddd6df05b94610496064a088e",
+      "worker_result": "RuntimeError: ValueError",
+      "static_reason": "Reflective or I/O builtin denied"
+    }
+  },
+  "hy4": {
+    "request_window_start_jst": "2026-11-19T20:08:05.750000+09:00",
+    "inferred_40min_jst": "2026-11-19T20:48:05.750000+09:00",
+    "candidate_count": 13,
+    "within_window": {
+      "first": {
+        "file": "hy4/01_63HG_submission.py",
+        "time_jst": "2026-11-19T20:24:03.039+09:00",
+        "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\63HG.py",
+        "kind": "original CodeBuddy history bytes",
+        "sha256": "07c38ba857b0b3dc7fd293b236133373d421bb4179210b187bb12441608110b1",
+        "dunder_nodes": [
+          [
+            242,
+            "__new__",
+            "Attribute"
+          ]
+        ],
+        "elapsed_seconds_from_request": 957.289,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Forbidden attribute access"
+      },
+      "last": {
+        "file": "hy4/13_xYy9_submission.py",
+        "time_jst": "2026-11-19T20:47:50.590+09:00",
+        "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\xYy9.py",
+        "kind": "original CodeBuddy history bytes",
+        "sha256": "a889f4bd4c922e54c31c8cddee1d630548e11bfc8d3f8bc57b2c9a054b46e111",
+        "dunder_nodes": [
+          [
+            242,
+            "__new__",
+            "Attribute"
+          ]
+        ],
+        "elapsed_seconds_from_request": 2384.84,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Forbidden attribute access"
+      }
+    },
+    "current": {
+      "sha256": "18e5edc868411a6989608fbd5b79bccf2604190edace64ef13d82a8eccb354d2",
+      "worker_result": "RuntimeError: ValueError",
+      "static_reason": "Forbidden attribute access"
+    }
+  },
+  "doubao": {
+    "request_window_start_jst": "2026-11-19T20:37:29.479000+09:00",
+    "inferred_40min_jst": "2026-11-19T21:17:29.479000+09:00",
+    "candidate_count": 1,
+    "within_window": {
+      "first": {
+        "file": "doubao/01_line1385_submission.py",
+        "time_jst": "2026-11-19T21:12:51.756+09:00",
+        "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-19\\clients\\203414-393-39404-vscode-2026-11-19-39404.log:1385 PowerShell command fb45196f-2a06-4cd5-9cd3-25d03fe93bc4",
+        "kind": "recovered command payload",
+        "sha256": "9d23e92706cd543e9bad2594d8eb74774ddb1c8bf7be9395664b04a37757cd0f",
+        "dunder_nodes": [
+          [
+            113,
+            "__new__",
+            "Attribute"
+          ],
+          [
+            139,
+            "__new__",
+            "Attribute"
+          ]
+        ],
+        "elapsed_seconds_from_request": 2122.277,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Forbidden attribute access"
+      },
+      "last": {
+        "file": "doubao/01_line1385_submission.py",
+        "time_jst": "2026-11-19T21:12:51.756+09:00",
+        "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-19\\clients\\203414-393-39404-vscode-2026-11-19-39404.log:1385 PowerShell command fb45196f-2a06-4cd5-9cd3-25d03fe93bc4",
+        "kind": "recovered command payload",
+        "sha256": "9d23e92706cd543e9bad2594d8eb74774ddb1c8bf7be9395664b04a37757cd0f",
+        "dunder_nodes": [
+          [
+            113,
+            "__new__",
+            "Attribute"
+          ],
+          [
+            139,
+            "__new__",
+            "Attribute"
+          ]
+        ],
+        "elapsed_seconds_from_request": 2122.277,
+        "worker_result": "RuntimeError: ValueError",
+        "static_reason": "Forbidden attribute access"
+      }
+    },
+    "current": {
+      "sha256": "9f951f4a179fb895557833d8381739c3ba9db3c77164a963f428439b2ac95f1c",
+      "worker_result": "RuntimeError: ValueError",
+      "static_reason": "Forbidden attribute access"
+    }
+  }
+}

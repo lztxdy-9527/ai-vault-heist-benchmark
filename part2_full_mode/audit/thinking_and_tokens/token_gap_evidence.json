@@ -1,0 +1,1449 @@
+{
+  "deepseek": {
+    "tokenizer": {
+      "file": "deps/deepseek_v41_flash_tokenizer.json",
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/tokenizer.json",
+      "sha256": "c90dfa01249db1be4245780a052ede752e1361c612ac6d08e2bdada7d599476b"
+    },
+    "nonempty_reasoning_responses": 135,
+    "reasoning_estimate": 140286,
+    "source": "<LOCAL_USER_HOME>\\.dsh\\sessions\\--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--\\session-a11cda84-af09-4635-97b0-2a5db66db350\\session.v4.jsonl.zstd",
+    "responses": [
+      {
+        "line": 21,
+        "seq": 19,
+        "reasoning": 0,
+        "output": 263
+      },
+      {
+        "line": 33,
+        "seq": 31,
+        "reasoning": 26,
+        "output": 152
+      },
+      {
+        "line": 41,
+        "seq": 39,
+        "reasoning": 48,
+        "output": 236
+      },
+      {
+        "line": 51,
+        "seq": 49,
+        "reasoning": 20,
+        "output": 83
+      },
+      {
+        "line": 57,
+        "seq": 55,
+        "reasoning": 290,
+        "output": 533
+      },
+      {
+        "line": 67,
+        "seq": 65,
+        "reasoning": 19,
+        "output": 401
+      },
+      {
+        "line": 79,
+        "seq": 77,
+        "reasoning": 254,
+        "output": 343
+      },
+      {
+        "line": 85,
+        "seq": 83,
+        "reasoning": 0,
+        "output": 84
+      },
+      {
+        "line": 91,
+        "seq": 89,
+        "reasoning": 56,
+        "output": 156
+      },
+      {
+        "line": 97,
+        "seq": 95,
+        "reasoning": 201,
+        "output": 351
+      },
+      {
+        "line": 105,
+        "seq": 103,
+        "reasoning": 0,
+        "output": 237
+      },
+      {
+        "line": 113,
+        "seq": 111,
+        "reasoning": 0,
+        "output": 161
+      },
+      {
+        "line": 121,
+        "seq": 119,
+        "reasoning": 82,
+        "output": 234
+      },
+      {
+        "line": 129,
+        "seq": 127,
+        "reasoning": 0,
+        "output": 177
+      },
+      {
+        "line": 137,
+        "seq": 135,
+        "reasoning": 573,
+        "output": 713
+      },
+      {
+        "line": 145,
+        "seq": 143,
+        "reasoning": 0,
+        "output": 150
+      },
+      {
+        "line": 153,
+        "seq": 151,
+        "reasoning": 13,
+        "output": 154
+      },
+      {
+        "line": 161,
+        "seq": 159,
+        "reasoning": 83,
+        "output": 299
+      },
+      {
+        "line": 169,
+        "seq": 167,
+        "reasoning": 0,
+        "output": 160
+      },
+      {
+        "line": 177,
+        "seq": 175,
+        "reasoning": 43,
+        "output": 119
+      },
+      {
+        "line": 183,
+        "seq": 181,
+        "reasoning": 5384,
+        "output": 5659
+      },
+      {
+        "line": 191,
+        "seq": 189,
+        "reasoning": 13215,
+        "output": 13481
+      },
+      {
+        "line": 198,
+        "seq": 196,
+        "reasoning": 51,
+        "output": 315
+      },
+      {
+        "line": 206,
+        "seq": 204,
+        "reasoning": 1377,
+        "output": 12986
+      },
+      {
+        "line": 212,
+        "seq": 210,
+        "reasoning": 1209,
+        "output": 3718
+      },
+      {
+        "line": 218,
+        "seq": 216,
+        "reasoning": 95,
+        "output": 370
+      },
+      {
+        "line": 224,
+        "seq": 222,
+        "reasoning": 0,
+        "output": 1108
+      },
+      {
+        "line": 230,
+        "seq": 228,
+        "reasoning": 0,
+        "output": 102
+      },
+      {
+        "line": 238,
+        "seq": 236,
+        "reasoning": 670,
+        "output": 1039
+      },
+      {
+        "line": 246,
+        "seq": 244,
+        "reasoning": 0,
+        "output": 256
+      },
+      {
+        "line": 254,
+        "seq": 252,
+        "reasoning": 260,
+        "output": 496
+      },
+      {
+        "line": 262,
+        "seq": 260,
+        "reasoning": 689,
+        "output": 1441
+      },
+      {
+        "line": 268,
+        "seq": 266,
+        "reasoning": 0,
+        "output": 99
+      },
+      {
+        "line": 276,
+        "seq": 274,
+        "reasoning": 2822,
+        "output": 5589
+      },
+      {
+        "line": 282,
+        "seq": 280,
+        "reasoning": 0,
+        "output": 89
+      },
+      {
+        "line": 290,
+        "seq": 288,
+        "reasoning": 1126,
+        "output": 1753
+      },
+      {
+        "line": 296,
+        "seq": 294,
+        "reasoning": 0,
+        "output": 97
+      },
+      {
+        "line": 304,
+        "seq": 302,
+        "reasoning": 2427,
+        "output": 2913
+      },
+      {
+        "line": 312,
+        "seq": 310,
+        "reasoning": 15883,
+        "output": 25040
+      },
+      {
+        "line": 318,
+        "seq": 316,
+        "reasoning": 3941,
+        "output": 14332
+      },
+      {
+        "line": 324,
+        "seq": 322,
+        "reasoning": 3701,
+        "output": 4340
+      },
+      {
+        "line": 330,
+        "seq": 328,
+        "reasoning": 0,
+        "output": 3761
+      },
+      {
+        "line": 336,
+        "seq": 334,
+        "reasoning": 38,
+        "output": 138
+      },
+      {
+        "line": 344,
+        "seq": 342,
+        "reasoning": 0,
+        "output": 2624
+      },
+      {
+        "line": 352,
+        "seq": 350,
+        "reasoning": 129,
+        "output": 1516
+      },
+      {
+        "line": 358,
+        "seq": 356,
+        "reasoning": 0,
+        "output": 107
+      },
+      {
+        "line": 366,
+        "seq": 364,
+        "reasoning": 170,
+        "output": 481
+      },
+      {
+        "line": 374,
+        "seq": 372,
+        "reasoning": 168,
+        "output": 415
+      },
+      {
+        "line": 380,
+        "seq": 378,
+        "reasoning": 0,
+        "output": 386
+      },
+      {
+        "line": 388,
+        "seq": 386,
+        "reasoning": 545,
+        "output": 1119
+      },
+      {
+        "line": 396,
+        "seq": 394,
+        "reasoning": 23,
+        "output": 623
+      },
+      {
+        "line": 402,
+        "seq": 400,
+        "reasoning": 0,
+        "output": 115
+      },
+      {
+        "line": 411,
+        "seq": 409,
+        "reasoning": 113,
+        "output": 353
+      },
+      {
+        "line": 419,
+        "seq": 417,
+        "reasoning": 0,
+        "output": 372
+      },
+      {
+        "line": 427,
+        "seq": 425,
+        "reasoning": 571,
+        "output": 1163
+      },
+      {
+        "line": 435,
+        "seq": 433,
+        "reasoning": 624,
+        "output": 874
+      },
+      {
+        "line": 443,
+        "seq": 441,
+        "reasoning": 218,
+        "output": 770
+      },
+      {
+        "line": 450,
+        "seq": 448,
+        "reasoning": 638,
+        "output": 706
+      },
+      {
+        "line": 457,
+        "seq": 455,
+        "reasoning": 0,
+        "output": 111
+      },
+      {
+        "line": 465,
+        "seq": 463,
+        "reasoning": 296,
+        "output": 906
+      },
+      {
+        "line": 473,
+        "seq": 471,
+        "reasoning": 775,
+        "output": 1368
+      },
+      {
+        "line": 481,
+        "seq": 479,
+        "reasoning": 831,
+        "output": 1347
+      },
+      {
+        "line": 489,
+        "seq": 487,
+        "reasoning": 854,
+        "output": 980
+      },
+      {
+        "line": 497,
+        "seq": 495,
+        "reasoning": 345,
+        "output": 473
+      },
+      {
+        "line": 505,
+        "seq": 503,
+        "reasoning": 198,
+        "output": 312
+      },
+      {
+        "line": 513,
+        "seq": 511,
+        "reasoning": 705,
+        "output": 833
+      },
+      {
+        "line": 521,
+        "seq": 519,
+        "reasoning": 190,
+        "output": 442
+      },
+      {
+        "line": 527,
+        "seq": 525,
+        "reasoning": 0,
+        "output": 112
+      },
+      {
+        "line": 535,
+        "seq": 533,
+        "reasoning": 67,
+        "output": 195
+      },
+      {
+        "line": 543,
+        "seq": 541,
+        "reasoning": 846,
+        "output": 1279
+      },
+      {
+        "line": 549,
+        "seq": 547,
+        "reasoning": 0,
+        "output": 124
+      },
+      {
+        "line": 558,
+        "seq": 556,
+        "reasoning": 1726,
+        "output": 2144
+      },
+      {
+        "line": 566,
+        "seq": 564,
+        "reasoning": 1602,
+        "output": 3613
+      },
+      {
+        "line": 572,
+        "seq": 570,
+        "reasoning": 0,
+        "output": 124
+      },
+      {
+        "line": 580,
+        "seq": 578,
+        "reasoning": 1449,
+        "output": 2964
+      },
+      {
+        "line": 586,
+        "seq": 584,
+        "reasoning": 0,
+        "output": 149
+      },
+      {
+        "line": 594,
+        "seq": 592,
+        "reasoning": 693,
+        "output": 1851
+      },
+      {
+        "line": 600,
+        "seq": 598,
+        "reasoning": 0,
+        "output": 186
+      },
+      {
+        "line": 608,
+        "seq": 606,
+        "reasoning": 348,
+        "output": 417
+      },
+      {
+        "line": 615,
+        "seq": 613,
+        "reasoning": 0,
+        "output": 260
+      },
+      {
+        "line": 623,
+        "seq": 621,
+        "reasoning": 296,
+        "output": 414
+      },
+      {
+        "line": 631,
+        "seq": 629,
+        "reasoning": 0,
+        "output": 694
+      },
+      {
+        "line": 637,
+        "seq": 635,
+        "reasoning": 0,
+        "output": 150
+      },
+      {
+        "line": 645,
+        "seq": 643,
+        "reasoning": 0,
+        "output": 120
+      },
+      {
+        "line": 653,
+        "seq": 651,
+        "reasoning": 576,
+        "output": 644
+      },
+      {
+        "line": 660,
+        "seq": 658,
+        "reasoning": 0,
+        "output": 283
+      },
+      {
+        "line": 668,
+        "seq": 666,
+        "reasoning": 696,
+        "output": 1580
+      },
+      {
+        "line": 674,
+        "seq": 672,
+        "reasoning": 0,
+        "output": 371
+      },
+      {
+        "line": 682,
+        "seq": 680,
+        "reasoning": 224,
+        "output": 534
+      },
+      {
+        "line": 690,
+        "seq": 688,
+        "reasoning": 395,
+        "output": 721
+      },
+      {
+        "line": 698,
+        "seq": 696,
+        "reasoning": 776,
+        "output": 1364
+      },
+      {
+        "line": 706,
+        "seq": 704,
+        "reasoning": 566,
+        "output": 897
+      },
+      {
+        "line": 714,
+        "seq": 712,
+        "reasoning": 124,
+        "output": 441
+      },
+      {
+        "line": 722,
+        "seq": 720,
+        "reasoning": 403,
+        "output": 712
+      },
+      {
+        "line": 730,
+        "seq": 728,
+        "reasoning": 388,
+        "output": 889
+      },
+      {
+        "line": 738,
+        "seq": 736,
+        "reasoning": 587,
+        "output": 1001
+      },
+      {
+        "line": 746,
+        "seq": 744,
+        "reasoning": 574,
+        "output": 1113
+      },
+      {
+        "line": 755,
+        "seq": 753,
+        "reasoning": 21127,
+        "output": 22629
+      },
+      {
+        "line": 761,
+        "seq": 759,
+        "reasoning": 1432,
+        "output": 3472
+      },
+      {
+        "line": 767,
+        "seq": 765,
+        "reasoning": 0,
+        "output": 101
+      },
+      {
+        "line": 775,
+        "seq": 773,
+        "reasoning": 990,
+        "output": 1256
+      },
+      {
+        "line": 783,
+        "seq": 781,
+        "reasoning": 0,
+        "output": 199
+      },
+      {
+        "line": 789,
+        "seq": 787,
+        "reasoning": 0,
+        "output": 102
+      },
+      {
+        "line": 797,
+        "seq": 795,
+        "reasoning": 53,
+        "output": 250
+      },
+      {
+        "line": 805,
+        "seq": 803,
+        "reasoning": 595,
+        "output": 831
+      },
+      {
+        "line": 813,
+        "seq": 811,
+        "reasoning": 767,
+        "output": 1205
+      },
+      {
+        "line": 821,
+        "seq": 819,
+        "reasoning": 37,
+        "output": 156
+      },
+      {
+        "line": 827,
+        "seq": 825,
+        "reasoning": 0,
+        "output": 218
+      },
+      {
+        "line": 833,
+        "seq": 831,
+        "reasoning": 0,
+        "output": 191
+      },
+      {
+        "line": 839,
+        "seq": 837,
+        "reasoning": 0,
+        "output": 99
+      },
+      {
+        "line": 847,
+        "seq": 845,
+        "reasoning": 8991,
+        "output": 9177
+      },
+      {
+        "line": 855,
+        "seq": 853,
+        "reasoning": 26,
+        "output": 148
+      },
+      {
+        "line": 861,
+        "seq": 859,
+        "reasoning": 0,
+        "output": 120
+      },
+      {
+        "line": 869,
+        "seq": 867,
+        "reasoning": 1443,
+        "output": 1631
+      },
+      {
+        "line": 877,
+        "seq": 875,
+        "reasoning": 16,
+        "output": 213
+      },
+      {
+        "line": 883,
+        "seq": 881,
+        "reasoning": 0,
+        "output": 94
+      },
+      {
+        "line": 891,
+        "seq": 889,
+        "reasoning": 704,
+        "output": 2438
+      },
+      {
+        "line": 897,
+        "seq": 895,
+        "reasoning": 0,
+        "output": 269
+      },
+      {
+        "line": 905,
+        "seq": 903,
+        "reasoning": 58,
+        "output": 291
+      },
+      {
+        "line": 913,
+        "seq": 911,
+        "reasoning": 243,
+        "output": 597
+      },
+      {
+        "line": 921,
+        "seq": 919,
+        "reasoning": 447,
+        "output": 1076
+      },
+      {
+        "line": 929,
+        "seq": 927,
+        "reasoning": 856,
+        "output": 1213
+      },
+      {
+        "line": 937,
+        "seq": 935,
+        "reasoning": 1658,
+        "output": 2083
+      },
+      {
+        "line": 945,
+        "seq": 943,
+        "reasoning": 1058,
+        "output": 1657
+      },
+      {
+        "line": 951,
+        "seq": 949,
+        "reasoning": 0,
+        "output": 228
+      },
+      {
+        "line": 959,
+        "seq": 957,
+        "reasoning": 1776,
+        "output": 1935
+      },
+      {
+        "line": 966,
+        "seq": 964,
+        "reasoning": 673,
+        "output": 756
+      },
+      {
+        "line": 972,
+        "seq": 970,
+        "reasoning": 0,
+        "output": 103
+      },
+      {
+        "line": 980,
+        "seq": 978,
+        "reasoning": 629,
+        "output": 699
+      },
+      {
+        "line": 987,
+        "seq": 985,
+        "reasoning": 0,
+        "output": 127
+      },
+      {
+        "line": 993,
+        "seq": 991,
+        "reasoning": 0,
+        "output": 424
+      },
+      {
+        "line": 1002,
+        "seq": 1000,
+        "reasoning": 510,
+        "output": 1289
+      },
+      {
+        "line": 1008,
+        "seq": 1006,
+        "reasoning": 0,
+        "output": 252
+      },
+      {
+        "line": 1016,
+        "seq": 1014,
+        "reasoning": 174,
+        "output": 307
+      },
+      {
+        "line": 1023,
+        "seq": 1021,
+        "reasoning": 641,
+        "output": 739
+      },
+      {
+        "line": 1031,
+        "seq": 1029,
+        "reasoning": 340,
+        "output": 414
+      },
+      {
+        "line": 1038,
+        "seq": 1036,
+        "reasoning": 0,
+        "output": 375
+      },
+      {
+        "line": 1044,
+        "seq": 1042,
+        "reasoning": 0,
+        "output": 288
+      },
+      {
+        "line": 1050,
+        "seq": 1048,
+        "reasoning": 0,
+        "output": 186
+      },
+      {
+        "line": 1058,
+        "seq": 1056,
+        "reasoning": 368,
+        "output": 503
+      },
+      {
+        "line": 1066,
+        "seq": 1064,
+        "reasoning": 0,
+        "output": 90
+      },
+      {
+        "line": 1074,
+        "seq": 1072,
+        "reasoning": 1218,
+        "output": 2279
+      },
+      {
+        "line": 1080,
+        "seq": 1078,
+        "reasoning": 0,
+        "output": 170
+      },
+      {
+        "line": 1088,
+        "seq": 1086,
+        "reasoning": 33,
+        "output": 126
+      },
+      {
+        "line": 1096,
+        "seq": 1094,
+        "reasoning": 661,
+        "output": 1320
+      },
+      {
+        "line": 1102,
+        "seq": 1100,
+        "reasoning": 0,
+        "output": 282
+      },
+      {
+        "line": 1110,
+        "seq": 1108,
+        "reasoning": 264,
+        "output": 543
+      },
+      {
+        "line": 1118,
+        "seq": 1116,
+        "reasoning": 723,
+        "output": 1092
+      },
+      {
+        "line": 1124,
+        "seq": 1122,
+        "reasoning": 0,
+        "output": 406
+      },
+      {
+        "line": 1132,
+        "seq": 1130,
+        "reasoning": 693,
+        "output": 956
+      },
+      {
+        "line": 1138,
+        "seq": 1136,
+        "reasoning": 0,
+        "output": 298
+      },
+      {
+        "line": 1146,
+        "seq": 1144,
+        "reasoning": 442,
+        "output": 596
+      },
+      {
+        "line": 1154,
+        "seq": 1152,
+        "reasoning": 315,
+        "output": 2003
+      },
+      {
+        "line": 1160,
+        "seq": 1158,
+        "reasoning": 0,
+        "output": 122
+      },
+      {
+        "line": 1168,
+        "seq": 1166,
+        "reasoning": 0,
+        "output": 124
+      },
+      {
+        "line": 1176,
+        "seq": 1174,
+        "reasoning": 1036,
+        "output": 1126
+      },
+      {
+        "line": 1184,
+        "seq": 1182,
+        "reasoning": 93,
+        "output": 480
+      },
+      {
+        "line": 1190,
+        "seq": 1188,
+        "reasoning": 0,
+        "output": 88
+      },
+      {
+        "line": 1198,
+        "seq": 1196,
+        "reasoning": 0,
+        "output": 5537
+      },
+      {
+        "line": 1204,
+        "seq": 1202,
+        "reasoning": 332,
+        "output": 670
+      },
+      {
+        "line": 1213,
+        "seq": 1211,
+        "reasoning": 188,
+        "output": 555
+      },
+      {
+        "line": 1221,
+        "seq": 1219,
+        "reasoning": 104,
+        "output": 353
+      },
+      {
+        "line": 1227,
+        "seq": 1225,
+        "reasoning": 0,
+        "output": 157
+      },
+      {
+        "line": 1235,
+        "seq": 1233,
+        "reasoning": 430,
+        "output": 564
+      },
+      {
+        "line": 1242,
+        "seq": 1240,
+        "reasoning": 0,
+        "output": 282
+      },
+      {
+        "line": 1250,
+        "seq": 1248,
+        "reasoning": 289,
+        "output": 714
+      },
+      {
+        "line": 1258,
+        "seq": 1256,
+        "reasoning": 246,
+        "output": 542
+      },
+      {
+        "line": 1266,
+        "seq": 1264,
+        "reasoning": 611,
+        "output": 1408
+      },
+      {
+        "line": 1272,
+        "seq": 1270,
+        "reasoning": 0,
+        "output": 322
+      },
+      {
+        "line": 1280,
+        "seq": 1278,
+        "reasoning": 53,
+        "output": 130
+      },
+      {
+        "line": 1287,
+        "seq": 1285,
+        "reasoning": 0,
+        "output": 134
+      },
+      {
+        "line": 1294,
+        "seq": 1292,
+        "reasoning": 893,
+        "output": 1257
+      },
+      {
+        "line": 1302,
+        "seq": 1300,
+        "reasoning": 1537,
+        "output": 2076
+      },
+      {
+        "line": 1308,
+        "seq": 1306,
+        "reasoning": 0,
+        "output": 161
+      },
+      {
+        "line": 1316,
+        "seq": 1314,
+        "reasoning": 151,
+        "output": 266
+      },
+      {
+        "line": 1324,
+        "seq": 1322,
+        "reasoning": 0,
+        "output": 104
+      },
+      {
+        "line": 1330,
+        "seq": 1328,
+        "reasoning": 0,
+        "output": 149
+      },
+      {
+        "line": 1338,
+        "seq": 1336,
+        "reasoning": 203,
+        "output": 666
+      },
+      {
+        "line": 1346,
+        "seq": 1344,
+        "reasoning": 594,
+        "output": 936
+      },
+      {
+        "line": 1352,
+        "seq": 1350,
+        "reasoning": 0,
+        "output": 129
+      },
+      {
+        "line": 1362,
+        "seq": 1360,
+        "reasoning": 2634,
+        "output": 3357
+      },
+      {
+        "line": 1370,
+        "seq": 1368,
+        "reasoning": 234,
+        "output": 405
+      },
+      {
+        "line": 1376,
+        "seq": 1374,
+        "reasoning": 0,
+        "output": 160
+      },
+      {
+        "line": 1384,
+        "seq": 1382,
+        "reasoning": 529,
+        "output": 1034
+      },
+      {
+        "line": 1392,
+        "seq": 1390,
+        "reasoning": 774,
+        "output": 1070
+      },
+      {
+        "line": 1400,
+        "seq": 1398,
+        "reasoning": 839,
+        "output": 972
+      },
+      {
+        "line": 1407,
+        "seq": 1405,
+        "reasoning": 0,
+        "output": 142
+      },
+      {
+        "line": 1419,
+        "seq": 1417,
+        "reasoning": 991,
+        "output": 1892
+      },
+      {
+        "line": 1425,
+        "seq": 1423,
+        "reasoning": 0,
+        "output": 424
+      },
+      {
+        "line": 1433,
+        "seq": 1431,
+        "reasoning": 211,
+        "output": 715
+      },
+      {
+        "line": 1441,
+        "seq": 1439,
+        "reasoning": 118,
+        "output": 424
+      },
+      {
+        "line": 1449,
+        "seq": 1447,
+        "reasoning": 554,
+        "output": 700
+      },
+      {
+        "line": 1456,
+        "seq": 1454,
+        "reasoning": 0,
+        "output": 127
+      },
+      {
+        "line": 1469,
+        "seq": 1467,
+        "reasoning": 206,
+        "output": 1230
+      },
+      {
+        "line": 1475,
+        "seq": 1473,
+        "reasoning": 0,
+        "output": 238
+      },
+      {
+        "line": 1481,
+        "seq": 1479,
+        "reasoning": 0,
+        "output": 870
+      },
+      {
+        "line": 1487,
+        "seq": 1485,
+        "reasoning": 0,
+        "output": 309
+      },
+      {
+        "line": 1493,
+        "seq": 1491,
+        "reasoning": 88,
+        "output": 480
+      },
+      {
+        "line": 1499,
+        "seq": 1497,
+        "reasoning": 0,
+        "output": 315
+      },
+      {
+        "line": 1507,
+        "seq": 1505,
+        "reasoning": 80,
+        "output": 515
+      },
+      {
+        "line": 1515,
+        "seq": 1513,
+        "reasoning": 0,
+        "output": 177
+      },
+      {
+        "line": 1521,
+        "seq": 1519,
+        "reasoning": 0,
+        "output": 184
+      },
+      {
+        "line": 1527,
+        "seq": 1525,
+        "reasoning": 0,
+        "output": 177
+      },
+      {
+        "line": 1533,
+        "seq": 1531,
+        "reasoning": 130,
+        "output": 458
+      },
+      {
+        "line": 1541,
+        "seq": 1539,
+        "reasoning": 344,
+        "output": 770
+      },
+      {
+        "line": 1549,
+        "seq": 1547,
+        "reasoning": 148,
+        "output": 502
+      },
+      {
+        "line": 1557,
+        "seq": 1555,
+        "reasoning": 366,
+        "output": 503
+      },
+      {
+        "line": 1565,
+        "seq": 1563,
+        "reasoning": 525,
+        "output": 776
+      },
+      {
+        "line": 1571,
+        "seq": 1569,
+        "reasoning": 0,
+        "output": 631
+      },
+      {
+        "line": 1577,
+        "seq": 1575,
+        "reasoning": 0,
+        "output": 281
+      },
+      {
+        "line": 1585,
+        "seq": 1583,
+        "reasoning": 54,
+        "output": 349
+      },
+      {
+        "line": 1593,
+        "seq": 1591,
+        "reasoning": 0,
+        "output": 309
+      },
+      {
+        "line": 1599,
+        "seq": 1597,
+        "reasoning": 0,
+        "output": 99
+      },
+      {
+        "line": 1607,
+        "seq": 1605,
+        "reasoning": 85,
+        "output": 299
+      },
+      {
+        "line": 1615,
+        "seq": 1613,
+        "reasoning": 330,
+        "output": 499
+      },
+      {
+        "line": 1622,
+        "seq": 1620,
+        "reasoning": 0,
+        "output": 1150
+      }
+    ]
+  },
+  "qwen": {
+    "tokenizer_proxy": {
+      "file": "deps/qwen_public_tokenizer.json",
+      "source": "https://huggingface.co/Qwen/Qwen-tokenizer/blob/main/tokenizer.json",
+      "sha256": "f7c9b2dba4a296b1aa76c16a34b8225c0c118978400d4bb66bff0902d702f5b8"
+    },
+    "reasoning_estimate": 117863,
+    "assistant_records": 222,
+    "deduplicated_thinking_blocks": 95,
+    "window_jst": "2026-11-20 01:02–02:47 (inclusive minute)",
+    "screenshot_cache_hit_display_percent": 91.9
+  },
+  "doubao": {
+    "tokenizer_proxy": {
+      "file": "deps/qwen_public_tokenizer.json",
+      "source": "https://huggingface.co/Qwen/Qwen-tokenizer/blob/main/tokenizer.json",
+      "sha256": "f7c9b2dba4a296b1aa76c16a34b8225c0c118978400d4bb66bff0902d702f5b8"
+    },
+    "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-20\\servers\\051248-324\\connections\\051248-755-2026-11-20-66fe0a56-19cb-43b6-9c6d-25e5e37a47eb.log",
+    "matching_history_log_lines": [
+      205,
+      239
+    ],
+    "rounds": [
+      {
+        "message_id": "6afedf792068cc6f156830c8",
+        "time_jst": "2026-11-19T20:37:29+09:00",
+        "status": "failed",
+        "native_last_invocation": {
+          "input": "0.000",
+          "output": "0.000",
+          "last_turn_total_tokens": 46694,
+          "max_tokens": 116000,
+          "completion_tokens": 2594,
+          "prompt_tokens": 44100,
+          "reasoning_tokens": 1916,
+          "total_tokens": 46694,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "prompt_tokens_total": 0,
+          "completion_tokens_total": 0
+        },
+        "indexed_context_estimate": 18520,
+        "plan_items": 71,
+        "distinct_generated_timestamps": 70,
+        "thinking_text_blocks": 70,
+        "proxy_reasoning_tokens": 64086,
+        "proxy_non_reasoning_output": 34251,
+        "last_reasoning_proxy": 1848,
+        "reasoning_calibration": 1.0367965367965368,
+        "reasoning_estimate": 66444,
+        "output_estimate": 100695,
+        "input_linear_growth_scenario": 2204490,
+        "input_constant_terminal_scenario": 3087000,
+        "input_midpoint_scenario": 2645745
+      },
+      {
+        "message_id": "6afeeaeb2068cc6f1568321a",
+        "time_jst": "2026-11-19T21:26:19+09:00",
+        "status": "failed",
+        "native_last_invocation": {
+          "input": "0.000",
+          "output": "0.000",
+          "last_turn_total_tokens": 54162,
+          "max_tokens": 116000,
+          "completion_tokens": 7180,
+          "prompt_tokens": 46982,
+          "reasoning_tokens": 5657,
+          "total_tokens": 54162,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 42808,
+          "prompt_tokens_total": 0,
+          "completion_tokens_total": 0
+        },
+        "indexed_context_estimate": 18674,
+        "plan_items": 72,
+        "distinct_generated_timestamps": 71,
+        "thinking_text_blocks": 70,
+        "proxy_reasoning_tokens": 72295,
+        "proxy_non_reasoning_output": 40789,
+        "last_reasoning_proxy": 5461,
+        "reasoning_calibration": 1.0358908624793994,
+        "reasoning_estimate": 74890,
+        "output_estimate": 115679,
+        "input_linear_growth_scenario": 2344942,
+        "input_constant_terminal_scenario": 3335722,
+        "input_midpoint_scenario": 2840332
+      },
+      {
+        "message_id": "6afef7af2068cc6f156832fb",
+        "time_jst": "2026-11-19T22:20:47+09:00",
+        "status": "completed",
+        "native_last_invocation": {
+          "input": "0.000",
+          "output": "0.000",
+          "last_turn_total_tokens": 58870,
+          "max_tokens": 116000,
+          "completion_tokens": 817,
+          "prompt_tokens": 58053,
+          "reasoning_tokens": 281,
+          "total_tokens": 58870,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "prompt_tokens_total": 0,
+          "completion_tokens_total": 0
+        },
+        "indexed_context_estimate": 18982,
+        "plan_items": 18,
+        "distinct_generated_timestamps": 18,
+        "thinking_text_blocks": 18,
+        "proxy_reasoning_tokens": 8156,
+        "proxy_non_reasoning_output": 8498,
+        "last_reasoning_proxy": 273,
+        "reasoning_calibration": 1.0293040293040292,
+        "reasoning_estimate": 8395,
+        "output_estimate": 16893,
+        "input_linear_growth_scenario": 712850,
+        "input_constant_terminal_scenario": 1044954,
+        "input_midpoint_scenario": 878902
+      }
+    ],
+    "actual_sum": {
+      "non_cached_input": 106327,
+      "cache_read": 42808,
+      "cache_write": 0,
+      "output": 10591,
+      "reasoning": 7854,
+      "total": 159726
+    },
+    "estimate": {
+      "non_cached_input": 4537963,
+      "cache_read": 1827016,
+      "cache_write": 0,
+      "output": 233267,
+      "reasoning": 149729,
+      "total": 6598246
+    },
+    "assumed_cache_read_fraction": 0.2870419418647534
+  }
+}

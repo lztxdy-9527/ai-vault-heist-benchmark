@@ -1,0 +1,967 @@
+[
+  {
+    "time": "2026-11-20T02:47:05.350000+09:00",
+    "kind": "user/input_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:738"
+  },
+  {
+    "time": "2026-11-20T02:47:12.451000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:741"
+  },
+  {
+    "time": "2026-11-20T02:47:23.350000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:748"
+  },
+  {
+    "time": "2026-11-20T02:47:41.725000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:768"
+  },
+  {
+    "time": "2026-11-20T02:47:48.615000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:769"
+  },
+  {
+    "time": "2026-11-20T02:48:19.790000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:777"
+  },
+  {
+    "time": "2026-11-20T02:48:19.790000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:777"
+  },
+  {
+    "time": "2026-11-20T02:48:19.790000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:777"
+  },
+  {
+    "time": "2026-11-20T02:48:41.351000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:779"
+  },
+  {
+    "time": "2026-11-20T02:48:41.351000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:779"
+  },
+  {
+    "time": "2026-11-20T02:48:41.351000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:779"
+  },
+  {
+    "time": "2026-11-20T02:48:56.441000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:781"
+  },
+  {
+    "time": "2026-11-20T02:48:56.441000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:781"
+  },
+  {
+    "time": "2026-11-20T02:48:57.210000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:782"
+  },
+  {
+    "time": "2026-11-20T02:49:20.093000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:788"
+  },
+  {
+    "time": "2026-11-20T02:49:20.093000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:788"
+  },
+  {
+    "time": "2026-11-20T02:49:20.093000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:788"
+  },
+  {
+    "time": "2026-11-20T02:49:39.089000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:790"
+  },
+  {
+    "time": "2026-11-20T02:49:39.089000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:790"
+  },
+  {
+    "time": "2026-11-20T02:49:39.089000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:790"
+  },
+  {
+    "time": "2026-11-20T02:49:56.385000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:792"
+  },
+  {
+    "time": "2026-11-20T02:49:56.385000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:792"
+  },
+  {
+    "time": "2026-11-20T02:50:20.657000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:800"
+  },
+  {
+    "time": "2026-11-20T02:50:20.657000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:800"
+  },
+  {
+    "time": "2026-11-20T02:50:20.657000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:800"
+  },
+  {
+    "time": "2026-11-20T02:50:39.813000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:802"
+  },
+  {
+    "time": "2026-11-20T02:50:39.813000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:802"
+  },
+  {
+    "time": "2026-11-20T02:50:54.865000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:804"
+  },
+  {
+    "time": "2026-11-20T02:50:54.865000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:804"
+  },
+  {
+    "time": "2026-11-20T02:50:54.865000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:804"
+  },
+  {
+    "time": "2026-11-20T02:51:14.089000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:806"
+  },
+  {
+    "time": "2026-11-20T02:51:14.089000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:806"
+  },
+  {
+    "time": "2026-11-20T02:51:14.089000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:806"
+  },
+  {
+    "time": "2026-11-20T02:53:05.214000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:826"
+  },
+  {
+    "time": "2026-11-20T02:53:05.214000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:826"
+  },
+  {
+    "time": "2026-11-20T02:53:05.214000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:826"
+  },
+  {
+    "time": "2026-11-20T02:53:17.163000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:828"
+  },
+  {
+    "time": "2026-11-20T02:53:17.163000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:828"
+  },
+  {
+    "time": "2026-11-20T02:53:45.481000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:831"
+  },
+  {
+    "time": "2026-11-20T02:53:53.169000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:836"
+  },
+  {
+    "time": "2026-11-20T02:54:04.354000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:841"
+  },
+  {
+    "time": "2026-11-20T02:54:38.388000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:853"
+  },
+  {
+    "time": "2026-11-20T02:54:38.388000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:853"
+  },
+  {
+    "time": "2026-11-20T02:54:38.388000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:853"
+  },
+  {
+    "time": "2026-11-20T02:54:52.287000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:855"
+  },
+  {
+    "time": "2026-11-20T02:54:52.287000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:855"
+  },
+  {
+    "time": "2026-11-20T02:56:00.033000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:861"
+  },
+  {
+    "time": "2026-11-20T02:56:00.033000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:861"
+  },
+  {
+    "time": "2026-11-20T02:56:00.033000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:861"
+  },
+  {
+    "time": "2026-11-20T02:56:21.329000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:863"
+  },
+  {
+    "time": "2026-11-20T02:56:21.329000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:863"
+  },
+  {
+    "time": "2026-11-20T02:56:21.329000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:863"
+  },
+  {
+    "time": "2026-11-20T02:56:38.237000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:865"
+  },
+  {
+    "time": "2026-11-20T02:56:38.237000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:865"
+  },
+  {
+    "time": "2026-11-20T02:56:38.237000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:865"
+  },
+  {
+    "time": "2026-11-20T02:57:38.824000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:879"
+  },
+  {
+    "time": "2026-11-20T02:57:59.458000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:880"
+  },
+  {
+    "time": "2026-11-20T02:58:33.256000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:887"
+  },
+  {
+    "time": "2026-11-20T02:58:41.597000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:892"
+  },
+  {
+    "time": "2026-11-20T02:59:03.080000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:913"
+  },
+  {
+    "time": "2026-11-20T02:59:13.622000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:920"
+  },
+  {
+    "time": "2026-11-20T02:59:35.352000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:926"
+  },
+  {
+    "time": "2026-11-20T02:59:35.352000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:926"
+  },
+  {
+    "time": "2026-11-20T02:59:35.352000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:926"
+  },
+  {
+    "time": "2026-11-20T02:59:50.736000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:928"
+  },
+  {
+    "time": "2026-11-20T03:00:05.229000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:936"
+  },
+  {
+    "time": "2026-11-20T03:00:33.229000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:944"
+  },
+  {
+    "time": "2026-11-20T03:00:33.229000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:944"
+  },
+  {
+    "time": "2026-11-20T03:00:33.229000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:944"
+  },
+  {
+    "time": "2026-11-20T03:00:49.816000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:946"
+  },
+  {
+    "time": "2026-11-20T03:00:49.816000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:946"
+  },
+  {
+    "time": "2026-11-20T03:00:49.816000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:946"
+  },
+  {
+    "time": "2026-11-20T03:01:20.161000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:956"
+  },
+  {
+    "time": "2026-11-20T03:01:32.755000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:963"
+  },
+  {
+    "time": "2026-11-20T03:01:58.883000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:971"
+  },
+  {
+    "time": "2026-11-20T03:01:58.883000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:971"
+  },
+  {
+    "time": "2026-11-20T03:01:58.883000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:971"
+  },
+  {
+    "time": "2026-11-20T03:02:15.492000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:973"
+  },
+  {
+    "time": "2026-11-20T03:02:15.492000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:973"
+  },
+  {
+    "time": "2026-11-20T03:02:15.492000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:973"
+  },
+  {
+    "time": "2026-11-20T03:03:06.237000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:989"
+  },
+  {
+    "time": "2026-11-20T03:03:09.332000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:990"
+  },
+  {
+    "time": "2026-11-20T03:03:34.486000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:996"
+  },
+  {
+    "time": "2026-11-20T03:03:34.486000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:996"
+  },
+  {
+    "time": "2026-11-20T03:03:34.486000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:996"
+  },
+  {
+    "time": "2026-11-20T03:03:50.598000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:998"
+  },
+  {
+    "time": "2026-11-20T03:03:50.598000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:998"
+  },
+  {
+    "time": "2026-11-20T03:03:50.598000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:998"
+  },
+  {
+    "time": "2026-11-20T03:03:58.091000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1000"
+  },
+  {
+    "time": "2026-11-20T03:05:12.218000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1008"
+  },
+  {
+    "time": "2026-11-20T03:05:23.571000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1015"
+  },
+  {
+    "time": "2026-11-20T03:05:34.301000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1022"
+  },
+  {
+    "time": "2026-11-20T03:05:53.205000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1027"
+  },
+  {
+    "time": "2026-11-20T03:06:25.618000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1039"
+  },
+  {
+    "time": "2026-11-20T03:06:25.618000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1039"
+  },
+  {
+    "time": "2026-11-20T03:06:25.618000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1039"
+  },
+  {
+    "time": "2026-11-20T03:06:47.907000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1041"
+  },
+  {
+    "time": "2026-11-20T03:06:47.907000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1041"
+  },
+  {
+    "time": "2026-11-20T03:06:47.907000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1041"
+  },
+  {
+    "time": "2026-11-20T03:07:03.808000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1043"
+  },
+  {
+    "time": "2026-11-20T03:07:03.808000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1043"
+  },
+  {
+    "time": "2026-11-20T03:07:03.808000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1043"
+  },
+  {
+    "time": "2026-11-20T03:07:21.228000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1045"
+  },
+  {
+    "time": "2026-11-20T03:07:21.228000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1045"
+  },
+  {
+    "time": "2026-11-20T03:07:21.228000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1045"
+  },
+  {
+    "time": "2026-11-20T03:07:37.288000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1047"
+  },
+  {
+    "time": "2026-11-20T03:07:37.288000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1047"
+  },
+  {
+    "time": "2026-11-20T03:07:40.431000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1048"
+  },
+  {
+    "time": "2026-11-20T03:08:03.903000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1061"
+  },
+  {
+    "time": "2026-11-20T03:08:13.883000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1068"
+  },
+  {
+    "time": "2026-11-20T03:08:38.022000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1075"
+  },
+  {
+    "time": "2026-11-20T03:08:38.022000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1075"
+  },
+  {
+    "time": "2026-11-20T03:08:38.022000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1075"
+  },
+  {
+    "time": "2026-11-20T03:08:46.888000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1077"
+  },
+  {
+    "time": "2026-11-20T03:10:28.058000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1084"
+  },
+  {
+    "time": "2026-11-20T03:11:06.256000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1103"
+  },
+  {
+    "time": "2026-11-20T03:11:06.256000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1103"
+  },
+  {
+    "time": "2026-11-20T03:11:06.256000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1103"
+  },
+  {
+    "time": "2026-11-20T03:11:14.453000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1105"
+  },
+  {
+    "time": "2026-11-20T03:12:17.017000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1124"
+  },
+  {
+    "time": "2026-11-20T03:40:37.348000+09:00",
+    "kind": "user/input_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1133"
+  },
+  {
+    "time": "2026-11-20T03:40:45.277000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1138"
+  },
+  {
+    "time": "2026-11-20T03:40:46.460000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1139"
+  },
+  {
+    "time": "2026-11-20T03:41:16.365000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1154"
+  },
+  {
+    "time": "2026-11-20T03:41:17.807000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1156"
+  },
+  {
+    "time": "2026-11-20T03:41:44.013000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1157"
+  },
+  {
+    "time": "2026-11-20T03:42:00.952000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1162"
+  },
+  {
+    "time": "2026-11-20T03:42:19.873000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1178"
+  },
+  {
+    "time": "2026-11-20T03:43:52.398000+09:00",
+    "kind": "user/input_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1185"
+  },
+  {
+    "time": "2026-11-20T03:44:16.051000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1190"
+  },
+  {
+    "time": "2026-11-20T03:44:45.460000+09:00",
+    "kind": "user/input_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1197"
+  },
+  {
+    "time": "2026-11-20T03:44:54.647000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1202"
+  },
+  {
+    "time": "2026-11-20T03:44:57.735000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1203"
+  },
+  {
+    "time": "2026-11-20T03:45:26.182000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1212"
+  },
+  {
+    "time": "2026-11-20T03:45:26.182000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1212"
+  },
+  {
+    "time": "2026-11-20T03:45:26.182000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1212"
+  },
+  {
+    "time": "2026-11-20T03:45:41.865000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1214"
+  },
+  {
+    "time": "2026-11-20T03:45:41.865000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1214"
+  },
+  {
+    "time": "2026-11-20T03:45:41.865000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1214"
+  },
+  {
+    "time": "2026-11-20T03:45:57.852000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1216"
+  },
+  {
+    "time": "2026-11-20T03:45:57.852000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1216"
+  },
+  {
+    "time": "2026-11-20T03:45:57.852000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1216"
+  },
+  {
+    "time": "2026-11-20T03:46:13.465000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1218"
+  },
+  {
+    "time": "2026-11-20T03:46:13.465000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1218"
+  },
+  {
+    "time": "2026-11-20T03:46:13.465000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1218"
+  },
+  {
+    "time": "2026-11-20T03:46:19.066000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1221"
+  },
+  {
+    "time": "2026-11-20T03:46:41.629000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1227"
+  },
+  {
+    "time": "2026-11-20T03:46:41.629000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1227"
+  },
+  {
+    "time": "2026-11-20T03:46:41.629000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1227"
+  },
+  {
+    "time": "2026-11-20T03:46:59.878000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1229"
+  },
+  {
+    "time": "2026-11-20T03:46:59.878000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1229"
+  },
+  {
+    "time": "2026-11-20T03:46:59.878000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1229"
+  },
+  {
+    "time": "2026-11-20T03:47:02.480000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1232"
+  },
+  {
+    "time": "2026-11-20T03:47:18.855000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1239"
+  },
+  {
+    "time": "2026-11-20T03:47:32.755000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1246"
+  },
+  {
+    "time": "2026-11-20T03:47:41.740000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1253"
+  },
+  {
+    "time": "2026-11-20T03:47:52.149000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1260"
+  },
+  {
+    "time": "2026-11-20T03:49:46.861000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1288"
+  },
+  {
+    "time": "2026-11-20T03:49:53.291000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1293"
+  },
+  {
+    "time": "2026-11-20T03:49:58.532000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1302"
+  },
+  {
+    "time": "2026-11-20T03:50:13.286000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1314"
+  },
+  {
+    "time": "2026-11-20T03:50:37.764000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1321"
+  },
+  {
+    "time": "2026-11-20T03:50:46.959000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1326"
+  },
+  {
+    "time": "2026-11-20T03:50:54.564000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1333"
+  },
+  {
+    "time": "2026-11-20T03:51:02.791000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1344"
+  },
+  {
+    "time": "2026-11-20T03:51:04.543000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1345"
+  },
+  {
+    "time": "2026-11-20T03:51:19.066000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1353"
+  },
+  {
+    "time": "2026-11-20T03:51:31.715000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1361"
+  },
+  {
+    "time": "2026-11-20T03:52:05.297000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1362"
+  },
+  {
+    "time": "2026-11-20T03:52:43.111000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1378"
+  },
+  {
+    "time": "2026-11-20T03:52:54.011000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1385"
+  },
+  {
+    "time": "2026-11-20T03:53:04.975000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1392"
+  },
+  {
+    "time": "2026-11-20T03:53:24.456000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1408"
+  },
+  {
+    "time": "2026-11-20T03:53:37.901000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1414"
+  },
+  {
+    "time": "2026-11-20T03:53:38.375000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1415"
+  },
+  {
+    "time": "2026-11-20T03:53:59.206000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1421"
+  },
+  {
+    "time": "2026-11-20T03:53:59.206000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1421"
+  },
+  {
+    "time": "2026-11-20T03:53:59.206000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1421"
+  },
+  {
+    "time": "2026-11-20T03:54:22.039000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1429"
+  },
+  {
+    "time": "2026-11-20T03:54:29.078000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1430"
+  },
+  {
+    "time": "2026-11-20T03:54:54.541000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1437"
+  },
+  {
+    "time": "2026-11-20T03:55:51.587000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1462"
+  },
+  {
+    "time": "2026-11-20T03:56:25.583000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1468"
+  },
+  {
+    "time": "2026-11-20T03:56:25.583000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1468"
+  },
+  {
+    "time": "2026-11-20T03:56:25.583000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1468"
+  },
+  {
+    "time": "2026-11-20T03:56:32.187000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1471"
+  },
+  {
+    "time": "2026-11-20T03:56:43.358000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1477"
+  },
+  {
+    "time": "2026-11-20T03:56:44.557000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1478"
+  },
+  {
+    "time": "2026-11-20T03:57:10.333000+09:00",
+    "kind": "summary_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1492"
+  },
+  {
+    "time": "2026-11-20T03:57:13.837000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1496"
+  },
+  {
+    "time": "2026-11-20T03:57:28.308000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1502"
+  },
+  {
+    "time": "2026-11-20T03:57:43.255000+09:00",
+    "kind": "custom_tool_call",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1510"
+  },
+  {
+    "time": "2026-11-20T03:58:51.223000+09:00",
+    "kind": "assistant/output_text",
+    "locator": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl:1545"
+  }
+]

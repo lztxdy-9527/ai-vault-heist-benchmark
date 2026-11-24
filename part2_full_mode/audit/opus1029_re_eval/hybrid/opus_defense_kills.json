@@ -1,0 +1,223 @@
+{
+  "wave2_60m_reinforcements": [
+    {
+      "match_id": "wave2_60m_reinforcements_M057_neon_vs_opus",
+      "source": "original",
+      "hero_id": "neon",
+      "hero_name": "Neon",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave2_60m_reinforcements\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[86]",
+      "cue": {
+        "turn": 123,
+        "action": "WAIT",
+        "hero_pos": [
+          35,
+          10
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "LASER",
+          "trap_nominal": 50,
+          "self_nominal": 0,
+          "hp_after": 0
+        },
+        "cannon": [
+          35,
+          2
+        ],
+        "period": 3,
+        "direction": "D"
+      }
+    },
+    {
+      "match_id": "wave2_60m_reinforcements_M056_sol_vs_opus",
+      "source": "original",
+      "hero_id": "sol",
+      "hero_name": "SOL 6.2",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave2_60m_reinforcements\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[85]",
+      "cue": {
+        "turn": 165,
+        "action": "WAIT",
+        "hero_pos": [
+          35,
+          12
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "LASER",
+          "trap_nominal": 50,
+          "self_nominal": 0,
+          "hp_after": 0
+        },
+        "cannon": [
+          35,
+          2
+        ],
+        "period": 3,
+        "direction": "D"
+      }
+    },
+    {
+      "match_id": "wave2_60m_reinforcements_M058_hunyuan_vs_opus",
+      "source": "original",
+      "hero_id": "hunyuan",
+      "hero_name": "混元 HY4",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave2_60m_reinforcements\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[87]",
+      "cue": {
+        "turn": 189,
+        "action": "WAIT",
+        "hero_pos": [
+          34,
+          4
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "EXPLOSION",
+          "trap_nominal": 0,
+          "self_nominal": 50,
+          "hp_after": 0
+        },
+        "bomb_placed_turn": 187,
+        "bomb_source": {
+          "x": 34,
+          "y": 4,
+          "kind": "BOMB"
+        }
+      }
+    }
+  ],
+  "wave3_final_11seats": [
+    {
+      "match_id": "wave3_final_11seats_M056_deepseek_vs_opus",
+      "source": "original",
+      "hero_id": "deepseek",
+      "hero_name": "DeepSeek",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave3_final_11seats\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[88]",
+      "cue": {
+        "turn": 88,
+        "action": "WAIT",
+        "hero_pos": [
+          35,
+          14
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "LASER",
+          "trap_nominal": 50,
+          "self_nominal": 0,
+          "hp_after": 0
+        },
+        "cannon": [
+          35,
+          24
+        ],
+        "period": 4,
+        "direction": "U"
+      }
+    },
+    {
+      "match_id": "wave3_final_11seats_M053_neon_vs_opus",
+      "source": "original",
+      "hero_id": "neon",
+      "hero_name": "Neon",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave3_final_11seats\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[85]",
+      "cue": {
+        "turn": 123,
+        "action": "WAIT",
+        "hero_pos": [
+          35,
+          10
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "LASER",
+          "trap_nominal": 50,
+          "self_nominal": 0,
+          "hp_after": 0
+        },
+        "cannon": [
+          35,
+          2
+        ],
+        "period": 3,
+        "direction": "D"
+      }
+    },
+    {
+      "match_id": "wave3_final_11seats_M052_sol_vs_opus",
+      "source": "original",
+      "hero_id": "sol",
+      "hero_name": "SOL 6.2",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave3_final_11seats\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[84]",
+      "cue": {
+        "turn": 165,
+        "action": "WAIT",
+        "hero_pos": [
+          35,
+          12
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "LASER",
+          "trap_nominal": 50,
+          "self_nominal": 0,
+          "hp_after": 0
+        },
+        "cannon": [
+          35,
+          2
+        ],
+        "period": 3,
+        "direction": "D"
+      }
+    },
+    {
+      "match_id": "wave3_final_11seats_M058_hunyuan_vs_opus",
+      "source": "original",
+      "hero_id": "hunyuan",
+      "hero_name": "混元 HY4",
+      "replay_path": "part2_full_mode/audit\\three_waves_20261120\\wave3_final_11seats\\replays\\tournament_results_full.json",
+      "replay_json_locator": "featured_matches[90]",
+      "cue": {
+        "turn": 189,
+        "action": "WAIT",
+        "hero_pos": [
+          34,
+          4
+        ],
+        "hp_before": 50,
+        "hp_after": 0,
+        "damage": {
+          "type": "DAMAGE",
+          "source": "EXPLOSION",
+          "trap_nominal": 0,
+          "self_nominal": 50,
+          "hp_after": 0
+        },
+        "bomb_placed_turn": 187,
+        "bomb_source": {
+          "x": 34,
+          "y": 4,
+          "kind": "BOMB"
+        }
+      }
+    }
+  ]
+}

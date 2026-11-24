@@ -1,0 +1,11 @@
+--- D:\publish\part2_full\exam_rooms\P2_05_hydrogen_agy\submission.py
++++ D:\publish\part2_full\audit\retest_20261119\submissions\hydrogen\submission.py
+@@ -151,7 +151,7 @@
+     put(6, 17, "T_W")
+ 
+     return {
+-        "taunt": "Plates feed pits, switches flip twice, mod-12 waits for none.",
++        "taunt": "Plates feed pits. Mod-12 waits for none.",
+         "grid": grid,
+         "author_solution": list(_AUTHOR_SOLUTION),
+     }

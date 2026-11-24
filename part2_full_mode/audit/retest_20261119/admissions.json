@@ -1,0 +1,79 @@
+{
+  "sol": {
+    "original": "part2_full_mode/exam_rooms\\P2_02_sol_codex\\submission.py",
+    "original_sha256": "cecd94856c7e7804a12f672c1c6222a8973d502b9f1e4054d686ad4e7ab3a6e6",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\sol\\submission.py",
+    "replay_sha256": "cecd94856c7e7804a12f672c1c6222a8973d502b9f1e4054d686ad4e7ab3a6e6",
+    "loaded": true,
+    "valid_demon": true,
+    "detail": "",
+    "spent_gold": 2610,
+    "author_steps": 192
+  },
+  "carbon": {
+    "original": "part2_full_mode/exam_rooms\\P2_04_carbon_opencode\\submission.py",
+    "original_sha256": "329a5198407c235993f585b6107b77176ce87c3cd0585b3712046a303b673afc",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\carbon\\submission.py",
+    "replay_sha256": "329a5198407c235993f585b6107b77176ce87c3cd0585b3712046a303b673afc",
+    "loaded": true,
+    "valid_demon": true,
+    "detail": "",
+    "spent_gold": 2930,
+    "author_steps": 181
+  },
+  "hydrogen": {
+    "original": "part2_full_mode/exam_rooms\\P2_05_hydrogen_agy\\submission.py",
+    "original_sha256": "8f1f2da955c2db02a037f2906de639a1fc2b80fc811f143623fba7e7628956d6",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\hydrogen\\submission.py",
+    "replay_sha256": "4526fc68e35ce528a231d91c1703864891efa19d6cff85be80b886338ef4a580",
+    "loaded": true,
+    "valid_demon": true,
+    "detail": "",
+    "spent_gold": 2775,
+    "author_steps": 151
+  },
+  "deepseek": {
+    "original": "part2_full_mode/exam_rooms\\P2_07_deepseek_dsh\\submission.py",
+    "original_sha256": "bc1bad22325ac226a66be35ead372937f0c9d60a2ffe5875b5cc367cd2776468",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\deepseek\\submission.py",
+    "replay_sha256": "6f4b08a6652c29349e0cd8187836929a4f83c82e0f5d26ffcac7e39d0ec75786",
+    "loaded": true,
+    "valid_demon": true,
+    "detail": "",
+    "spent_gold": 1515,
+    "author_steps": 120
+  },
+  "glm": {
+    "original": "part2_full_mode/exam_rooms\\P2_08_glm_opencode\\submission.py",
+    "original_sha256": "a3362cd2eba6620922bda0b6c482364ab617e5dddd6df05b94610496064a088e",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\glm\\submission.py",
+    "replay_sha256": "7ab31fda5dabfc90189174daa03ce021bbe35715cffe27031b40d30ff8749244",
+    "loaded": true,
+    "valid_demon": true,
+    "detail": "",
+    "spent_gold": 2020,
+    "author_steps": 155
+  },
+  "hunyuan": {
+    "original": "part2_full_mode/exam_rooms\\P2_09_hunyuan_codebuddy\\submission.py",
+    "original_sha256": "18e5edc868411a6989608fbd5b79bccf2604190edace64ef13d82a8eccb354d2",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\hunyuan\\submission.py",
+    "replay_sha256": "38d29df33b0012c9401910a29f2b148e527a653ed459123902ff3c6a16ecec61",
+    "loaded": true,
+    "valid_demon": true,
+    "detail": "",
+    "spent_gold": 1740,
+    "author_steps": 170
+  },
+  "doubao": {
+    "original": "part2_full_mode/exam_rooms\\P2_11_doubao_vscode\\submission.py",
+    "original_sha256": "9f951f4a179fb895557833d8381739c3ba9db3c77164a963f428439b2ac95f1c",
+    "replay_source": "part2_full_mode/audit\\retest_20261119\\submissions\\doubao\\submission.py",
+    "replay_sha256": "0d01de5a566269a2c986d176b0e683984d6e94df9c879a540027b2542940128a",
+    "loaded": true,
+    "valid_demon": false,
+    "detail": "build_dungeon rejected: Grid invalid: Outer frame cell (0,0) must be 'T_W'.",
+    "spent_gold": 0,
+    "author_steps": 0
+  }
+}

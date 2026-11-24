@@ -1,0 +1,1354 @@
+[
+  {
+    "seq": 8,
+    "time": 1795104045860,
+    "tokens": {
+      "input": 7699,
+      "output": 41,
+      "reasoning": 165,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 19,
+    "time": 1795104052908,
+    "tokens": {
+      "input": 2167,
+      "output": 310,
+      "reasoning": 48,
+      "cache": {
+        "read": 7576,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 51,
+    "time": 1795104066111,
+    "tokens": {
+      "input": 56442,
+      "output": 157,
+      "reasoning": 67,
+      "cache": {
+        "read": 9744,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 67,
+    "time": 1795104077086,
+    "tokens": {
+      "input": 7136,
+      "output": 91,
+      "reasoning": 235,
+      "cache": {
+        "read": 66187,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 81,
+    "time": 1795104083342,
+    "tokens": {
+      "input": 2730,
+      "output": 104,
+      "reasoning": 546,
+      "cache": {
+        "read": 71274,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 91,
+    "time": 1795104093630,
+    "tokens": {
+      "input": 2934,
+      "output": 131,
+      "reasoning": 135,
+      "cache": {
+        "read": 71955,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 101,
+    "time": 1795104101157,
+    "tokens": {
+      "input": 2516,
+      "output": 192,
+      "reasoning": 4480,
+      "cache": {
+        "read": 72840,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 111,
+    "time": 1795104146377,
+    "tokens": {
+      "input": 5547,
+      "output": 404,
+      "reasoning": 525,
+      "cache": {
+        "read": 75357,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 121,
+    "time": 1795104158802,
+    "tokens": {
+      "input": 3056,
+      "output": 487,
+      "reasoning": 25,
+      "cache": {
+        "read": 78855,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 129,
+    "time": 1795104166602,
+    "tokens": {
+      "input": 2611,
+      "output": 500,
+      "reasoning": 286,
+      "cache": {
+        "read": 79862,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 139,
+    "time": 1795104178790,
+    "tokens": {
+      "input": 2866,
+      "output": 26,
+      "reasoning": 13,
+      "cache": {
+        "read": 80424,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 147,
+    "time": 1795104184377,
+    "tokens": {
+      "input": 2399,
+      "output": 12846,
+      "reasoning": 1878,
+      "cache": {
+        "read": 83291,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 157,
+    "time": 1795104285413,
+    "tokens": {
+      "input": 14755,
+      "output": 27,
+      "reasoning": 39,
+      "cache": {
+        "read": 85691,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 165,
+    "time": 1795104290766,
+    "tokens": {
+      "input": 2177,
+      "output": 101,
+      "reasoning": 12473,
+      "cache": {
+        "read": 98397,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 175,
+    "time": 1795104420544,
+    "tokens": {
+      "input": 12774,
+      "output": 18386,
+      "reasoning": 5491,
+      "cache": {
+        "read": 100575,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 185,
+    "time": 1795104607898,
+    "tokens": {
+      "input": 23908,
+      "output": 606,
+      "reasoning": 58,
+      "cache": {
+        "read": 113350,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 193,
+    "time": 1795104616847,
+    "tokens": {
+      "input": 2743,
+      "output": 25,
+      "reasoning": 26,
+      "cache": {
+        "read": 135209,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 201,
+    "time": 1795104643497,
+    "tokens": {
+      "input": 2663,
+      "output": 20403,
+      "reasoning": 1489,
+      "cache": {
+        "read": 135903,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 211,
+    "time": 1795104803022,
+    "tokens": {
+      "input": 21924,
+      "output": 25,
+      "reasoning": 18,
+      "cache": {
+        "read": 138567,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 219,
+    "time": 1795104818510,
+    "tokens": {
+      "input": 2683,
+      "output": 476,
+      "reasoning": 1289,
+      "cache": {
+        "read": 158442,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 229,
+    "time": 1795104836430,
+    "tokens": {
+      "input": 2385,
+      "output": 25,
+      "reasoning": 12,
+      "cache": {
+        "read": 160535,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 237,
+    "time": 1795104841054,
+    "tokens": {
+      "input": 4452,
+      "output": 2789,
+      "reasoning": 2749,
+      "cache": {
+        "read": 162921,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 247,
+    "time": 1795104889291,
+    "tokens": {
+      "input": 5570,
+      "output": 2287,
+      "reasoning": 54,
+      "cache": {
+        "read": 167374,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 255,
+    "time": 1795104913645,
+    "tokens": {
+      "input": 2373,
+      "output": 317,
+      "reasoning": 61,
+      "cache": {
+        "read": 172945,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 263,
+    "time": 1795104926367,
+    "tokens": {
+      "input": 2460,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 173269,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 271,
+    "time": 1795104940636,
+    "tokens": {
+      "input": 2691,
+      "output": 734,
+      "reasoning": 570,
+      "cache": {
+        "read": 173680,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 281,
+    "time": 1795104954852,
+    "tokens": {
+      "input": 3382,
+      "output": 24,
+      "reasoning": 12,
+      "cache": {
+        "read": 174322,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 289,
+    "time": 1795104964657,
+    "tokens": {
+      "input": 2444,
+      "output": 1012,
+      "reasoning": 1884,
+      "cache": {
+        "read": 175655,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 299,
+    "time": 1795104996173,
+    "tokens": {
+      "input": 2928,
+      "output": 2769,
+      "reasoning": 44,
+      "cache": {
+        "read": 178100,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 307,
+    "time": 1795105020914,
+    "tokens": {
+      "input": 2845,
+      "output": 652,
+      "reasoning": 50,
+      "cache": {
+        "read": 181029,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 315,
+    "time": 1795105030555,
+    "tokens": {
+      "input": 2784,
+      "output": 507,
+      "reasoning": 31,
+      "cache": {
+        "read": 181825,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 323,
+    "time": 1795105056048,
+    "tokens": {
+      "input": 2620,
+      "output": 25,
+      "reasoning": 18,
+      "cache": {
+        "read": 182560,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 331,
+    "time": 1795105066631,
+    "tokens": {
+      "input": 2693,
+      "output": 205,
+      "reasoning": 1350,
+      "cache": {
+        "read": 183131,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 341,
+    "time": 1795105086553,
+    "tokens": {
+      "input": 2212,
+      "output": 229,
+      "reasoning": 1604,
+      "cache": {
+        "read": 185825,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 351,
+    "time": 1795105112313,
+    "tokens": {
+      "input": 2636,
+      "output": 515,
+      "reasoning": 1950,
+      "cache": {
+        "read": 188038,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 361,
+    "time": 1795105140273,
+    "tokens": {
+      "input": 2497,
+      "output": 598,
+      "reasoning": 89,
+      "cache": {
+        "read": 190675,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 371,
+    "time": 1795105160175,
+    "tokens": {
+      "input": 2769,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 191123,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 379,
+    "time": 1795105177719,
+    "tokens": {
+      "input": 2690,
+      "output": 1041,
+      "reasoning": 1474,
+      "cache": {
+        "read": 191843,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 389,
+    "time": 1795105201243,
+    "tokens": {
+      "input": 2547,
+      "output": 412,
+      "reasoning": 158,
+      "cache": {
+        "read": 194534,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 399,
+    "time": 1795105209790,
+    "tokens": {
+      "input": 2652,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 195032,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 407,
+    "time": 1795105217824,
+    "tokens": {
+      "input": 2696,
+      "output": 23772,
+      "reasoning": 3966,
+      "cache": {
+        "read": 195635,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 417,
+    "time": 1795105414933,
+    "tokens": {
+      "input": 27770,
+      "output": 25,
+      "reasoning": 39,
+      "cache": {
+        "read": 198332,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 425,
+    "time": 1795105424129,
+    "tokens": {
+      "input": 2721,
+      "output": 5722,
+      "reasoning": 351,
+      "cache": {
+        "read": 224053,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 435,
+    "time": 1795105473363,
+    "tokens": {
+      "input": 6102,
+      "output": 25,
+      "reasoning": 26,
+      "cache": {
+        "read": 226775,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 443,
+    "time": 1795105484280,
+    "tokens": {
+      "input": 2330,
+      "output": 369,
+      "reasoning": 1854,
+      "cache": {
+        "read": 230828,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 453,
+    "time": 1795105511447,
+    "tokens": {
+      "input": 2310,
+      "output": 397,
+      "reasoning": 22,
+      "cache": {
+        "read": 233159,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 461,
+    "time": 1795105520559,
+    "tokens": {
+      "input": 2499,
+      "output": 26,
+      "reasoning": 13,
+      "cache": {
+        "read": 233420,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 469,
+    "time": 1795105532438,
+    "tokens": {
+      "input": 2365,
+      "output": 1286,
+      "reasoning": 4621,
+      "cache": {
+        "read": 233870,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 479,
+    "time": 1795105584805,
+    "tokens": {
+      "input": 5939,
+      "output": 1479,
+      "reasoning": 174,
+      "cache": {
+        "read": 236236,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 489,
+    "time": 1795105599819,
+    "tokens": {
+      "input": 3001,
+      "output": 598,
+      "reasoning": 81,
+      "cache": {
+        "read": 240860,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 499,
+    "time": 1795105611964,
+    "tokens": {
+      "input": 2220,
+      "output": 137,
+      "reasoning": 26,
+      "cache": {
+        "read": 242353,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 507,
+    "time": 1795105617492,
+    "tokens": {
+      "input": 2245,
+      "output": 132,
+      "reasoning": 38,
+      "cache": {
+        "read": 242524,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 515,
+    "time": 1795105623866,
+    "tokens": {
+      "input": 2252,
+      "output": 125,
+      "reasoning": 104,
+      "cache": {
+        "read": 242720,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 525,
+    "time": 1795105638185,
+    "tokens": {
+      "input": 2311,
+      "output": 1385,
+      "reasoning": 356,
+      "cache": {
+        "read": 242923,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 535,
+    "time": 1795105659154,
+    "tokens": {
+      "input": 2403,
+      "output": 25,
+      "reasoning": 24,
+      "cache": {
+        "read": 244603,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 543,
+    "time": 1795105667474,
+    "tokens": {
+      "input": 2058,
+      "output": 390,
+      "reasoning": 2002,
+      "cache": {
+        "read": 245235,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 553,
+    "time": 1795105694291,
+    "tokens": {
+      "input": 2424,
+      "output": 173,
+      "reasoning": 82,
+      "cache": {
+        "read": 247294,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 563,
+    "time": 1795105700333,
+    "tokens": {
+      "input": 2337,
+      "output": 497,
+      "reasoning": 81,
+      "cache": {
+        "read": 247669,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 573,
+    "time": 1795105709649,
+    "tokens": {
+      "input": 2660,
+      "output": 1065,
+      "reasoning": 49,
+      "cache": {
+        "read": 247957,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 581,
+    "time": 1795105724989,
+    "tokens": {
+      "input": 3196,
+      "output": 25,
+      "reasoning": 24,
+      "cache": {
+        "read": 248568,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 589,
+    "time": 1795105732431,
+    "tokens": {
+      "input": 2336,
+      "output": 260,
+      "reasoning": 61,
+      "cache": {
+        "read": 249715,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 597,
+    "time": 1795105740082,
+    "tokens": {
+      "input": 2496,
+      "output": 343,
+      "reasoning": 1237,
+      "cache": {
+        "read": 250002,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 607,
+    "time": 1795105766921,
+    "tokens": {
+      "input": 2297,
+      "output": 32,
+      "reasoning": 23,
+      "cache": {
+        "read": 251814,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 615,
+    "time": 1795105777589,
+    "tokens": {
+      "input": 2496,
+      "output": 5369,
+      "reasoning": 18812,
+      "cache": {
+        "read": 252499,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 625,
+    "time": 1795105983705,
+    "tokens": {
+      "input": 24210,
+      "output": 25,
+      "reasoning": 39,
+      "cache": {
+        "read": 254996,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 633,
+    "time": 1795105995837,
+    "tokens": {
+      "input": 2845,
+      "output": 7531,
+      "reasoning": 5428,
+      "cache": {
+        "read": 277157,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 643,
+    "time": 1795106097144,
+    "tokens": {
+      "input": 12989,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 280003,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 651,
+    "time": 1795106104411,
+    "tokens": {
+      "input": 2470,
+      "output": 5486,
+      "reasoning": 5187,
+      "cache": {
+        "read": 290943,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 661,
+    "time": 1795106187544,
+    "tokens": {
+      "input": 10703,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 293414,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 669,
+    "time": 1795106195465,
+    "tokens": {
+      "input": 2493,
+      "output": 630,
+      "reasoning": 1333,
+      "cache": {
+        "read": 302068,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 679,
+    "time": 1795106214413,
+    "tokens": {
+      "input": 4043,
+      "output": 25,
+      "reasoning": 13,
+      "cache": {
+        "read": 302512,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 687,
+    "time": 1795106239225,
+    "tokens": {
+      "input": 2554,
+      "output": 1033,
+      "reasoning": 4072,
+      "cache": {
+        "read": 304506,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 697,
+    "time": 1795106294814,
+    "tokens": {
+      "input": 5137,
+      "output": 515,
+      "reasoning": 102,
+      "cache": {
+        "read": 307061,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 707,
+    "time": 1795106304034,
+    "tokens": {
+      "input": 2699,
+      "output": 25,
+      "reasoning": 41,
+      "cache": {
+        "read": 310149,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 715,
+    "time": 1795106319243,
+    "tokens": {
+      "input": 2582,
+      "output": 169,
+      "reasoning": 562,
+      "cache": {
+        "read": 310799,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 725,
+    "time": 1795106330421,
+    "tokens": {
+      "input": 2813,
+      "output": 25,
+      "reasoning": 14,
+      "cache": {
+        "read": 311332,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 733,
+    "time": 1795106345581,
+    "tokens": {
+      "input": 2553,
+      "output": 32,
+      "reasoning": 225,
+      "cache": {
+        "read": 312096,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 743,
+    "time": 1795106412260,
+    "tokens": {
+      "input": 2349,
+      "output": 777,
+      "reasoning": 408,
+      "cache": {
+        "read": 313382,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 753,
+    "time": 1795106427320,
+    "tokens": {
+      "input": 2299,
+      "output": 32,
+      "reasoning": 22,
+      "cache": {
+        "read": 314650,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 761,
+    "time": 1795106445920,
+    "tokens": {
+      "input": 2785,
+      "output": 777,
+      "reasoning": 3945,
+      "cache": {
+        "read": 314900,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 771,
+    "time": 1795106487846,
+    "tokens": {
+      "input": 4754,
+      "output": 539,
+      "reasoning": 81,
+      "cache": {
+        "read": 317686,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 779,
+    "time": 1795106499884,
+    "tokens": {
+      "input": 2700,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 320391,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 787,
+    "time": 1795106520714,
+    "tokens": {
+      "input": 2556,
+      "output": 29183,
+      "reasoning": 1688,
+      "cache": {
+        "read": 321042,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 797,
+    "time": 1795106738381,
+    "tokens": {
+      "input": 30899,
+      "output": 1860,
+      "reasoning": 446,
+      "cache": {
+        "read": 323599,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 807,
+    "time": 1795106762828,
+    "tokens": {
+      "input": 2335,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 354499,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 815,
+    "time": 1795106784316,
+    "tokens": {
+      "input": 2430,
+      "output": 262,
+      "reasoning": 284,
+      "cache": {
+        "read": 354785,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 825,
+    "time": 1795106794460,
+    "tokens": {
+      "input": 2624,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 355166,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 833,
+    "time": 1795106894706,
+    "tokens": {
+      "input": 3492,
+      "output": 925,
+      "reasoning": 836,
+      "cache": {
+        "read": 355741,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 843,
+    "time": 1795106915956,
+    "tokens": {
+      "input": 3192,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 357831,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 851,
+    "time": 1795106970088,
+    "tokens": {
+      "input": 2393,
+      "output": 165,
+      "reasoning": 502,
+      "cache": {
+        "read": 360073,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 861,
+    "time": 1795106983704,
+    "tokens": {
+      "input": 2123,
+      "output": 168,
+      "reasoning": 501,
+      "cache": {
+        "read": 361064,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 871,
+    "time": 1795106999208,
+    "tokens": {
+      "input": 2776,
+      "output": 193,
+      "reasoning": 323,
+      "cache": {
+        "read": 361138,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 881,
+    "time": 1795107019536,
+    "tokens": {
+      "input": 2625,
+      "output": 1061,
+      "reasoning": 438,
+      "cache": {
+        "read": 361865,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 891,
+    "time": 1795107038441,
+    "tokens": {
+      "input": 2103,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 363915,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 899,
+    "time": 1795107085965,
+    "tokens": {
+      "input": 2529,
+      "output": 2742,
+      "reasoning": 584,
+      "cache": {
+        "read": 364932,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 909,
+    "time": 1795107135886,
+    "tokens": {
+      "input": 3354,
+      "output": 25,
+      "reasoning": 14,
+      "cache": {
+        "read": 367462,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 917,
+    "time": 1795107189914,
+    "tokens": {
+      "input": 3491,
+      "output": 215,
+      "reasoning": 270,
+      "cache": {
+        "read": 368767,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 927,
+    "time": 1795107224861,
+    "tokens": {
+      "input": 2563,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 370209,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 935,
+    "time": 1795107275839,
+    "tokens": {
+      "input": 3493,
+      "output": 1068,
+      "reasoning": 478,
+      "cache": {
+        "read": 370723,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 945,
+    "time": 1795107296927,
+    "tokens": {
+      "input": 2978,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 372813,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 953,
+    "time": 1795107346710,
+    "tokens": {
+      "input": 2536,
+      "output": 337,
+      "reasoning": 605,
+      "cache": {
+        "read": 374698,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 963,
+    "time": 1795107359930,
+    "tokens": {
+      "input": 2373,
+      "output": 25,
+      "reasoning": 15,
+      "cache": {
+        "read": 375832,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 971,
+    "time": 1795107390880,
+    "tokens": {
+      "input": 2410,
+      "output": 41,
+      "reasoning": 822,
+      "cache": {
+        "read": 377235,
+        "write": 0
+      }
+    }
+  },
+  {
+    "seq": 981,
+    "time": 1795107402619,
+    "tokens": {
+      "input": 2479,
+      "output": 2028,
+      "reasoning": 119,
+      "cache": {
+        "read": 378246,
+        "write": 0
+      }
+    }
+  }
+]

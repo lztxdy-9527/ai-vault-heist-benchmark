@@ -1,0 +1,233 @@
+{
+  "astra_21m": {
+    "seat_id": "astra",
+    "orig": "part2_full_mode/exam_rooms\\P2_01_astra_codex\\history\\CUTOFF_40m00s_04845fa1.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\astra_21m\\submission.py",
+    "sha256": "04845fa112cac8115a8c5897c0a64b50caa13489841ebac9c838eedf694fdd62",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2250,
+    "author_steps": 193,
+    "reason": ""
+  },
+  "astra_39m": {
+    "seat_id": "astra",
+    "orig": "part2_full_mode/exam_rooms\\P2_01_astra_codex\\postmatch_candidate.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\astra_39m\\submission.py",
+    "sha256": "e258196efa0f466a2cb54ab2f5b10954a20c129a370aaa62f1acafbac2dd96b5",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2290,
+    "author_steps": 189,
+    "reason": ""
+  },
+  "sol_17m": {
+    "seat_id": "sol",
+    "orig": "part2_full_mode/exam_rooms\\P2_02_sol_codex\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\sol_17m\\submission.py",
+    "sha256": "cecd94856c7e7804a12f672c1c6222a8973d502b9f1e4054d686ad4e7ab3a6e6",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2610,
+    "author_steps": 192,
+    "reason": ""
+  },
+  "sol_39m": {
+    "seat_id": "sol",
+    "orig": "part2_full_mode/exam_rooms\\P2_02_sol_codex\\submission_overtime.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\sol_39m\\submission.py",
+    "sha256": "38a8b7f3e77d7a45266f91fe7e87673a7f7c9a29fc199c7ebbeeb0b4bf91ebe4",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2610,
+    "author_steps": 192,
+    "reason": ""
+  },
+  "neon_40m": {
+    "seat_id": "neon",
+    "orig": "part2_full_mode/exam_rooms\\P2_03_neon_agy\\history\\CUTOFF_40m00s_dcddc96e.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\neon_40m\\submission.py",
+    "sha256": "dcddc96e3865311eac6758f6adb478d740708f9461702deca0135f90a5dda908",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 1095,
+    "author_steps": 76,
+    "reason": ""
+  },
+  "neon_54m": {
+    "seat_id": "neon",
+    "orig": "part2_full_mode/exam_rooms\\P2_03_neon_agy\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\neon_54m\\submission.py",
+    "sha256": "8545b849599557e37d0a2f5e17ea1bbb48adba91df9aba96a31081c8f9a01a7d",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2890,
+    "author_steps": 183,
+    "reason": ""
+  },
+  "carbon_108m": {
+    "seat_id": "carbon",
+    "orig": "part2_full_mode/audit\\retest_20261119\\submissions\\carbon\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\carbon_108m\\submission.py",
+    "sha256": "329a5198407c235993f585b6107b77176ce87c3cd0585b3712046a303b673afc",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2930,
+    "author_steps": 181,
+    "reason": ""
+  },
+  "hydrogen_64m": {
+    "seat_id": "hydrogen",
+    "orig": "part2_full_mode/audit\\retest_20261119\\submissions\\hydrogen\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\hydrogen_64m\\submission.py",
+    "sha256": "4526fc68e35ce528a231d91c1703864891efa19d6cff85be80b886338ef4a580",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2775,
+    "author_steps": 151,
+    "reason": ""
+  },
+  "opus_40m": {
+    "seat_id": "opus",
+    "orig": "part2_full_mode/exam_rooms\\P2_06_opus_agy\\history\\CUTOFF_40m00s_47b78c89.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\opus_40m\\submission.py",
+    "sha256": "47b78c89d95d38ee27531e44e27e2d27b46f1db217b4e21ebf7dc8495e28320f",
+    "loaded": false,
+    "valid_demon": false,
+    "spent_gold": 0,
+    "author_steps": 0,
+    "reason": "Module import error: ValueError"
+  },
+  "opus_quota": {
+    "seat_id": "opus",
+    "orig": "part2_full_mode/exam_rooms\\P2_06_opus_agy\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\opus_quota\\submission.py",
+    "sha256": "48bc1e613acadabaac0a0e48d0ceb6ea444715ad32539298dc4b83ae55e914ba",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 1215,
+    "author_steps": 143,
+    "reason": ""
+  },
+  "deepseek_14m": {
+    "seat_id": "deepseek",
+    "orig": "part2_full_mode/audit\\process_recovery_20261119\\deepseek_tools\\05_seq520_submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\deepseek_14m\\submission.py",
+    "sha256": "74a31a6024e1a1df9782212042c2f279bcd9702857cba1b2041035d85f028e96",
+    "loaded": true,
+    "valid_demon": false,
+    "spent_gold": 0,
+    "author_steps": 0,
+    "reason": "build_dungeon rejected: KeyError"
+  },
+  "deepseek_79m": {
+    "seat_id": "deepseek",
+    "orig": "part2_full_mode/audit\\process_recovery_20261119\\deepseek_history\\02_v01_v01_full_v22_09148101.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\deepseek_79m\\submission.py",
+    "sha256": "d3bc578b1a7223503b73db4bfdd7922e3749278be61cc7d9ad565cd42558bedf",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 1515,
+    "author_steps": 120,
+    "reason": ""
+  },
+  "deepseek_95m": {
+    "seat_id": "deepseek",
+    "orig": "part2_full_mode/audit\\retest_20261119\\submissions\\deepseek\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\deepseek_95m\\submission.py",
+    "sha256": "6f4b08a6652c29349e0cd8187836929a4f83c82e0f5d26ffcac7e39d0ec75786",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 1515,
+    "author_steps": 120,
+    "reason": ""
+  },
+  "glm_38m": {
+    "seat_id": "glm",
+    "orig": "part2_full_mode/audit\\process_recovery_20261119\\glm\\30_seq1339_0_submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\glm_38m\\submission.py",
+    "sha256": "ddfdbcb95d94b9c9925086f298ca4ff965bc6a9bce328ec56fa3de1b7888ff95",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2020,
+    "author_steps": 155,
+    "reason": ""
+  },
+  "glm_68m": {
+    "seat_id": "glm",
+    "orig": "part2_full_mode/audit\\retest_20261119\\submissions\\glm\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\glm_68m\\submission.py",
+    "sha256": "7ab31fda5dabfc90189174daa03ce021bbe35715cffe27031b40d30ff8749244",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2020,
+    "author_steps": 155,
+    "reason": ""
+  },
+  "hunyuan_39m": {
+    "seat_id": "hunyuan",
+    "orig": "part2_full_mode/audit\\process_recovery_20261119\\hy4\\13_xYy9_submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\hunyuan_39m\\submission.py",
+    "sha256": "85490725f543bd8b92ba21e2f15b7f2459256ba18b042d953e9870525d88ad08",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 1740,
+    "author_steps": 170,
+    "reason": ""
+  },
+  "hunyuan_63m": {
+    "seat_id": "hunyuan",
+    "orig": "part2_full_mode/audit\\retest_20261119\\submissions\\hunyuan\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\hunyuan_63m\\submission.py",
+    "sha256": "38d29df33b0012c9401910a29f2b148e527a653ed459123902ff3c6a16ecec61",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 1740,
+    "author_steps": 170,
+    "reason": ""
+  },
+  "qwen_39m": {
+    "seat_id": "qwen",
+    "orig": "part2_full_mode/exam_rooms\\P2_10_qwen_qoder\\history\\CUTOFF_40m00s_60c319ea.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\qwen_39m\\submission.py",
+    "sha256": "60c319ea9b847a892d486fb3d77d38cb77fdc428c8a12579f847e187e2ea1886",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 0,
+    "author_steps": 63,
+    "reason": ""
+  },
+  "qwen_105m": {
+    "seat_id": "qwen",
+    "orig": "part2_full_mode/exam_rooms\\P2_10_qwen_qoder\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\qwen_105m\\submission.py",
+    "sha256": "8273a2191da78930aefd059980871d40a381ce3edc734315225a2507daf75eab",
+    "loaded": true,
+    "valid_demon": true,
+    "spent_gold": 2975,
+    "author_steps": 194,
+    "reason": ""
+  },
+  "doubao_35m": {
+    "seat_id": "doubao",
+    "orig": "part2_full_mode/audit\\process_recovery_20261119\\doubao\\01_line1385_submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\doubao_35m\\submission.py",
+    "sha256": "43c89c23438ec61b1e40d997462c7e643852b8d1031f3cb0004c1c0b9aac6fdb",
+    "loaded": true,
+    "valid_demon": false,
+    "spent_gold": 0,
+    "author_steps": 0,
+    "reason": "build_dungeon rejected: KeyError"
+  },
+  "doubao_117m": {
+    "seat_id": "doubao",
+    "orig": "part2_full_mode/audit\\retest_20261119\\submissions\\doubao\\submission.py",
+    "staged": "part2_full_mode/audit\\three_waves_20261120\\submissions\\doubao_117m\\submission.py",
+    "sha256": "0d01de5a566269a2c986d176b0e683984d6e94df9c879a540027b2542940128a",
+    "loaded": true,
+    "valid_demon": false,
+    "spent_gold": 0,
+    "author_steps": 0,
+    "reason": "build_dungeon rejected: Grid invalid: Outer frame cell (0,0) must be 'T_W'."
+  }
+}

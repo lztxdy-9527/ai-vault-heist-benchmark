@@ -1,0 +1,31 @@
+# Local workspace agent skills (not part of public repo)
+.agents/
+
+# Temporary protection for externally locked legacy folders (delete after closing video player / old server)
+/audit/
+/video_pipeline/
+
+# Python & caches
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets & local env
+.env
+.env.*
+*.key
+*.pem
+
+# Expanded large replay bundles (regenerate via unpack scripts)
+part1_fog_mode/replays/tournament_bundle.json
+part1_fog_mode/replays/tournament_bundle.js
+part2_full_mode/replays/tournament_results_full.json
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,152 @@
+{
+  "baseline": {
+    "line": 722,
+    "timestamp": "2026-11-16T01:48:45.878Z",
+    "payload": {
+      "type": "token_count",
+      "info": {
+        "total_token_usage": {
+          "input_tokens": 8354651,
+          "cached_input_tokens": 8207744,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 67158,
+          "reasoning_output_tokens": 34443,
+          "total_tokens": 8421809
+        },
+        "last_token_usage": {
+          "input_tokens": 142432,
+          "cached_input_tokens": 141952,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 234,
+          "reasoning_output_tokens": 18,
+          "total_tokens": 142666
+        },
+        "last_usage_includes_reasoning": true,
+        "model_context_window": 258400
+      },
+      "rate_limits": {
+        "limit_id": "codex",
+        "limit_name": null,
+        "primary": {
+          "used_percent": 80.0,
+          "window_minutes": 300,
+          "resets_at": 1794809070
+        },
+        "secondary": {
+          "used_percent": 99.0,
+          "window_minutes": 10080,
+          "resets_at": 1794909348
+        },
+        "credits": {
+          "has_credits": false,
+          "unlimited": false,
+          "balance": "0"
+        },
+        "individual_limit": null,
+        "spend_control_reached": null,
+        "plan_type": "plus",
+        "rate_limit_reached_type": null
+      }
+    }
+  },
+  "last_in_scope": {
+    "line": 1547,
+    "timestamp": "2026-11-19T18:58:51.231Z",
+    "payload": {
+      "type": "token_count",
+      "info": {
+        "total_token_usage": {
+          "input_tokens": 23924599,
+          "cached_input_tokens": 23474560,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 135215,
+          "reasoning_output_tokens": 65293,
+          "total_tokens": 24059814
+        },
+        "last_token_usage": {
+          "input_tokens": 74685,
+          "cached_input_tokens": 74496,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 471,
+          "reasoning_output_tokens": 8,
+          "total_tokens": 75156
+        },
+        "last_usage_includes_reasoning": true,
+        "model_context_window": 258400
+      },
+      "rate_limits": {
+        "limit_id": "codex",
+        "limit_name": null,
+        "primary": {
+          "used_percent": 40.0,
+          "window_minutes": 300,
+          "resets_at": 1795131646
+        },
+        "secondary": {
+          "used_percent": 53.0,
+          "window_minutes": 10080,
+          "resets_at": 1795551304
+        },
+        "credits": {
+          "has_credits": false,
+          "unlimited": false,
+          "balance": "0"
+        },
+        "individual_limit": null,
+        "spend_control_reached": null,
+        "plan_type": "plus",
+        "rate_limit_reached_type": null
+      }
+    }
+  },
+  "last_whole_rollout": {
+    "line": 1547,
+    "timestamp": "2026-11-19T18:58:51.231Z",
+    "payload": {
+      "type": "token_count",
+      "info": {
+        "total_token_usage": {
+          "input_tokens": 23924599,
+          "cached_input_tokens": 23474560,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 135215,
+          "reasoning_output_tokens": 65293,
+          "total_tokens": 24059814
+        },
+        "last_token_usage": {
+          "input_tokens": 74685,
+          "cached_input_tokens": 74496,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 471,
+          "reasoning_output_tokens": 8,
+          "total_tokens": 75156
+        },
+        "last_usage_includes_reasoning": true,
+        "model_context_window": 258400
+      },
+      "rate_limits": {
+        "limit_id": "codex",
+        "limit_name": null,
+        "primary": {
+          "used_percent": 40.0,
+          "window_minutes": 300,
+          "resets_at": 1795131646
+        },
+        "secondary": {
+          "used_percent": 53.0,
+          "window_minutes": 10080,
+          "resets_at": 1795551304
+        },
+        "credits": {
+          "has_credits": false,
+          "unlimited": false,
+          "balance": "0"
+        },
+        "individual_limit": null,
+        "spend_control_reached": null,
+        "plan_type": "plus",
+        "rate_limit_reached_type": null
+      }
+    }
+  }
+}

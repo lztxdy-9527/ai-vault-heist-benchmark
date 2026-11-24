@@ -1,0 +1,153 @@
+{
+  "units": {
+    "mean_turn1_seconds": "秒",
+    "clear_rate": "0–1",
+    "wait_share": "0–1"
+  },
+  "bounds": {
+    "mean_turns": [
+      130.07692307692307,
+      226.15384615384616
+    ],
+    "clear_rate": [
+      0,
+      0.7692307692307693
+    ],
+    "wall_breaks_per_match": [
+      0,
+      1.1538461538461537
+    ],
+    "box_moves_per_match": [
+      0.5384615384615384,
+      16.53846153846154
+    ],
+    "laser_hits_per_match": [
+      0,
+      0.3076923076923077
+    ],
+    "jumps_per_match": [
+      0.5384615384615384,
+      2.6923076923076925
+    ],
+    "wait_share": [
+      0.0019654088050314465,
+      0.6788990825688074
+    ],
+    "mean_turn1_seconds": [
+      0.3848227923198675,
+      1.5672551307451124
+    ]
+  },
+  "by_agent": {
+    "astra": {
+      "mean_turns": 130.07692307692307,
+      "clear_rate": 0.7692307692307693,
+      "wall_breaks_per_match": 1,
+      "box_moves_per_match": 7.461538461538462,
+      "laser_hits_per_match": 0.15384615384615385,
+      "jumps_per_match": 2.6923076923076925,
+      "wait_share": 0.1667652276759314,
+      "mean_turn1_seconds": 0.46649453077071273
+    },
+    "sol": {
+      "mean_turns": 160.92307692307693,
+      "clear_rate": 0.5384615384615384,
+      "wall_breaks_per_match": 0.5384615384615384,
+      "box_moves_per_match": 8,
+      "laser_hits_per_match": 0.23076923076923078,
+      "jumps_per_match": 1.4615384615384615,
+      "wait_share": 0.24235181644359466,
+      "mean_turn1_seconds": 1.1737503384580263
+    },
+    "neon": {
+      "mean_turns": 134.46153846153845,
+      "clear_rate": 0.6923076923076923,
+      "wall_breaks_per_match": 0.6153846153846154,
+      "box_moves_per_match": 9.384615384615385,
+      "laser_hits_per_match": 0.23076923076923078,
+      "jumps_per_match": 1.4615384615384615,
+      "wait_share": 0.008581235697940504,
+      "mean_turn1_seconds": 0.9235035461516907
+    },
+    "carbon": {
+      "mean_turns": 158.3846153846154,
+      "clear_rate": 0.5384615384615384,
+      "wall_breaks_per_match": 0.23076923076923078,
+      "box_moves_per_match": 5,
+      "laser_hits_per_match": 0,
+      "jumps_per_match": 1.5384615384615385,
+      "wait_share": 0.0029140359397765905,
+      "mean_turn1_seconds": 0.8612980384719916
+    },
+    "hydrogen": {
+      "mean_turns": 135.69230769230768,
+      "clear_rate": 0.6923076923076923,
+      "wall_breaks_per_match": 0.6153846153846154,
+      "box_moves_per_match": 16.53846153846154,
+      "laser_hits_per_match": 0.15384615384615385,
+      "jumps_per_match": 0.6153846153846154,
+      "wait_share": 0.06349206349206349,
+      "mean_turn1_seconds": 0.917025023059418
+    },
+    "opus": {
+      "mean_turns": 164.84615384615384,
+      "clear_rate": 0.46153846153846156,
+      "wall_breaks_per_match": 0.38461538461538464,
+      "box_moves_per_match": 6.923076923076923,
+      "laser_hits_per_match": 0,
+      "jumps_per_match": 2.076923076923077,
+      "wait_share": 0.1189920671955203,
+      "mean_turn1_seconds": 0.8374603846235774
+    },
+    "deepseek": {
+      "mean_turns": 195.69230769230768,
+      "clear_rate": 0.23076923076923078,
+      "wall_breaks_per_match": 0,
+      "box_moves_per_match": 0.5384615384615384,
+      "laser_hits_per_match": 0.15384615384615385,
+      "jumps_per_match": 0.6923076923076923,
+      "wait_share": 0.0019654088050314465,
+      "mean_turn1_seconds": 1.4226961076850644
+    },
+    "glm": {
+      "mean_turns": 201.23076923076923,
+      "clear_rate": 0.3076923076923077,
+      "wall_breaks_per_match": 0,
+      "box_moves_per_match": 2.230769230769231,
+      "laser_hits_per_match": 0,
+      "jumps_per_match": 0.5384615384615384,
+      "wait_share": 0.6788990825688074,
+      "mean_turn1_seconds": 0.5792980307731062
+    },
+    "hunyuan": {
+      "mean_turns": 179.84615384615384,
+      "clear_rate": 0.3076923076923077,
+      "wall_breaks_per_match": 0.46153846153846156,
+      "box_moves_per_match": 7.538461538461538,
+      "laser_hits_per_match": 0,
+      "jumps_per_match": 1.2307692307692308,
+      "wait_share": 0.02352437981180496,
+      "mean_turn1_seconds": 1.305702030748272
+    },
+    "qwen": {
+      "mean_turns": 190.69230769230768,
+      "clear_rate": 0.23076923076923078,
+      "wall_breaks_per_match": 1.1538461538461537,
+      "box_moves_per_match": 4.461538461538462,
+      "laser_hits_per_match": 0.23076923076923078,
+      "jumps_per_match": 1.5384615384615385,
+      "wait_share": 0.245663574021783,
+      "mean_turn1_seconds": 0.3848227923198675
+    },
+    "doubao": {
+      "mean_turns": 226.15384615384616,
+      "clear_rate": 0,
+      "wall_breaks_per_match": 0,
+      "box_moves_per_match": 1.9230769230769231,
+      "laser_hits_per_match": 0.3076923076923077,
+      "jumps_per_match": 2.5384615384615383,
+      "wait_share": 0.004421768707482994,
+      "mean_turn1_seconds": 1.5672551307451124
+    }
+  }
+}

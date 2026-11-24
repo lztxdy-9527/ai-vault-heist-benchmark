@@ -1,0 +1,92 @@
+PASS GV_02_BOX_LEAVES_CRACK_HERO_FALLS_IN_PIT
+PASS GV_03_SPRING_BLOCKED_BY_WALL_FALLS_EARLY_INTO_PIT
+PASS GV_04_PORTAL_DOUBLE_CAP_AND_EXIT_SUPPRESSION
+PASS GV_05_SIMULTANEOUS_LASER_SNAPSHOT_AND_TNT_NO_BOMB_TICK
+PASS GV_07_STONE_AIR_BOUNCE_AND_GROUND_ICE_SLIDE_TO_SWITCH
+PASS GV_08_TURN_240_PHASE_B_INSTANT_WIN_BEFORE_PHASE_D_LASER
+PASS GV_01_OUTER_FRAME_COST_AND_CLUE_BINDING
+PASS GV_06_STEP_32_FALLS_INTO_PIT_VS_STEP_33_CUTOFF
+PASS pure-computation AST check
+BUILD 1170 gold 0.00011389999417588115 seconds
+AUTHOR INDEPENDENT (60, 100)
+AUTHOR FULL 60 100
+{'name': 'open', 'turn': 62, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 32.64, 'mean_ms': 9.46, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+1 (2, 13) MOVE_R -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1904
+2 (3, 13) MOVE_U -> (3, 12) 100 0 jumps 3 bombs 2 partial 2800 0.1977
+3 (3, 12) MOVE_D -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1785
+4 (3, 13) MOVE_D -> (3, 14) 100 0 jumps 3 bombs 2 partial 2800 0.1842
+5 (3, 14) MOVE_U -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1982
+6 (3, 13) MOVE_U -> (3, 12) 100 0 jumps 3 bombs 2 partial 2800 0.1879
+7 (3, 12) MOVE_D -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1962
+8 (3, 13) MOVE_D -> (3, 14) 100 0 jumps 3 bombs 2 partial 2800 0.213
+9 (3, 14) MOVE_U -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1894
+10 (3, 13) MOVE_L -> (2, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1845
+11 (2, 13) MOVE_R -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.1995
+12 (3, 13) MOVE_U -> (3, 12) 100 0 jumps 3 bombs 2 partial 2800 0.2773
+13 (3, 12) MOVE_D -> (3, 13) 100 0 jumps 3 bombs 2 partial 2288 0.3409
+14 (3, 13) MOVE_D -> (3, 14) 100 0 jumps 3 bombs 2 partial 2672 0.3432
+15 (3, 14) MOVE_U -> (3, 13) 100 0 jumps 3 bombs 2 partial 2432 0.3418
+16 (3, 13) MOVE_L -> (2, 13) 100 0 jumps 3 bombs 2 partial 2256 0.3416
+17 (2, 13) MOVE_R -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.3151
+18 (3, 13) MOVE_U -> (3, 12) 100 0 jumps 3 bombs 2 partial 2800 0.2973
+19 (3, 12) MOVE_D -> (3, 13) 100 0 jumps 3 bombs 2 partial 2800 0.2688
+20 (3, 13) MOVE_D -> (3, 14) 100 0 jumps 3 bombs 2 partial 2800 0.2731
+21 (3, 14) BOMB -> (3, 14) 100 0 jumps 3 bombs 1 goal 694 0.0831
+22 (3, 14) MOVE_L -> (2, 14) 100 0 jumps 3 bombs 1 goal 246 0.0453
+23 (2, 14) MOVE_L -> (1, 14) 100 0 jumps 3 bombs 1 portal 1015 0.0911
+24 (1, 14) MOVE_R -> (2, 14) 100 0 jumps 3 bombs 1 portal 606 0.0613
+25 (2, 14) MOVE_D -> (2, 15) 100 0 jumps 3 bombs 1 portal 659 0.0642
+26 (2, 15) MOVE_R -> (3, 15) 100 0 jumps 3 bombs 1 portal 538 0.0543
+27 (3, 15) MOVE_R -> (4, 15) 100 0 jumps 3 bombs 1 portal 407 0.0443
+28 (4, 15) BOMB -> (4, 15) 100 0 jumps 3 bombs 0 portal 295 0.0516
+29 (4, 15) MOVE_D -> (4, 16) 100 0 jumps 3 bombs 0 portal 82 0.0143
+30 (4, 16) MOVE_D -> (4, 17) 100 0 jumps 3 bombs 0 portal 32 0.0105
+31 (4, 17) MOVE_R -> (5, 17) 100 0 jumps 3 bombs 0 portal 16 0.0131
+32 (5, 17) MOVE_U -> (5, 16) 100 0 jumps 3 bombs 0 portal 8 0.0116
+33 (5, 16) MOVE_U -> (5, 15) 100 0 jumps 3 bombs 0 portal 6 0.0107
+34 (5, 15) MOVE_U -> (5, 14) 100 0 jumps 3 bombs 0 portal 4 0.0127
+35 (5, 14) MOVE_U -> (5, 13) 100 0 jumps 3 bombs 0 portal 3 0.0102
+36 (5, 13) MOVE_L -> (32, 2) 100 1 jumps 3 bombs 0 portal 3 0.0144
+37 (32, 2) MOVE_R -> (5, 13) 100 1 jumps 3 bombs 0 portal 7 0.0041
+38 (5, 13) MOVE_R -> (6, 13) 100 1 jumps 3 bombs 0 portal 6 0.0045
+39 (6, 13) MOVE_R -> (7, 13) 100 1 jumps 3 bombs 0 portal 4 0.0047
+40 (7, 13) MOVE_R -> (34, 23) 100 3 jumps 3 bombs 0 portal 2 0.0059
+41 (34, 23) MOVE_L -> (7, 13) 100 3 jumps 3 bombs 0 partial 2800 0.1699
+42 (7, 13) MOVE_L -> (6, 13) 100 3 jumps 3 bombs 0 partial 2800 0.1884
+43 (6, 13) MOVE_L -> (5, 13) 100 3 jumps 3 bombs 0 goal 2749 0.2052
+44 (5, 13) MOVE_D -> (5, 14) 100 3 jumps 3 bombs 0 goal 2448 0.1826
+45 (5, 14) MOVE_D -> (5, 15) 100 3 jumps 3 bombs 0 goal 2337 0.2062
+46 (5, 15) MOVE_D -> (5, 16) 100 3 jumps 3 bombs 0 goal 2274 0.1829
+47 (5, 16) MOVE_R -> (6, 16) 100 3 jumps 3 bombs 0 goal 2214 0.1774
+48 (6, 16) MOVE_R -> (7, 16) 100 3 jumps 3 bombs 0 goal 2144 0.1579
+49 (7, 16) MOVE_R -> (8, 16) 100 3 jumps 3 bombs 0 goal 2153 0.1719
+50 (8, 16) MOVE_R -> (9, 16) 100 3 jumps 3 bombs 0 goal 2156 0.1812
+51 (9, 16) MOVE_U -> (9, 15) 100 3 jumps 3 bombs 0 goal 2009 0.1629
+52 (9, 15) MOVE_R -> (10, 15) 100 3 jumps 3 bombs 0 goal 1798 0.1707
+53 (10, 15) MOVE_R -> (11, 15) 100 3 jumps 3 bombs 0 goal 1682 0.1271
+54 (11, 15) MOVE_R -> (12, 15) 100 3 jumps 3 bombs 0 goal 1538 0.1341
+55 (12, 15) MOVE_R -> (13, 15) 100 3 jumps 3 bombs 0 goal 1425 0.1126
+56 (13, 15) MOVE_R -> (14, 15) 100 3 jumps 3 bombs 0 goal 1301 0.1163
+57 (14, 15) MOVE_R -> (15, 15) 100 3 jumps 3 bombs 0 goal 1159 0.112
+58 (15, 15) MOVE_R -> (16, 15) 100 3 jumps 3 bombs 0 goal 1027 0.1125
+59 (16, 15) MOVE_R -> (17, 15) 100 3 jumps 3 bombs 0 goal 878 0.0867
+60 (17, 15) MOVE_R -> (18, 15) 100 3 jumps 3 bombs 0 goal 754 0.0642
+61 (18, 15) MOVE_R -> (19, 15) 100 3 jumps 3 bombs 0 goal 524 0.0549
+62 (19, 15) MOVE_U -> (19, 14) 100 3 jumps 3 bombs 0 goal 374 0.0361
+63 (19, 14) MOVE_U -> (19, 13) 100 3 jumps 3 bombs 0 goal 300 0.0185
+64 (19, 13) MOVE_R -> (20, 13) 100 3 jumps 3 bombs 0 goal 218 0.0176
+65 (20, 13) MOVE_R -> (21, 13) 100 3 jumps 3 bombs 0 goal 181 0.0168
+66 (21, 13) MOVE_R -> (22, 13) 100 3 jumps 3 bombs 0 goal 155 0.0139
+67 (22, 13) MOVE_R -> (23, 13) 100 3 jumps 3 bombs 0 goal 133 0.0117
+68 (23, 13) MOVE_R -> (24, 13) 100 3 jumps 3 bombs 0 goal 110 0.0099
+69 (24, 13) MOVE_R -> (25, 13) 100 3 jumps 3 bombs 0 goal 89 0.0107
+70 (25, 13) MOVE_R -> (26, 13) 100 3 jumps 3 bombs 0 goal 69 0.0085
+71 (26, 13) MOVE_R -> (27, 13) 100 3 jumps 3 bombs 0 goal 53 0.0065
+72 (27, 13) MOVE_R -> (28, 13) 100 3 jumps 3 bombs 0 goal 39 0.0063
+73 (28, 13) MOVE_R -> (29, 13) 100 3 jumps 3 bombs 0 goal 26 0.006
+74 (29, 13) MOVE_R -> (30, 13) 100 3 jumps 3 bombs 0 goal 19 0.0063
+75 (30, 13) MOVE_R -> (31, 13) 100 3 jumps 3 bombs 0 goal 8 0.0061
+76 (31, 13) JUMP_R -> (33, 13) 100 3 jumps 2 bombs 0 goal 5 0.0057
+77 (33, 13) JUMP_R -> (35, 13) 100 3 jumps 1 bombs 0 goal 3 0.0058
+78 (35, 13) JUMP_R -> (37, 13) 100 3 jumps 0 bombs 0 goal 1 0.0057
+{'name': 'own directional portals', 'turn': 78, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 343.18, 'mean_ms': 112.82, 'position': [37, 13], 'jumps': 0, 'bombs': 0}

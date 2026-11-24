@@ -1,0 +1,496 @@
+# 豆包 ·《阴间地牢》下半场对话与 Thinking
+
+来源为 VS Code 的 TRAE 历史对话，模型为 Doubao-Seed-2.0-Code。以下是 2026-11-19 20:37–22:34 JST 的界面文字，按原顺序记录用户指令、助手回复、工具操作摘要和两处已展开的 Thinking。时间标题采用 JST，原文保留界面的相对时间。首轮界面只显示公开过程与中断提示，未找到独立可展开的 Thinking。工具卡片仅保留界面摘要。另从 TRAE 历史响应中找回含首轮的 Thinking 原文，详见 [TRAE 历史日志 Thinking](doubao_trae_logged_thinking.md)。本文件保留界面原样。三轮各自末笔的实测用量与整场估算见 [Token 汇总](tokens_supplement.json)。
+
+## 策略转折与终验
+
+- 20:37 首轮用 13 条历史轨迹校验本地物理实现，修正激光判伤位置、跳跃落冰、弹簧、传送和折返镜，最终做到 13/13。最初的全局搜索未找到完整解。
+- 21:26 续跑将压板和开关纳入搜索，预计算地形特征并尝试跨回合累积搜索。弱基准一度 68 步无伤通关，强基准仍受多箱多压板搜索停滞影响。
+- 22:20 催交后回退造成弱基准回归的启发式，并收紧回合预算。最终回复报告轨迹 13/13，弱基准 69 步无伤通关，强基准未解，两张基准均为 0 次超时违规。自建图造价 1095G，自证路线 59 步。
+
+## 20:37 初轮
+
+````text
+只能阅读part2_full_mode/exam_rooms\P2_11_doubao_vscode下的所有文件，并按要求完成任务，写成的一切文件均只放在该文件夹，温馨提示，打过强基准也不代表强，它只是一个正常基准
+昨天 20:37
+
+Builder
+Doubao-Seed-2.0-Code
+已浏览 1 个目录，执行 3 条命令
+
+现在我来读取任务定义文件。让我先阅读提示、规则和模板：
+已读取 1 个文件
+
+Read工具受限于工作目录，我用PowerShell读取文件内容：
+已执行 2 条命令
+
+规则开头被截断了，让我补读规则开头，同时读取模板、golden vectors 和 baseline：
+已执行 1 条命令
+
+现在读取模板、golden vectors 和 baseline：
+已执行 2 条命令
+
+baseline_sha256文件名可能带前导点，先放一边。现在读取我继承的上半场 submission.py：
+已执行 1 条命令
+
+这是我继承的上半场 BLIND 模式代码。现在读取战报了解上半场表现与死因，以及试练靶场结构：
+已执行 1 条命令
+
+关键信息：我上半场魔王图被废标（0分），勇者8/13死于激光。FULL模式下需彻底重构。现在读取试练靶场与基准集结构，用于本地回归：
+已执行 2 条命令
+
+让我创建一个探索脚本来查看两张基准图的全貌与机关坐标（脚本放在目标文件夹内）：
+已执行 1 条命令
+
+现在我理解了两张基准图。让我查看 part1 基准集结构，以便用那 14 张图做回归测试：
+已执行 2 条命令
+
+轨迹数据很有价值——可以用它校验我自建的物理引擎。让我分析我阵亡局的激光受伤事件：
+已执行 1 条命令
+
+让我查看几张秒杀图的激光布局，以推导精确的激光时序：
+已执行 1 条命令
+
+我已推导出精确的激光时序模型（回合t行动后，激光在t回合结算，命中即-50/门）。现在编写本地物理引擎并用13条真实轨迹校验。先创建引擎：
+已执行 1 条命令
+
+引擎写好了。现在用13条真实轨迹校验引擎是否正确复现位置与血量：
+已执行 1 条命令
+
+4/13通过，激光命中在astra/deepseek复现了，但其他图出现偏差。需要精确定位。让我调试 sol 和 carbon两个失败案例：
+已执行 1 条命令
+
+PowerShell内联脚本引号被转义了。写入文件再运行：
+已执行 1 条命令
+
+关键发现：sol 图中回合6英雄从(9,13)上移到(9,12)却仍受-50激光伤害——因为激光在**回合开始时（行动前）**结算，英雄在(9,13)被命中后才移动。我的引擎把激光放在了行动后。让我先读取规则书确认时序：
+已执行 1 条命令
+
+让我读取完整的回合阶段定义（L79-100附近）：
+已执行 1 条命令
+
+sol 在回合6受到-50但英雄移到了(9,12)——可能不是激光而是踩到了 MIMIC 宝箱怪（我的引擎没识别出该格）。这说明网格解析或时序索引有系统性偏差。让我精确检查 sol 网格的关键格和 astra 的实际动作：
+已执行 1 条命令
+
+关键发现：
+1. sol 行13从x=8到x=17全空，LASER_L射程10格（x=17..8），所以回合3英雄在(5,13)/(6,13)（x<8）不在射程→无伤；回合6开始时英雄在(9,13)（x=9在射程内）→被命中-50后才移动到(9,12)。
+2. 结论：激光在回合开始时、英雄行动前结算，命中的是回合起始位置。
+我的引擎把激光放在了行动后。修正并重新校验全部13条轨迹：
+已编辑 2 个文件，读取 2 个文件
+
+编辑工具匹配异常，改用Python脚本精确替换：
+已执行 1 条命令
+
+激光时序修复后6/13通过。剩余7例全是位置偏差（1-2格），说明移动模型有差异——很可能是 JUMP、冰滑、传送门或弹簧语义。逐个调试 argon（T6死亡，差异最早出现）和 hydrogen：
+已执行 1 条命令
+
+两个关键发现：
+1. argon：JUMP_R 落到冰面 (8,13) 后应继续滑行到 (10,13)，但我的 JUMP 分支没触发冰滑。
+2. argon/hydrogen：激光在回合末结算，但伤害依据回合起始位置（行动前的位置）——所以英雄被激光秒杀后，其本回合的移动动作仍会执行，最终位置会更新（real argon 死于(10,13)但位置记为(11,13)）。
+需要重构：激光改回回合末结算，但用起始位置判伤；JUMP 落冰后触发滑行。让我读取当前完整 step 和激光函数后精确修改：
+已读取 3 个文件，执行 1 条命令
+
+现在精确重构引擎：激光改回合末结算但用起始位置判伤，JUMP 落冰触发滑行：
+已执行 1 条命令
+
+11/13通过！剩下 carbon 和 glm 都是位置偏差——很可能是我没实现的 SPRING 弹簧机关。让我查规则书的弹簧语义并调试这两张图：
+已执行 1 条命令
+
+确认了：glm T26 是 JUMP_U 落到 SPRING_D(18,21) 后被弹簧向下弹射3格到(18,24)；carbon 涉及传送门。我的引擎缺弹簧和传送门逻辑。让我读取现有 _slide 和 _move_hero_into，统一重构为动量链解析：
+已读取 2 个文件
+
+现在实施弹簧+传送门的完整动量链重构：
+已执行 1 条命令
+
+12/13！只剩 carbon。让我从头追踪 carbon 找第一个偏差点：
+已执行 1 条命令
+
+偏差在 T43 MOVE_R：从 (21,23) 向右滑过冰面到 (26,23)=MIRROR_SW，应折转向下到 (26,24)，但引擎停在镜子上没折转。检查我的 MIRROR 折转表：
+已执行 1 条命令
+
+找到 bug：我的 MIRROR 折转表把 NE/SW 设成相同、NW/SE 设成相同（复制错误）。正确的物理是：\ 镜（NE↔SW 角）R→D，/ 镜（NW↔SE 角）R→U。carbon 的 MIRROR_SW 要求 R→S，证实应修正。让我读取并修正 MIRROR 表：
+已执行 2 条命令
+
+13/13 全部匹配！ 本地引擎已与官方运行结果完全一致。现在清理临时调试文件，进入正式交付阶段。先确认目录现状并读取关键约束文档：
+已删除 1 个文件，执行 2 条命令
+
+现在读取当前 submission.py（继承的上半场版本）和 v2.2 基准图，以及规则书中的状态字典格式与建图返回 schema：
+已执行 3 条命令
+
+状态字典的权威定义在我自己的 _engine.observation() 里。让我读取它和 Game.__init__，确认完整字段：
+已读取 2 个文件
+
+我已掌握完整状态 schema。现在查看 v2.2 双基准靶场的图结构，评估求解器需要覆盖的机制复杂度：
+已执行 2 条命令
+
+（终端显示会剥离逗号，实际文件正常。）让我用更简洁的脚本打印两张基准图：
+已执行 1 条命令
+
+两张基准图都需要推箱压板、开关、激光规避（BENCH_WEAK 要把 BOX 推上 PLATE 开 P_GATE 才能进 V；BENCH_STRONG 更复杂）。我的求解器必须内置完整物理仿真 + 状态空间搜索。
+先把已验证的引擎完整读出来，移植进 submission.py：
+已读取 3 个文件，执行 1 条命令
+
+我已完整掌握引擎逻辑。现在编写 submission.py：将已验证的物理引擎移植为可克隆的 World 类，加 A* 全局搜索、激光时序感知、推箱/开关/压板支持，以及 decide_action 和 build_dungeon。先写引擎+求解器部分并在弱基准上验证：
+已执行 2 条命令
+
+语法通过（exit 0）。现在写一个本地对战验证脚本：用已验证的 _engine.Game 跑真实对局，每回合把状态喂给 submission.decide_action，测试能否通关弱/强基准：
+已执行 6 条命令
+
+求解器没找到完整解（只输出了朝目标移动的局部计划，最后卡在重复 MOVE_R）。核心思路：Turn 1 用足 2.0s 做一次全局搜索求出完整通关计划并缓存，后续回合只做廉价跟随 + 必要时重规划。先测量当前搜索在 2.0s 内能否求出弱基准完整解：
+已执行 1 条命令
+
+模型思考次数已达上限，请输入「继续」以获取更多内容。
+
+异常打断
+````
+
+## 21:26 Continue
+
+````text
+Continue
+昨天 21:26
+
+Builder
+Doubao-Seed-2.0-Code
+思考过程
+
+思考
+Let me continue from where I left off. The search found a 39-step plan that gets to (24,21) with both keys, but never reaches V. The plan exhausts and hero is at (24,21) with keys. The issue is the heuristic isn't guiding toward V once keys are collected, OR there's a barrier preventing reaching V (P_GATE closed because PLATE not pressed).
+Looking at BENCH_WEAK: it requires pushing a BOX onto PLATE to open P_GATE to reach V. The hero got both keys at (24,21) but V is probably behind a P_GATE that needs a box on plate. My search isn't pushing boxes onto plates because:
+1. The heuristic doesn't account for "need to activate plate"
+2. The state space with boxes is huge
+Also the search seems stuck — best_h stays at some value and never improves. Let me look at the actual map.
+Actually a key problem: my A* visited set uses sig() which includes hp, jumps, turn%12, boxes_sig, keys, gf, position. But the visited[sig] <= f check means once a state is visited with lower f, we skip. The issue is f = g + pain*40 + h. When we revisit with same sig but higher g (longer path), we skip — that's correct for A*. But the problem is the search isn't exploring pushing boxes.
+Let me think about the architecture more carefully. The current brute-force A* over full state (including boxes) is too slow and the heuristic doesn't guide box-pushing.
+Better approach: hierarchical planning. Since maps are handcrafted puzzles with a clear solution, I should:
+1. Identify subgoals: K1, K2, then V. But V may require plate activation, gate flipping, etc.
+2. The search should focus on reaching the next subgoal.
+Actually, the real issue: the search at 10s only expanded enough to reach (24,21) with keys. The box-pushing to activate plate and reach V wasn't found. The heuristic h after getting keys is just manhattan to V, which is small, but the actual path requires detouring to push a box. So A* explores toward V, hits the closed P_GATE, can't pass, and the box-pushing branches have higher f so they're deprioritized.
+Let me reconsider the whole approach. Given time constraints (2s turn 1, 0.5s after), a pure A* over the joint box+hero state space on 40x26 is too slow.
+Let me think about what maps actually look like. They're puzzle maps. The standard approach in these dungeon-solving competitions:
+1. Reachability-based subgoal planning with BFS on hero-only for movement, treating boxes as movable obstacles when needed.
+2. For box pushing, do targeted BFS/A* only when a box must be moved (to activate plate or clear path).
+Actually, let me reconsider. The benchmark author solutions: BENCH_WEAK is 81 steps, BENCH_STRONG 115 steps. These are relatively short. A well-designed A* with a good heuristic should find them IF the search explores the right branches.
+The core problem with my current search: the heuristic is admissible but not informative enough about box requirements, AND the visited pruning with full box state causes combinatorial explosion.
+Let me try a different strategy that's more robust for these puzzle maps:
+Strategy: Iterative deepening / goal-directed search with subgoal extraction.
+Actually, let me first understand WHY the search fails. Let me instrument it to see best_h over time and what states it's exploring. The plan found ends at (24,21) with both keys. V must be elsewhere behind a gate.
+Let me look at the BENCH_WEAK map to understand its structure. Let me find V, plates, boxes, gates.
+Actually, let me reconsider the time budget. The contest gives:
+• Turn 1: 2.0s (can precompute a full plan)
+• Turn 2..240: 0.5s each
+So on Turn 1, I should spend up to ~1.8s finding a complete plan, cache it, then execute it turn by turn. If execution diverges (e.g., I took damage differently, or my engine differs from server), replan.
+The problem is my search can't find the complete plan even in 10s. I need a much better search.
+Key insight: I should separate the problem into layers:
+1. Static pathfinding (hero-only): BFS/A* over terrain ignoring boxes, lasers, gates dynamics. Fast. Used as heuristic and for movement between known-safe waypoints.
+2. Full simulation search: Only expand branches that matter.
+Let me think about what makes these maps solvable. They're designed with a unique solution. The boxes need to go to specific plates. The laser timing has period 12 (lcm(3,4)).
+Let me improve the search:
+1. Better heuristic: Include box-to-plate distance when plates exist and aren't all pressed.
+2. Prune the action space: Don't try all 13 actions every node. Pre-filter: only try actions that make progress (move toward subgoal, push box toward plate, etc.). Actually pruning actions can break correctness... but for these puzzles, WAIT is only needed for laser timing, and THROW/BOMB are rarely needed.
+3. Avoid storing full world clones in heap — memory/speed. Use parent pointers with deltas.
+Actually the biggest issue might be that my search explores MOVE_R repeatedly toward V but V is behind a closed gate, so it keeps finding the same dead-end and the box-pushing branches (which have higher g + higher heuristic because box is far from hero) are never popped.
+Wait — A* with f = g + h. If h is admissible, the optimal path WILL be found eventually. But if the solution requires a long detour (push box), and there are many short dead-ends toward V, the search could spend all time exploring dead-ends. The heuristic to V being small makes dead-ends near V look cheap.
+The fix: a better heuristic that accounts for plate activation. If V is behind a P_GATE and plates aren't pressed, the true distance is: go to box, push box to plate, then go to V. My heuristic should approximate this.
+Let me compute a richer heuristic:
+• If all plates pressed (or no plates): h = manhattan path through remaining keys to V.
+• Else: h = (min over boxes of manhattan(hero, box) + manhattan(box, nearest unpressed plate)) + manhattan(plate, V) via keys.
+Also need to handle SWITCH/R_GATE/B_GATE: if V (or keys) behind a gate that needs flipping, add switch distance.
+This is getting complex. Let me look at the actual maps first to design the right heuristic, then iterate.
+Actually, let me step back and think about robustness vs. the scoring. The user said "打过强基准也不代表强，它只是一个正常基准" (beating the strong benchmark doesn't mean strong, it's just a normal benchmark). So I need a solver that generalizes, not one hardcoded to the benchmarks.
+Let me look at the map structure and design a hierarchical solver:
+Layer 1: Subgoal graph. Compute static reachability with BFS treating:
+• Boxes as obstacles (but note which are "movable")
+• Gates as open/closed based on current switch state
+• Lasers as passable-with-timing This gives a coarse plan: visit K1, K2, activate plates, flip switches, reach V.
+Layer 2: Detailed execution. For each segment between subgoals, do a time-aware A* (laser timing, box pushing if needed).
+Hmm, this is a lot. Given I need to deliver something working, let me focus on making the A* search effective by:
+1. Improving heuristic (plate/switch awareness).
+2. Making it faster (avoid cloning full 40x26 grids in every node — use a more efficient state representation; actually the grids don't change much except occ, terrain mutations from bombs/cracks. For most maps without bombs/cracks, terrain is static and only occ (boxes) changes. I can optimize: if terrain never changes (no CRACK, no bombs used, no TNT), store terrain once and only clone occ + hero.)
+Let me check: do benchmark maps have CRACK/bombs? Probably some. But for the common case, terrain is static. Let me optimize clone to detect static terrain.
+Actually, let me first just look at the maps and instrument the search to understand the failure. Let me be efficient and batch.
+Let me reconsider — maybe there's a much simpler and more robust approach given these are puzzle maps: BFS over the joint state but with smart action generation and a good heuristic, running for the full 2s on turn 1.
+The key realization: my current search DID make progress (found a 39-step plan to keys). It just didn't find the box-push to V. Let me improve the heuristic to account for plates and rerun. If that finds the full plan in 2s, great. Then I cache and execute.
+Let me look at the map and add plate awareness to heuristic. Let me also add switch/gate awareness.
+Let me first inspect BENCH_WEAK layout: find V, plates, boxes, gates, switches, K1, K2 positions.
+Let me write a quick inspection. But actually, I realize I should be more strategic. Let me read the RULES and map carefully, then rewrite the solver with a proper hierarchical approach.
+Given the complexity, let me design the solver properly:
+Solver Design
+State
+Hero pos, hp, keys, jumps, throws, bombs, switch_state(gf), turn (for laser mod 12), box positions. Terrain mostly static.
+Heuristic h(state)
+A lower bound on remaining turns:
+• Compute the set of "mandatory waypoints":
+◦ Each unpicked key (K1 if not have, K2 if not have)
+◦ If any P_GATE blocks the path to V/keys and plates not all active: need to activate plates → nearest box→plate cost
+◦ If any R_GATE/B_GATE blocks path and switch in wrong state: need to flip switch → switch cost
+• Greedy TSP over mandatory waypoints ending at V, using static manhattan (ignoring obstacles). This is a fast lower bound.
+Actually computing "which gates block the path" requires path analysis. Simpler: always include switch and plate costs as potentials, but that overestimates (inadmissible) → A* might not find optimal. But for finding ANY valid plan within 200 steps, a slightly inadmissible heuristic with a weight (Weighted A*) is fine and faster. I can use weighted A*: f = g + wh with w=2 or 3, find a plan quickly, then it's valid (just not necessarily shortest). Since scoring rewards fewer steps but clearing is the main thing, weighted A is a good tradeoff.
+Weighted A* with subgoal-aware heuristic
+• h = greedy manhattan tour over {unpicked keys} + (plate activation if plates exist and inactive) + (switch flip if gates exist) ending at V.
+• Run weighted A* (w=3) for up to ~1.7s on turn 1.
+• Cache plan. Execute. If a step leads to unexpected state (dead or diverged), replan within 0.4s.
+Action pruning
+• Generate: 4 MOVEs, plus JUMP only if it crosses an obstacle/pit (check if landing is reachable and useful), plus THROW/BOMB only rarely. Actually for safety, keep all but order them by heuristic improvement.
+Let me also reconsider: the visited set. With weighted A*, standard A* visited pruning (closed set) can cause issues if a worse f reaches first. Better: store best g per state, only skip if new g >= stored g. Let me use g-based pruning.
+Let me also speed up clone. For maps without dynamic terrain changes (no CRACK leaving, no bomb destruction), I can avoid cloning terrain each step. Let me add a static_terrain flag: terrain is static if no CRACK, no ICE? No—ICE doesn't change terrain. CRACK→PIT changes. Bombs change terrain. TNT changes. So: terrain_static = (no CRACK tiles) and (won't use bombs). Since I control actions, I can treat terrain as static as long as I don't use BOMB and there are no CRACK tiles being stepped off. CRACK changes when hero leaves it. So if map has CRACK, terrain can change. Let me just always clone but optimize: use tuples or a flat representation.
+Actually, cloning 26 lists of 40 strings is fast (~1000 string copies). 10000 nodes/sec → 260k char copies/sec, fine. The bottleneck is likely the 40x26 loops in laser_broadcast (which runs every step to check beams). Let me optimize: precompute laser emitter positions and directions, cache beam computation per (turn, gate_state, box_positions). Actually box positions affect beam blocking! That's the expensive part — every step recomputes beams by scanning.
+Let me optimize laser: precompute list of emitter (x,y,dir,color). For beam check at a turn, only compute if turn%3==0 or turn%4==0. Cache beams in a dict keyed by (turn%12, gf, frozenset(boxes), pa). Since boxes rarely move, this cache hits often. For hit detection during search, I can precompute which turns are dangerous and where.
+Let me restructure: I'll write a more optimized solver. Given the effort, let me write it cleanly in one go, then test against benchmarks, then iterate.
+Let me first inspect the two maps to make sure my heuristic targets the right things. Let me do that quickly.
+Actually, let me just look at the maps via a script to find key elements. Let me batch: inspect both maps.
+Then rewrite submission.py solver section, keeping the engine (which is verified). I'll keep World class as the simulator but optimize it for search (cache laser beams, static terrain detection).
+Let me go. First inspect maps.
+
+搜索在 10 秒内只走到了拿钥匙的位置（24,21），却始终没找到推箱压板开 P_GATE 进 V 的路径——说明启发式没把"压板激活"纳入考量，A* 全耗在朝 V 的死胡同分支上了。先看清两张基准图的结构（V/压板/箱/门/开关位置），再针对性重写启发式与搜索：
+已执行 1 条命令
+
+现在图结构清楚了：
+• BENCH_WEAK：BOX(8,17) 推上 ICE(9,17)(10,17) 滑到 PLATE(11,17) → 开 P_GATE(35,15) 进 V；K1 在 R_GATE 后需先踩 SWITCH(12,10)；K2 被 ONEWAY_D 夹住只能上进下出；LASER_R(26,15) 每 3 发射扫过 V 入口需卡时序。
+• BENCH_STRONG：4 箱 3 压板 + 冰镜弹簧 + 多激光，115 步。
+我的 A* 拿到钥匙就卡在 V 前，因为启发式完全没考虑压板激活——朝 V 的死胡同分支 f 值更低，把推箱分支饿死了。现在重写为：带压板/开关子目标的静态 BFS 距离场 + 加权 A（w≈2.5）+ 激光缓存 + 跨回合计划缓存*。先写改进版求解器并验证：
+已执行 1 条命令
+
+语法通过。先用我自己的 World 快速验证搜索能否在 1.7s 内求出两张基准图的完整通关计划：
+已执行 1 条命令
+
+进展明显：BENCH_WEAK 在 4s 内求出了 68 步无伤通关计划（hp=100），说明启发式改造方向正确。但 1.7s 内只走到一半，BENCH_STRONG 也还没解出来——瓶颈是每节点都在做 O(1040) 的全图扫描（pa()、激光遍历、开关判定都扫全图）。我来做几处关键优化：预计算压板/激光发射器/门特征列表，把 pa() 从 O(1040) 降到 O(压板数)，激光只遍历发射器，并用特征裁剪 THROW/BOMB 分支。重写优化版：
+已读取 1 个文件，执行 3 条命令
+
+找到 bug：_scan_features 里属性名是 _tnt_present，但 _actions 写成了 _has_tnt。修正引用：
+已创建 1 个文件，执行 1 条命令
+
+Write 工具被限制在工作目录，目标文件夹只能用 RunCommand 写。改用脚本文件修复：
+已执行 1 条命令
+
+优化效果显著：BENCH_WEAK 现在 0.53s 求出 68 步无伤通关。但 BENCH_STRONG 仍只探索了 6 步。先给它更长时间看是否本质可解（同时统计节点扩展数），以判断是速度问题还是启发式问题：
+已执行 1 条命令
+
+15 秒只探索了 9 步——搜索吞吐极低，堆里堆了海量同 f 值状态。先测一下实际节点扩展速率，定位瓶颈：
+已执行 1 条命令
+
+吞吐约 5000 clone/s——BENCH_WEAK 够了（2445 节点就解出），但 BENCH_STRONG 115 步 + 4 箱需要的节点数远超此。两个关键改进：
+1. 速度：静态图共享 terrain（不复制 26×40）、箱子位置用增量集合（boxes_tuple 从 O(1040)→O(箱数)），约翻倍吞吐。
+2. 跨回合累积搜索：memory 跨回合持久，Turn 1 用 2.0s + 后续每回合 0.4s 续搜同一个堆（anytime 搜索），硬图可累积近百秒搜索量。
+先做速度优化。读取当前关键方法确认精确文本：
+已读取 1 个文件，执行 1 条命令
+
+我来做速度优化（共享 terrain + 增量箱子集合）。先读取 _move_box 与两个爆炸函数的精确文本：
+已读取 3 个文件，搜索 1 次文件，执行 1 条命令
+
+现在应用速度优化。先做 4 处明确的编辑：
+已编辑 1 个文件，执行 1 条命令
+
+RunCommand 的输出显示会吞掉逗号（文件实际有逗号，Read 工具能正确显示）。我改用 Python 脚本做精确替换。先读 clone 完整内容和 _scan_features：
+已读取 2 个文件，执行 2 条命令
+
+我已掌握搜索与决策的全貌。再读取顶部常量、clone 结尾、step/sig 部分以确保补丁精确：
+已读取 3 个文件
+
+引擎与搜索结构已完全掌握。现在需要确认 build_dungeon 的返回契约（harness 期望的精确格式）。读取模板与通告：
+已读取 1 个文件
+
+Read 工具受工作目录限制，改用 Python 读取模板与通告中 build_dungeon 的契约：
+已执行 1 条命令
+
+模板确认 build_dungeon() -> dict。现在从通告/规则中提取返回 dict 的精确字段 schema：
+已执行 1 条命令
+
+查看基准 JSON 的 dungeon 字段结构（即 build_dungeon 应返回的 schema），并在规则书中确认：
+已执行 1 条命令
+
+查看本地引擎 _engine.py 如何加载 dungeon（揭示 harness 期望的字段）以及准入校验逻辑：
+已执行 8 条命令
+
+需要确认 build_dungeon 返回字段。读取完整通告（交付步骤部分）：
+已执行 1 条命令
+
+确认 World.__init__ 如何从 grid 构建 occ（BOX 抽取），这关系到 _boxes 初始化时机：
+已读取 1 个文件
+
+引擎、搜索、决策、建图契约都已明确。现在一次性生成最终版：对头部应用速度优化（共享 terrain、增量箱子集合），并追加可跨回合续搜的 SearchSession（用父指针重构路径，避免每节点复制路径列表）与 build_dungeon。写一个生成脚本：
+已执行 1 条命令
+
+生成成功。现在运行综合验证：语法、13条官方轨迹回归、双基准完整对局模拟、以及自建图的合规性（造价/准入/author_solution≤200且通关）：
+已执行 1 条命令
+
+基准 JSON 是按图名键控的字典。修正迭代方式：
+已执行 2 条命令
+
+地牢在 d["dungeons"]，轨迹在 my_hero_matches。先跑已有的 _validate.py 确认优化没破坏引擎（应仍 13/13）：
+已执行 1 条命令
+
+13/13 引擎行为不变。现在写验证脚本：自建图合规性 + 两张基准图完整对局模拟。先确认 from_state 期望的 state 字段，以便构造测试用 state 桥：
+已读取 1 个文件
+
+写完整验证脚本（自建图 + 双基准对局模拟 + 每步耗时监控）：
+已执行 1 条命令
+
+自建图验证全部通过（造价1095、解59步通关、准入5个安全落点）。检查基准 JSON 的键结构：
+已执行 1 条命令
+
+基准在 bench["dungeons"] 下。修正并重跑对局模拟：
+已执行 1 条命令
+
+引号转义被 PowerShell 破坏。直接重写验证脚本：
+已执行 1 条命令
+
+BENCH_WEAK 完美通关（68步/0伤/0超时）。但 BENCH_STRONG 暴露两个严重问题：(1) 225/240 回合超过 0.5s 时限（总耗时154s），说明每回合同时跑了 sess.run(0.36) + 兜底 search(0.28)；(2) 搜索没进展（英雄卡在 (10,16)）。先调试强基准下搜索为何无进展：
+已执行 1 条命令
+
+输出中逗号被工具显示剥离了，实际错误是属性名 _lasers 不存在。查正确的属性名：
+已执行 1 条命令
+
+属性名不对。重写调试脚本只看搜索进展（不引用不存在的属性）：
+已执行 1 条命令
+
+搜索本身有进展（best_h 92→81，6步计划）。问题在对齐失败导致每回合重根 + 兜底双重搜索。写对齐诊断：
+已执行 1 条命令
+
+诊断清楚了：计划耗尽（pidx >= len(plan)）时没有重根，导致内存停留在旧会话，每回合都触发昂贵兜底搜索 → 超时。重新设计 decide_action：单硬时限预算 + 计划耗尽时重根 + 计划充足时跳过搜索直接跟随。打补丁：
+已执行 1 条命令
+
+重跑完整验证：13轨迹回归 + 双基准对局（重点看是否还超时）：
+已执行 1 条命令
+
+时限问题已解决（0 超时），但强基准仍卡在 (10,16)：每次计划耗尽就重根，丢弃了累积的搜索前沿。改用跨会话共享 visited 闭集 + 持久化 Solver，避免重根时重复探索已展开状态。重写 SearchSession 到文件末尾：
+已执行 1 条命令
+
+编译通过。跑回归 + 双基准，重点看强基准是否开始推进：
+已执行 1 条命令
+
+共享 visited 让搜索变快（10.8s）但过度剪枝导致停滞在 (10,15)。先确认：一次长时间连续搜索能否解掉强基准？跑 30s 无共享的独立搜索看 best_h 演进：
+已执行 1 条命令
+
+关键发现：连续 33s 搜索也只到 best_h=80、9步计划，启发式在箱子-压板谜题上失去引导力（长时间 plateau）。这是核心瓶颈。读取当前 Solver 启发式实现以强化：
+已读取 1 个文件，搜索 1 次文件
+
+启发式的核心缺陷：它用静态距离场引导直接冲向 K1/V，但 K1/V 可能被未激活的 P_GATE 挡住 → 英雄撞到关着的门，h 不再下降，形成 plateau。需要按当前门状态做可达性分层：被挡住的目标不计入就近巡游，而是前置压板解锁代价。先读取 World 的通行判定与压板状态方法：
+已读取 3 个文件，搜索 1 次文件
+
+现在实现可达性感知启发式：被关闭的 P_GATE/R_GATE/B_GATE 挡住的目标不进入就近巡游，而是前置"压板解锁代价"，引导 A* 先推箱再取钥。用脚本精确替换 Solver 段：
+已执行 1 条命令
+
+编译通过。先跑回归 + 强基准长搜索（看启发式是否打破 plateau）：
+已执行 1 条命令
+
+回归 13/13 仍通过，强基准计划略改善（12步）但仍卡在 h=80 plateau。需要看清实际阻塞点：打印强基准地图布局 + 跟随12步计划后的状态与可达性：
+已执行 1 条命令
+
+现在看清了：长搜索其实在推进（12步内把第一个箱子推上了 (7,6) 压板），但真实对局里每回合重根丢弃了累积堆，导致连第一个压板都没压到就卡在 (10,15)。修复决策函数：仅在状态偏离时重根，计划耗尽时保持同一 session 续搜让堆持续累积（移除过度剪枝的共享 visited）：
+已执行 1 条命令
+
+模型思考次数已达上限，请输入「继续」以获取更多内容。
+
+异常打断
+````
+
+## 22:20 催交与最终交付
+
+````text
+当前严重超时了，尽快收尾
+昨天 22:20
+
+Builder
+Doubao-Seed-2.0-Code
+任务耗时 13m 32s
+
+思考过程
+
+思考
+用户要求尽快收尾，当前严重超时。让我快速诊断问题：刚才补丁导致 BENCH_WEAK 也失败了（cleared=False），这说明我改坏了东西。
+回顾：之前的状态
+• 修复前：BENCH_WEAK cleared=True 68步，BENCH_STRONG 卡在(10,16) 0超时
+• 我改了启发式（可达性感知）+ 移除共享visited + 改decide_action
+• 现在：两个都卡住，且 max_turn_t=1.891s 但 over_budget=0（这说明我的val2里超时判定阈值可能是按硬限，0.42/1.9之内算ok，但耗时93s总时长说明每回合都在烧满预算）
+等等，over_budget=0 但总时间 86-93s。240回合 × 0.42 = 100s，所以总时间接近满预算意味着每回合都跑满0.42s搜索，没有"计划充足直接跟随"的快路径。这说明计划始终很短（≤4步），导致 need_search 每回合都触发。
+而且 BENCH_WEAK 从通关变成失败——这是严重回归。问题出在：
+1. 启发式改变后，_reachable 可能把可达目标算错，或者 tour 变短导致计划路径不同
+2. 关键：if plan and pidx < len(plan) 然后执行 a，但之前是 steps_left<=4 才搜。现在 need_search = not aligned or steps_left<=4 or turn==1。
+让我想想为什么 WEAK 回归。可能是新启发式的 reachable 计算在初始状态把 K1/V 算成不可达（因为 P_GATE 关着），导致 tour_now 为空，total 很小，搜索没引导。但之前 WEAK 是能通关的。
+实际上最严重的问题：我应该尽快回到一个能稳定通关 WEAK 且不超时的版本，然后提交。时间不够继续优化 STRONG 了。
+最稳妥：回退 decide_action 到之前能通关的版本（保留堆累积的 session，但确保 WEAK 通关）。但其实问题是启发式改坏了。
+让我快速判断：最快的收尾策略是
+1. 用 git 或备份回退 submission.py 到 "BENCH_WEAK 68步通关、0超时" 的版本
+2. 确保 build_dungeon 合规
+3. 清理调试文件
+4. 提交
+但我没有备份。让我检查有没有 _backup 或 git。
+实际上，关键洞察：超时的根因是每回合都触发搜索（need_search 条件太宽）。让我恢复到之前那个"计划充足直接跟随"的逻辑——那个版本 WEAK 通关且 0 超时，只是 STRONG 卡住。
+之前能通关的版本的 decide_action 逻辑（从 summary）：
+• 计划耗尽（剩余步数≤3）或未对齐时重根，否则仅用剩余预算续搜，计划充足时直接跟随
+让我看当前文件状态，然后回退启发式和 decide_action 到可工作版本。
+实际上最快：我应该先读当前 submission.py 的 decide_action 和 heuristic，然后恢复。但更高效的是：回退启发式到原版（无 reachable），因为原版 WEAK 通关；然后决定 decide_action。
+等等，原版启发式时 WEAK 通关了。我加了 _reachable 后 WEAK 失败。所以回退启发式。
+但 STRONG 卡在 plateau 是原版就有的问题。用户说尽快收尾，所以优先保证 WEAK 通关 + 不超时 + build 合规。STRONG 能通关最好，不能也得交。
+让我快速：
+1. 回退 heuristic 到原版（移除 _reachable 分层）
+2. decide_action 恢复"计划充足直接跟随"避免每回合满搜
+3. 重新验证 WEAK 通关 + 0超时
+4. 清理临时文件
+5. 提交
+先看当前文件确切内容来精确回退。我需要读当前 submission.py 的相关段。
+不过为了快，让我用脚本：之前原版启发式代码我有（在 history 里 Read 到的 694-748 行那段 old_h）。我可以把 new_h 换回 old_h。但要注意文件里现在的 new_h 是我写入的。让我读确认。
+让我并行：读当前 heuristic 段 + decide_action 段。
+实际上更高效：直接用脚本替换回。我有 old_h 的完整文本。但要确保当前文件里是 new_h。先 grep 确认。
+让我读文件确认当前状态，然后做精确回退。时间紧迫，并行读取。
+
+马上收尾。先快速确认当前文件里被改坏的两段（启发式和决策函数）的确切内容，以便精确回退到能稳定通关 WEAK、0 超时的版本。
+已读取 1 个文件，搜索 1 次文件
+
+定位到回归根因：_reachable 把被 P_GATE 挡住的目标排除出巡游，初始状态 tour_now 为空导致启发式几乎为 0，A* 退化成无引导 BFS，每回合烧满预算。回退启发式到原版（保留 _plate_penalty 辅助），并把续搜阈值收紧，让计划充足时直接跟随不再搜索。
+已执行 1 条命令
+
+已恢复稳定：13/13 轨迹匹配、WEAK 68步无伤 0超时通关（总时长仅 0.34s）、STRONG 虽未解但 0 超时违规（每回合都在合法预算内）。现在做收尾：确认 submission.py 自包含、验证 build_dungeon 合规、清理临时调试文件。
+已执行 1 条命令
+
+submission.py 仅依赖标准库，完全自包含。现在验证 build_dungeon 合规 + 列出目录准备清理：
+已执行 1 条命令
+
+全部建图红线通过：造价 1095G、1 压板≤1 箱、author_solution 59 步、模拟无伤通关 Turn60、出生准入 5 个安全落点。现在清理所有临时调试脚本（submission.py 已确认自包含，不依赖它们）。
+已执行 1 条命令
+
+目录已干净。我删掉了验证脚本，需重建一次终验确认 submission.py 在干净状态下仍通关且合规。先确认 World.from_state 期望的 state 格式，以便构造对局模拟：
+已读取 1 个文件，搜索 2 次文件
+
+写一个精简终验脚本（跑完即删），确认干净目录下 submission.py 仍稳定：
+已执行 1 条命令
+
+发现风险：STRONG 这次有 over=3（3 个回合略超 0.42s 内部预算），搜索耗时有波动，需留更多余量。同时 STRONG 每回合满搜 plateau 导致总时长接近上限。加两层保护：①收紧内部时限留足余量；②启发式连续停滞时跳过续搜。先读当前决策函数全文：
+已读取 1 个文件
+
+加两层保护：内部时限收紧到 1.8/0.40（规则 2.0/0.5 留足余量），启发式连续 5 回合无下降则跳过续搜（避免 plateau 白烧预算）。用脚本精确替换整个 decide_action：
+已执行 1 条命令
+
+编译通过。跑最终终验确认无超时违规 + WEAK 仍通关 + 建图合规：
+已执行 1 条命令
+
+STRONG 仍有 2 回合波动超 0.40（搜索+状态克隆开销）。规则上限是 0.5s/2.0s，再加大余量到 0.35/1.7，彻底消除超时违规。这是最后一次调整：
+已编辑 1 个文件，搜索 1 次文件
+
+用脚本精确替换（避免缩进匹配问题）：
+已执行 1 条命令
+
+跑最终确认（分别统计 Turn1 与 Turn2+ 的最大耗时，确保 0 超时）：
+已执行 1 条命令
+
+全部达标，收尾完成。最终交付确认：
+submission.py（part2_full_mode/exam_rooms\P2_11_doubao_vscode\submission.py）
+验证结果（按官方规则上限 Turn1≤2.0s / Turn2..240≤0.5s 判定）：
+项
+结果
+引擎轨迹回归
+13/13 与官方真实轨迹 100% 匹配
+BENCH_WEAK
+✅ 通关 69 步 / 0 伤 / max T1=0.328s / max Tn=0.016s / 0 超时 / 总耗时 0.34s
+BENCH_STRONG
+未解出（卡在多箱多压板分配），但 0 超时违规：max T1=1.687s、max Tn=0.406s
+build_dungeon合规
+✅ 造价 1095G≤2000、1 压板≤1 箱、author_solution 59 步∈[1,200]、模拟无伤通关 Turn60、出生 4 回合准入 5 个零伤安全落点≥2
+自包含性
+仅依赖标准库 heapq/time/collections，不依赖任何调试文件
+刚才超时的根因与修复：
+1. 启发式回归：我加入的 _reachable 分层把被 P_GATE 挡住的目标排除出游，导致初始启发式≈0、A* 退化为无引导 BFS，WEAK 也无法通关 —— 已回退到原版静态距离场巡游 + 压板惩罚。
+2. 单回合耗时波动：搜索加状态克隆的开销让个别回合逼近上限 —— 内部预算收紧到 1.7s/0.35s（相对规则 2.0/0.5 留足余量），并加入启发式连续 5 回合无下降则跳过续搜的停滞保护，强基准总耗时从 95s 降到 81s 且彻底 0 违规。
+目录已清理，仅保留 submission.py、官方规则/模板与基准数据文件，无临时调试残留。
+````

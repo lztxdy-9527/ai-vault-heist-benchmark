@@ -1,0 +1,355 @@
+{
+  "WAIT": {
+    "position": [
+      3,
+      21
+    ],
+    "hp": 100,
+    "result": {
+      "turn": 12,
+      "action": "WAIT",
+      "status": "ALIVE",
+      "hero_pos": [
+        3,
+        21
+      ],
+      "hero_hp": 100,
+      "keys": [
+        false,
+        false
+      ],
+      "jumps": 3,
+      "throws": 3,
+      "bombs_left": 2,
+      "gates_flipped": false,
+      "plates_active": false,
+      "trap_damage_total": 0.0,
+      "steps_taken": 0,
+      "portal_count": 0,
+      "phase_d_executed": true,
+      "exposed_cells": [
+        [
+          3,
+          21
+        ]
+      ],
+      "events": [
+        {
+          "type": "LASER_FIRE",
+          "beams": [
+            {
+              "cannon": [
+                31,
+                8
+              ],
+              "dir": "D",
+              "period": 3,
+              "cells": [
+                [
+                  31,
+                  9
+                ],
+                [
+                  31,
+                  10
+                ],
+                [
+                  31,
+                  11
+                ],
+                [
+                  31,
+                  12
+                ],
+                [
+                  31,
+                  13
+                ],
+                [
+                  31,
+                  14
+                ],
+                [
+                  31,
+                  15
+                ],
+                [
+                  31,
+                  16
+                ],
+                [
+                  31,
+                  17
+                ],
+                [
+                  31,
+                  18
+                ]
+              ]
+            },
+            {
+              "cannon": [
+                38,
+                12
+              ],
+              "dir": "L",
+              "period": 3,
+              "cells": [
+                [
+                  37,
+                  12
+                ]
+              ]
+            },
+            {
+              "cannon": [
+                34,
+                18
+              ],
+              "dir": "U",
+              "period": 4,
+              "cells": [
+                [
+                  34,
+                  17
+                ],
+                [
+                  34,
+                  16
+                ],
+                [
+                  34,
+                  15
+                ],
+                [
+                  34,
+                  14
+                ],
+                [
+                  34,
+                  13
+                ],
+                [
+                  34,
+                  12
+                ],
+                [
+                  34,
+                  11
+                ],
+                [
+                  34,
+                  10
+                ],
+                [
+                  34,
+                  9
+                ],
+                [
+                  34,
+                  8
+                ]
+              ]
+            }
+          ],
+          "hero_hits": 0
+        }
+      ]
+    }
+  },
+  "MOVE_R": {
+    "position": [
+      4,
+      21
+    ],
+    "hp": 100,
+    "result": {
+      "turn": 12,
+      "action": "MOVE_R",
+      "status": "ALIVE",
+      "hero_pos": [
+        4,
+        21
+      ],
+      "hero_hp": 100,
+      "keys": [
+        false,
+        false
+      ],
+      "jumps": 3,
+      "throws": 3,
+      "bombs_left": 2,
+      "gates_flipped": false,
+      "plates_active": false,
+      "trap_damage_total": 0.0,
+      "steps_taken": 1,
+      "portal_count": 0,
+      "phase_d_executed": true,
+      "exposed_cells": [
+        [
+          3,
+          21
+        ],
+        [
+          4,
+          21
+        ]
+      ],
+      "events": [
+        {
+          "type": "BOX_MOVE",
+          "from": [
+            4,
+            21
+          ],
+          "to": [
+            5,
+            21
+          ]
+        },
+        {
+          "type": "BOX_MOVE",
+          "from": [
+            5,
+            21
+          ],
+          "to": [
+            8,
+            21
+          ]
+        },
+        {
+          "type": "HERO_MOVE",
+          "from": [
+            3,
+            21
+          ],
+          "to": [
+            4,
+            21
+          ]
+        },
+        {
+          "type": "LASER_FIRE",
+          "beams": [
+            {
+              "cannon": [
+                31,
+                8
+              ],
+              "dir": "D",
+              "period": 3,
+              "cells": [
+                [
+                  31,
+                  9
+                ],
+                [
+                  31,
+                  10
+                ],
+                [
+                  31,
+                  11
+                ],
+                [
+                  31,
+                  12
+                ],
+                [
+                  31,
+                  13
+                ],
+                [
+                  31,
+                  14
+                ],
+                [
+                  31,
+                  15
+                ],
+                [
+                  31,
+                  16
+                ],
+                [
+                  31,
+                  17
+                ],
+                [
+                  31,
+                  18
+                ]
+              ]
+            },
+            {
+              "cannon": [
+                38,
+                12
+              ],
+              "dir": "L",
+              "period": 3,
+              "cells": [
+                [
+                  37,
+                  12
+                ]
+              ]
+            },
+            {
+              "cannon": [
+                34,
+                18
+              ],
+              "dir": "U",
+              "period": 4,
+              "cells": [
+                [
+                  34,
+                  17
+                ],
+                [
+                  34,
+                  16
+                ],
+                [
+                  34,
+                  15
+                ],
+                [
+                  34,
+                  14
+                ],
+                [
+                  34,
+                  13
+                ],
+                [
+                  34,
+                  12
+                ],
+                [
+                  34,
+                  11
+                ],
+                [
+                  34,
+                  10
+                ],
+                [
+                  34,
+                  9
+                ],
+                [
+                  34,
+                  8
+                ]
+              ]
+            }
+          ],
+          "hero_hits": 0
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,2833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.5D 像素地下城 · 纯享导播舞台 v3.0</title>
+  <script src="replays/demo_bundle.js"></script>
+  <style>
+    :root {
+      --bg-void: #070a11;
+      --dock-bg: rgba(12, 17, 28, 0.88);
+      --dock-border: rgba(148, 163, 184, 0.25);
+      --accent-gold: #fbbf24;
+      --accent-cyan: #38bdf8;
+      --accent-rose: #f43f5e;
+      --text-main: #f1f5f9;
+      --text-dim: #94a3b8;
+      --font-ui: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", "Consolas", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+    }
+
+    /* ==================== 100% 全屏纯享 16:9 2.5D 像素地牢舞台 ==================== */
+    .pure-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 48%, #111828 0%, #070a11 78%);
+    }
+
+    #dungeonCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      image-rendering: pixelated;
+    }
+
+    #dungeonCanvas:active {
+      cursor: grabbing;
+    }
+
+    /* ==================== 人类踢馆键位浮标（仅踢馆模式且非纯净录屏时显示） ==================== */
+    .human-controls-banner {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, rgba(225, 29, 72, 0.90), rgba(159, 18, 57, 0.90));
+      border: 1.5px solid rgba(253, 164, 175, 0.7);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      gap: 11px;
+      z-index: 40;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+    }
+
+    .human-controls-banner.show {
+      display: inline-flex;
+    }
+
+    .kbd-key {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    /* ==================== 紧凑悬浮导播条（不悬停时自动淡化，按 H 一键全隐） ==================== */
+    .director-floating-dock {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dock-bg);
+      border: 1px solid var(--dock-border);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.78);
+      z-index: 100;
+      opacity: 0.32;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      max-width: 96vw;
+      flex-wrap: nowrap;
+    }
+
+    .director-floating-dock:hover,
+    .director-floating-dock:focus-within {
+      opacity: 1;
+    }
+
+    body.cinema-clean-mode .director-floating-dock,
+    body.cinema-clean-mode .human-controls-banner {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: none !important;
+    }
+
+    .dock-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(148, 163, 184, 0.22);
+      flex-shrink: 0;
+    }
+
+    .dock-select {
+      background: #0b101b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      max-width: 290px;
+      outline: none;
+    }
+    .dock-select optgroup {
+      background: #0f172a;
+      color: #38bdf8;
+      font-style: normal;
+      font-weight: 800;
+    }
+
+    .dock-btn {
+      background: #172033;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.14s ease;
+    }
+
+    .dock-btn:hover {
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+
+    .dock-btn.active {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .dock-btn.play-main {
+      background: var(--accent-gold);
+      color: #0f172a;
+      border-color: var(--accent-gold);
+    }
+
+    .dock-btn.play-main:hover {
+      background: #fcd34d;
+      color: #0f172a;
+    }
+
+    .dock-btn.human-active {
+      background: var(--accent-rose);
+      border-color: #fda4af;
+      color: #fff;
+    }
+
+    .dock-slider {
+      width: 110px;
+      accent-color: var(--accent-gold);
+      cursor: pointer;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+  </style>
+</head>
+<body>
+  <main class="pure-stage" id="viewportCard">
+    <canvas id="dungeonCanvas"></canvas>
+
+    <!-- 仅人类肉身踢馆时浮出的极简按键提示 -->
+    <div class="human-controls-banner" id="humanBanner">
+      <span>👑 肉身踢馆</span>
+      <span>移动 <kbd class="kbd-key">WASD</kbd></span>
+      <span>奔跑 <kbd class="kbd-key">Shift+WASD</kbd></span>
+      <span>跨跳 <kbd class="kbd-key">J</kbd>+<kbd class="kbd-key">WASD</kbd></span>
+      <span>飞石 <kbd class="kbd-key">K</kbd>+<kbd class="kbd-key">WASD</kbd></span>
+      <span>炸弹 <kbd class="kbd-key">Space</kbd></span>
+      <span>等待 <kbd class="kbd-key">E</kbd></span>
+      <span>重开 <kbd class="kbd-key">R</kbd></span>
+      <span id="humanModIndicator" style="color:#fde047;"></span>
+    </div>
+
+    <!-- 底部左侧品牌占位符（留空供后期剪辑） -->
+  </main>
+
+  <!-- 紧凑悬浮导播台：平时淡出，悬停亮起，按 H 键纯净录屏完全隐藏 -->
+  <div class="director-floating-dock" id="directorDock">
+    <select class="dock-select" id="matchSelect" onchange="onSelectMatch(this.value)"></select>
+
+    <div class="btn-group">
+      <button class="dock-btn" onclick="seekFrame(0)" title="回到开局">⏮</button>
+      <button class="dock-btn" onclick="stepFrame(-1)" title="上一回合">◀</button>
+      <button class="dock-btn play-main" id="playPauseBtn" onclick="togglePlay()">▶ 播放</button>
+      <button class="dock-btn" onclick="stepFrame(1)" title="下一回合">▶</button>
+    </div>
+
+    <input type="range" class="dock-slider" id="frameSlider" min="0" max="100" value="0" oninput="seekFrame(this.value)" />
+
+    <div class="btn-group">
+      <button class="dock-btn" id="spd1Btn" onclick="setPlaySpeed(1)">1x</button>
+      <button class="dock-btn active" id="spd2Btn" onclick="setPlaySpeed(2)">2x</button>
+      <button class="dock-btn" id="spd4Btn" onclick="setPlaySpeed(4)">4x</button>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <div class="btn-group" title="切换战争迷雾模式 (快捷键 F)">
+      <button class="dock-btn active" id="visGodBtn" onclick="setVisionMode('GOD')">上帝全亮</button>
+      <button class="dock-btn" id="visSemiBtn" onclick="setVisionMode('SEMI')">迷雾透视</button>
+      <button class="dock-btn" id="visFogBtn" onclick="setVisionMode('FOG')">勇者盲视</button>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <button class="dock-btn active" id="camModeBtn" onclick="toggleCameraMode()" title="丝滑跟随 / 全景地图 (快捷键 C)">🎥 跟随</button>
+    <button class="dock-btn" id="toggleLabelsBtn" onclick="toggleCalloutLabels()" title="切换临时路标 (默认关闭，靠2.5D建模识别)">🏷️</button>
+    <button class="dock-btn active" id="spoilerBtn" onclick="toggleSpoilerMask()" title="前85%正片录屏隐藏 ASTRA 6.2 为神秘客 [???] (快捷键 M)">🕵️ 隐身???</button>
+    <button class="dock-btn" id="humanModeBtn" onclick="toggleHumanMode()" title="UP主亲自用 WASD 下场挑战">🎮 踢馆</button>
+    <button class="dock-btn" id="cleanModeBtn" onclick="toggleCleanBroadcastMode()" title="隐藏全部控件纯净录屏 (快捷键 H)">🎬 录屏</button>
+  </div>
+
+  <script>
+    // ============================================================================
+    // 1. 基础常量与现有资产映射（保留 <REPO_ROOT>/assets\* 现有文件暂不改动，待统一替换）
+    // ============================================================================
+    const GRID_W = 40;
+    const GRID_H = 26;
+    const MAX_TURNS = 240;
+    const TILE_SIZE = 32; // 基础 16x16 像素网格 @ 2x = 32 world units
+
+    const ASSET_MAP = {
+      astra62:  { avatar: "../assets/avatars/astra.png",    sprite: "../assets/sprites/px_astra.png",    color: "#a855f7", accent: "#f43f5e", name: "ASTRA 6.2" },
+      astra:    { avatar: "../assets/avatars/astra.png",    sprite: "../assets/sprites/px_astra.png",    color: "#60a5fa", accent: "#fde047", name: "ASTRA" },
+      sol:      { avatar: "../assets/avatars/sol.png",      sprite: "../assets/sprites/px_sol.png",      color: "#a3e635", accent: "#f8fafc", name: "SOL" },
+      argon:    { avatar: "../assets/avatars/argon.png",    sprite: "../assets/sprites/px_argon.png",    color: "#a855f7", accent: "#38bdf8", name: "ARGON" },
+      carbon:   { avatar: "../assets/avatars/carbon.png",   sprite: "../assets/sprites/px_carbon.png",   color: "#f43f5e", accent: "#c084fc", name: "CARBON" },
+      hydrogen: { avatar: "../assets/avatars/hydrogen.png", sprite: "../assets/sprites/px_hydrogen.png", color: "#fb923c", accent: "#38bdf8", name: "HYDROGEN" },
+      opus:     { avatar: "../assets/avatars/opus.png",     sprite: "../assets/sprites/px_opus.png",     color: "#f59e0b", accent: "#fef3c7", name: "Claude Opus 5.5" },
+      deepseek: { avatar: "../assets/avatars/deepseek.png", sprite: "../assets/sprites/px_deepseek.png", color: "#38bdf8", accent: "#ffffff", name: "DeepSeek" },
+      qwen:     { avatar: "../assets/avatars/qwen.png",     sprite: "../assets/sprites/px_qwen.png",     color: "#818cf8", accent: "#e0e7ff", name: "Qwen" },
+      kimi:     { avatar: "../assets/avatars/kimi.png",     sprite: "../assets/sprites/px_kimi.png",     color: "#cbd5e1", accent: "#818cf8", name: "Kimi" },
+      glm:      { avatar: "../assets/avatars/glm.png",      sprite: "../assets/sprites/px_glm.png",      color: "#2dd4bf", accent: "#0f172a", name: "GLM" },
+      hunyuan:  { avatar: "../assets/avatars/hunyuan.png",  sprite: "../assets/sprites/px_hunyuan.png",  color: "#c084fc", accent: "#f43f5e", name: "混元 HY4" },
+      doubao:   { avatar: "../assets/avatars/doubao.png",   sprite: "../assets/sprites/px_doubao.png",   color: "#fb7185", accent: "#e2e8f0", name: "豆包", pot: true },
+      human:    { avatar: "../assets/avatars/carbon.png",   sprite: "../assets/sprites/px_human.png",    color: "#fbbf24", accent: "#ef4444", name: "人类 UP 主" },
+      official: { avatar: "../assets/avatars/astra.png",    sprite: "../assets/sprites/px_astra.png",    color: "#38bdf8", accent: "#ffffff", name: "官方" }
+    };
+
+    function getAssetKey(idOrName) {
+      if (!idOrName) return "official";
+      const key = String(idOrName).toLowerCase();
+      if (key.includes("6.2") || key.includes("astra62")) return "astra62";
+      if (ASSET_MAP[key]) return key;
+      for (const [k, v] of Object.entries(ASSET_MAP)) {
+        if (k === "astra62") continue;
+        if (key.includes(k) || v.name.toLowerCase() === key) return k;
+      }
+      return "official";
+    }
+
+    function getAssetInfo(idOrName) {
+      return ASSET_MAP[getAssetKey(idOrName)];
+    }
+
+    const AVATAR_IMAGES = {};
+    const SPRITE_IMAGES = {};
+    for (const [k, info] of Object.entries(ASSET_MAP)) {
+      const av = new Image();
+      av.src = info.avatar;
+      AVATAR_IMAGES[k] = av;
+      const sp = new Image();
+      sp.src = info.sprite;
+      SPRITE_IMAGES[k] = sp;
+    }
+
+    // ============================================================================
+    // 2. 2.5D 像素地下城精灵图集 (16x16 / 16x22 / 16x26 纯手工像素点阵编译缓存)
+    // ============================================================================
+    function makePixelSprite(palette, rows) {
+      const h = rows.length;
+      const w = rows[0].length;
+      const c = document.createElement("canvas");
+      c.width = w;
+      c.height = h;
+      const g = c.getContext("2d");
+      for (let y = 0; y < h; y++) {
+        const r = rows[y];
+        for (let x = 0; x < w; x++) {
+          const ch = r[x];
+          const col = palette[ch];
+          if (col) {
+            g.fillStyle = col;
+            g.fillRect(x, y, 1, 1);
+          }
+        }
+      }
+      return c;
+    }
+
+    const SPRITES = {};
+    function buildPixelAtlas() {
+      // ---- 1. 地下城石砖地板变体 (16x16) ----
+      const floorPal = {
+        ".": "#1d2536",
+        ",": "#232c40",
+        "h": "#2b364e",
+        "s": "#141a27",
+        "c": "#171e2d"
+      };
+      SPRITES.FLOOR_A = makePixelSprite(floorPal, [
+        "shhhhhhhhhssssss",
+        "h........,s,,,.h",
+        "h.,,,,,,.,s,...c",
+        "s.,,,,,,.,c,...s",
+        "s.,,,,,,.,c....s",
+        "s........c.....s",
+        "ssssssssssssssss",
+        "c..h,,,,,,,s.h,,",
+        ",..h,c,,,,,s.,..",
+        ",..s,,,,,,,s.,..",
+        ",..s,,,,,,,s.,..",
+        ",..s,,,,,,,c.,..",
+        "s..c.......s....",
+        "ssssssssssssssss",
+        "h,,,,,cs,,,,,,,.",
+        ".,,,,,,s,,,,,,,,"
+      ]);
+      SPRITES.FLOOR_B = makePixelSprite(floorPal, [
+        "ssssssssssssssss",
+        "h,,,,,.s,,,,,,.h",
+        ",,,,,,cs,,c,,,.,",
+        ",,,,,,,s,,,,,,.,",
+        ",,,,,,,s,,,,,,.,",
+        "......,s.......s",
+        "ssssssssssssssss",
+        "shhhhh.s.hhhhh..",
+        "h,,,,,.s.,,,,,c.",
+        ".,,,,,,c,,,,,,..",
+        ".,,,,,,s,,,,,,..",
+        ".,,,,,,s,,,,,,..",
+        ".......s........",
+        "ssssssssssssssss",
+        ",...cs,,,,,,cs,,",
+        "....s,,,,,,,s,,,"
+      ]);
+
+      // ---- 2. 2.5D 钛金承重墙 T_W (16x22: 顶部16行城垛顶面 + 底部6行正面切面砖墙) ----
+      const twPal = {
+        "k": "#0d111a", // 深黑轮廓
+        "b": "#7c8ba6", // 顶部高光棱线
+        "t": "#49546b", // 顶面主金属青灰
+        "m": "#3b4559", // 顶面暗板
+        "r": "#cbd5e1", // 顶面四角铆钉亮点
+        "e": "#64748b", // 正面沿口高光
+        "f": "#283042", // 正面砖块底色
+        "d": "#1c2230", // 正面砖块阴影
+        "g": "#141924"  // 砖缝深灰
+      };
+      SPRITES.T_W = makePixelSprite(twPal, [
+        "kbbbbbbbbbbbbbbk",
+        "btrtttttttttttrb",
+        "bttttttmtttttttb",
+        "bttmmmmmmmmmmttb",
+        "bttmttttttttmttb",
+        "bttmtmmttmmtmttb",
+        "bttmtmmttmmtmttb",
+        "bttmttttttttmttb",
+        "bttmttttttttmttb",
+        "bttmtmmttmmtmttb",
+        "bttmtmmttmmtmttb",
+        "bttmttttttttmttb",
+        "bttmmmmmmmmmmttb",
+        "bttttttmtttttttb",
+        "btrtttttttttttrb",
+        "keeeeeeeeeeeeeek",
+        "kfffgffffffgfffk",
+        "kdddgddddddgdddk",
+        "kggggggggggggggk",
+        "kffffffgfffffffk",
+        "kddddddgdddddddk",
+        "kkkkkkkkkkkkkkkk"
+      ]);
+
+      // ---- 3. 2.5D 可炸裂隙砖墙 W (16x22: 暖陶土橘棕砖 + 明显裂缝) ----
+      const wPal = {
+        "k": "#231207",
+        "h": "#f59e0b",
+        "o": "#c97422",
+        "m": "#a45816",
+        "c": "#451e06",
+        "f": "#7d3e11",
+        "d": "#572909",
+        "l": "#eab308"
+      };
+      SPRITES.W = makePixelSprite(wPal, [
+        "khhhhhhhhhhhhhhk",
+        "hoooooomoooooooh",
+        "hoooocccooooomoh",
+        "kooomccomommmmok",
+        "hooomocooooooomh",
+        "hooooocooocoooom",
+        "kmmmmccmmccmmmok",
+        "kooooocccoooooom",
+        "hooomoocmooooomh",
+        "hoooccccmmmmmmok",
+        "hooooocooooooooh",
+        "kmmmmmcmmmmmmmok",
+        "hoooooocoooooooh",
+        "hooooooccoooooom",
+        "hllllllccclllllh",
+        "keeeeecccceeeeek".replace(/e/g, "h"),
+        "kfffcffffffcfffk",
+        "kdddcddddddcdddk",
+        "kcccccccccccccck",
+        "kfffffcffffffffk",
+        "kdddddcddddddddk",
+        "kkkkkkkkkkkkkkkk"
+      ]);
+
+      // ---- 4. 2.5D 致命深渊 PIT (16x16: 北侧露出下沉地下石壁台阶，下方漆黑幽紫深渊) ----
+      const pitPal = {
+        "k": "#030408",
+        "r": "#475569",
+        "w": "#273043",
+        "d": "#171d29",
+        "s": "#0f141e",
+        "p": "#3b1d5e",
+        "v": "#6b21a8"
+      };
+      SPRITES.PIT = makePixelSprite(pitPal, [
+        "krrrrrrrrrrrrrrk",
+        "kwwwdwwwwwwdwwwk",
+        "kdddsddddddsdddk",
+        "ksssssskwssssssk",
+        "kdsdsddkddddsdsk",
+        "kskkskkkkkkskksk",
+        "kkkkkkkkkkkkkkkk",
+        "kkkkkkkkkkkkkkkk",
+        "kkkkkkpkkkkkkkkk",
+        "kkkkkkkkkkkkpkkk",
+        "kkpkkkkkkkkkkkkk",
+        "kkkkkkkkvkkkkkkk",
+        "kkkkpkkkkkkkkkkk",
+        "kkkkkkkkkkkkkkpk",
+        "kkkkkkkkpkkkkkkk",
+        "kkkkkkkkkkkkkkkk"
+      ]);
+
+      // ---- 5. 滑冰道 ICE (16x16: 晶莹冰蓝反光斜纹) ----
+      const icePal = {
+        "e": "#0284c7",
+        "b": "#0ea5e9",
+        "i": "#38bdf8",
+        "l": "#7dd3fc",
+        "w": "#e0f2fe"
+      };
+      SPRITES.ICE = makePixelSprite(icePal, [
+        "ebbbbbbbbbbbbbbe",
+        "biiiiiiiiiiilwib",
+        "biiiiiiiiiilwlib",
+        "biiiiiiiiiilwiib",
+        "biiiiiiiiiiiiiib",
+        "biiilwiiiiiiilwb",
+        "biilwliiiiiilwlb",
+        "biilwiiiiiiilwib",
+        "biiiiiiiiiiiiiib",
+        "biiiilwiiiiiiiib",
+        "biiilwliiiilwiib",
+        "biiilwiiiilwliib",
+        "biiiiiiiiilwiiib",
+        "biiilwiiiiiiiiib",
+        "biilwliiiiiiiiib",
+        "ebbbbbbbbbbbbbbe"
+      ]);
+
+      // ---- 6. 脆冰断桥 CRACK (16x16: 薄青冰下露出黑色深渊裂缝) ----
+      const crackPal = {
+        "e": "#0891b2",
+        "i": "#22d3ee",
+        "l": "#a5f3fc",
+        "w": "#ecfeff",
+        "k": "#05070e"
+      };
+      SPRITES.CRACK = makePixelSprite(crackPal, [
+        "elllllllllllllle",
+        "liikiiiiiiiikiil",
+        "liikkiiiiiikkiil",
+        "liiikkkiiikkiiil",
+        "liiiiikkkkkiilwl",
+        "liiwiiikkiiiiwll",
+        "liiiiikkkiikkkil",
+        "liikkkiiikkiiiil",
+        "likkiiiikiiiiiil",
+        "liiiiikkkiikiiil",
+        "liiiikkiiikkkkil",
+        "liiwkkiiiiiiikkl",
+        "liiwkiiiikkiiiil",
+        "liiiiiiiikkkiiil",
+        "llllllllllklllle",
+        "eeeeeeeeeeeeeeee"
+      ]);
+
+      // ---- 7. 红蓝开关 SWITCH (16x16: 石座中央发光红/蓝压板按钮) ----
+      function makeSwitch(isBlue) {
+        return makePixelSprite({
+          "k": "#0b0f19",
+          "s": "#334155",
+          "h": "#64748b",
+          "b": isBlue ? "#1d4ed8" : "#be123c",
+          "c": isBlue ? "#3b82f6" : "#f43f5e",
+          "g": isBlue ? "#93c5fd" : "#fda4af",
+          "w": "#ffffff"
+        }, [
+          "................",
+          "..kkkkkkkkkkkk..",
+          ".khhhhhhhhhhhhk.",
+          ".khsssssssssshk.",
+          ".khsccccccccshk.",
+          ".khscggggggcshk.",
+          ".khscgwwwwgcshk.",
+          ".khscgwwwwgcshk.",
+          ".khscggggggcshk.",
+          ".khsccccccccshk.",
+          ".khsbbbbbbbbshk.",
+          ".khsbbbbbbbbshk.",
+          ".khsssssssssshk.",
+          ".kssssssssssssk.",
+          "..kkkkkkkkkkkk..",
+          "................"
+        ]);
+      }
+      SPRITES.SWITCH_RED = makeSwitch(false);
+      SPRITES.SWITCH_BLUE = makeSwitch(true);
+
+      // ---- 8. 红蓝升降门（关闭 16x22 带能源栏杆 / 开启 16x16 地槽底座） ----
+      function makeGateClosed(isBlue) {
+        return makePixelSprite({
+          "k": "#0a0e17",
+          "p": "#475569",
+          "h": "#94a3b8",
+          "d": "#1e293b",
+          "c": isBlue ? "#3b82f6" : "#f43f5e",
+          "g": isBlue ? "#93c5fd" : "#fda4af",
+          "w": "#ffffff",
+          "m": isBlue ? "#1d4ed8" : "#9f1239"
+        }, [
+          "khhkkkkkkkkkkhhk",
+          "kphcggggggggchpk",
+          "kphmccccccccmhpk",
+          "kppkkkkkkkkkkppk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kppkkkkkkkkkkppk",
+          "kphcggggggggchpk",
+          "kddmccccccccmddk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kdd..cwg.gwc..dk",
+          "kddmmmmmmmmmmddk",
+          "kkkkkkkkkkkkkkkk"
+        ]);
+      }
+      function makeGateOpen(isBlue) {
+        return makePixelSprite({
+          "k": "#111622",
+          "s": "#2b3648",
+          "c": isBlue ? "#1d4ed8" : "#9f1239"
+        }, [
+          "................",
+          ".ksskkkkkkkkssk.",
+          ".kck........kck.",
+          ".ksk..k..k..ksk.",
+          ".ksk..k..k..ksk.",
+          "................",
+          "................",
+          "................",
+          "................",
+          "................",
+          "................",
+          ".ksk..k..k..ksk.",
+          ".ksk..k..k..ksk.",
+          ".kck........kck.",
+          ".ksskkkkkkkkssk.",
+          "................"
+        ]);
+      }
+      SPRITES.R_GATE_CLOSED = makeGateClosed(false);
+      SPRITES.R_GATE_OPEN = makeGateOpen(false);
+      SPRITES.B_GATE_CLOSED = makeGateClosed(true);
+      SPRITES.B_GATE_OPEN = makeGateOpen(true);
+
+      // ---- 9. 2.5D 激光炮塔 LASER_U/D/L/R (16x22) ----
+      function makeLaserSprite(dir) {
+        const pal = {
+          "k": "#090c14",
+          "h": "#64748b",
+          "t": "#334155",
+          "f": "#1e293b",
+          "y": "#fbbf24",
+          "r": "#f43f5e",
+          "g": "#fda4af",
+          "w": "#ffffff",
+          "b": "#94a3b8"
+        };
+        const rows = [
+          "khhhhhhhhhhhhhhk",
+          "htyyttttttttyyth",
+          "htttttttttttttth",
+          "httttkkkkkktttth",
+          "htttkrrrrrrkttth",
+          "htttkrgggggkttth",
+          "htttkrgwwrgkttth",
+          "htttkrgwwrgkttth",
+          "htttkrgggggkttth",
+          "htttkrrrrrrkttth",
+          "httttkkkkkktttth",
+          "htttttttttttttth",
+          "htyyttttttttyyth",
+          "htttttttttttttth",
+          "kbbbbbbbbbbbbbbk",
+          "kffffffffffffffk",
+          "kfffkrrrrrrkfffk",
+          "kfffkggggggkfffk",
+          "kfffkrrrrrrkfffk",
+          "kffffffffffffffk",
+          "kffyyffffffyyffk",
+          "kkkkkkkkkkkkkkkk"
+        ].map(r => r.split(""));
+        // 加上明显炮口方向突出结构
+        if (dir === "R") {
+          for (let y = 5; y <= 9; y++) {
+            rows[y][13] = "b"; rows[y][14] = "b"; rows[y][15] = "r";
+          }
+          rows[7][14] = "w"; rows[7][15] = "w";
+        } else if (dir === "L") {
+          for (let y = 5; y <= 9; y++) {
+            rows[y][2] = "b"; rows[y][1] = "b"; rows[y][0] = "r";
+          }
+          rows[7][1] = "w"; rows[7][0] = "w";
+        } else if (dir === "U") {
+          for (let x = 5; x <= 10; x++) {
+            rows[0][x] = "r"; rows[1][x] = "b"; rows[2][x] = "b";
+          }
+          rows[0][7] = "w"; rows[0][8] = "w";
+        } else if (dir === "D") {
+          for (let x = 5; x <= 10; x++) {
+            rows[18][x] = "b"; rows[19][x] = "r"; rows[20][x] = "r"; rows[21][x] = "w";
+          }
+        }
+        return makePixelSprite(pal, rows.map(r => r.join("")));
+      }
+      ["U", "D", "L", "R"].forEach(d => { SPRITES[`LASER_${d}`] = makeLaserSprite(d); });
+
+      // ---- 10. 2.5D 机械弹射板 SPRING_U/D/L/R (16x18) ----
+      function makeSpringSprite(dir) {
+        const pal = {
+          "k": "#1f0e04",
+          "b": "#9a3412",
+          "o": "#f97316",
+          "h": "#fdba74",
+          "y": "#fde047",
+          "w": "#fef9c3"
+        };
+        const base = [
+          "................",
+          "..kkkkkkkkkkkk..",
+          ".khhhhhhhhhhhhk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".khoooooooooohk.",
+          ".kbbbbbbbbbbbbk.",
+          ".kbyybbbbbbyybk.",
+          "..kkkkkkkkkkkk..",
+          "..kbbbyyyybbbk..",
+          "...kkkkkkkkkk..."
+        ].map(r => r.split(""));
+        // 画金黄色像素方向箭头
+        const setY = (x, y, c = "y") => { if (base[y] && base[y][x]) base[y][x] = c; };
+        if (dir === "U") {
+          [7,8].forEach(x => { for (let y = 4; y <= 11; y++) setY(x, y, "w"); });
+          [6,9].forEach(x => setY(x, 5)); [5,10].forEach(x => setY(x, 6)); [4,11].forEach(x => setY(x, 7));
+        } else if (dir === "D") {
+          [7,8].forEach(x => { for (let y = 4; y <= 11; y++) setY(x, y, "w"); });
+          [6,9].forEach(x => setY(x, 10)); [5,10].forEach(x => setY(x, 9)); [4,11].forEach(x => setY(x, 8));
+        } else if (dir === "L") {
+          [7,8].forEach(y => { for (let x = 4; x <= 11; x++) setY(x, y, "w"); });
+          [6,9].forEach(y => setY(5, y)); [5,10].forEach(y => setY(6, y)); [4,11].forEach(y => setY(7, y));
+        } else if (dir === "R") {
+          [7,8].forEach(y => { for (let x = 4; x <= 11; x++) setY(x, y, "w"); });
+          [6,9].forEach(y => setY(10, y)); [5,10].forEach(y => setY(9, y)); [4,11].forEach(y => setY(8, y));
+        }
+        return makePixelSprite(pal, base.map(r => r.join("")));
+      }
+      ["U", "D", "L", "R"].forEach(d => { SPRITES[`SPRING_${d}`] = makeSpringSprite(d); });
+
+      // ---- 11. 2.5D 水晶折跃斜坡 MIRROR_NE/SE/SW/NW (16x20) ----
+      function makeMirrorSprite(kind) {
+        const pal = {
+          "k": "#0a101d",
+          "m": "#334155",
+          "d": "#1e293b",
+          "b": "#64748b",
+          "c": "#06b6d4",
+          "i": "#67e8f9",
+          "w": "#ecfeff"
+        };
+        const g = Array.from({ length: 20 }, () => Array(16).fill("."));
+        const isSlash = (kind === "MIRROR_NE" || kind === "MIRROR_SW");
+        for (let y = 2; y < 18; y++) {
+          for (let x = 1; x < 15; x++) {
+            const ry = y - 2;
+            const nx = (x - 1) / 13;
+            const ny = ry / 15;
+            const diag = isSlash ? Math.abs((1 - nx) - ny) : Math.abs(nx - ny);
+            const isBorder = (x === 1 || x === 14 || y === 2 || y === 17);
+            if (isBorder) {
+              g[y][x] = "k";
+            } else if (diag < 0.10) {
+              g[y][x] = "w";
+            } else if (diag < 0.22) {
+              g[y][x] = "i";
+            } else if (y === 3) {
+              g[y][x] = "b";
+            } else {
+              g[y][x] = (y > 14) ? "d" : "m";
+            }
+          }
+        }
+        // 在对应象限加亮天青导向菱形角标，一眼辨认折射朝向
+        const cornerMap = {
+          MIRROR_NE: [11, 5],
+          MIRROR_SE: [11, 13],
+          MIRROR_SW: [4, 13],
+          MIRROR_NW: [4, 5]
+        };
+        const [cx, cy] = cornerMap[kind];
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (Math.abs(dx) + Math.abs(dy) <= 1 && g[cy + dy] && g[cy + dy][cx + dx]) {
+              g[cy + dy][cx + dx] = (dx === 0 && dy === 0) ? "w" : "c";
+            }
+          }
+        }
+        return makePixelSprite(pal, g.map(r => r.join("")));
+      }
+      ["MIRROR_NE", "MIRROR_SE", "MIRROR_SW", "MIRROR_NW"].forEach(m => { SPRITES[m] = makeMirrorSprite(m); });
+
+      // ---- 12. 2.5D 魔法传送门 PORTAL_1 & PORTAL_2 (16x18) ----
+      function makePortalSprite(pairIdx) {
+        return makePixelSprite({
+          "k": "#0a0d17",
+          "s": "#475569",
+          "h": "#94a3b8",
+          "o": pairIdx === 1 ? "#7e22ce" : "#0369a1",
+          "m": pairIdx === 1 ? "#c084fc" : "#38bdf8",
+          "w": pairIdx === 1 ? "#fae8ff" : "#e0f2fe"
+        }, [
+          "....kkkkkkkk....",
+          "..kkhhhhhhhhkk..",
+          ".ksssoooooomssk.",
+          ".ksoommmwwmoosk.",
+          "kshomwmmmwwmohsk",
+          "koommwwmmmoomook",
+          "komwwmooomwwmmok",
+          "komwmooommwwmmok",
+          "kommmmwmmmmwmmok",
+          "koommmwwwwmmoook",
+          "kshommmwwmmmoskh",
+          ".ksoommmmmmmoosk",
+          ".ksssooooooossk.",
+          "..kksssssssskk..",
+          "...kddddddddk...".replace(/d/g, "s"),
+          "....kkkkkkkk....",
+          "................",
+          "................"
+        ]);
+      }
+      SPRITES.PORTAL_1 = makePortalSprite(1);
+      SPRITES.PORTAL_2 = makePortalSprite(2);
+
+      // ---- 13. 2.5D 可推木铁箱 BOX (16x22) ----
+      SPRITES.BOX = makePixelSprite({
+        "k": "#1f1206",
+        "h": "#facc15",
+        "w": "#b45309",
+        "l": "#d97706",
+        "d": "#78350f",
+        "m": "#94a3b8",
+        "s": "#475569"
+      }, [
+        "................",
+        ".kkkkkkkkkkkkkk.",
+        ".kmmllllllllmmk.",
+        ".kmwllwllwllwmk.",
+        ".klllhllllhlllk.",
+        ".kllwwlwwlwwllk.",
+        ".klwlhlwwlhlllk.",
+        ".kllwwllllllwlk.",
+        ".klllhlllhllllk.",
+        ".kmwllwllwllwmk.",
+        ".kmmllllllllmmk.",
+        ".kssssssssssssk.",
+        ".kssssssssssssk.",
+        ".ksswwwwwwwwssk.",
+        ".ksswddwdwddssk.",
+        ".ksswwdwwdwddsk.",
+        ".ksswdwdwddwddk.",
+        ".ksswwwwwwwwssk.",
+        ".kssddddddddssk.",
+        ".kkkkkkkkkkkkkk.",
+        "................",
+        "................"
+      ]);
+
+      // ---- 14. 2.5D 烈性火药桶 TNT (16x22) ----
+      SPRITES.TNT = makePixelSprite({
+        "k": "#1f060d",
+        "y": "#fde047",
+        "o": "#f97316",
+        "r": "#e11d48",
+        "h": "#fb7185",
+        "d": "#881337",
+        "w": "#ffffff",
+        "s": "#334155"
+      }, [
+        ".......yk.......",
+        "......koyk......",
+        "..kkkkkkkkkkkk..",
+        ".kssssssssssssk.",
+        ".kshhhhhhhhhhsk.",
+        ".ksrrrrrrrrrrsk.",
+        ".kshrrrrrrrrhsk.",
+        ".ksrrrrrrrrrrsk.",
+        ".kssrrrrrrrrssk.",
+        ".kssssssssssssk.",
+        ".kwwwwwwwwwwwwk.",
+        ".kwkkkwkwwkwkkk.",
+        ".kwdkwkdkwkdkwk.",
+        ".kwdkwkwkdkdkwk.",
+        ".kwwwwwwwwwwwwk.",
+        ".krrrrrrrrrrrrk.",
+        ".kddddddddddddk.",
+        ".kssssssssssssk.",
+        ".kddddddddddddk.",
+        "..kkkkkkkkkkkk..",
+        "................",
+        "................"
+      ]);
+
+      // ---- 15. 钥匙 K1 (黄金钥匙) & K2 (寒冰蓝钥匙) (16x16) ----
+      function makeKeySprite(isBlue) {
+        return makePixelSprite({
+          "k": "#0a0d16",
+          "h": isBlue ? "#e0f2fe" : "#fef08a",
+          "m": isBlue ? "#38bdf8" : "#fbbf24",
+          "d": isBlue ? "#0284c7" : "#d97706"
+        }, [
+          "................",
+          "................",
+          "...kkkk.........",
+          "..khhhhk........",
+          ".khmmddhk.......",
+          ".khdkkmdhkkkkkk.",
+          ".khdkkmmmmmmhhk.",
+          ".khmmddmmmmdddk.",
+          "..kddddk..kmkdk.",
+          "...kkkk...kdk.k.",
+          "..........kkk...",
+          "................",
+          "................",
+          "................",
+          "................",
+          "................"
+        ]);
+      }
+      SPRITES.K1 = makeKeySprite(false);
+      SPRITES.K2 = makeKeySprite(true);
+
+      // ---- 16. 2.5D 终极黄金圣殿金库大门 V (16x26) ----
+      SPRITES.VAULT = makePixelSprite({
+        "k": "#1f1402",
+        "w": "#fef9c3",
+        "y": "#fde047",
+        "g": "#f59e0b",
+        "d": "#b45309",
+        "e": "#10b981",
+        "l": "#6ee7b7"
+      }, [
+        "....kkkkkkkk....",
+        "..kkwwwwwwwwkk..",
+        ".kwyyeeeeeeeywk.",
+        "kgyyelllllleyygk",
+        "kgyyewwwwwwweygk",
+        "kgyyeeeeeeeeeygk",
+        "kgyyyyyyyyyyyygk",
+        "kgwwwwwwwwwwwwgk",
+        "kgyggggggggggygk",
+        "kgygddkggkddgygk",
+        "kgygdkkggkkdgygk",
+        "kgygddkggkddgygk",
+        "kgyggggggggggygk",
+        "kgyggwwwwwwggygk",
+        "kgdddddddddddddg".replace(/g$/,"k"),
+        "kggggggggggggggk",
+        "kgdyyyggggyyydgk",
+        "kgdykkggggkkydgk",
+        "kgdykkggggkkydgk",
+        "kgdgggwwwwgggdgk",
+        "kgddddwwwwddddgk",
+        "kgddddddddddddgk",
+        "kddddddddddddddk",
+        "kkkkkkkkkkkkkkkk",
+        "................",
+        "................"
+      ]);
+
+      // ---- 17. 2.5D 宝箱 (普通 / 补给箱 / 露牙宝箱怪) (16x20) ----
+      SPRITES.CHEST_NORMAL = makePixelSprite({
+        "k": "#1b0f05", "y": "#fbbf24", "w": "#fef08a", "l": "#c27022", "d": "#78350f"
+      }, [
+        "................",
+        "..kkkkkkkkkkkk..",
+        ".kyllllllllllyk.",
+        ".kllllllllllllk.",
+        ".klwwwwwwwwwwlk.",
+        ".kllllllllllllk.",
+        ".kyyywwwwwwyyyk.",
+        ".kdddyyyyyydddk.",
+        ".kdddlyyyyllddk.",
+        ".kddddlyylddddk.",
+        ".kdddddkkdddddk.",
+        ".kddddddddddddk.",
+        ".kddddddddddddk.",
+        ".kyddddddddddyk.",
+        ".kddddddddddddk.",
+        "..kkkkkkkkkkkk..",
+        "................",
+        "................",
+        "................",
+        "................"
+      ]);
+      SPRITES.CHEST_HEAL = makePixelSprite({
+        "k": "#1b0f05", "y": "#fbbf24", "w": "#bbf7d0", "g": "#22c55e", "l": "#c27022", "d": "#78350f"
+      }, [
+        "................",
+        "..kkkkkkkkkkkk..",
+        ".kyllllllllllyk.",
+        ".kllllllllllllk.",
+        ".klwwwwwwwwwwlk.",
+        ".kllllggggllllk.",
+        ".kyyygwwwwgyyyk.",
+        ".kdddggggggdddk.",
+        ".kdddyyyyyydddk.",
+        ".kddddyyyyddddk.",
+        ".kdddddkkdddddk.",
+        ".kddddddddddddk.",
+        ".kddddddddddddk.",
+        ".kyddddddddddyk.",
+        ".kddddddddddddk.",
+        "..kkkkkkkkkkkk..",
+        "................",
+        "................",
+        "................",
+        "................"
+      ]);
+      SPRITES.CHEST_MIMIC = makePixelSprite({
+        "k": "#1b0f05", "y": "#fbbf24", "l": "#b45309", "d": "#78350f", "r": "#f43f5e", "f": "#ffffff"
+      }, [
+        "................",
+        "..kkkkkkkkkkkk..",
+        ".kyllllllllllyk.",
+        ".kllllllllllllk.",
+        ".kllrrrrlrrrrlk.",
+        ".krrrrrrrrrrrrk.",
+        ".kffrffrrffrffk.",
+        ".kffrffrrffrffk.",
+        ".krrrrrffrrrrrk.",
+        ".kyyyddddddyyyk.",
+        ".kddddddddddddk.",
+        ".kddddddddddddk.",
+        ".kddddddddddddk.",
+        ".kyddddddddddyk.",
+        ".kddddddddddddk.",
+        "..kkkkkkkkkkkk..",
+        "................",
+        "................",
+        "................",
+        "................"
+      ]);
+
+      // ---- 18. 骸骨线索 CLUE (16x16) ----
+      SPRITES.CLUE = makePixelSprite({
+        "k": "#0a0e17",
+        "w": "#f1f5f9",
+        "s": "#94a3b8"
+      }, [
+        "................",
+        "................",
+        ".....kkkkkk.....",
+        "....kwwwwwwk....",
+        "...kwwwwwwwwk...",
+        "...kwkkwwkkwk...",
+        "...kwkkwwkkwk...",
+        "...kwwwwwwwwk...",
+        "....ksskkssk....",
+        "....kwwkkwwk....",
+        "..kk.kkkkkk.kk..",
+        ".kwwk......kwwk.",
+        "..kk..kkkk..kk..",
+        "......kssk......",
+        "................",
+        "................"
+      ]);
+
+      // ---- 19. 黑色定时炸弹外壳 BOMB (16x16) ----
+      SPRITES.BOMB = makePixelSprite({
+        "k": "#05070c",
+        "b": "#1e293b",
+        "h": "#475569",
+        "w": "#cbd5e1",
+        "y": "#fde047",
+        "r": "#f97316"
+      }, [
+        ".........yk.....",
+        "........kryk....",
+        ".......k........",
+        ".....kkkkkk.....",
+        "....khhhhhhk....",
+        "...khhwbbbbbkk..",
+        "..khhwbbbbbbbbk.",
+        "..khwbbbbbbbbbk.",
+        "..kbbbbbbbbbbbk.",
+        "..kbbbbbbbbbbbk.",
+        "..kbbbbbbbbbbbk.",
+        "...kbbbbbbbbbk..",
+        "....kbbbbbbbk...",
+        ".....kkkkkkk....",
+        "................",
+        "................"
+      ]);
+
+      // ---- 20. 2.5D 像素骑士身体精灵（支持随模型阵营染色 & 双腿走路两帧） ----
+      SPRITES.heroCache = {};
+    }
+
+    function getHeroBodySprite(colorHex, stepFrame) {
+      const key = `${colorHex}_${stepFrame}`;
+      if (SPRITES.heroCache[key]) return SPRITES.heroCache[key];
+      const pal = {
+        "k": "#0a0e17",
+        "c": colorHex || "#38bdf8",
+        "d": "#1e293b",
+        "a": "#cbd5e1",
+        "s": "#64748b",
+        "g": "#fbbf24",
+        "w": "#ffffff"
+      };
+      // 16x16 下半身像素铠甲+披风+长剑+步伐
+      const rows = stepFrame === 0 ? [
+        "................",
+        "................",
+        ".....kkkkkk.....",
+        "....kcccccck....",
+        "...kcaaaaaack...",
+        "...kcaassaaak...",
+        "..kkcggggggckk..",
+        ".kccccaaaaccwwk.",
+        ".kccckaaaakccwk.",
+        ".kccckddddkccwk.",
+        "..kcckddddkcgk..",
+        "....kkdd.ddkk...",
+        "....kdk..kdk....",
+        "....kkk..kkk....",
+        "................",
+        "................"
+      ] : [
+        "................",
+        "................",
+        ".....kkkkkk.....",
+        "....kcccccck....",
+        "...kcaaaaaack...",
+        "...kcaassaaak...",
+        "..kkcggggggckk..",
+        ".kccccaaaaccwwk.",
+        ".kccckaaaakccwk.",
+        ".kccckddddkccwk.",
+        "..kcckddddkcgk..",
+        "....kdd..ddkk...",
+        "...kdk....kdk...",
+        "...kkk....kkk...",
+        "................",
+        "................"
+      ];
+      const spr = makePixelSprite(pal, rows);
+      SPRITES.heroCache[key] = spr;
+      return spr;
+    }
+
+    function drawPixelPotHat(ctx, cx, y) {
+      // 小铝锅盖头 (12x7 像素风锅盖)
+      const p = 2;
+      const x = Math.round(cx - 6 * p);
+      const top = Math.round(y);
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(x + 4 * p, top, 4 * p, p);
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fillRect(x + 2 * p, top + p, 8 * p, p);
+      ctx.fillStyle = "#94a3b8";
+      ctx.fillRect(x + p, top + 2 * p, 10 * p, 3 * p);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(x + 2 * p, top + 2 * p, 2 * p, 2 * p);
+      ctx.fillStyle = "#475569";
+      ctx.fillRect(x, top + 5 * p, 12 * p, p);
+    }
+
+    // ============================================================================
+    // 3. 全局引擎状态与 100% 离线物理模拟器
+    // ============================================================================
+    const bundleData = window.TOURNAMENT_BUNDLE || { featured_matches: [] };
+    let currentMatch = null;
+    let currentFrameIdx = 0;
+    let isPlaying = false;
+    let playSpeed = 2.0;
+    let visionMode = "GOD";      // "GOD" | "SEMI" | "FOG"
+    let cameraFollow = true;
+    let showCalloutLabels = false; // 默认关闭文字路标，让 2.5D 像素建模自带高辨识度
+    let spoilerMaskMystery = true; // 导演防剧透开关：默认隐藏 ASTRA 6.2 为神秘客 [???]，第8幕揭面时点按钮或按 M 揭晓
+
+    const EXTRA_DIRECTOR_TAGS = {
+      49: "⚡ASTRA 3步十连杀 [1/9]",
+      50: "⚡ASTRA 3步十连杀 [2/9]",
+      51: "⚡ASTRA 3步十连杀 [3/9]",
+      52: "⚡ASTRA 3步十连杀 [4/9]",
+      53: "⚡ASTRA 3步十连杀 [5/9]",
+      54: "⚡ASTRA 3步十连杀 [6/9]",
+      55: "⚡ASTRA 3步十连杀 [7/9]",
+      56: "⚡ASTRA 3步十连杀 [8/9]",
+      57: "⚡ASTRA 3步十连杀 [9/9]",
+      63: "🤡10次来回传送鬼打墙",
+      65: "⚡Turn1 开局一步秒混元",
+      68: "💥T11自爆半血+T84接炮",
+      124: "🔒三跳回旋镖罚站103步",
+      130: "💃金库门口0钥匙跳广场舞",
+      132: "🛋️蹲[8,1]连续WAIT 74步"
+    };
+
+    // 丝滑动画与相机状态
+    let animSubProgress = 1.0;
+    let lastTurnAdvanceTime = performance.now();
+    let lastRafMs = performance.now();
+    let camX = 20 * TILE_SIZE;
+    let camY = 13 * TILE_SIZE;
+    let camZoom = 2.05;
+    let targetZoom = 2.05;
+    let heroFacing = "R";
+    let heroIsMoving = false;
+    let screenShake = 0;
+    let isDraggingCam = false;
+    let dragStartX = 0, dragStartY = 0;
+    let floatingPopups = [];
+
+    // 人类踢馆状态
+    let isHumanMode = false;
+    let humanPendingMod = null;
+    let localSim = null;
+
+    const canvas = document.getElementById("dungeonCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const DIR_VECS = { U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0] };
+    const MIRROR_MAP = {
+      MIRROR_NE: { "-1,0": [0, -1], "1,0": [0, -1], "0,-1": [1, 0], "0,1": [1, 0] },
+      MIRROR_SE: { "-1,0": [0, 1],  "1,0": [0, 1],  "0,-1": [1, 0], "0,1": [1, 0] },
+      MIRROR_SW: { "-1,0": [0, 1],  "1,0": [0, 1],  "0,-1": [-1, 0], "0,1": [-1, 0] },
+      MIRROR_NW: { "-1,0": [0, -1], "1,0": [0, -1], "0,-1": [-1, 0], "0,1": [-1, 0] }
+    };
+
+    function computeDynamicVisibleMask(terrain, hx, hy, gatesFlipped = false) {
+      const mask = Array.from({ length: GRID_H }, () => Array(GRID_W).fill(false));
+      const highWall = (x, y) => {
+        if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) return true;
+        const tile = terrain[y][x];
+        return tile === "T_W" || tile === "W" || tile.startsWith("LASER_")
+          || (tile === "R_GATE" && !gatesFlipped) || (tile === "B_GATE" && gatesFlipped);
+      };
+      const open = (dx, dy) => {
+        const x = hx+dx, y = hy+dy;
+        return x >= 0 && x < GRID_W && y >= 0 && y < GRID_H && mask[y][x] && !highWall(x,y);
+      };
+      for (let radius=0; radius<=3; radius++) {
+        for (let dy=-radius; dy<=radius; dy++) for (let dx=-radius; dx<=radius; dx++) {
+          if (Math.max(Math.abs(dx),Math.abs(dy)) !== radius || dx*dx+dy*dy>10) continue;
+          const x=hx+dx, y=hy+dy;
+          if (x<0 || x>=GRID_W || y<0 || y>=GRID_H) continue;
+          const sx=Math.sign(dx), sy=Math.sign(dy);
+          if (radius<=1) mask[y][x]=true;
+          else if (dx===0 || dy===0) mask[y][x]=open(dx-sx,dy-sy);
+          else if (Math.abs(dx)===Math.abs(dy)) mask[y][x]=open(sx,sy) && !(highWall(hx+sx,hy)&&highWall(hx,hy+sy));
+          else if (Math.abs(dx)>Math.abs(dy)) mask[y][x]=open(dx-sx,dy)||open(dx-sx,dy-sy);
+          else mask[y][x]=open(dx,dy-sy)||open(dx-sx,dy-sy);
+        }
+      }
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx === 0 && dy === 0) continue;
+          const ax = hx + dx, ay = hy + dy;
+          if (ax < 0 || ax >= GRID_W || ay < 0 || ay >= GRID_H) continue;
+          const t0 = terrain[ay] && terrain[ay][ax];
+          if (t0 === "ICE" || (t0 && t0.startsWith("MIRROR_"))) {
+            const dirs = (dx === 0 || dy === 0) ? [[dx, dy]] : [[0,-1],[0,1],[-1,0],[1,0]];
+            for (const d0 of dirs) {
+              let cx = ax, cy = ay, curD = d0;
+              for (let s = 0; s < 32; s++) {
+                if (cx < 0 || cx >= GRID_W || cy < 0 || cy >= GRID_H) break;
+                mask[cy][cx] = true;
+                const ct = terrain[cy][cx];
+                if (MIRROR_MAP[ct]) curD = MIRROR_MAP[ct][`${curD[0]},${curD[1]}`];
+                else if (ct !== "ICE") break;
+                cx += curD[0];
+                cy += curD[1];
+              }
+            }
+          }
+        }
+      }
+      return mask;
+    }
+
+    // 重建真实物理移动路径（解决旧 JSON 回放因 sorted(exposed_cells) 导致的倒走与折返 Bug）
+    function buildOrderedHeroPath(prevFrame, curFrame) {
+      if (curFrame._orderedPath) return curFrame._orderedPath;
+
+      const startPos = prevFrame ? prevFrame.hero_pos : curFrame.hero_pos;
+      const endPos = curFrame.hero_pos;
+      const moves = (curFrame.events || []).filter(e => e.type === "HERO_MOVE");
+      if (moves.length) {
+        curFrame._orderedPath = [moves[0].from, ...moves.map(e => e.to)];
+        return curFrame._orderedPath;
+      }
+      const raw = curFrame.exposed_cells || [];
+
+      if (!prevFrame || raw.length <= 1 || (raw.length === 2 && startPos[0] === endPos[0] && startPos[1] === endPos[1])) {
+        curFrame._orderedPath = [endPos];
+        return curFrame._orderedPath;
+      }
+
+      if (raw.length === 2) {
+        curFrame._orderedPath = [startPos, endPos];
+        return curFrame._orderedPath;
+      }
+
+      // 超过 2 格（滑冰 / 跳板 / 传送门）：从 startPos 出发按真实移动方向串联所有途径格到 endPos
+      const pool = [];
+      const seen = new Set();
+      for (const c of raw) {
+        const k = `${c[0]},${c[1]}`;
+        if (k === `${startPos[0]},${startPos[1]}` || k === `${endPos[0]},${endPos[1]}`) continue;
+        if (!seen.has(k)) {
+          seen.add(k);
+          pool.push([c[0], c[1]]);
+        }
+      }
+
+      const path = [startPos];
+      let cur = startPos;
+      let prevDir = null;
+
+      while (pool.length > 0) {
+        let bestIdx = -1;
+        let bestScore = Infinity;
+
+        for (let i = 0; i < pool.length; i++) {
+          const p = pool[i];
+          const dx = p[0] - cur[0];
+          const dy = p[1] - cur[1];
+          const dist = Math.abs(dx) + Math.abs(dy);
+          let score = dist * 10;
+
+          if (dist === 1) {
+            score = 1;
+            if (prevDir && dx === prevDir[0] && dy === prevDir[1]) score = 0; // 优先延续滑冰惯性方向
+          } else if ((dx === 0 || dy === 0) && dist <= 3) {
+            score = 5 + dist; // 跨跳/弹簧短距直线
+          }
+          if (score < bestScore) {
+            bestScore = score;
+            bestIdx = i;
+          }
+        }
+
+        if (bestIdx === -1) break;
+        const next = pool.splice(bestIdx, 1)[0];
+        const ndx = Math.sign(next[0] - cur[0]);
+        const ndy = Math.sign(next[1] - cur[1]);
+        if (Math.abs(next[0] - cur[0]) + Math.abs(next[1] - cur[1]) <= 3) {
+          prevDir = [ndx, ndy];
+        } else {
+          prevDir = null;
+        }
+        path.push(next);
+        cur = next;
+      }
+
+      if (cur[0] !== endPos[0] || cur[1] !== endPos[1]) {
+        path.push(endPos);
+      }
+
+      curFrame._orderedPath = path;
+      return path;
+    }
+
+    // 1:1 完整 v2.1 确定性模拟引擎（供离线踢馆模式直接挑战任何地图）
+    class ClientDungeonSimulator {
+      constructor(sourceFrame, meta) {
+        this.demon_id = meta.demon_id || "official";
+        this.demon_name = meta.demon_name || "官方一图";
+        this.terrain = sourceFrame.terrain.map(r => r.slice());
+        this.occupant = sourceFrame.occupant.map(r => r.slice());
+        this.clues = sourceFrame.clues.map(r => r.slice());
+        this.bombs = [];
+        this.nextBombId = 1;
+        this.turn = 1;
+        this.hx = 2;
+        this.hy = 13;
+        this.hp = 100;
+        this.keys = [false, false];
+        this.jumps = 3;
+        this.throws = 3;
+        this.bombs_left = 2;
+        this.gates_flipped = false;
+        this.status = "ALIVE";
+        this.trap_damage_total = 0;
+        this.exposed_cells = [[2, 13]];
+        this.events = [];
+
+        this.mimicToClue = {};
+        const boundClues = new Set();
+        for (let y = 0; y < GRID_H; y++) for (let x = 0; x < GRID_W; x++) {
+          if (this.terrain[y][x] !== "MIMIC") continue;
+          for (const [dx, dy] of Object.values(DIR_VECS)) {
+            const nx = x + dx, ny = y + dy;
+            if (nx < 0 || nx >= GRID_W || ny < 0 || ny >= GRID_H) continue;
+            const ck = `${nx},${ny}`;
+            if (this.terrain[ny][nx] !== "EMPTY" || this.occupant[ny][nx] !== null ||
+                (nx >= 1 && nx <= 3 && ny >= 12 && ny <= 14) || boundClues.has(ck)) continue;
+            const otherChest = Object.values(DIR_VECS).some(([ax, ay]) => {
+              const cx = nx + ax, cy = ny + ay;
+              return !(cx === x && cy === y) && ["HEAL", "MIMIC"].includes(this.terrain[cy]?.[cx]);
+            });
+            if (!otherChest) { this.mimicToClue[`${x},${y}`] = [nx, ny]; boundClues.add(ck); break; }
+          }
+        }
+        this.portalMap = {};
+        const pts = {};
+        for (let y = 0; y < GRID_H; y++) {
+          for (let x = 0; x < GRID_W; x++) {
+            const t = this.terrain[y][x];
+            if (t && t.startsWith("PORTAL_")) pts[t] = [x, y];
+          }
+        }
+        if (pts.PORTAL_1A && pts.PORTAL_1B) {
+          this.portalMap[`${pts.PORTAL_1A[0]},${pts.PORTAL_1A[1]}`] = pts.PORTAL_1B;
+          this.portalMap[`${pts.PORTAL_1B[0]},${pts.PORTAL_1B[1]}`] = pts.PORTAL_1A;
+        }
+        if (pts.PORTAL_2A && pts.PORTAL_2B) {
+          this.portalMap[`${pts.PORTAL_2A[0]},${pts.PORTAL_2A[1]}`] = pts.PORTAL_2B;
+          this.portalMap[`${pts.PORTAL_2B[0]},${pts.PORTAL_2B[1]}`] = pts.PORTAL_2A;
+        }
+      }
+
+      isHighWall(x, y) {
+        if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) return true;
+        const t = this.terrain[y][x];
+        if (t === "W" || t === "T_W" || (t && t.startsWith("LASER_"))) return true;
+        if (t === "R_GATE" && !this.gates_flipped) return true;
+        if (t === "B_GATE" && this.gates_flipped) return true;
+        return false;
+      }
+
+      isEnterable(x, y, entity) {
+        if (this.isHighWall(x, y)) return false;
+        if (this.occupant[y][x] === "BOX" || this.occupant[y][x] === "TNT") return false;
+        if (entity === "BOX") {
+          if (x === this.hx && y === this.hy) return false;
+          const t = this.terrain[y][x];
+          if (t === "K1" || t === "K2" || t === "V") return false;
+        }
+        return true;
+      }
+
+      applyDamage(trapNominal, selfNominal) {
+        const tot = trapNominal + selfNominal;
+        if (tot <= 0 || this.hp <= 0) return;
+        const effTrap = Math.min(this.hp, tot) * (trapNominal / tot);
+        this.trap_damage_total = Math.min(100, this.trap_damage_total + effTrap);
+        this.hp -= tot;
+        this.events.push({ type: "DAMAGE", trap_nominal: trapNominal, self_nominal: selfNominal, hp_after: this.hp });
+        if (this.hp <= 0) this.status = "DEAD";
+      }
+
+      displace(entity, p0, p1, dir, tracker, viaPortal = false) {
+        if (this.status !== "ALIVE") return;
+        const [x0, y0] = p0;
+        const [x1, y1] = p1;
+        tracker.steps += 1;
+
+        if (this.terrain[y0][x0] === "CRACK") {
+          this.terrain[y0][x0] = "PIT";
+          this.events.push({ type: "CRACK_COLLAPSE", x: x0, y: y0 });
+        }
+
+        if (entity === "BOX") {
+          this.occupant[y0][x0] = null;
+          this.occupant[y1][x1] = "BOX";
+        } else {
+          this.events.push({type: "HERO_MOVE", from: [x0, y0], to: [x1, y1]});
+          this.hx = x1;
+          this.hy = y1;
+          this.exposed_cells.push([x1, y1]);
+        }
+
+        const t1 = this.terrain[y1][x1];
+        if (entity === "BOX") {
+          if (t1 === "PIT") {
+            this.occupant[y1][x1] = null;
+            this.terrain[y1][x1] = "EMPTY";
+            return;
+          } else if (t1 === "MIMIC") {
+            this.clearMimic(x1, y1);
+          } else if (t1 === "SWITCH") {
+            this.gates_flipped = !this.gates_flipped;
+          }
+        } else {
+          if (t1 === "PIT") {
+            this.applyDamage(100, 0);
+          } else if (t1 === "MIMIC") {
+            this.clearMimic(x1, y1);
+            tracker.stop = true;
+            this.applyDamage(45, 0);
+          } else if (t1 === "HEAL") {
+            this.hp = Math.min(100, this.hp + 30);
+            this.terrain[y1][x1] = "EMPTY";
+            this.events.push({ type: "HEAL", x: x1, y: y1, hp_after: this.hp });
+          } else if (t1 === "SWITCH") {
+            this.gates_flipped = !this.gates_flipped;
+          }
+        }
+
+        if (this.status !== "ALIVE") return;
+
+        if (entity === "HERO") {
+          const tn = this.terrain[y1][x1];
+          if (tn === "K1") { this.keys[0] = true; this.terrain[y1][x1] = "EMPTY"; }
+          if (tn === "K2") { this.keys[1] = true; this.terrain[y1][x1] = "EMPTY"; }
+          if (tn === "V" && this.keys[0] && this.keys[1] && this.hp > 0) {
+            this.status = "CLEARED";
+            return;
+          }
+        }
+
+        if (tracker.steps >= 32 || tracker.stop) return;
+
+        if (viaPortal) {
+          if (tracker.portals >= 2) return;
+          const nx = x1 + dir[0], ny = y1 + dir[1];
+          if (this.isEnterable(nx, ny, entity)) {
+            this.displace(entity, [x1, y1], [nx, ny], dir, tracker, false);
+          }
+          return;
+        }
+
+        const tc = this.terrain[y1][x1];
+        if (tc === "ICE") {
+          const nx = x1 + dir[0], ny = y1 + dir[1];
+          if (this.isEnterable(nx, ny, entity)) {
+            this.displace(entity, [x1, y1], [nx, ny], dir, tracker, false);
+          }
+        } else if (MIRROR_MAP[tc]) {
+          const nd = MIRROR_MAP[tc][`${dir[0]},${dir[1]}`];
+          const nx = x1 + nd[0], ny = y1 + nd[1];
+          if (this.isEnterable(nx, ny, entity)) {
+            this.displace(entity, [x1, y1], [nx, ny], nd, tracker, false);
+          }
+        } else if (tc && tc.startsWith("SPRING_")) {
+          const sd = DIR_VECS[tc.split("_")[1]];
+          let blockedK = null;
+          for (let k = 1; k <= 3; k++) {
+            const kx = x1 + k * sd[0], ky = y1 + k * sd[1];
+            if (!this.isEnterable(kx, ky, entity)) {
+              blockedK = k;
+              if (entity === "BOX" && ky >= 0 && ky < GRID_H && kx >= 0 && kx < GRID_W && this.occupant[ky][kx] === "TNT") {
+                this.tntArmed.add(`${kx},${ky}`);
+              }
+              break;
+            }
+          }
+          if (blockedK === 1) return;
+          const landK = blockedK ? blockedK - 1 : 3;
+          this.displace(entity, [x1, y1], [x1 + landK * sd[0], y1 + landK * sd[1]], sd, tracker, false);
+        } else if (tc && tc.startsWith("PORTAL_")) {
+          if (tracker.portals >= 2) return;
+          const pair = this.portalMap[`${x1},${y1}`];
+          if (pair && this.isEnterable(pair[0], pair[1], entity)) {
+            tracker.portals += 1;
+            this.displace(entity, [x1, y1], pair, dir, tracker, true);
+          }
+        }
+      }
+
+      clearMimic(x, y) {
+        this.terrain[y][x] = "EMPTY";
+        const clue = this.mimicToClue[`${x},${y}`];
+        if (clue) this.clues[clue[1]][clue[0]] = false;
+        delete this.mimicToClue[`${x},${y}`];
+      }
+
+      executeThrow(direction) {
+        if (this.throws <= 0) return;
+        this.throws--;
+        let sx = this.hx, sy = this.hy, cd = direction, portals = 0;
+        const enter = () => {
+          sx += cd[0]; sy += cd[1];
+          if (this.isHighWall(sx, sy) || this.occupant[sy][sx] === "BOX") return false;
+          if (this.occupant[sy][sx] === "TNT") { this.tntArmed.add(`${sx},${sy}`); return false; }
+          const t = this.terrain[sy][sx];
+          if (t === "SWITCH") { this.gates_flipped = !this.gates_flipped; return false; }
+          if (t === "MIMIC") { this.clearMimic(sx, sy); return false; }
+          if (MIRROR_MAP[t]) cd = MIRROR_MAP[t][`${cd[0]},${cd[1]}`];
+          else if (t.startsWith("PORTAL_") && portals < 2) {
+            const pair = this.portalMap[`${sx},${sy}`];
+            if (pair && !this.isHighWall(...pair) && !this.occupant[pair[1]][pair[0]]) {
+              [sx, sy] = pair;
+              if (++portals >= 2) return false;
+              return "PORTAL";
+            }
+          }
+          return true;
+        };
+        for (let k = 0; k < 6; k++) if (!enter()) return;
+        if (this.terrain[sy][sx] !== "ICE" && !MIRROR_MAP[this.terrain[sy][sx]]) return;
+        for (let k = 0; k < 32; k++) {
+          const result = enter();
+          if (!result) return;
+          const t = this.terrain[sy][sx];
+          if (result !== "PORTAL" && t !== "ICE" && !MIRROR_MAP[t]) return;
+        }
+      }
+
+      step(action) {
+        if (this.status !== "ALIVE") return this.toFrame(action);
+        this.exposed_cells = [[this.hx, this.hy]];
+        this.events = [];
+        this.tntArmed = new Set();
+
+        if (action === "BOMB") {
+          if (this.bombs_left > 0 && !this.bombs.some(b => b.x === this.hx && b.y === this.hy)) {
+            this.bombs_left -= 1;
+            this.bombs.push({ id: this.nextBombId++, x: this.hx, y: this.hy, timer: 3 });
+          }
+        } else if (action.startsWith("MOVE_")) {
+          const d = DIR_VECS[action.split("_")[1]];
+          const x1 = this.hx + d[0], y1 = this.hy + d[1];
+          if (!this.isHighWall(x1, y1) && this.occupant[y1][x1] !== "TNT") {
+            if (this.occupant[y1][x1] === "BOX") {
+              const x2 = this.hx + 2 * d[0], y2 = this.hy + 2 * d[1];
+              if (this.isEnterable(x2, y2, "BOX")) {
+                this.displace("BOX", [x1, y1], [x2, y2], d, { steps: 0, portals: 0, stop: false });
+                if (this.status === "ALIVE" && this.isEnterable(x1, y1, "HERO")) {
+                  this.displace("HERO", [this.hx, this.hy], [x1, y1], d, { steps: 0, portals: 0, stop: false });
+                }
+              }
+            } else {
+              this.displace("HERO", [this.hx, this.hy], [x1, y1], d, { steps: 0, portals: 0, stop: false });
+            }
+          }
+        } else if (action.startsWith("JUMP_")) {
+          if (this.jumps > 0) {
+            this.jumps -= 1;
+            const d = DIR_VECS[action.split("_")[1]];
+            const x1 = this.hx + d[0], y1 = this.hy + d[1];
+            const x2 = this.hx + 2 * d[0], y2 = this.hy + 2 * d[1];
+            if (!this.isHighWall(x1, y1) && this.isEnterable(x2, y2, "HERO")) {
+              this.displace("HERO", [this.hx, this.hy], [x2, y2], d, { steps: 0, portals: 0, stop: false });
+            }
+          }
+        } else if (action.startsWith("THROW_")) {
+          this.executeThrow(DIR_VECS[action.split("_")[1]]);
+        }
+
+        if (this.status !== "ALIVE") return this.toFrame(action);
+
+        this.bombs.forEach(b => b.timer -= 1);
+        const initBombs = this.bombs.filter(b => b.timer <= 0).map(b => b.id);
+        this.resolveExplosions(initBombs, Array.from(this.tntArmed));
+        if (this.status !== "ALIVE") return this.toFrame(action);
+
+        if (this.turn % 3 === 0) {
+          const beams = [];
+          const hitTnts = [];
+          for (let y = 1; y < GRID_H - 1; y++) {
+            for (let x = 1; x < GRID_W - 1; x++) {
+              const t = this.terrain[y][x];
+              if (t && t.startsWith("LASER_")) {
+                const dKey = t.split("_")[1];
+                const dv = DIR_VECS[dKey];
+                const cells = [];
+                for (let k = 1; k <= 10; k++) {
+                  const bx = x + k * dv[0], by = y + k * dv[1];
+                  if (this.isHighWall(bx, by) || this.occupant[by][bx] === "BOX") break;
+                  if (this.occupant[by][bx] === "TNT") { hitTnts.push(`${bx},${by}`); break; }
+                  cells.push([bx, by]);
+                }
+                beams.push({ cannon: [x, y], dir: dKey, cells });
+              }
+            }
+          }
+          let hits = 0;
+          for (const bm of beams) {
+            if (bm.cells.some(c => this.exposed_cells.some(ec => ec[0] === c[0] && ec[1] === c[1]))) hits += 1;
+          }
+          if (beams.length > 0) this.events.push({ type: "LASER_FIRE", beams, hero_hits: hits });
+          if (hits > 0) this.applyDamage(50 * hits, 0);
+          if (this.status === "ALIVE" && hitTnts.length > 0) this.resolveExplosions([], hitTnts);
+        }
+
+        const executedTurn = this.turn;
+        if (this.turn >= MAX_TURNS && this.status === "ALIVE") this.status = "TIMEOUT";
+        else if (this.status === "ALIVE") this.turn += 1;
+
+        return this.toFrame(action, executedTurn);
+      }
+
+      resolveExplosions(bombIds, tntKeys) {
+        if (bombIds.length === 0 && tntKeys.length === 0) return;
+        const expBombs = new Set(bombIds);
+        const expTnts = new Set(tntKeys);
+        const queue = [];
+        this.bombs.forEach(b => { if (expBombs.has(b.id)) queue.push([b.x, b.y, "BOMB"]); });
+        tntKeys.forEach(k => { const [x, y] = k.split(",").map(Number); queue.push([x, y, "TNT"]); });
+
+        const blastCells = [];
+        const blastSet = new Set();
+        let qi = 0;
+        while (qi < queue.length) {
+          const [ex, ey] = queue[qi++];
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const cx = ex + dx, cy = ey + dy;
+              if (cx < 0 || cx >= GRID_W || cy < 0 || cy >= GRID_H) continue;
+              const ck = `${cx},${cy}`;
+              if (!blastSet.has(ck)) { blastSet.add(ck); blastCells.push([cx, cy]); }
+              if (this.occupant[cy][cx] === "TNT" && !expTnts.has(ck)) {
+                expTnts.add(ck); queue.push([cx, cy, "TNT"]);
+              }
+              this.bombs.forEach(b => {
+                if (b.x === cx && b.y === cy && !expBombs.has(b.id)) {
+                  expBombs.add(b.id); queue.push([b.x, b.y, "BOMB"]);
+                }
+              });
+            }
+          }
+        }
+
+        let trapNom = 0, selfNom = 0;
+        for (const [ex, ey, kind] of queue) {
+          if (Math.abs(this.hx - ex) <= 1 && Math.abs(this.hy - ey) <= 1) {
+            if (kind === "TNT") trapNom += 60; else selfNom += 50;
+          }
+        }
+        if (trapNom + selfNom > 0) this.applyDamage(trapNom, selfNom);
+
+        this.bombs = this.bombs.filter(b => !expBombs.has(b.id));
+        expTnts.forEach(k => {
+          const [tx, ty] = k.split(",").map(Number);
+          if (this.occupant[ty][tx] === "TNT") this.occupant[ty][tx] = null;
+        });
+
+        this.events.push({ type: "EXPLOSION_BATCH", blast_cells: blastCells });
+
+        const immune = new Set(["T_W", "K1", "K2", "V", "PORTAL_1A", "PORTAL_1B", "PORTAL_2A", "PORTAL_2B", "PIT"]);
+        for (const [cx, cy] of blastCells) {
+          if (this.occupant[cy][cx] === "BOX") this.occupant[cy][cx] = null;
+          const t = this.terrain[cy][cx];
+          if (immune.has(t)) continue;
+          if (t === "MIMIC") this.clearMimic(cx, cy);
+          else if (t === "CRACK") this.terrain[cy][cx] = "PIT";
+          else this.terrain[cy][cx] = "EMPTY";
+        }
+        if (this.hp > 0 && this.status === "ALIVE" && this.terrain[this.hy][this.hx] === "PIT") {
+          this.applyDamage(100, 0);
+        }
+      }
+
+      toFrame(action, turnNum = this.turn) {
+        return {
+          turn: turnNum,
+          action,
+          status: this.status,
+          hero_pos: [this.hx, this.hy],
+          hero_hp: this.hp,
+          keys: [...this.keys],
+          jumps: this.jumps,
+          throws: this.throws,
+          bombs_left: this.bombs_left,
+          gates_flipped: this.gates_flipped,
+          trap_damage_total: this.trap_damage_total,
+          exposed_cells: this.exposed_cells.map(c => [...c]),
+          events: this.events,
+          terrain: this.terrain.map(r => r.slice()),
+          occupant: this.occupant.map(r => r.slice()),
+          bombs: this.bombs.map(b => ({ ...b })),
+          clues: this.clues.map(r => r.slice())
+        };
+      }
+    }
+
+    // ============================================================================
+    // 4. 2.5D 像素地下城渲染管线（纯像素纹理 + 真 2.5D 纵深遮挡 + 迷雾全裁切 + 无残影无蓝轨）
+    // ============================================================================
+    function drawRoundedRect(c, x, y, w, h, r) {
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.arcTo(x + w, y, x + w, y + h, r);
+      c.arcTo(x + w, y + h, x, y + h, r);
+      c.arcTo(x, y + h, x, y, r);
+      c.arcTo(x, y, x + w, y, r);
+      c.closePath();
+    }
+
+    function drawSpriteAt(ctx, sprite, dx, dy, dw, dh) {
+      if (!sprite) return;
+      ctx.drawImage(sprite, Math.round(dx), Math.round(dy), Math.round(dw), Math.round(dh));
+    }
+
+    function isTallOccluder(terrain, x, y, gatesFlipped) {
+      if (y < 0 || y >= GRID_H || x < 0 || x >= GRID_W) return false;
+      const t = terrain[y][x];
+      if (t === "T_W" || t === "W" || t === "V" || (t && t.startsWith("LASER_"))) return true;
+      if (t === "R_GATE" && !gatesFlipped) return true;
+      if (t === "B_GATE" && gatesFlipped) return true;
+      return false;
+    }
+
+    function drawFloorAndFlatTile(ctx, type, gx, gy, px, py, gatesFlipped, nowMs) {
+      // 1. 基础地下城石砖地板
+      const floorSpr = ((gx * 7 + gy * 13) & 1) === 0 ? SPRITES.FLOOR_A : SPRITES.FLOOR_B;
+      drawSpriteAt(ctx, floorSpr, px, py, TILE_SIZE, TILE_SIZE);
+
+      // 2. 扁平地表陷阱/机关（紧贴 32x32 格子）
+      if (type === "PIT") {
+        drawSpriteAt(ctx, SPRITES.PIT, px, py, TILE_SIZE, TILE_SIZE);
+      } else if (type === "ICE") {
+        drawSpriteAt(ctx, SPRITES.ICE, px, py, TILE_SIZE, TILE_SIZE);
+      } else if (type === "CRACK") {
+        drawSpriteAt(ctx, SPRITES.CRACK, px, py, TILE_SIZE, TILE_SIZE);
+      } else if (type === "SWITCH") {
+        drawSpriteAt(ctx, gatesFlipped ? SPRITES.SWITCH_BLUE : SPRITES.SWITCH_RED, px, py, TILE_SIZE, TILE_SIZE);
+      } else if (type === "R_GATE" && gatesFlipped) {
+        drawSpriteAt(ctx, SPRITES.R_GATE_OPEN, px, py, TILE_SIZE, TILE_SIZE);
+      } else if (type === "B_GATE" && !gatesFlipped) {
+        drawSpriteAt(ctx, SPRITES.B_GATE_OPEN, px, py, TILE_SIZE, TILE_SIZE);
+      } else if (type && type.startsWith("PORTAL_")) {
+        const spr = type.startsWith("PORTAL_1") ? SPRITES.PORTAL_1 : SPRITES.PORTAL_2;
+        drawSpriteAt(ctx, spr, px, py - 2, TILE_SIZE, 36);
+        // 微弱魔法粒子脉冲（2px 像素点）
+        const phase = Math.floor(nowMs / 180) % 4;
+        const offsets = [[8, 8], [22, 10], [10, 22], [20, 20]];
+        const [ox, oy] = offsets[(phase + gx + gy) % 4];
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(px + ox, py + oy, 2, 2);
+      } else if (type && type.startsWith("SPRING_")) {
+        drawSpriteAt(ctx, SPRITES[type], px, py - 4, TILE_SIZE, 36);
+      } else if (type && type.startsWith("MIRROR_")) {
+        drawSpriteAt(ctx, SPRITES[type], px, py - 8, TILE_SIZE, 40);
+      } else if (type === "K1" || type === "K2") {
+        const bob = Math.round(Math.sin(nowMs / 220) * 2);
+        // 钥匙地面椭圆像素影
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.fillRect(px + 10, py + 24, 12, 4);
+        drawSpriteAt(ctx, SPRITES[type], px, py + bob - 2, TILE_SIZE, TILE_SIZE);
+      }
+    }
+
+    function drawStandingObject(ctx, terrainType, occType, px, py, gatesFlipped, turnNum, nowMs) {
+      // 1. 地形立体建筑（向 Y 轴上方延展，底部对齐地板底边）
+      if (terrainType === "T_W") {
+        drawSpriteAt(ctx, SPRITES.T_W, px, py - 12, TILE_SIZE, 44);
+      } else if (terrainType === "W") {
+        drawSpriteAt(ctx, SPRITES.W, px, py - 12, TILE_SIZE, 44);
+      } else if (terrainType === "R_GATE" && !gatesFlipped) {
+        drawSpriteAt(ctx, SPRITES.R_GATE_CLOSED, px, py - 12, TILE_SIZE, 44);
+      } else if (terrainType === "B_GATE" && gatesFlipped) {
+        drawSpriteAt(ctx, SPRITES.B_GATE_CLOSED, px, py - 12, TILE_SIZE, 44);
+      } else if (terrainType && terrainType.startsWith("LASER_")) {
+        drawSpriteAt(ctx, SPRITES[terrainType], px, py - 12, TILE_SIZE, 44);
+        // 激光充能预警提示（2像素红白脉冲核心，绝不透出迷雾）
+        if ((turnNum % 3 === 2 || turnNum % 3 === 0) && Math.floor(nowMs / 160) % 2 === 0) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(px + 14, py - 2, 4, 4);
+        }
+      } else if (terrainType === "V") {
+        drawSpriteAt(ctx, SPRITES.VAULT, px, py - 20, TILE_SIZE, 52);
+      } else if (terrainType === "HEAL" || terrainType === "MIMIC" || terrainType === "CHEST") {
+        let spr = SPRITES.CHEST_NORMAL;
+        if (visionMode === "GOD") {
+          spr = terrainType === "MIMIC" ? SPRITES.CHEST_MIMIC : SPRITES.CHEST_HEAL;
+        }
+        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        ctx.fillRect(px + 4, py + 24, 24, 5);
+        drawSpriteAt(ctx, spr, px, py - 8, TILE_SIZE, 40);
+      }
+
+      // 2. 实体层立体对象 (BOX / TNT)
+      if (occType === "BOX") {
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.fillRect(px + 3, py + 25, 26, 5);
+        drawSpriteAt(ctx, SPRITES.BOX, px, py - 12, TILE_SIZE, 44);
+      } else if (occType === "TNT") {
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.fillRect(px + 4, py + 25, 24, 5);
+        drawSpriteAt(ctx, SPRITES.TNT, px, py - 12, TILE_SIZE, 44);
+        if (Math.floor(nowMs / 140) % 2 === 0) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(px + 14, py - 12, 4, 4);
+        }
+      }
+    }
+
+    // 绘制 2.5D 像素 Q 版角色立绘（零蓝轨，迈步轻摇+起伏动画，未加载完成时回退像素骑士）
+    function draw25DHeroCharacter(ctx, wx, wy, heroId, hp, jumpHeight, nowMs) {
+      const heroKey = getAssetKey(isHumanMode ? "human" : heroId);
+      const info = ASSET_MAP[heroKey];
+      const sprImg = SPRITE_IMAGES[heroKey];
+      const cx = Math.round(wx + TILE_SIZE / 2);
+
+      // 1. 脚底像素风地面椭圆影（随跳跃高度缩放）
+      const shadowScale = Math.max(0.45, 1 - jumpHeight / 28);
+      const sw = Math.round(22 * shadowScale);
+      const sh = Math.round(7 * shadowScale);
+      ctx.fillStyle = "rgba(0, 0, 0, 0.58)";
+      ctx.fillRect(cx - Math.round(sw / 2), Math.round(wy + TILE_SIZE - 4), sw, sh);
+
+      let barTopY;
+      if (spoilerMaskMystery && heroKey === "astra62") {
+        // 神秘客 [???] 纯黑紫剪影态（防第8幕前剧透）
+        const walkStep = heroIsMoving ? (Math.floor(nowMs / 110) % 2) : 0;
+        const idleBob = heroIsMoving ? (walkStep * 2) : (Math.floor(nowMs / 320) % 2);
+        const liftY = Math.round(jumpHeight + idleBob);
+        const bodyTopY = Math.round(wy + 6 - liftY);
+        const bodySpr = getHeroBodySprite("#0f172a", walkStep);
+        ctx.drawImage(bodySpr, cx - 16, bodyTopY, 32, 32);
+        const headY = bodyTopY - 6;
+        ctx.save();
+        ctx.fillStyle = "#090d16";
+        ctx.beginPath();
+        ctx.arc(cx, headY, 13, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#a855f7";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = "#e879f9";
+        ctx.font = "900 13px Consolas, monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("?", cx, headY + 1);
+        ctx.restore();
+        barTopY = headY - 21;
+      } else if (sprImg && sprImg.complete && sprImg.naturalWidth > 0) {
+        const spriteSize = 46;
+        const walkBob = heroIsMoving ? Math.abs(Math.sin(nowMs / 85)) * 3.5 : Math.sin(nowMs / 360) * 1.0;
+        const walkTilt = heroIsMoving ? Math.sin(nowMs / 85) * 0.065 : 0;
+        const drawBottom = wy + TILE_SIZE - 1 - jumpHeight - walkBob;
+        const drawTop = drawBottom - spriteSize;
+
+        ctx.save();
+        ctx.translate(cx, drawBottom - spriteSize / 2);
+        if (walkTilt !== 0) ctx.rotate(walkTilt);
+        // 官方 Q 版像素立绘默认微朝左，向右移动时镜像翻转
+        if (heroKey !== "human" && heroFacing === "R") {
+          ctx.scale(-1, 1);
+        }
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(sprImg, -spriteSize / 2, -spriteSize / 2, spriteSize, spriteSize);
+        ctx.imageSmoothingEnabled = false;
+        ctx.restore();
+
+        // 豆包专属 2.5D 像素铝锅盖头（无 Emoji 杂色）
+        if (info.pot) {
+          drawPixelPotHat(ctx, cx, drawTop - 7);
+        }
+        barTopY = drawTop - (info.pot ? 15 : 6);
+      } else {
+        // 立绘尚在加载时回退到 2.5D 像素骑士 + 头像徽章
+        const walkStep = heroIsMoving ? (Math.floor(nowMs / 110) % 2) : 0;
+        const idleBob = heroIsMoving ? (walkStep * 2) : (Math.floor(nowMs / 320) % 2);
+        const liftY = Math.round(jumpHeight + idleBob);
+        const bodySpr = getHeroBodySprite(info.color, walkStep);
+        const bodyTopY = Math.round(wy + 6 - liftY);
+        ctx.save();
+        if (heroFacing === "L") {
+          ctx.translate(cx, bodyTopY);
+          ctx.scale(-1, 1);
+          ctx.drawImage(bodySpr, -16, 0, 32, 32);
+        } else {
+          ctx.drawImage(bodySpr, cx - 16, bodyTopY, 32, 32);
+        }
+        ctx.restore();
+
+        const headY = bodyTopY - 6;
+        const headR = 11;
+        ctx.save();
+        ctx.fillStyle = "#090d16";
+        ctx.beginPath();
+        ctx.arc(cx, headY, headR + 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = isHumanMode ? "#fbbf24" : (info.color || "#38bdf8");
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx, headY, headR, 0, Math.PI * 2);
+        ctx.clip();
+
+        const imgObj = AVATAR_IMAGES[isHumanMode ? "carbon" : heroKey] || AVATAR_IMAGES.astra;
+        if (imgObj && imgObj.complete && imgObj.naturalWidth > 0) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.drawImage(imgObj, cx - headR, headY - headR, headR * 2, headR * 2);
+          ctx.imageSmoothingEnabled = false;
+        } else {
+          ctx.fillStyle = info.color || "#38bdf8";
+          ctx.fillRect(cx - headR, headY - headR, headR * 2, headR * 2);
+        }
+        ctx.restore();
+
+        if (info.pot) {
+          drawPixelPotHat(ctx, cx, headY - headR - 11);
+        }
+        barTopY = headY - headR - (info.pot ? 18 : 8);
+      }
+
+      // 头顶像素风微缩 HP 血条
+      if (document.body.classList.contains("cinema-clean-mode")) return;
+      const barW = 28;
+      const barH = 4;
+      const barX = Math.round(cx - barW / 2);
+      const barY = Math.round(barTopY);
+      ctx.fillStyle = "#05070c";
+      ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
+      const ratio = Math.max(0, Math.min(1, hp / 100));
+      ctx.fillStyle = hp > 50 ? "#22c55e" : (hp > 25 ? "#fbbf24" : "#f43f5e");
+      ctx.fillRect(barX, barY, Math.round(barW * ratio), barH);
+    }
+
+    function drawFloatingCallout(ctx, cx, topY, text, bgColor = "#fbbf24", textColor = "#0f172a") {
+      ctx.save();
+      ctx.font = "900 10px 'Microsoft YaHei', sans-serif";
+      const padX = 6;
+      const tw = ctx.measureText(text).width + padX * 2;
+      const th = 16;
+      const bx = Math.round(cx - tw / 2);
+      const by = Math.round(topY - th - 5);
+
+      ctx.fillStyle = "rgba(0,0,0,0.65)";
+      drawRoundedRect(ctx, bx + 1, by + 2, tw, th, 4);
+      ctx.fill();
+
+      ctx.fillStyle = bgColor;
+      drawRoundedRect(ctx, bx, by, tw, th, 4);
+      ctx.fill();
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.fillStyle = textColor;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, cx, by + th / 2 + 0.5);
+      ctx.restore();
+    }
+
+    // ============================================================================
+    // 5. 连续路径恒速插值与 60fps 渲染循环（彻底根除每格卡顿与上一格残影）
+    // ============================================================================
+    function getInterpolatedHeroWorldPos(prevFrame, frame, subProgress) {
+      const path = buildOrderedHeroPath(prevFrame, frame);
+      if (!path || path.length <= 1 || subProgress >= 1.0) {
+        const end = frame.hero_pos;
+        if (path && path.length >= 2) {
+          const a = path[path.length - 2];
+          const b = path[path.length - 1];
+          if (b[0] < a[0]) heroFacing = "L";
+          else if (b[0] > a[0]) heroFacing = "R";
+        }
+        heroIsMoving = false;
+        return {
+          wx: end[0] * TILE_SIZE,
+          wy: end[1] * TILE_SIZE,
+          jumpH: 0
+        };
+      }
+
+      // 基于真实欧氏步长的恒速线性插值：跨越多格不刹车，连续走格不停顿
+      let totalLen = 0;
+      const segLens = [];
+      for (let i = 0; i < path.length - 1; i++) {
+        const dx = path[i + 1][0] - path[i][0];
+        const dy = path[i + 1][1] - path[i][1];
+        const len = Math.max(0.5, Math.hypot(dx, dy));
+        segLens.push(len);
+        totalLen += len;
+      }
+
+      // 自动播放时使用完全线性 progress，保证连续直行永不顿挫
+      const progress = isPlaying ? subProgress : (subProgress * (2 - subProgress));
+      let distTarget = progress * totalLen;
+      let segIdx = 0;
+      while (segIdx < segLens.length - 1 && distTarget > segLens[segIdx]) {
+        distTarget -= segLens[segIdx];
+        segIdx++;
+      }
+
+      const localT = segLens[segIdx] > 0 ? Math.min(1, Math.max(0, distTarget / segLens[segIdx])) : 1;
+      const c0 = path[segIdx];
+      const c1 = path[segIdx + 1];
+
+      if (c1[0] < c0[0]) heroFacing = "L";
+      else if (c1[0] > c0[0]) heroFacing = "R";
+      heroIsMoving = true;
+
+      const wx = (c0[0] + (c1[0] - c0[0]) * localT) * TILE_SIZE;
+      const wy = (c0[1] + (c1[1] - c0[1]) * localT) * TILE_SIZE;
+
+      const manhattanDist = Math.abs(c1[0] - c0[0]) + Math.abs(c1[1] - c0[1]);
+      const jumpH = manhattanDist > 1 && manhattanDist <= 3 ? Math.sin(localT * Math.PI) * 18 : 0;
+
+      return { wx, wy, jumpH };
+    }
+
+    // Ground-level atmosphere. Lighting fades into darkness; the moving mist
+    // is drawn on the floor BEFORE tall objects and the actor, not across faces.
+    const groundAtmosphere = { fog: null, mist: null, image: null,
+      mistImage: null, staticNoise: null, distances: null, inside: null, maskKey: "", stamp: "" };
+    function atmosphereNoise(x, y) {
+      const ix=Math.floor(x), iy=Math.floor(y), fx=x-ix, fy=y-iy;
+      const u=fx*fx*(3-2*fx), v=fy*fy*(3-2*fy);
+      const hash=(a,b)=>{
+        let n=Math.imul(a,374761393)+Math.imul(b,668265263);
+        n=Math.imul(n^(n>>>13),1274126177);
+        return ((n^(n>>>16))>>>0)/4294967295;
+      };
+      return (hash(ix,iy)*(1-u)+hash(ix+1,iy)*u)*(1-v)
+        +(hash(ix,iy+1)*(1-u)+hash(ix+1,iy+1)*u)*v;
+    }
+    function atmosphereSmooth(a,b,value) {
+      const t=Math.max(0,Math.min(1,(value-a)/(b-a)));
+      return t*t*(3-2*t);
+    }
+    function prepareGroundAtmosphere(visibleMask, nowMs, heroX, heroY) {
+      const state=groundAtmosphere;
+      const width=GRID_W*TILE_SIZE/4, height=GRID_H*TILE_SIZE/4;
+      if (!state.fog) {
+        for (const name of ["fog","mist"]) {
+          state[name]=document.createElement("canvas");
+          state[name].width=width;state[name].height=height;
+        }
+        state.image=state.fog.getContext("2d").createImageData(width,height);
+        state.mistImage=state.mist.getContext("2d").createImageData(width,height);
+        state.staticNoise=new Float32Array(width*height);
+        for(let y=0;y<height;y++)for(let x=0;x<width;x++)
+          state.staticNoise[y*width+x]=atmosphereNoise((x*4+2)*.018,(y*4+2)*.034);
+      }
+      const maskKey=visibleMask.map(row=>row.map(v=>v?"1":"0").join("")).join("");
+      if (maskKey!==state.maskKey) {
+        state.maskKey=maskKey;state.stamp="";
+        state.inside=new Path2D();
+        for(let y=0;y<GRID_H;y++)for(let x=0;x<GRID_W;x++)
+          if(visibleMask[y][x])state.inside.rect(x*TILE_SIZE,y*TILE_SIZE,TILE_SIZE,TILE_SIZE);
+        const distance=state.distances=new Float32Array(width*height);
+        // Signed-mask feathering runs inward only: no blur can expose a cell
+        // excluded by the 37-cell disc or by wall LOS.
+        for(let y=0;y<height;y++)for(let x=0;x<width;x++) {
+          if(!visibleMask[y>>3][x>>3])continue;
+          const wx=x*4+2,wy=y*4+2,tx=x>>3,ty=y>>3;
+          let nearest=48;
+          for(let ny=ty-1;ny<=ty+1;ny++)for(let nx=tx-1;nx<=tx+1;nx++) {
+            if(ny>=0&&ny<GRID_H&&nx>=0&&nx<GRID_W&&visibleMask[ny][nx])continue;
+            const dx=Math.max(nx*TILE_SIZE-wx,0,wx-(nx+1)*TILE_SIZE);
+            const dy=Math.max(ny*TILE_SIZE-wy,0,wy-(ny+1)*TILE_SIZE);
+            nearest=Math.min(nearest,Math.hypot(dx,dy));
+          }
+          distance[y*width+x]=nearest;
+        }
+      }
+      const stamp=Math.floor(nowMs/100)+":"+Math.round(heroX/2)+":"+Math.round(heroY/2);
+      if(stamp===state.stamp)return;
+      state.stamp=stamp;
+      const t=nowMs*.001,pixels=state.image.data,mist=state.mistImage.data;
+      for(let y=0;y<height;y++)for(let x=0;x<width;x++) {
+        const wx=x*4+2,wy=y*4+2,index=(y*width+x)*4;
+        const dx=wx-heroX,dy=(wy-heroY)*1.12;
+        const radial=Math.hypot(dx,dy);
+        const reach=Math.exp(-(dx*dx+dy*dy)/(112*112));
+        // Non-periodic noise, with no rotating domains, tile centres or rings.
+        const broad=radial<208?atmosphereNoise(wx*.018+t*.012,wy*.034-t*.004):state.staticNoise[y*width+x];
+        const distance=state.distances[y*width+x];
+        const low=distance>0?atmosphereNoise(wx*.042-t*.008+73,wy*.135+t*.003+19):0;
+        const fine=distance>0?atmosphereNoise(wx*.115+31,wy*.19-67):0;
+        const shade=10.5+reach*(9+broad*6)+(broad-.5)*1.8;
+        pixels[index]=Math.round(shade*.86);
+        pixels[index+1]=Math.round(shade*.98);
+        pixels[index+2]=Math.round(shade*1.15+2);
+        const dark=.035+.92*atmosphereSmooth(22,116,radial);
+        const feather=1-atmosphereSmooth(0,28,distance);
+        const alpha=distance===0?1:1-(1-dark)*(1-feather);
+        pixels[index+3]=Math.round(alpha*255);
+        // Long, low, very faint wisps hug the ground plane. At this speed a
+        // strand drifts less than one world pixel per second and never rotates.
+        const strand=atmosphereSmooth(.35,.70,broad*.25+low*.65+fine*.10);
+        mist[index]=113;mist[index+1]=123;mist[index+2]=133;
+        mist[index+3]=distance===0?0:Math.round(strand*reach*28
+          *atmosphereSmooth(1,14,distance));
+      }
+      state.fog.getContext("2d").putImageData(state.image,0,0);
+      state.mist.getContext("2d").putImageData(state.mistImage,0,0);
+    }
+    function drawFloorMist(context,heroX,heroY) {
+      const state=groundAtmosphere;
+      context.save();context.clip(state.inside);
+      // A restrained pool of warm light belongs to the floor, not the camera.
+      const glow=context.createRadialGradient(heroX,heroY,8,heroX,heroY,105);
+      glow.addColorStop(0,"rgba(184,164,120,0.105)");
+      glow.addColorStop(.55,"rgba(140,139,116,0.035)");
+      glow.addColorStop(1,"rgba(140,139,116,0)");
+      context.fillStyle=glow;context.fillRect(heroX-105,heroY-105,210,210);
+      context.imageSmoothingEnabled=true;
+      context.drawImage(state.mist,0,0,GRID_W*TILE_SIZE,GRID_H*TILE_SIZE);
+      context.restore();
+    }
+    function drawAtmosphereFog(context,semi) {
+      const state=groundAtmosphere;
+      // One continuous pixel-aligned veil avoids the fine rectangular seams
+      // caused by compositing separate inside/outside clipping paths.
+      context.save();context.imageSmoothingEnabled=false;
+      context.globalAlpha=semi ? .83 : 1;
+      context.drawImage(state.fog,0,0,GRID_W*TILE_SIZE,GRID_H*TILE_SIZE);
+      context.restore();
+    }
+
+    function renderLoop(nowMs) {
+      requestAnimationFrame(renderLoop);
+      const dt = Math.min(0.05, Math.max(0.001, (nowMs - lastRafMs) / 1000));
+      lastRafMs = nowMs;
+
+      if (!currentMatch || !currentMatch.frames || currentMatch.frames.length === 0) return;
+
+      // 1. 先推进回合索引与累加时间，绝不先取旧 frame 再 advance（彻底消除退一格残影！）
+      const turnDurationMs = 460 / playSpeed;
+      if (isPlaying && !isHumanMode) {
+        let elapsed = nowMs - lastTurnAdvanceTime;
+        if (elapsed > turnDurationMs * 3) {
+          lastTurnAdvanceTime = nowMs - turnDurationMs;
+          elapsed = turnDurationMs;
+        }
+        while (elapsed >= turnDurationMs && currentFrameIdx < currentMatch.frames.length - 1) {
+          advanceToFrame(currentFrameIdx + 1, lastTurnAdvanceTime + turnDurationMs, false);
+          elapsed = nowMs - lastTurnAdvanceTime;
+        }
+        if (currentFrameIdx >= currentMatch.frames.length - 1 && elapsed >= turnDurationMs) {
+          animSubProgress = 1.0;
+          isPlaying = false;
+          document.getElementById("playPauseBtn").textContent = "▶ 重播";
+        } else {
+          animSubProgress = Math.max(0, Math.min(1, elapsed / turnDurationMs));
+        }
+      } else {
+        const elapsed = nowMs - lastTurnAdvanceTime;
+        animSubProgress = Math.max(0, Math.min(1, elapsed / 170));
+      }
+
+      const frame = currentMatch.frames[currentFrameIdx];
+      const prevFrame = currentFrameIdx > 0 ? currentMatch.frames[currentFrameIdx - 1] : null;
+      if (!frame) return;
+
+      // 2. 帧率无关指数阻尼镜头跟随
+      const heroInterp = getInterpolatedHeroWorldPos(prevFrame, frame, animSubProgress);
+      const worldW = GRID_W * TILE_SIZE;
+      const worldH = GRID_H * TILE_SIZE;
+      const camAlpha = 1 - Math.exp(-dt * 11.0);
+
+      if (cameraFollow && !isDraggingCam) {
+        targetZoom = Math.max(targetZoom, 1.5);
+        const targetX = heroInterp.wx + TILE_SIZE / 2;
+        const targetY = heroInterp.wy + TILE_SIZE / 2;
+        camX += (targetX - camX) * camAlpha;
+        camY += (targetY - camY) * camAlpha;
+      } else if (!cameraFollow && !isDraggingCam) {
+        targetZoom = 1.0;
+        camX += (worldW / 2 - camX) * camAlpha;
+        camY += (worldH / 2 - camY) * camAlpha;
+      }
+      camZoom += (targetZoom - camZoom) * camAlpha;
+
+      // 3. 适配画布 DPR 并确保像素采样锐利
+      const vp = document.getElementById("viewportCard");
+      const dpr = window.devicePixelRatio || 1;
+      const cw = vp.clientWidth;
+      const ch = vp.clientHeight;
+      const targetW = Math.floor(cw * dpr);
+      const targetH = Math.floor(ch * dpr);
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.imageSmoothingEnabled = false;
+
+      ctx.fillStyle = visionMode === "GOD" ? "#070a11" : "#090a0e";
+      ctx.fillRect(0, 0, cw, ch);
+
+      const baseFitScale = Math.min((cw - 16) / worldW, (ch - 16) / worldH);
+      const effectiveScale = baseFitScale * camZoom;
+
+      let shakeX = 0, shakeY = 0;
+      if (screenShake > 0.2) {
+        shakeX = (Math.random() - 0.5) * screenShake;
+        shakeY = (Math.random() - 0.5) * screenShake;
+        screenShake *= Math.pow(0.02, dt);
+      } else {
+        screenShake = 0;
+      }
+
+      const halfViewW = (cw / 2) / effectiveScale;
+      const halfViewH = (ch / 2) / effectiveScale;
+      const clampedCamX = camZoom <= 1.05 ? worldW / 2 : Math.max(halfViewW * 0.72, Math.min(worldW - halfViewW * 0.72, camX));
+      const clampedCamY = camZoom <= 1.05 ? worldH / 2 : Math.max(halfViewH * 0.72, Math.min(worldH - halfViewH * 0.72, camY));
+
+      ctx.translate(cw / 2 + shakeX, ch / 2 + shakeY);
+      ctx.scale(effectiveScale, effectiveScale);
+      ctx.translate(-clampedCamX, -clampedCamY);
+
+      const terrain = frame.terrain || [];
+      const occupant = frame.occupant || [];
+      const clues = frame.clues || [];
+      const bombs = frame.bombs || [];
+      const gatesFlipped = !!frame.gates_flipped;
+      const turnNum = frame.turn || 0;
+
+      const heroGridX = Math.max(0, Math.min(GRID_W - 1, Math.round(heroInterp.wx / TILE_SIZE)));
+      const heroGridY = Math.max(0, Math.min(GRID_H - 1, Math.round(heroInterp.wy / TILE_SIZE)));
+      // Visibility follows an actual simulation coordinate, never the interpolated
+      // line between portal ends (which could reveal cells the hero never visited).
+      const dynamicMask = computeDynamicVisibleMask(terrain, frame.hero_pos[0], frame.hero_pos[1], gatesFlipped);
+      const lightX=heroInterp.wx+TILE_SIZE/2, lightY=heroInterp.wy+TILE_SIZE*.72;
+      if(visionMode!=="GOD")prepareGroundAtmosphere(dynamicMask,nowMs,lightX,lightY);
+
+      const exposedSet = new Set();
+      dynamicMask.forEach((row, y) => row.forEach((v, x) => { if (v) exposedSet.add(`${x},${y}`); }));
+
+      // 计算严格视野裁切路径（用于第一人称 FOG 模式彻底截断激光/爆炸/炸弹）
+      let fogClipPath = null;
+      if (visionMode !== "GOD") {
+        fogClipPath = new Path2D();
+        for (let y = 0; y < GRID_H; y++) {
+          for (let x = 0; x < GRID_W; x++) {
+            if (exposedSet.has(`${x},${y}`)) {
+              fogClipPath.rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            }
+          }
+        }
+      }
+
+      // ==================== 第一遍：地板、机关、高墙地面投影 ====================
+      for (let y = 0; y < GRID_H; y++) {
+        const rowT = terrain[y] || [];
+        const rowC = clues[y] || [];
+        for (let x = 0; x < GRID_W; x++) {
+          const isVis = dynamicMask[y][x];
+          if (visionMode === "FOG" && !isVis) {
+            ctx.fillStyle = "#080b10";
+            ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            continue;
+          }
+          const t = rowT[x] || "EMPTY";
+          const px = x * TILE_SIZE;
+          const py = y * TILE_SIZE;
+          drawFloorAndFlatTile(ctx, t, x, y, px, py, gatesFlipped, nowMs);
+
+          // 2.5D 高墙向南投下的环境阴影（大幅增强立体纵深感）
+          if (t !== "PIT" && !isTallOccluder(terrain, x, y, gatesFlipped) && isTallOccluder(terrain, x, y - 1, gatesFlipped)) {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.36)";
+            ctx.fillRect(px, py, TILE_SIZE, 7);
+          }
+
+          if (rowC[x]) {
+            drawSpriteAt(ctx, SPRITES.CLUE, px, py, TILE_SIZE, TILE_SIZE);
+          }
+        }
+      }
+
+      if(visionMode!=="GOD")drawFloorMist(ctx,lightX,lightY);
+
+      // ==================== 第二遍：Y轴从北向南绘制 2.5D 立体物件、炸弹、宝箱与勇者（已彻底移除蓝色轨迹线！） ====================
+      const heroRowY = Math.min(GRID_H - 1, Math.max(0, Math.round(heroInterp.wy / TILE_SIZE)));
+      const calloutQueue = [];
+      const seenLabelKinds = new Set();
+      const pushOnce = (kind, cx, topY, label, bg, fg) => {
+        if (!seenLabelKinds.has(kind)) {
+          seenLabelKinds.add(kind);
+          calloutQueue.push([cx, topY, label, bg, fg]);
+        }
+      };
+
+      for (let y = 0; y < GRID_H; y++) {
+        const rowT = terrain[y] || [];
+        const rowO = occupant[y] || [];
+        const rowC = clues[y] || [];
+        for (let x = 0; x < GRID_W; x++) {
+          const isVis = dynamicMask[y][x];
+          if (visionMode === "FOG" && !isVis) continue;
+
+          const t = rowT[x] || "EMPTY";
+          const occ = rowO[x] || null;
+          const px = x * TILE_SIZE;
+          const py = y * TILE_SIZE;
+
+          drawStandingObject(ctx, t, occ, px, py, gatesFlipped, turnNum, nowMs);
+
+          if (showCalloutLabels && (isVis || visionMode !== "FOG")) {
+            const cx = px + TILE_SIZE / 2;
+            if (t === "K1") calloutQueue.push([cx, py - 2, "🔑 钥匙 K1", "#fbbf24", "#0f172a"]);
+            else if (t === "K2") calloutQueue.push([cx, py - 2, "🔑 钥匙 K2", "#38bdf8", "#0f172a"]);
+            else if (t === "V") calloutQueue.push([cx, py - 14, "🏆 终极金库", "#fbbf24", "#0f172a"]);
+            else if (t === "T_W" && y === 0 && x >= 10) pushOnce("T_W", cx, py + 52, "🛡️ 钛金外墙(无敌)", "#475569", "#f8fafc");
+            else if (t === "ICE" && x >= 8) pushOnce("ICE", cx, py - 4, "🧊 单向冰面(滑到底)", "#38bdf8", "#0f172a");
+            else if (t === "ICE") pushOnce("ICE", cx, py - 4, "🧊 单向冰面(滑到底)", "#38bdf8", "#0f172a");
+            else if (t && t.startsWith("LASER_")) pushOnce("LASER", cx, py - 12, "⚡ 激光炮(-50血/3拍)", "#f43f5e", "#ffffff");
+            else if (t === "W") pushOnce("W", cx, py - 12, "🧱 土黄砖墙(可炸)", "#f59e0b", "#0f172a");
+            else if (t === "SWITCH") pushOnce("SWITCH", cx, py - 4, "🔵 按钮开关", "#60a5fa", "#0f172a");
+            else if (t === "R_GATE") pushOnce("R_GATE", cx, py - 12, "🚪 红门(开关联动)", "#ef4444", "#ffffff");
+            else if (t === "B_GATE") pushOnce("B_GATE", cx, py - 12, "🚪 蓝门(反相联动)", "#3b82f6", "#ffffff");
+            else if (t && t.startsWith("PORTAL_1")) pushOnce(t, cx, py - 4, t === "PORTAL_1A" ? "🌀 紫传送门 A" : "🌀 紫传送门 B", "#c084fc", "#0f172a");
+            else if (t && t.startsWith("PORTAL_2")) pushOnce(t, cx, py - 4, t === "PORTAL_2A" ? "🌀 蓝传送门 A" : "🌀 蓝传送门 B", "#38bdf8", "#0f172a");
+            else if (t === "CRACK") pushOnce("CRACK", cx, py - 4, "⚠️ 脆冰(踩1次塌成坑)", "#94a3b8", "#0f172a");
+            else if (t === "PIT") pushOnce("PIT", cx, py - 4, "🕳️ 无底深渊(-100血)", "#1e293b", "#f8fafc");
+            else if (t === "HEAL") pushOnce("HEAL", cx, py - 10, "💛 金宝箱(+30血)", "#facc15", "#0f172a");
+            else if (t === "MIMIC") pushOnce("MIMIC", cx, py - 10, "👹 假宝箱(-100血)", "#e11d48", "#ffffff");
+            else if (t && t.startsWith("SPRING_")) pushOnce("SPRING", cx, py - 6, "🔼 单向弹簧(强飞2格)", "#4ade80", "#0f172a");
+            else if (t && t.startsWith("MIRROR_")) pushOnce("MIRROR", cx, py - 10, "💎 反射镜(90°折射)", "#22d3ee", "#0f172a");
+            if (rowC[x]) pushOnce("CLUE", cx, py - 4, "💀 白骨暗号(真伪线)", "#e2e8f0", "#0f172a");
+            if (occ === "BOX") pushOnce("BOX", cx, py - 14, "📦 木箱(推/填坑/滑)", "#d97706", "#ffffff");
+            if (occ === "TNT") pushOnce("TNT", cx, py - 14, "🧨 火药桶(3×3爆)", "#f43f5e", "#ffffff");
+          }
+        }
+
+        // 同行定时炸弹：严格受 FOG 视野过滤
+        bombs.forEach(b => {
+          if (b.y === y) {
+            if (visionMode === "FOG" && (!dynamicMask[b.y] || !dynamicMask[b.y][b.x])) return;
+            const bx = b.x * TILE_SIZE;
+            const by = b.y * TILE_SIZE;
+            drawSpriteAt(ctx, SPRITES.BOMB, bx, by, TILE_SIZE, TILE_SIZE);
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "900 11px Consolas, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(String(b.timer), bx + 15, by + 19);
+          }
+        });
+
+        if (y === heroRowY) {
+          draw25DHeroCharacter(ctx, heroInterp.wx, heroInterp.wy, currentMatch.hero_id, frame.hero_hp, heroInterp.jumpH, nowMs);
+        }
+      }
+
+      // ==================== 第三遍：激光齐射与爆炸（FOG 模式下严格用 visPath Clip 裁切，绝不泄露丝毫痕迹！） ====================
+      const showTurnVfx = !isPlaying ? true : (animSubProgress > 0.15 && animSubProgress < 0.96);
+      if (frame.events && showTurnVfx) {
+        ctx.save();
+        if (fogClipPath) ctx.clip(fogClipPath);
+
+        frame.events.forEach(ev => {
+          if (ev.type === "LASER_FIRE" && ev.beams) {
+            ev.beams.forEach(bm => {
+              if (!bm.cells || bm.cells.length === 0) return;
+              const [c0x, c0y] = bm.cannon;
+              const [lastX, lastY] = bm.cells[bm.cells.length - 1];
+              const x1 = c0x * TILE_SIZE + TILE_SIZE / 2;
+              const y1 = c0y * TILE_SIZE + TILE_SIZE / 2;
+              const x2 = lastX * TILE_SIZE + TILE_SIZE / 2;
+              const y2 = lastY * TILE_SIZE + TILE_SIZE / 2;
+
+              ctx.strokeStyle = "rgba(244, 63, 94, 0.50)";
+              ctx.lineWidth = 12;
+              ctx.lineCap = "round";
+              ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+
+              ctx.strokeStyle = "#ffffff";
+              ctx.lineWidth = 3.5;
+              ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            });
+          } else if (ev.type === "EXPLOSION_BATCH") {
+            const cells = ev.blast_cells || ev.blast_zone || [];
+            cells.forEach(([ex, ey]) => {
+              const px = ex * TILE_SIZE;
+              const py = ey * TILE_SIZE;
+              ctx.fillStyle = "rgba(251, 146, 60, 0.72)";
+              ctx.fillRect(px + 2, py + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+              ctx.fillStyle = "rgba(254, 240, 138, 0.88)";
+              ctx.fillRect(px + 8, py + 8, TILE_SIZE - 16, TILE_SIZE - 16);
+            });
+          }
+        });
+
+        ctx.restore();
+      }
+
+      // Final darkness seals unknown geometry/effects. Ground mist was already
+      // drawn below the actor; this veil feathers inward without changing LOS.
+      if (visionMode !== "GOD") drawAtmosphereFog(ctx, visionMode === "SEMI");
+
+      // ==================== 第五遍：可选临时路标与受击飘字 ====================
+      if (showCalloutLabels) {
+        calloutQueue.forEach(args => drawFloatingCallout(ctx, ...args));
+      }
+
+      floatingPopups = floatingPopups.filter(p => nowMs - p.born < 900);
+      (document.body.classList.contains("cinema-clean-mode") ? [] : floatingPopups).forEach(p => {
+        const age = (nowMs - p.born) / 900;
+        ctx.save();
+        ctx.font = "900 14px 'Microsoft YaHei', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillStyle = p.color;
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 3;
+        const py = p.wy - age * 26;
+        ctx.strokeText(p.text, p.wx, py);
+        ctx.fillText(p.text, p.wx, py);
+        ctx.restore();
+      });
+
+      ctx.restore();
+    }
+
+    // ============================================================================
+    // 6. 帧推进、对局切换与导播交互控制
+    // ============================================================================
+    function advanceToFrame(idx, stampMs = performance.now(), resetTimer = true) {
+      if (!currentMatch || !currentMatch.frames) return;
+      currentFrameIdx = Math.max(0, Math.min(currentMatch.frames.length - 1, idx));
+      lastTurnAdvanceTime = stampMs;
+      if (resetTimer) {
+        animSubProgress = 0.0;
+      }
+
+      const frame = currentMatch.frames[currentFrameIdx];
+      document.getElementById("frameSlider").value = currentFrameIdx;
+
+      if (frame.events) {
+        frame.events.forEach(ev => {
+          if (ev.type === "DAMAGE") {
+            const tot = (ev.trap_nominal || 0) + (ev.self_nominal || 0);
+            floatingPopups.push({
+              wx: frame.hero_pos[0] * TILE_SIZE + 16,
+              wy: frame.hero_pos[1] * TILE_SIZE,
+              text: `-${tot} HP`,
+              color: "#f43f5e",
+              born: stampMs
+            });
+            screenShake = 8;
+          } else if (ev.type === "HEAL") {
+            floatingPopups.push({
+              wx: frame.hero_pos[0] * TILE_SIZE + 16,
+              wy: frame.hero_pos[1] * TILE_SIZE,
+              text: `+30 HP`,
+              color: "#4ade80",
+              born: stampMs
+            });
+          } else if (ev.type === "EXPLOSION_BATCH") {
+            screenShake = 9;
+          }
+        });
+      }
+    }
+
+    function loadMatchByIndex(idx) {
+      const matches = bundleData.featured_matches || [];
+      if (!matches[idx]) return;
+      currentMatch = matches[idx];
+      currentFrameIdx = 0;
+      const selEl = document.getElementById("matchSelect");
+      if (selEl && selEl.querySelector(`option[value="${idx}"]`)) selEl.value = String(idx);
+
+      const slider = document.getElementById("frameSlider");
+      slider.max = Math.max(0, currentMatch.frames.length - 1);
+      slider.value = 0;
+
+      if (currentMatch.mode === "BLIND" && visionMode === "GOD") {
+        setVisionMode("SEMI");
+      }
+
+      const f0 = currentMatch.frames[0];
+      camX = f0.hero_pos[0] * TILE_SIZE + 16;
+      camY = f0.hero_pos[1] * TILE_SIZE + 16;
+      heroFacing = "R";
+      advanceToFrame(0, performance.now(), true);
+      animSubProgress = 1.0;
+    }
+
+    function maskActorDisplay(name) {
+      if (!spoilerMaskMystery || !name) return name;
+      return String(name)
+        .replace(/ASTRA\s*6\.2|astra_6\.2_medium|6\.2/gi, "神秘客 [???]")
+        .replace(/\s*\(Fix\)/gi, "");
+    }
+
+    function populateMatchSelect() {
+      const sel = document.getElementById("matchSelect");
+      const prevIdx = sel.value;
+      sel.innerHTML = "";
+      const groups = [
+        { key: "highlight", label: "⭐ 重点高能与反转焦点", items: [] },
+        { key: "stage1",    label: "🏆 官方基准三图 (Stage 1)", items: [] },
+        { key: "stage2",    label: "⚔️ 全交叉魔王战 (Stage 2)", items: [] },
+        { key: "easter",    label: spoilerMaskMystery ? "🎭 赛后揭秘与对照 (神秘客 [???] & Opus 修正)" : "🎭 赛后揭秘与对照 (Astra 6.2 & Opus Fixed)", items: [] },
+      ];
+      const byKey = Object.fromEntries(groups.map(g => [g.key, g]));
+
+      (bundleData.featured_matches || []).forEach((m, i) => {
+        const icon = m.status === "CLEARED" ? "🎉" : (m.status === "DEAD" ? "💀" : "⏳");
+        const rawTag = m.highlight_tag || EXTRA_DIRECTOR_TAGS[i + 1] || "";
+        const tagText = maskActorDisplay(rawTag);
+        const tag = tagText ? ` ${tagText} |` : "";
+        const dName = maskActorDisplay(m.demon_name);
+        const hName = maskActorDisplay(m.hero_name);
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = `[#${i + 1}]${tag} ${dName} VS ${hName} (${m.turns}t) ${icon}`;
+        if (rawTag) {
+          byKey.highlight.items.push(opt);
+        } else if (String(m.stage || "").startsWith("EasterEgg")) {
+          byKey.easter.items.push(opt);
+        } else if (String(m.stage || "").startsWith("Stage 1")) {
+          byKey.stage1.items.push(opt);
+        } else {
+          byKey.stage2.items.push(opt);
+        }
+      });
+
+      const hasGroups = byKey.highlight.items.length > 0 || byKey.easter.items.length > 0;
+      for (const g of groups) {
+        if (g.items.length === 0) continue;
+        if (hasGroups) {
+          const og = document.createElement("optgroup");
+          og.label = `${g.label} (${g.items.length})`;
+          g.items.forEach(opt => og.appendChild(opt));
+          sel.appendChild(og);
+        } else {
+          g.items.forEach(opt => sel.appendChild(opt));
+        }
+      }
+      if (prevIdx !== "" && sel.querySelector(`option[value="${prevIdx}"]`)) {
+        sel.value = prevIdx;
+      }
+    }
+
+    function toggleSpoilerMask() {
+      spoilerMaskMystery = !spoilerMaskMystery;
+      const btn = document.getElementById("spoilerBtn");
+      btn.classList.toggle("active", spoilerMaskMystery);
+      btn.textContent = spoilerMaskMystery ? "🕵️ 隐身???" : "🎭 已揭6.2";
+      populateMatchSelect();
+    }
+
+    function onSelectMatch(val) {
+      if (isHumanMode) startHumanOnCurrentMatch(parseInt(val));
+      else loadMatchByIndex(parseInt(val));
+    }
+
+    function togglePlay() {
+      if (isHumanMode) return;
+      if (!isPlaying && currentMatch && currentFrameIdx >= currentMatch.frames.length - 1) {
+        currentFrameIdx = 0;
+        advanceToFrame(0, performance.now(), true);
+      }
+      isPlaying = !isPlaying;
+      document.getElementById("playPauseBtn").textContent = isPlaying ? "⏸ 暂停" : "▶ 播放";
+      lastTurnAdvanceTime = performance.now();
+    }
+
+    function stepFrame(delta) {
+      if (isHumanMode) return;
+      isPlaying = false;
+      document.getElementById("playPauseBtn").textContent = "▶ 播放";
+      advanceToFrame(currentFrameIdx + delta, performance.now(), true);
+    }
+
+    function seekFrame(val) {
+      if (isHumanMode) return;
+      isPlaying = false;
+      document.getElementById("playPauseBtn").textContent = "▶ 播放";
+      advanceToFrame(parseInt(val), performance.now(), true);
+      animSubProgress = 1.0;
+    }
+
+    function setPlaySpeed(spd) {
+      playSpeed = spd;
+      document.getElementById("spd1Btn").classList.toggle("active", spd === 1);
+      document.getElementById("spd2Btn").classList.toggle("active", spd === 2);
+      document.getElementById("spd4Btn").classList.toggle("active", spd === 4);
+    }
+
+    function setVisionMode(mode) {
+      visionMode = mode;
+      document.getElementById("visGodBtn").classList.toggle("active", mode === "GOD");
+      document.getElementById("visSemiBtn").classList.toggle("active", mode === "SEMI");
+      document.getElementById("visFogBtn").classList.toggle("active", mode === "FOG");
+    }
+
+    function toggleCameraMode() {
+      cameraFollow = !cameraFollow;
+      targetZoom = cameraFollow ? 2.05 : 1.0;
+      const btn = document.getElementById("camModeBtn");
+      btn.classList.toggle("active", cameraFollow);
+      btn.textContent = cameraFollow ? "🎥 跟随" : "🗺️ 全景";
+    }
+
+    function toggleCalloutLabels() {
+      showCalloutLabels = !showCalloutLabels;
+      document.getElementById("toggleLabelsBtn").classList.toggle("active", showCalloutLabels);
+    }
+
+    function toggleCleanBroadcastMode() {
+      document.body.classList.toggle("cinema-clean-mode");
+      document.getElementById("cleanModeBtn").classList.toggle("active", document.body.classList.contains("cinema-clean-mode"));
+    }
+
+    function toggleHumanMode() {
+      isHumanMode = !isHumanMode;
+      const btn = document.getElementById("humanModeBtn");
+      const banner = document.getElementById("humanBanner");
+      if (isHumanMode) {
+        isPlaying = false;
+        btn.classList.add("human-active");
+        btn.textContent = "🚪 退出";
+        banner.classList.add("show");
+        startHumanOnCurrentMatch(parseInt(document.getElementById("matchSelect").value || 0));
+      } else {
+        btn.classList.remove("human-active");
+        btn.textContent = "🎮 踢馆";
+        banner.classList.remove("show");
+        loadMatchByIndex(parseInt(document.getElementById("matchSelect").value || 0));
+      }
+    }
+
+    function startHumanOnCurrentMatch(matchIdx) {
+      const baseMatch = (bundleData.featured_matches || [])[matchIdx] || (bundleData.featured_matches || [])[0];
+      if (!baseMatch || !baseMatch.frames || !baseMatch.frames[0]) return;
+
+      localSim = new ClientDungeonSimulator(baseMatch.frames[0], baseMatch);
+      const initFrame = localSim.toFrame("START", 0);
+
+      currentMatch = {
+        ...baseMatch,
+        hero_id: "human",
+        hero_name: "人类 UP 主",
+        frames: [initFrame]
+      };
+      currentFrameIdx = 0;
+      humanPendingMod = null;
+      document.getElementById("humanModIndicator").textContent = "";
+      heroFacing = "R";
+      camX = 2 * TILE_SIZE + 16;
+      camY = 13 * TILE_SIZE + 16;
+      advanceToFrame(0, performance.now(), true);
+      animSubProgress = 1.0;
+    }
+
+    function executeHumanStep(action) {
+      if (!isHumanMode || !localSim || localSim.status !== "ALIVE") return;
+      const nextFrame = localSim.step(action);
+      currentMatch.frames.push(nextFrame);
+      advanceToFrame(currentMatch.frames.length - 1, performance.now(), true);
+    }
+
+    // 鼠标滚轮无级缩放与左键拖拽平移
+    canvas.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.22 : -0.22;
+      targetZoom = Math.max(0.9, Math.min(3.5, targetZoom + delta));
+    }, { passive: false });
+
+    canvas.addEventListener("mousedown", (e) => {
+      isDraggingCam = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDraggingCam) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      camX -= dx / camZoom;
+      camY -= dy / camZoom;
+    });
+
+    window.addEventListener("mouseup", () => { isDraggingCam = false; });
+
+    window.addEventListener("keydown", (e) => {
+      if (["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)) return;
+      const k = e.key.toUpperCase();
+      if (k === "H") { toggleCleanBroadcastMode(); return; }
+      if (k === "M") { toggleSpoilerMask(); return; }
+      if (k === "C") { toggleCameraMode(); return; }
+      if (k === "F") {
+        const order = ["GOD", "SEMI", "FOG"];
+        setVisionMode(order[(order.indexOf(visionMode) + 1) % order.length]);
+        return;
+      }
+
+      if (isHumanMode) {
+        if (k === "R") {
+          startHumanOnCurrentMatch(parseInt(document.getElementById("matchSelect").value || 0));
+          return;
+        }
+        if (k === "J" || k === "K") {
+          const mod = k === "J" ? "JUMP" : "THROW";
+          humanPendingMod = humanPendingMod === mod ? null : mod;
+          document.getElementById("humanModIndicator").textContent = humanPendingMod === "JUMP" ? "【方向键飞跃】" : humanPendingMod === "THROW" ? "【方向键飞石】" : "";
+          return;
+        }
+        if (k === "B" || e.code === "Space") {
+          e.preventDefault();
+          executeHumanStep("BOMB");
+          return;
+        }
+        if (k === "E") {
+          e.preventDefault();
+          executeHumanStep("WAIT");
+          return;
+        }
+        const dirMap = { W: "U", ARROWUP: "U", S: "D", ARROWDOWN: "D", A: "L", ARROWLEFT: "L", D: "R", ARROWRIGHT: "R" };
+        const d = dirMap[k] || dirMap[e.code.toUpperCase()];
+        if (d) {
+          e.preventDefault();
+          let prefix = "MOVE";
+          if (humanPendingMod) prefix = humanPendingMod;
+          humanPendingMod = null;
+          document.getElementById("humanModIndicator").textContent = "";
+          executeHumanStep(`${prefix}_${d}`);
+          if (e.shiftKey && prefix === "MOVE") executeHumanStep(`MOVE_${d}`);
+        }
+      } else {
+        if (e.code === "Space") {
+          e.preventDefault();
+          togglePlay();
+        } else if (e.code === "ArrowLeft" || k === "A") {
+          stepFrame(-1);
+        } else if (e.code === "ArrowRight" || k === "D") {
+          stepFrame(1);
+        }
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      buildPixelAtlas();
+      populateMatchSelect();
+      if (bundleData.featured_matches && bundleData.featured_matches.length > 0) {
+        loadMatchByIndex(0);
+      }
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+请阅读当前工作目录 part2_full_mode/scratch\opus_resumed_run 下的以下文件：
+1. CONTESTANT_PROMPT_FULL.md 与 RULES_FULL_v22.md（赛题与规则）
+2. _migration/OPUS_HANDOFF_PROMPT.md（你在上个平台因额度中断前的完整进度交接与最后断点日志）
+3. submission.py（你停笔时保存的 891 行代码）
+
+注意：
+- 当前目录为原考场 P2_06_opus_agy 的独立接力副本，所有改动和命令行测试（如 python dev_run_all.py）请全部在本目录内完成，严禁修改原考场目录 part2_full_mode/exam_rooms\P2_06_opus_agy。
+- 如需查阅早期某个完整工具输出或源码决策，可按需读取 _migration/opus_part2_session_full.md。
+
+请从上次断点（step 233 刚查完 sol 地图手动路径、待排查 sol/carbon 失败原因并把 BENCH_STRONG Turn-1 耗时从 1.84s 压回 <=1.55s）继续完成后续开发与自测！

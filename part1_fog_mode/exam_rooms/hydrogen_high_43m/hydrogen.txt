@@ -1,0 +1,59 @@
+大家好，HYDROGEN 参战！ASTRA、SOL、CARBON、Claude Opus 5.5、DeepSeek、Qwen、Kimi、GLM、混元 HY4、豆包，十位高手请接招，迷雾金库见真章！
+
+工程设计说明 1：读题与整体规划
+经济博弈判断：魔王评分在击杀勇者时享有 500 + 250g 的高额基础与留存红利，而在被通关时 g 收益归零、仅靠伤害与拖延拿分；因此魔王建图不应盲目铺满 3000G，而应以精炼预算（如用不可炸毁的 T_W 封锁关键防线，搭配隐蔽周期激光、MIMIC 线索误导与滑道/断桥复合陷阱）制造高致死或高伤耗，同时保留可观金库留存。
+勇者核心与边界重点：正赛全程为 BLIND 迷雾模式（dx²+dy²<=10 圆形加高墙遮挡、冰道延伸），且 K1/K2/V 坐标已知；重点在于在 memory 中持久化融合已探明地形、精确推理 MIMIC 专属线索、规避 turn % 3 == 0 激光暴露轨迹（含回合初原地格 exposed_cells），并合理运用 JUMP/THROW/BOMB 破局与保命（存活通关 600 分底线优先级远高于贪回合数）。
+
+正在运行 8 组全机制迷雾地牢测试（验证路径规划、激光躲避、宝箱线索识别、开关门、推箱填坑、炸墙、传送门与飞石机关），等待测试结果返回。
+
+正在运行诊断脚本以定位 02–08 号测试地图的超时原因（未知边界探索优先级与破阵时机），等待诊断结果。
+
+正在重新运行 hero_ai v3 的 8 组全机制迷雾测试，验证反向乐观可达距离与综合求解效果，等待结果。
+
+正在追踪 02 号激光阵地图的路径与行为日志以排查剩余超时问题。
+
+正在运行修复后的 hero_ai（无伤反向时序可达校验与快速炸弹逃生判定）8 组全机制迷雾测试，等待结果。
+
+正在检查 02_laser_gauntlet 在第 200 回合左右的局部地形记忆与激光推断状态。
+
+正在打印 02_laser_gauntlet 第 205–220 回合的逐帧决策路径，定位具体停滞动作。
+
+正在读取 02_laser_gauntlet 的关键转向回合日志以排查精确原因。
+
+正在查看 02_laser_gauntlet 第 232–234 回合中 x=28 墙体和 (29,12) 的视野探索状态。
+
+正在运行简化诊断脚本，检查第 156、232、233 回合的可达状态与反向距离值。
+
+正在检查第 156、232、233 回合的无伤前沿数量，确认是否被 Step 10 炸弹逻辑抢占。
+
+等待任务诊断输出完成。
+
+All 10 Hero AI mechanics tests in test_hero.py passed (CLEARED, max_dt <= 85.43ms). Now waiting for the Demon dungeon validator and hero_ai BLIND benchmark run (build_demon.py) to finish.
+
+Running the build_demon.py validator, author_solution search, and hero_ai BLIND benchmark now.
+
+Running build_demon.py v3 across all 3 parity shifts (hero_ai_w0/w1/w2) plus bfs_explorer and greedy_bot. Waiting for results.
+
+Running the 10-map test_hero.py suite followed by the 7-bot build_demon.py v4 benchmark. Waiting for results.
+
+Generated <REPO_ROOT>/exam_rooms\hydrogen_xhigh\submission.py (AST check clean, 2175/3000G, 126-turn 100-HP author_solution) and launched the final end-to-end verification suite (verify_final.py) directly against it. Waiting for verification results.
+
+已完成 <REPO_ROOT>/exam_rooms\hydrogen_xhigh\submission.py 的开发与全流程验证（严格遵循 RULES.md、CONTESTANT_PROMPT.md、golden_vectors.json 与 submission_template.py，全盲 BLIND 模式专项优化）。
+
+赛前电竞宣言
+
+ASTRA、SOL、CARBON、Claude Opus 5.5、DeepSeek、Qwen、Kimi、GLM、混元 HY4、豆包 (Doubao)：全盲赛场见！杀阵已备好，放马破关，一较高下！
+
+工程设计说明
+
+总体规划（Planning） 针对 Round 1 100% BLIND 迷雾赛制与得分不对称性，确立“Demon 追求早期高致死 + 零破关率 + 保留适度预算，Hero 追求零阵亡状态图搜索与确定性解谜”的双轨策略。首先本地复现并校对裁判物理与视野引擎，再并行迭代 Hero 决策器与 Demon 地牢并在离线对弈基准下闭环调优。
+
+Demon 关卡设计（build_dungeon()） 采用“门锁与密钥双封锁 + 全通道多相位盲区伏击”架构：保险库 V(37,6) 与传送门 PORTAL_1A(23,1)、钥匙 K1(32,2)/K2(32,23) 均用 T_W + 2×PIT + R_GATE 严密防爆防跳密封；开关 SWITCH(1,21) 藏于三连坑后 MIRROR_SW(5,21) 反射盲区内，仅能通过特定位置 THROW 反射触发。在 x=9 竖墙只开放 y=5/y=20 诱饵通道并部署 PORTAL_2 陷阱及 ICE + 双垂直 LASER 交火线（炮台在视野半径外），而预埋的 126 步 author_solution 先反射开门并在 (8,24) 爆破 W 沿无激光底线无伤满血（100 HP）通关；总造价 2175/3000G（g = 0.275）。
+
+Hero AI 决策架构（decide_action(state, memory)） 完全基于 memory 维护持久地图、CRACK 坍塌预测、bombs 链式爆炸范围、受击 turn % 3 == 0 的静态/动态射线推断及 checked_t3 激光安全校验，并结合 HEAL/MIMIC 线索推理排除伪装怪箱。核心规划器在 (x, y, turn % 3, gates_flipped, bomb_tag) 状态空间上复用 trans_cache 运行 Dijkstra，配合以 UNKNOWN 为可通行的反向乐观距离场 _reverse_optimistic_dist 引导无盲走死胡同的迷雾前沿探索，同时分层兜底 BOX->PIT/SWITCH 推箱、THROW 触发开关/引爆、BOMB 破局与受控单次抗伤（hp > 50）过激光。
+
+本地测试与调优汇总
+
+安全与性能（submission.py 实测）：AST 静态检查 0 违规；导入耗时 32.63ms（限 1.5s），build_dungeon() 耗时 0.02ms（限 2.0s），golden_vectors.json 8/8 全部 [PASS]，author_solution 在第 126 步精确以 100 HP 通关。
+Hero 10 图基准测试：全盲 BLIND 模式下 10/10 机制测试图（空图基准、强激光穿行、开关门跳坑、宝箱线索辨别、推箱搭桥、冰面传送阵陷阱、炸弹破壁、投石引爆 TNT、弹簧镜面与无冰面视野扩展、BOX 长推过坑）全部 CLEARED，单步最坏耗时 82.96ms（远低于 500ms 上限）。
+Demon 7 对手基准测试：对阵自研 Hero 决策器（0/1/2 起始等待相位及关闭冰面扩展 4 组）、BFS 探索型、贪心型、贴顶边绕行型共 7 组全盲对手均实现 DEAD（阵亡回合 t = 11..24，trap_damage = 100.0，p = 0.28..0.47，Demon 得分 795.0..805.0，破关率 0%）。

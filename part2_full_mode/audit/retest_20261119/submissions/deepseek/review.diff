@@ -1,0 +1,38 @@
+--- D:\publish\part2_full\exam_rooms\P2_07_deepseek_dsh\submission.py
++++ D:\publish\part2_full\audit\retest_20261119\submissions\deepseek\submission.py
+@@ -73,12 +73,11 @@
+ # 一、前向仿真内核（v2.2 规则逐字实现；用于计划校验与战斗推演）
+ # =============================================================================
+ 
+-class _Sim(object):
+-    __slots__ = ("ter", "occ", "hx", "hy", "hp", "k1", "k2", "jumps", "throws",
+-                 "bombs", "bmap", "gates", "dmg", "status", "exposed", "tnt_armed",
+-                 "turn")
+-
+-    def __init__(self, ter, occ, hero, gates, turn=1):
++class _Sim:
++
++    def __init__(self, ter=None, occ=None, hero=None, gates=None, turn=1):
++        if ter is None:
++            return
+         self.ter = [row[:] for row in ter]
+         self.occ = [row[:] for row in occ]
+         self.hx, self.hy = hero[0], hero[1]
+@@ -94,7 +93,7 @@
+         self.tnt_armed = set()
+ 
+     def clone(self):
+-        s = _Sim.__new__(_Sim)
++        s = _Sim()
+         s.ter = [row[:] for row in self.ter]
+         s.occ = [row[:] for row in self.occ]
+         s.hx, s.hy, s.hp = self.hx, self.hy, self.hp
+@@ -531,7 +530,7 @@
+     return ter, occ, hero, bool(state["gates_flipped"]), int(state["turn"])
+ 
+ 
+-class _Plan(object):
++class _Plan:
+     """规划上下文：一份可增量推进的 _Sim + 计算好的危险表 / 加速结构。"""
+ 
+     def __init__(self, sim, targets):

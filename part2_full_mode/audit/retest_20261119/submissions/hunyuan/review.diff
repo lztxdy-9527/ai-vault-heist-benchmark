@@ -1,0 +1,20 @@
+--- D:\publish\part2_full\exam_rooms\P2_09_hunyuan_codebuddy\submission.py
++++ D:\publish\part2_full\audit\retest_20261119\submissions\hunyuan\submission.py
+@@ -162,6 +162,8 @@
+     """Immutable base map + sparse override dicts -> cheap snapshots for A*."""
+ 
+     def __init__(self, grid=None, state=None):
++        if grid is None and state is None:
++            return
+         if state is not None:
+             self._from_state(state)
+         else:
+@@ -244,7 +246,7 @@
+                 self.portals[pc[b]] = pc[a]
+ 
+     def clone(self):
+-        s = _Sim.__new__(_Sim)
++        s = _Sim()
+         s.bt, s.bo, s.plates, s.cannons, s.portals, s.targets = (
+             self.bt, self.bo, self.plates, self.cannons, self.portals, self.targets)
+         s.dt = dict(self.dt)

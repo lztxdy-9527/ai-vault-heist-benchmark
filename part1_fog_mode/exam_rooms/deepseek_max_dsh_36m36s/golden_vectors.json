@@ -1,0 +1,187 @@
+{
+  "schema_version": "2.1",
+  "description": "官方静态黄金测试向量 (Golden Vectors)，用于说明规则边界条件下的标准输入与期望输出。",
+  "vectors": [
+    {
+      "id": "GV_01_OUTER_FRAME_COST_AND_CLUE_BINDING",
+      "category": "budget_and_validation",
+      "description": "验证外框 128 格 T_W 计费为 0G 且不占配额；内圈放置 2 格 T_W (50G)、1 对 PORTAL_1A/1B (80G)、1 个 MIMIC (60G)，总花费应精确为 190G；MIMIC(10,10) 按 U,D,L,R 顺序将 (10,9) 绑定为专属线索格。",
+      "Placed_inner_tiles": [
+        {"x": 20, "y": 5, "tile": "K1"},
+        {"x": 20, "y": 20, "tile": "K2"},
+        {"x": 35, "y": 13, "tile": "V"},
+        {"x": 6, "y": 6, "tile": "T_W"},
+        {"x": 7, "y": 6, "tile": "T_W"},
+        {"x": 8, "y": 8, "tile": "PORTAL_1A"},
+        {"x": 25, "y": 8, "tile": "PORTAL_1B"},
+        {"x": 10, "y": 10, "tile": "MIMIC"}
+      ],
+      "expected": {
+        "valid": true,
+        "spent_gold": 190,
+        "vault_gold": 2810,
+        "inner_tw_count": 2,
+        "mimic_clue_coord": [10, 9]
+      }
+    },
+    {
+      "id": "GV_02_BOX_LEAVES_CRACK_HERO_FALLS_IN_PIT",
+      "category": "atomic_displacement_and_box",
+      "description": "勇者在 (5,10) 执行 MOVE_R 推动位于脆冰 CRACK(6,10) 上的 BOX 到 EMPTY(7,10)。箱子先行离开 (6,10) 使其立即坍塌为 PIT；随后勇者迈入 (6,10) 直接落入新生成的 PIT，受到 100 点机关伤害当场阵亡。",
+      "initial": {
+        "turn": 1,
+        "hero": {"x": 5, "y": 10, "hp": 100, "keys": [false, false], "jumps": 3, "throws": 3, "bombs": 2},
+        "local_tiles": {
+          "(5,10)": {"terrain": "EMPTY", "occupant": null},
+          "(6,10)": {"terrain": "CRACK", "occupant": "BOX"},
+          "(7,10)": {"terrain": "EMPTY", "occupant": null}
+        }
+      },
+      "action": "MOVE_R",
+      "expected": {
+        "box_final_pos": [7, 10],
+        "tile_6_10_terrain_after": "PIT",
+        "hero_final_pos": [6, 10],
+        "hero_hp_after": 0,
+        "trap_damage_dealt": 100.0,
+        "status": "DEAD"
+      }
+    },
+    {
+      "id": "GV_03_SPRING_BLOCKED_BY_WALL_FALLS_EARLY_INTO_PIT",
+      "category": "momentum_and_spring",
+      "description": "勇者从 (4,10) MOVE_R 踏上 SPRING_R(5,10)。前方第 1 格 (6,10) 为 EMPTY，第 2 格 (7,10) 为 PIT，第 3 格 (8,10) 为普通砖墙 W。因第 3 格受阻，勇者腾空飞越第 1 格 (6,10)，提前跌落在第 2 格 (7,10) 的 PIT 中当场暴毙。",
+      "initial": {
+        "turn": 1,
+        "hero": {"x": 4, "y": 10, "hp": 100, "keys": [false, false], "jumps": 3, "throws": 3, "bombs": 2},
+        "local_tiles": {
+          "(4,10)": {"terrain": "EMPTY", "occupant": null},
+          "(5,10)": {"terrain": "SPRING_R", "occupant": null},
+          "(6,10)": {"terrain": "EMPTY", "occupant": null},
+          "(7,10)": {"terrain": "PIT", "occupant": null},
+          "(8,10)": {"terrain": "W", "occupant": null}
+        }
+      },
+      "action": "MOVE_R",
+      "expected": {
+        "exposed_cells": [[4, 10], [5, 10], [7, 10]],
+        "hero_final_pos": [7, 10],
+        "hero_hp_after": 0,
+        "status": "DEAD"
+      }
+    },
+    {
+      "id": "GV_04_PORTAL_DOUBLE_CAP_AND_EXIT_SUPPRESSION",
+      "category": "portal_mechanics",
+      "description": "勇者从 (4,10) MOVE_R 踏入 PORTAL_1A(5,10) -> 传至 PORTAL_1B(10,10) [第1次传送，抑制1B回吸] -> 继续向右迈出 1 格踏入 PORTAL_2A(11,10) -> 传至 PORTAL_2B(20,10) [第2次传送达到单回合上限2次] -> 即使 (21,10) 是 ICE，勇者也在第 2 个配对端 (20,10) 立即停稳，终止本回合动量。",
+      "initial": {
+        "turn": 1,
+        "hero": {"x": 4, "y": 10, "hp": 100, "keys": [false, false], "jumps": 3, "throws": 3, "bombs": 2},
+        "local_tiles": {
+          "(4,10)": {"terrain": "EMPTY", "occupant": null},
+          "(5,10)": {"terrain": "PORTAL_1A", "occupant": null},
+          "(10,10)": {"terrain": "PORTAL_1B", "occupant": null},
+          "(11,10)": {"terrain": "PORTAL_2A", "occupant": null},
+          "(20,10)": {"terrain": "PORTAL_2B", "occupant": null},
+          "(21,10)": {"terrain": "ICE", "occupant": null}
+        }
+      },
+      "action": "MOVE_R",
+      "expected": {
+        "portal_count": 2,
+        "hero_final_pos": [20, 10],
+        "hero_hp_after": 100,
+        "status": "ALIVE"
+      }
+    },
+    {
+      "id": "GV_05_SIMULTANEOUS_LASER_SNAPSHOT_AND_TNT_NO_BOMB_TICK",
+      "category": "phase_d_laser_and_explosion",
+      "description": "第 3 回合 (turn=3)，勇者 WAIT 在 (10,12)，场上有 1 颗本回合刚放下的 BOMB (阶段C后 timer=2)。阶段 D 开始冻结快照：LASER_R(5,8) 射中 TNT(8,8)，该 TNT 九宫格包含 LASER_D(8,9)；与此同时 LASER_D(8,9) 向下射中 (8,12)。因同步快照结算，LASER_D 在本回合依然成功发射（若勇者在 (8,12) 会受 50 伤），且阶段 D 引爆 TNT 销毁 LASER_D 时，绝不会再次递减远处 BOMB 的 timer（保持为 2）。",
+      "initial": {
+        "turn": 3,
+        "hero": {"x": 8, "y": 12, "hp": 100, "keys": [false, false], "jumps": 3, "throws": 3, "bombs": 2},
+        "local_tiles": {
+          "(5,8)": {"terrain": "LASER_R", "occupant": null},
+          "(8,8)": {"terrain": "EMPTY", "occupant": "TNT"},
+          "(8,9)": {"terrain": "LASER_D", "occupant": null},
+          "(8,12)": {"terrain": "EMPTY", "occupant": null}
+        }
+      },
+      "action": "BOMB",
+      "expected": {
+        "bomb_timer_after_turn": 2,
+        "laser_d_destroyed_for_future_turns": true,
+        "hero_hit_by_laser_d_this_turn": true,
+        "hero_hp_after": 50,
+        "trap_damage_dealt": 50.0,
+        "status": "ALIVE"
+      }
+    },
+    {
+      "id": "GV_06_STEP_32_FALLS_INTO_PIT_VS_STEP_33_CUTOFF",
+      "category": "sub_tick_loop_guard",
+      "description": "验证第 32 次成功位移照常结算落脚效果（若第 32 步落点为 PIT 则照常 -100 HP 死亡），但在第 32 步结算完第 1~6 步后，于第 7 步触发 steps_taken >= 32 熔断，禁止发起第 33 次位移。",
+      "initial": {
+        "turn": 1,
+        "hero": {"x": 2, "y": 13, "hp": 100},
+        "note": "环形冰道 MIRROR 循环：第 32 次成功位移落在 (10,5) ICE 上，下一格 (11,5) 为 PIT。"
+      },
+      "action": "MOVE_R",
+      "expected": {
+        "steps_taken": 32,
+        "entered_step_33_pit": false,
+        "hero_final_pos": [10, 5],
+        "hero_hp_after": 100,
+        "status": "ALIVE"
+      }
+    },
+    {
+      "id": "GV_07_STONE_AIR_BOUNCE_AND_GROUND_ICE_SLIDE_TO_SWITCH",
+      "category": "throw_physics",
+      "description": "勇者在 (5,10) 执行 THROW_R：飞石空中向右飞 3 格进入 MIRROR_SE(8,10) 折转向南 (D)，再向南飞 3 格（耗尽 6 点空中射程）落在第 6 格 ICE(8,13) 上；因第 6 格为 ICE，飞石转入地面滑行模式继续向南滑行，在 (8,15) 撞击 SWITCH 翻转全场红蓝门并碎裂。",
+      "initial": {
+        "turn": 1,
+        "gates_flipped": false,
+        "hero": {"x": 5, "y": 10, "hp": 100, "keys": [false, false], "jumps": 3, "throws": 3, "bombs": 2},
+        "local_tiles": {
+          "(6,10)": {"terrain": "PIT", "occupant": null},
+          "(7,10)": {"terrain": "EMPTY", "occupant": null},
+          "(8,10)": {"terrain": "MIRROR_SE", "occupant": null},
+          "(8,11)": {"terrain": "PIT", "occupant": null},
+          "(8,12)": {"terrain": "EMPTY", "occupant": null},
+          "(8,13)": {"terrain": "ICE", "occupant": null},
+          "(8,14)": {"terrain": "ICE", "occupant": null},
+          "(8,15)": {"terrain": "SWITCH", "occupant": null}
+        }
+      },
+      "action": "THROW_R",
+      "expected": {
+        "hero_throws_after": 2,
+        "gates_flipped_after": true,
+        "hero_final_pos": [5, 10],
+        "status": "ALIVE"
+      }
+    },
+    {
+      "id": "GV_08_TURN_240_PHASE_B_INSTANT_WIN_BEFORE_PHASE_D_LASER",
+      "category": "win_condition_priority",
+      "description": "第 240 回合 (turn=240, 恰为 3 的倍数激光发射回合)，已集齐双钥、仅剩 20 HP 的勇者在阶段 B 滑行踏上金库 V(35,13)。尽管 (35,13) 位于 LASER_D(35,5) 的射线上，但因 8 步原子序第 6 步规定踏上 V 立即终止整局判定通关，不再执行阶段 C/D，勇者以 20 HP 存活通关！",
+      "initial": {
+        "turn": 240,
+        "hero": {"x": 34, "y": 13, "hp": 20, "keys": [true, true], "jumps": 0, "throws": 0, "bombs": 0},
+        "local_tiles": {
+          "(35,5)": {"terrain": "LASER_D", "occupant": null},
+          "(35,13)": {"terrain": "V", "occupant": null}
+        }
+      },
+      "action": "MOVE_R",
+      "expected": {
+        "hero_final_pos": [35, 13],
+        "hero_hp_after": 20,
+        "phase_d_executed": false,
+        "status": "CLEARED"
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Created At: 2026-11-20T04:06:23+09:00
+Completed At: 2026-11-20T04:06:25+09:00
+Workflow "Add beam-zone time key pruning" completed.
+Output:
+BENCH_WEAK full True 72 0.02 ('WIN', 72, 100, 0.0)
+BENCH_STRONG full True 119 1.29 ('WIN', 119, 100, 0.0)

@@ -1,0 +1,12 @@
+MAZE 0 known walking solution 147
+{'name': 'DFS maze 0', 'turn': 161, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 262.03, 'mean_ms': 40.82, 'position': [35, 13], 'jumps': 1, 'bombs': 0}
+MAZE 1 known walking solution 217
+{'name': 'DFS maze 1', 'turn': 194, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 339.28, 'mean_ms': 51.0, 'position': [35, 13], 'jumps': 2, 'bombs': 0}
+MAZE 2 known walking solution 147
+{'name': 'DFS maze 2', 'turn': 100, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 344.75, 'mean_ms': 84.53, 'position': [35, 13], 'jumps': 2, 'bombs': 0}
+MAZE 4 known walking solution 149
+{'name': 'DFS maze 4', 'turn': 240, 'hp': 100, 'keys': 3, 'won': False, 'max_ms': 313.06, 'mean_ms': 44.86, 'position': [35, 7], 'jumps': 0, 'bombs': 0}
+MAZE 6 known walking solution 141
+{'name': 'DFS maze 6', 'turn': 222, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 342.12, 'mean_ms': 57.19, 'position': [35, 13], 'jumps': 2, 'bombs': 0}
+MAZE 7 known walking solution 119
+{'name': 'DFS maze 7', 'turn': 158, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 281.14, 'mean_ms': 43.96, 'position': [35, 13], 'jumps': 2, 'bombs': 0}

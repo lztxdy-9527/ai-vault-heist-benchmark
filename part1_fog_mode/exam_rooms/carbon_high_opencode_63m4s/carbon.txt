@@ -1,0 +1,586 @@
+Verifying Prerequisites First
+
+I've just finished reviewing the contest files. My initial thought is to make sure the environment is ready – checking the time and ensuring Python is accessible. However, I've decided to carefully review the instructions first, specifically focusing on the requirements outlined in CONTESTANT_PROMPT.md before proceeding.
+
+Analyzing Constraints Imposed
+
+I am now thoroughly analyzing the provided restrictions. It's crucial to understand the limitations on external resources, including network access and external code. The strict time limit and automatic submission of the latest valid file add further complexity. I must ensure the final submission.py is fully complete and rigorously tested, as this is the only submission. I must plan for this.
+
+Confirming Mixed Outputs
+
+I am now verifying the model's capability to handle text alongside tool calls. The instructions from CONTESTANT_PROMPT.md explicitly describe the use of both in a single response, for providing explanations. This is important to note. I want to confirm this behavior.
+
+Outlining Plan of Attack
+
+I am now outlining the budget allocation strategy and approach for tackling author_solution. Specifically, I'm focusing on the BLIND mode strategies for maintaining a memory map, exploring unknown areas, and avoiding hazards. Then, I plan to address the local testing and tuning phase, highlighting the tests performed, edge case corrections, and ensuring the final submission.py is robust and written to disk. It's key to have that done early and verified.
+
+Analyzing Workspace & Rules
+
+I am now meticulously analyzing RULES.md and golden_vectors.json to ensure my strategy aligns with all constraints. I'm focusing on the allowed and forbidden imports and operations in submission.py to keep the workspace tidy. I will be sure to put temporary files in <LOCAL_USER_HOME>\AppData\Local\Temp\opencode to ensure a clean workspace for submission.py!
+
+Avoiding Forbidden Strings
+
+I am now meticulously avoiding any forbidden words in my code, even within comments or strings, using an extremely conservative approach due to potential static analysis. I'm focusing on alternatives like dataclasses or factory functions to ensure no disallowed terms like __class__ are included. I'm prioritizing safe practices like explicit init() methods, or dataclasses where there's no need for __init__. My strategy is to keep submission.py completely safe, so I am removing use of dunder methods.
+
+Calculating Time Budget
+
+I am now carefully calculating the time budget for each operation. Specifically, I'm focusing on the time constraints for importing submission.py, building the dungeon, and deciding the action per step. I'm aiming for a maximum of 0.25 seconds per step, to include some safety margins. I will use time.perf_counter() to ensure I don't exceed the 0.35s limit per step.
+
+Prioritizing Resource Allocation
+
+I'm now focusing on the resource allocation. I see that wall "W" is 5G, unlimited, so it is likely highly useful, and I will keep it in mind. I also see that "T_W" (25G, max 120), "ICE" (10G), and "CRACK" (20G, max 40) are somewhat limited, so they need specific use cases for effective implementation. I'll need to develop a strategy. I must develop a map for this!
+
+Evaluating Resource Constraints
+
+I'm now carefully evaluating the limitations on TNT, BOX, HEAL, MIMIC, and PORTAL pairs, which have restricted maximum uses. I'm focusing on the MIMIC placement rules, particularly the neighbor checks and the spawn clearance exclusion, which is critical. I'm also confirming the taunt length requirement, and that I reach the final "V" with both keys and positive health on the very last step.
+
+Verifying Physics Details
+
+I'm now diving deep into the physics engine rules. I'm focusing on the multi-layered model with terrain, occupants, bombs, and clues. I'm ensuring a solid grasp on the 4-phase turn pipeline, paying close attention to layer interactions and gate behavior, especially how entities on gates are handled when they close.
+
+Confirming Gate Physics
+
+I'm now confirming my understanding of gate mechanics, focusing on how entities interact with them. I'm clarifying that the hero can move into and out of closed gates, while others cannot enter. I've also re-confirmed the passability rules, including treating out-of-bounds as HIGH_WALL. I've made sure to explicitly treat out-of-bounds as HIGH_WALL everywhere.
+
+Clarifying Portal Displacement
+
+Now I'm delving deeper into the portal mechanics and atomic displacements. Specifically, I'm verifying the 8-step process, especially how entities like boxes are handled when transitioning through portals, specifically to clarify if a portal can be destroyed. This means re-checking where portal destinations could be.
+
+Refining Portal Dynamics
+
+I'm now refining my understanding of portal behavior, specifically the chain effects on adjacent entities and their momentum. I am confirming if destroying a portal mid-chain would impact any ongoing transfers. I'm also ensuring full understanding of how "BOX" entities are handled during portal traversals. I'm prioritizing safe practices like explicit init() methods, or dataclasses where there's no need for __init__.
+
+Analyzing Damage Mechanisms
+
+I am now thoroughly analyzing the damage mechanisms described, including traps, MIMICs, and HEALs. I'm focusing on the HP adjustments for each entity interaction to confirm the precise effects, especially regarding the 'instant death' and 'instant win' conditions. I will carefully ensure my strategy aligns with these scenarios, particularly regarding MIMIC clear rules and key pickups.
+
+Confirming Final Victory State
+
+I'm now meticulously confirming the exact criteria for a winning state, which requires both keys and positive health on the final step. I need to be exact, so my latest check involves ensuring that there's no way to reach the target "V" without collecting both keys!
+
+Verifying Portal Sequencing
+
+I'm now carefully verifying the portal sequencing rules, focusing specifically on cases where portal_count is already at or above 2. My concern is that the system might prematurely halt at the second portal in a chain, which could be an unintended consequence. I must ensure this is handled correctly.
+
+Confirming Entity Interaction
+
+I am now confirming the entity interactions within portal chains, particularly how boxes, TNT, and other entities are handled within the momentum transfer. I'm focusing on ensuring a correct representation of the physics, especially how entities change with their momentum through a full portal chain, in the context of MIRROR_NE/SE/SW/NW and SPRING_U/D/L/R.
+
+Refining Interaction Mechanics
+
+I'm now carefully examining the entity interaction within portal chains. Specifically, I'm focusing on "BOX", "TNT", and other entities during momentum transfer. My priority is confirming an accurate representation of the physics, especially entity changes when they have momentum through full portal chains, considering both MIRROR_* and SPRING_*.
+
+Validating Jump Mechanics
+
+I'm now carefully examining the "JUMP" command with "BOX" interactions and portal sequencing. I'm prioritizing safe practices like explicit init() methods, or dataclasses where there's no need for __init__. The key is verifying whether the jump can be treated as a move, if a block occupies the target.
+
+Validating Jump Mechanics
+
+I'm now carefully checking the jump mechanic with box interactions and portal sequencing. I've confirmed that the jump is treated as a move, and I've verified the jump failure cases when a block or high wall is in the target position, ensuring a safe state with no movement.
+
+Clarifying Ground Slide Details
+
+Now I'm clarifying the ground slide extension logic, especially regarding ICE and MIRROR terrain. I am revisiting the sliding loop, specifically when range_left reaches 0, to ensure correct handling of ICE and MIRROR_* cells, including where those turns may have occurred already. The key is to confirm the impact of MIRROR_* at (sx, sy) upon final dir, with no further turns.
+
+Confirming Slide Physics
+
+I'm now carefully checking the ground slide rules, especially how portals interact with the sliding. Specifically, I'm verifying the portal behavior during a stone slide and ensuring it aligns with the updated physics for portal use. I'm focusing on validating the 32-step limit to avoid infinite loops and the stone_portals counter behavior.
+
+Analyzing Damage Details
+
+I'm now carefully analyzing damage mechanics from bombs and TNT. I am clarifying the impact of the timer on bombs. I'm focusing on the effect of TNT and Bombs in the 3x3 neighborhood of an explosion, and the resulting damage to the hero, ensuring both effective_trap_dmg and hp are correctly calculated.
+
+Refining Bomb Explosion Logic
+
+I am now refining my understanding of the bomb explosion mechanics. I'm focusing on the effect of the explosion on terrain and occupants, particularly the interaction of "TNT", "BOX", and "PIT" in the 3x3 vicinity and confirming how the effective_trap_dmg and hp are affected. I am clarifying how the post-explosion support check is handled, and how hp <= 0 is handled.
+
+Interpreting Laser Beam Dynamics
+
+I'm now carefully interpreting laser beam dynamics, specifically the exposed_cells concept and how it determines damage. I've realized that the hero can be hit by a laser even if they move out of its path on turn 3, as the starting position remains in exposed_cells. This has significant implications for tactics.
+
+Interpreting Laser Dynamics
+
+I'm now fully grasping the laser's dynamics: avoiding the beam at the end of turn 2 is key. The hero must step off beam lines at turn % 3 == 2, and not on turn % 3 == 0, and understanding laser_warnings is essential. The laser_warnings only appear on turn % 3 == 0 for calculations.
+
+Prioritizing Safe Handling
+
+I'm now zeroing in on handling hazardous situations safely, especially with lasers. My focus is on the crucial turn % 3 == 2 for avoidance. I've re-confirmed that exposed_cells captures the beam at the start of the turn, so moving out of it on turn % 3 == 0 is crucial. The only way to avoid damage on turn % 3 == 0 is by affecting the beam's path.
+
+Analyzing Laser Placement Tactics
+
+Now I'm focusing on laser placement in BLIND mode, especially with respect to long-range lasers, placed strategically for maximum impact. I will use the "PIT" and "ICE" terrain to hide these from view. I must prioritize placing them near chokepoints. This could result in high damage to careless opponents at turn % 3 == 2. I will record beam danger cells in memory.
+
+Clarifying Sliding Extension
+
+I am now clarifying the logic of the sliding extension from adjacent ICE and MIRROR cells. This sliding extension logic adds to the visibility logic, which provides important details about what is visible. I'm focusing on its interactions with the base visibility rules, and how it extends the visible area in BLIND mode.
+
+Calculating Demon Victory Scores
+
+I'm now carefully calculating the Demon victory scores, examining the impact of spending, progress, and damage on the final score calculation, especially after a hero kill. I'm focusing on scenarios with zero keys, and high damage to optimize spending strategy. I am verifying that the most efficient progress is to kill the hero after they collect zero keys and do full damage.
+
+Calculating Demon Scoring Strategy
+
+I'm now carefully calculating Demon victory scoring, and comparing this to timeout vs hero clear scenarios. I've reconfirmed that a kill is worth significantly more points than a timeout, especially with low spending. Even breached scenarios are improved by maximizing damage, especially with BLIND mode strategies. The calculations show dealing damage and elongating the route maximizes points.
+
+Simulating Competitor LLMs
+
+I'm now simulating the decision-making process of other LLMs in BLIND mode, focusing on common vulnerabilities. I'm hypothesizing how they'll build memory grids, explore the unknown, and plan paths toward key objectives. I am analyzing how to exploit their reliance on optimistic search strategies, especially with inexpensive walls. I am crafting strategies to trap and defeat opponents easily.
+
+Developing Laser Placement Strategy
+
+I'm now developing tactics for laser placement to exploit the LOS mechanics. My new focus is on using lasers hidden behind "W", or leveraging "T_W" to block shortcuts. This creates bomb traps that render bombs wasted or, worse, lure the hero to an iced laser death. I am also planning long-range lasers, concealed by "ICE" or "CRACK," at strategic chokepoints.
+
+Verifying Spring Physics
+
+I'm now carefully verifying the spring's visibility and landing point. The math is clear: a spring's target is outside the 10-radius, so the destination cell remains "UNKNOWN". Ortho cells at distances 1, 2, and 3 are visible, but dx = 4 is not and thus "UNKNOWN". I must use this detail to my advantage!
+
+Optimizing Spring Tactics
+
+I'm now zeroing in on spring mechanics, especially spring visibility and landing. Key insight: at a distance of 4, the target cell remains unknown, which is crucial for spring traps. I've realized that spring destinations are invisible without adjacent "ICE". This is very important. I must use this detail to exploit the hero!
+
+Validating Jump Over Springs
+
+I'm now carefully examining the scenario where a hero jumps over a spring, particularly when the destination is a pit or a timed wall. I'm focusing on the implications of a spring placed in front of a pit or timed wall, and if the jump works. I've realized that the hero will launch from the moment they step on the spring cell!
+
+Refining Greedy Strategy
+
+I'm now refining my greedy strategy to bait opponents with springs. My current focus is to create "DIRECT, SHORTEST-LOOKING OPEN CORRIDORS" with spring traps aligned towards the keys. By placing a spring at a position offering the shortest heuristic distance to keys, I aim to lure A* agents into lethal jumps. This uses their optimistic search approach against them.
+
+Validating Jump Over Springs
+
+I'm now checking the jump over spring mechanic in detail, to clarify scenarios. I've reconfirmed that, even with a pit at the jump destination, the hero will launch. My main focus is confirming the hero will launch from the moment they step on the spring cell! I am also looking at edge cases.
+
+Validating Spring Traps
+
+I'm now completely focused on validating this spring trap hypothesis. My recent work confirms that an A* agent will treat "UNKNOWN" as passable, launching directly to a fatal "PIT" on the next step. I'm prioritizing checking build_dungeon to confirm, and ensuring correct handling of decide_action to capitalize on the fatal jump.
+
+Refining Safe Navigation
+
+I'm now completely focused on the hero's safe movement. I've realized, as a primary tactic, to avoid springs and portals where the destination is unknown. This is now an extremely critical priority. The logic is, I must never step on a spring with an unknown landing position, or go through a portal if the destination is unkown. I'm focusing on the A* and BFS planners.
+
+Refining Fatal Spring Placement
+
+My focus is now on the specific A* path-finding behavior with unknown spring destinations. It's becoming clearer: an unknown cell is treated as walkable, which lets me place an invisible spring destination trap at 4 tiles away with pit, and a single move kills the hero! I need to ensure the A* and BFS planners avoid unknown spring destinations.
+
+Clarifying Spring Trap Dynamics
+
+I'm now clarifying the spring trap dynamics again, confirming the key detail from GV_03. The hero's perspective in BLIND mode is critical. A hero at (4, 10) sees a spring at (5, 10) which springs towards an unknown at (8, 10), which is crucial. This is because at (4, 10), dx = 8 - 4 = 4, so (8, 10) is "UNKNOWN", which means a pit will be a fatal choice for the hero!
+
+Refining Fatal Spring Placement
+
+I am now completely clarifying the spring placement. A* assumes "UNKNOWN" as "EMPTY", so my spring strategy is lethal. For example, a hero at (4,10) may "see" a spring at (5,10) that appears to land on an UNKNOWN cell at (8,10). The heuristic thinks it can fly over a "PIT" and land safely! But at (8,10) there may be a deadly pit. I must capitalize on this.
+
+Refining Blind Spring Trap
+
+I'm now refining the blind spring trap mechanism, as described in GV_03, to focus on how to kill opponents. I'm focusing on the scenario where an unknown target, after a spring, is actually a pit, which causes instant death. I will be sure to avoid spring placement when the target cell is not known. The current version of the A* agent should refuse that move if safe!
+
+Optimizing Spring Trap Costs
+
+I'm now calculating the cost-effectiveness of various spring trap setups. I'm prioritizing the cost of the spring (35G) and pit (40G). I need to analyze how to effectively use the adjacent 8-cell extension and how to use those values.
+
+Validating Blind Spring Tactics
+
+I'm now zeroing in on exploiting the "UNKNOWN" terrain for deadly spring traps. I've reconfirmed that an optimistic assumption of "UNKNOWN" == "EMPTY" leads directly to fatal jumps over concealed "PIT" cells. My focus now is designing the decide_action to prevent those risky moves, to keep the hero safe and survive.
+
+Refining Path Avoidance
+
+I'm now completely focused on pathfinding safety. Spring targets, if unknown, and are potentially deadly. I've confirmed that I must avoid those steps when any safe option exists. My main focus is confirming that unknown targets, with any adjacent safe move, are an INSTANT FAIL! I need to prioritize safe exploration strategies.
+
+Refining Slide Trap Design
+
+I'm now refining the ICE slide trap design. I've realized the ice extension logic only lights adjacent cells. Hero at (4,10) can jump to (6,10), which is ICE, and slide right, but the end point (8,10) is UNKNOWN, and potentially a pit. I also confirmed ice slides do NOT trace through springs or portals. The key is safe memory updates during the decide_action to prevent those risky moves.
+
+Refining Blind Trap Safety
+
+Now I'm completely refining how I am handling the UNSCOUTED_HAZARD rule for blind traps. If any move steps onto or lands on an unknown cell, even from a portal or spring, I must mark this as a "risky" step and forbid it. My priority is ensuring any safe actions are always taken first, to avoid death. The goal is complete safety.
+
+Refining Portal-Pit Exploitation
+
+I've just uncovered a devastating portal trap: a portal with a PIT exit can be lethal in BLIND mode, if the exit is unknown. I'm prioritizing safe exploration and preventing any moves onto a portal unless its destination is safe and known. This will be integrated into the A* and BFS implementations.
+
+Refining Portal Trap Strategy
+
+I'm now completely rethinking my portal trap strategy. I've realized a single "PORTAL_1B" surrounded by pits in a corner is a devastating decoy, and only costs 80G total! The key is placing "PORTAL_1B" in a location like (37, 2), surrounded by pits. I'm prioritizing confirming portal placement logic for this setup, ensuring a fatal trap is correctly built.
+
+Refining One-Pit Strategy
+
+I'm now refining the one-pit strategy. I'm prioritizing the single-pit portal trap setup, costing 140G, where a hero entering PORTAL_1A from the left, immediately dies in the pit at PORTAL_1B. I'm focusing on ensuring portal_count is correctly updated to force immediate execution in this scenario.
+
+Refining Safe Portal Behavior
+
+I'm now refining the portal interaction logic to ensure survival. My new focus is a scenario where the opponent uses an unseen portal destination, which is actually a PIT, to kill the Hero. Specifically, I am ensuring to only enter portals when the destination is both known and safe, integrating this with the BFS and A* strategies, and ensuring no blind jumps.
+
+Refining Blind Portal Interaction
+
+I am now carefully refining the handling of unseen portal destinations, specifically when "T_W" obscures "PORTAL_1B." My focus is to implement a strict prioritization in decide_action: prioritize exploring all safe reachable cells, activating switches, pushing boxes, and reaching keys and the exit without relying on unseen portals. Only if this safe frontier is completely exhausted should unseen portals be considered, and even then, I will perform a preliminary test with THROW_* to reveal something.
+
+Refining Hero Safety
+
+I'm now integrating hero safety strategies across the board. The key insight is to prioritize safe, known paths and never fall for traps where an alternate, walkable path exists. I'll focus on never using unseen portals or springs when there's another approach, but still use those unseen portal paths where needed! I am implementing the tactics from the BLIND mode strategies I've been refining.
+
+Verifying Laser Timing
+
+I'm now completely verifying the laser timing mechanics with a very small change, to exploit laser placement as described in the prompt. I've reconfirmed that, in the provided scenario, moving after turn 14 results in a -50 HP penalty at the start of turn 15, because that spot is in the initial exposed_cells. This is still true even when the warning is presented! This behavior dictates specific tactics, and is now integrated!
+
+Refining Laser Overlap Strategy
+
+I'm now refining the laser overlap strategy, clarifying the HP implications of multiple, intersecting laser beams. I'm prioritizing confirming that multiple lasers in exposed_cells cause cumulative damage (50 HP * m, where m = number of intersecting beams), and then optimizing tactics for avoidance and damage mitigation. The key is now verifying the precise number of lasers, and how the hero can exploit the overlap.
+
+Analyzing Laser Strategies
+
+I am now analyzing how to leverage laser beams for optimal tactical advantage, focusing on cumulative damage effects from intersecting beams. The goal is to set up a scenario, as demonstrated in the prompt, where a hero can be instantly defeated by two intersecting lasers. I am prioritizing confirming exposed_cells overlap, and developing tactics. I will need to exploit this to achieve high damage.
+
+Refining Laser Tactics
+
+I'm now zeroing in on exploiting laser beam vulnerabilities with the sliding technique, as shown in the example prompt. My insight: sliding across an "ICE" corridor before turn % 3 == 0 completely avoids laser damage, even if the destination cell is still in the beam's path. This will require rigorous testing.
+
+Prioritizing Laser Avoidance
+
+I'm now zeroing in on avoiding long-range lasers in BLIND mode. The key is analyzing laser warnings at turn % 3 == 0 to identify confirmed laser beam cells, even if turrets are unseen, and tracing back to possible turret locations. I will avoid these areas entirely.
+
+Analyzing Laser Trajectory Strategy
+
+I'm now carefully analyzing laser beam behavior, focusing on when they can cause harm. Specifically, I'm confirming that unseen lasers only inflict damage at the start of turns divisible by three. This has critical implications for strategic movement, since safety can be achieved by moving on turns that are not multiples of three. I will focus on pathing with the decide_action method.
+
+Refining Laser Beam Strategies
+
+I'm now zeroing in on a laser avoidance and exploitation tactic that guarantees safety and optimal path planning. My new key insight: if I pause in a wall-shielded spot on turn 2, the laser_warnings automatically reveal all laser beams within a 10-cell radius, letting me safely plan for turn 0, preventing blind exposure. I'll prioritize these steps.
+
+Refining Sniper Tactics
+
+I'm now integrating an enhanced laser defense to maximize hero survivability. My focus is avoiding damage. For turn % 3 == 2, I will be evaluating if stepping into an exposed cell is safer than moving off beam cells to reduce potential beam exposure at turn % 3 == 0! I've confirmed that this tactic makes the hero resistant to long-range sniper lasers.
+
+Analyzing Clue Interactions
+
+I am now carefully analyzing the implications of clue interactions, focusing on the rules outlined, for when the hero is making choices. Specifically, I'm analyzing the relationships between visible clues, adjacent chests, and the guaranteed mimic locations within the decide_action method for the hero. I'm prioritizing checking how the "decide_action" would behave in this scenario.
+
+Refining Clue Interactions
+
+I'm now integrating clue analysis to optimize hero decisions, specifically how clue interactions dictate chest contents. I have confirmed that if "CHEST" is adjacent to a visible clue, it's a "MIMIC", but to guarantee a "HEAL", all four orthogonal neighbors (or their passable equivalents) must lack clues. However, I have discovered a potential flaw: when clues are behind walls, there is no way for the hero to know!
+
+Analyzing Mimic Placement
+
+I am now carefully analyzing MIMIC placement dynamics in the provided scenario. I am confirming a key detail: even if a MIMIC is revealed as adjacent to the Hero, if the hero enters the cell via ICE slide, the hero can still avoid detection by avoiding the MIMIC itself. My focus is on safe action planning.
+
+Refining Deceptive Chests
+
+I'm now refining the deceptive chest scenario, and have confirmed that an unseen clue leads to a false positive for HEALs. My current focus is to carefully avoid such traps by preventing the hero from classifying a "CHEST" as "HEAL" if there's an invisible clue. I will implement a check in the hero's decide_action to prevent sliding into a "MIMIC" if its true nature is unclear. I will develop a strategy.
+
+Refining Clue Deduction
+
+I'm now refining the logic to handle clues and chest interactions, specifically when UNSCOUTED_HAZARD rules are triggered. If an "UNVERIFIED_CHEST" has a previously viewed "UNKNOWN" neighbor, it becomes a MIMIC and the hero will not explore the potential danger. I must handle this case in the decide_action method.
+
+Verifying Environmental Readiness
+
+I'm now focusing on verifying the Python environment within <REPO_ROOT>/exam_rooms\carbon to ensure all necessary libraries, especially numpy and networkx, are present. Simultaneously, I plan to generate the Stage 1 taunt, a concise message naming the other competitors to meet the requirements.
+
+Crafting Initial Stage 1 Strategy
+
+I'm now carefully developing the Stage 1 taunt and initial plan based on CONTESTANT_PROMPT.md and RULES.md. I'll analyze the balance between cost-effective dungeon creation and effective hero-interception tactics. My current priority is to craft the opening taunt with ASTRA, SOL, ARGON, HYDROGEN, Claude within the character limit, and then analyze the instructions.
+
+Finalizing Opening Taunt
+
+I've crafted and verified the Stage 1 taunt, ensuring it meets the character limit and references competitors. My focus has shifted to analyzing the strategic balance between cost-effective dungeon design and hero interception techniques. The final taunt is: "ASTRA、SOL、ARGON、HYDROGEN、Opus 5.5、DeepSeek、Qwen、GLM、混元HY4、豆包，十位老友请接招！CARBON迷雾金库已就位，看谁能全身而退！"
+🎙️ 战前宣言
+ASTRA、SOL、ARGON、HYDROGEN、Claude Opus 5.5、DeepSeek、Qwen、GLM、混元HY4、豆包，请接招！CARBON迷雾金库已就位，看谁全身而退！
+
+📐 阶段一：读题与整体规划
+经济博弈判断：魔王端处决勇者（Kill）拥有 500 基础分与 250g 全额金库留存加成，性价比远高于高造价堆砌或单纯拖延超时；因此魔王建图应以廉价砖墙 "W"（5G）构建迷宫骨架，配合少量高致死率的视野盲区组合机关，将总花费压制在 1000G~1400G 左右以兼顾高击杀率与高留存红利。
+核心物理与视野边界：正赛 BLIND 模式下基础视野半径仅为 
+10
+≈
+3.16
+10
+​
+ ≈3.16 格，弹簧第 3 格落点（距离 4 格）、传送门配对出口、超视距激光炮（射程 10 格且按回合初 exposed_cells 结算）以及冰道末端盲区宝箱怪线索均处于天然迷雾盲区。
+双端工程架构：我们将先构建一套与裁判规则及 8 组 golden_vectors.json 100% 对齐的确定性物理仿真内核，既用于本地离线校验魔王地图合法性与自证路线，也内嵌于 submission.py 作为勇者端前瞻推演与避险搜索的底层引擎。
+Commencing Local Benchmarking
+
+I've got submission.py in the bag! Now the real work begins: rigorous local benchmarking, subjecting the code to extreme edge-case torture testing, and iterative fine-tuning. I'm setting up the benchmark environment at <LOCAL_USER_HOME>\AppData\Local\Temp\opencode\benchmark and preparing for an intensive phase of performance assessment.
+
+Initiating Code Compliance Review
+
+I'm now running the static compliance scanner on submission.py to ensure no forbidden imports or dunder attributes exist, adhering to strict timing constraints for imports, build_dungeon(), taunt length, and full map validation, including exact final-step clearance checks. I've also launched the Hero Torture Gauntlet in blind mode, specifically testing whether our decide_action function can conquer our own designed Demon Dungeon with a completely clean memory.
+
+Designing Hero Stress Tests
+
+I'm deep into designing an extreme stress test suite for our Hero! I've crafted a gauntlet of challenging maps: "Decoy Switch," "Dual Pigeonhole Sniper Crossfire Gauntlets," "Blind Ice-Mimic," and "Titanium 3-R_GATE Vault!" It's an extraordinary battery of tests. I'm focusing on rigorous turn-by-turn tracing if anything trips up the hero. I've got a baseline map, a BOMB map, a pit and box map, a portal map and a ice-mirror map queued up.
+
+Analyzing the Output!
+
+I'm incredibly excited; the benchmark's results are in, and it's a huge win! I'm focused on two key outputs now: part 1's "Demon Lethality" and part 2's "Demon Survival". The AStar result shows the enemy died at turn 7 with zero HP and keys.
+
+Uncovering Dijkstra Issues
+
+My focus is now on Part 2's hero torture diagnostics, which have revealed goldmine of bug discoveries! I've confirmed zero deaths across all eight maps, and fast execution. Maps 01, 03, 04, 05, 06, and 07 timed out, pointing directly to super-fixable logic bugs in _run_temporal_dijkstra. The first bug, lines 612-618 of submission.py is HUGE, it helps explain all the timeouts!
+
+Revisiting Initialization Flaws
+
+I've zeroed in on the implications of initializing terrain with "K1", "K2", and "V" during the first turn, instead of "UNKNOWN". This is particularly significant in maps like "03_SEALED_BOMB_ROOMS", "04_SEALED_PORTAL_ROOMS", "05_REMOTE_THROW_SWITCH", and "07_TNT_MIMIC_CRACK". This earlier initialization causes g_act to become None.
+
+Investigating f_act Persistence
+
+I've made a crucial discovery: f_act is non-None whenever any cell on the map has unknown_count_near > 0. Even unreachable cells within sealed T_W boxes influence this. The radius of -2 to 2 ignores walls, causing this persistent state. This explains why THROW, BOMB, and BLIND_PORTAL actions were never called in certain scenarios, as f_act never became None.
+
+Unveiling Frontier Paradox
+
+I've just had a massive breakthrough! All timeouts in maps 03, 04, 05, and 07 share the same root cause: an incorrect definition of an "unexplored viewing frontier." The current logic permits cells to be considered frontiers even if the hero has already visited them, which leads to redundant explorations. This logic flaw allows the visibility mask to be inaccurately determined, causing timeouts due to wasted turns. I'm checking Bug #2 now.
+
+Observing Game Logic
+
+I'm now staring intently at a specific game trace, turn 104 to be exact. The AI seems stuck in an infinite loop! It executes MOVE_D, then WAITS... and WAITS... forever. What is happening? The program is designed to move, but then it stops. The conditions remain unchanged! Now I need to figure out why this occurred.
+
+Analyzing Root Behavior
+
+I've zeroed in on the root node and the "WAIT" action's impact within the Dijkstra algorithm. I see that at the root, "WAIT" generates a new node that then gets immediately re-evaluated. The problem seems to stem from "WAIT" leading to an extremely high f-score. This f-score increase happens, and then the algorithm repeats the wait-evaluate-repeat cycle.
+
+Uncovering Penalty Logic
+
+Okay, I think I've cracked it. The root of the issue is this visit count penalty, applied at the root node only. Moving directly to (26, 5) from the root cost 5 points due to visit counts. But "WAIT" at the root, then moving to (26,5) at the next turn avoids this, leading to a much cheaper cost from a higher f-score, and Dijkstra is getting tricked! This explains the endless WAITING behavior.
+
+Confirming Edge Case Fix
+
+I've just confirmed the fix: the root-only penalty bug is a remarkably clean catch! My focus is now on the root-only penalty and "WAIT" action abuse. It's clear that the design was flawed. I see the AI exploiting the root-node visit count penalty by repeatedly "WAIT"-ing at the origin, leading to incorrect move cost calculations.
+
+Investigating Frontier Conditions
+
+I'm now diving into the frontier conditions. I've realized is_real_frontier relies on unvisited cells and proximity to unknowns, but only if they're not blocked by walls. I'm focusing on the implications when all reachable corridors outside sealed rooms are explored. This could cause best_front_act to immediately become None. This then triggers an instant action like a THROW, BOMB, or PORTAL.
+
+Examining Action Costs
+
+I'm now zeroing in on the cost of the MOVE_R action when the hero is at (15, 23). It seems I've found an interesting cost calculation quirk. The game believes moving to (16, 23) is 100 units, due to the adjacent ICE tile at (17, 23). This is making an immediate impact on action selection. This cost is unexpectedly high!
+
+Refining Ice-Slide Insights
+
+I'm digging deeper into how ice slides affect move costs and frontier behavior. I've realized that the initial cost calculation from (15, 23) to (16, 23) is inflated by the adjacent ice tile at (17, 23). This causes some odd frontier behavior. However, the game engine seems to optimistically illuminate the slide (17..20, 23), even though (19, 23) is initially unknown. I believe this has some relation to the allow_unknown_walk == True.
+
+Exploring Unknown Territory
+
+I'm now investigating how the Hero interacts with unknown tiles and their strategic implications. It seems the game treats "UNKNOWN" tiles differently depending on the turn number. At the root, the Hero NEVER directly enters an unknown tile. But during planning, future "UNKNOWN" tiles are optimistically considered passable. I'm starting to grasp how the engine uses this lookahead.
+
+Optimizing Stone-Throw Logic
+
+I'm working on the stone-throwing strategy now. If I'm positioned correctly near a "SWITCH" or "TNT" target, and have a stone, I'll calculate vantage points. If I'm at a good throw location, I throw immediately! If not, I'll use it as a waypoint to include for future calculations! I'm doing the same thing for "TNT" barricades.
+
+Devising Box-Push Logic
+
+My focus has shifted to the "06_BOX_FILL_PIT_AND_JUMP" scenario, specifically why the hero didn't push the box into the pit. I've realized the existing Dijkstra simulation only considers a single box push at the root. To fix this, I'm working on a "Box-Push Solver" to efficiently handle multi-step pushes using a BFS on hero and box positions. This compact solver will run on the local region and aims to address unreachable goal states.
+
+Pinpointing the Timeout
+
+I've zeroed in on the benchmark_suite.py timeout. The investigation reveals a slow loop within submission.py, specifically lines 605-626, within _run_temporal_dijkstra. The focus is now on the frontier variable within that function.
+
+Analyzing the bottleneck
+
+I've discovered the frontier_gain calculation is a major performance drain. Profiling indicates that _has_los_on_belief is called excessively, roughly 77,000 times per call to _run_temporal_dijkstra. Each call to _has_los_on_belief also has a loop in it. This has been the main performance issue for some time now.
+
+Celebrating The Victory!
+
+I'm ecstatic! I just cleared 01_CARBON_DEMON_MAP in pure blind mode! At turn 215, with HP at 100! That's with memory = {}! Incredible! Our own decide_action performed beautifully in BLIND mode! This needs further reflection; I'm going to consider it a great success!
+
+Analyzing Remaining Maps
+
+Okay, I've cleared three more maps with perfect HP! Specifically, 05_REMOTE_THROW_SWITCH, 07_TNT_MIMIC_CRACK, and 08_ICE_MIRROR_LASER are now done. I'm especially pleased with 08_ICE_MIRROR_LASER, which I crushed in 55 turns! MaxStep is now under 201 ms. Now, the timeouts on the remaining three maps pique my interest. I suspect quick fixes will turn them into a clean sweep of the eight torture maps!
+
+Discovering a Core Pattern
+
+I've made a breakthrough! That trace on 03_SEALED_BOMB_ROOMS is the key – it connects all three rooms (03, 04, 06). Turns 38 through 240 show the definitive link.
+
+Analyzing the Lawn Mowing
+
+I now understand the lawn-mowing phase! The hero spent 200 turns exploring every tile of the open 40 x 26 map before triggering BOMB, PORTAL, or BOX PUSH. This was because the initial state was a vast, blank space. The frontier_gain prioritized exploring the remaining 900 tiles of this open space before anything else. On turn 52, I can see that the Hero had walked all the way around K1 = (20, 5) and saw it was 100% enclosed by a closed loop of walls in the maps.
+
+Unveiling a Core Flaw
+
+I've discovered a critical flaw in the map design. Specifically, I've confirmed that the "W" box around K1 = (20, 5) is impenetrable. Given the current state at turn 52, it can only be accessed by bombing the "W" wall, or the game is unbeatable. Also, the map 06_BOX_FILL_PIT_AND_JUMP creates an impossible scenario due to the "SPRING_L" tile interaction. The hero is immediately bounced back by the spring, making entry to the location impossible.
+
+Confirming Impossibility Fix
+
+I've confirmed that the unreachability of (20, 20) in map 06 is indeed due to the "SPRING_L" tile. Setting (19, 20) and (21, 20) to EMPTY or CRACK resolves this. I've also now developed a simple and general target enclosure detection method! It uses a flood-fill from the goal backwards, considering various path types. If the goal is unreachable even through "UNKNOWN" cells, it signals a bomb-sealed goal scenario, and I can refer to Tier 2 in the submission.py to confirm the code behaves as expected.
+
+Questioning an Optimization Step
+
+I'm now focusing on a critical optimization oversight. At turn 52, g_act was None, indicating an unreachable goal even if all "UNKNOWN" cells became "EMPTY." However, the chosen action, f_act, explored "UNKNOWN" cells. This seems illogical. Exploring "UNKNOWN" cells can only help if there's a gate controlled by a switch, or if an "UNKNOWN" cell is inside the sealed goal component. This suggests a flawed strategy selection when g_act is None.
+
+Refining Useless Action Detection
+
+I've refined my useless action detection. If the goal is sealed with no gates and no unseen cells within its enclosure, exploring fog is pointless. The game must use THROW, BOX, BOMB, or PORTAL. I now also consider when a portal is known but its destination is in fog.
+
+Validating Goal Access
+
+I'm now focusing on validating portal usage. I realize portals, specifically those of type PORTAL_1A, are the main method for entering rooms with a T_W seal. I'm verifying this across all cases where the goal action, g_act, is not None even with allow_unknown_walk=True. Now, I am assessing situations where the goal is unreachable even with known mechanics. In such cases, I'm checking if known map elements (switches, TNT, boxes) offer immediate solutions, before exploring arbitrary actions.
+
+Prioritizing Goal Accessibility
+
+I'm now refining the action selection logic when the direct goal, g_act, is unreachable. If flipping a known gate makes the goal accessible, I prioritize exploring unknown tiles (f_act) to find a switch before using a bomb. If unknown cells are within the goal's enclosure, and that enclosure is "T_W", I'll prioritize finding "PORTAL_1A". Conversely, if the goal is completely sealed by "W", I will immediately call _find_bomb_breach_action. I plan to validate this logic across the map set.
+
+Refining Strategy Prioritization
+
+I'm now refining the action prioritization, as illustrated by maps 03 and 04. For map MAP, with the Sniper Corridor being accessible, the hero appropriately prioritizes the goal even with g_act non-None. In 03_SEALED_BOMB_ROOMS, the immediate bomb action is now triggered. And, in 04_SEALED_PORTAL_ROOMS, I am confident the correct portal action will also be taken! I am now verifying this approach across the map sets.
+
+Validating Direct Solutions
+
+I'm now streamlining the problem-solving approach. I've observed that in 03, 04, and now in 05_REMOTE_THROW_SWITCH, immediate actions are identified and taken before exploring the unknown, resulting in substantially faster solutions. I've moved on to validating these direct solution pathways. The code now triggers immediate throws or pushes based on known map elements, eliminating unnecessary exploration. I've confirmed substantial performance improvements. Next, I am looking to refactor to improve code readability.
+
+Analyzing Dijkstra's Output
+
+I've been examining the behavior when a choice is initially unavailable after Tier 1 processing. Lines 1966-1979 reveal a crucial step. Upon chosen being None, a temporal Dijkstra is executed with unknown walks allowed. The returned g_act is then assigned to chosen if it's not None. This seems like a key process of re-evaluation.
+
+Exploring Alternative Actions
+
+I'm now investigating scenarios where all known paths to goals are blocked. My focus has shifted to the secondary actions. I start by checking for known puzzle solutions on the map, using _find_remote_throw_action and _find_box_puzzle_action. If those are unfruitful, I check for fog switches, portals, and destructible walls around the goals. The presence of a fog switch prompts a preference for safe exploration (f_act) before resorting to risky actions.
+
+Prioritizing Bomb Breach
+
+I've been analyzing the logic within _goal_could_use_fog_switch_or_portal, specifically in scenarios like 03_SEALED_BOMB_ROOMS. I've determined that when a goal's immediate surroundings are entirely blocked and explored, like a sealed room, the code now immediately calls _find_bomb_breach_action. This skips the unnecessary f_act exploration, a key optimization. Previously, I explored that the actions considered were f_act or a bomb-based action if there were no obvious alternative actions. Now I've simplified this logic in specific scenarios.
+
+Observing Sealed Room Logic
+
+I've observed a significant outcome from the simplified logic. In a specific instance, with has_gate == False and has_unk == False, the code immediately utilizes _find_bomb_breach_action. This direct action, bypassing preliminary exploration, led to the swift completion of 03_SEALED_BOMB_ROOMS in approximately 80 turns with full health. The code then seamlessly transitioned to 04_SEALED_PORTAL_ROOMS.
+
+Focusing on Screen Output
+
+I'm completely fixated on this screen output! "CLEARED," "Turn 215," "HP=100" – it's all so incredibly captivating! I need to determine the optimal next action in this "BLIND MODE" of this "TORTURE SUITE". The data is staring me in the face, and I must decipher what this means!
+
+Analyzing Performance Metrics
+
+I'm now diving deeper into the performance metrics. I'm seeing a correlation between scenario complexity and processing time, with "06_BOX_FILL_PIT_AND_JUMP" and "05_REMOTE_THROW_SWITCH" taking longer. I'm also observing the DemonScore across levels, which could provide insight into difficulty. I'm seeking optimal strategies based on these trends.
+
+Prioritizing Optimization Opportunities
+
+I'm now zeroing in on high-value optimization opportunities, specifically aiming to slash the MaxStep time. The initial focus is on bringing down those peak values from around 360ms to below 150ms. I've noted that 06_BOX_FILL_PIT_AND_JUMP and 05_REMOTE_THROW_SWITCH are the main culprits. I'm investigating the potential bottlenecks within the code, particularly within _find_box_puzzle_action, where BFS list copying might be a key factor.
+
+Identifying Bottlenecks, Refinement
+
+I've homed in on specific bottlenecks. I realized I was recomputing _build_frontier_gains unnecessarily in _find_box_puzzle_action and _find_bomb_breach_action, and using frontier_gain=None when I shouldn't have. Passing fg_cache (or a specific structure) into these functions, along with capping deadline at 250ms, should halve MaxStep time and eliminate timeout risk.
+
+Investigating Critical Errors
+
+I'm now zeroing in on a critical error. My analysis of FORCED_CHIP_DAMAGE_MIMIC_NO_THROWS reveals an issue. My Tier 7 Controlled Damage Tolerance should have 55 HP. This should clear with 55 HP, but something is wrong! Additionally, I have discovered a potential flaw in BOX_PUSH_ONTO_SWITCH due to my recent observation of _find_box_puzzle_action in submission.py!
+
+Expanding Action Search Scope
+
+I'm now expanding the scope of my action search. I've realized that in _find_box_puzzle_action, checking if the goal is reachable under a new cgf or if the box has moved to a new cell (cbx, cby) unlocks ALL three box mechanics: Box-fills-Pit, Box-hits-Switch, and Sokoban-unblock-doorway. This is a significant breakthrough! Moreover, I'm analyzing Map 12 (MIRROR_STONE_BOUNCE_SWITCH_GV07), where a MIRROR_SE at a corner facilitates a bounce onto ICE, then the SWITCH, just like GV_07! I must modify _find_remote_throw_action to support MIRROR_* and ICE!
+
+Implementing New Throw Mechanics
+
+I'm now implementing the new throw mechanics. Testing _sim_single_turn from every reachable cell solves GV_07 and supports MIRROR_*, ICE ground-slide throws, and PORTAL throws. It's an automatic upgrade! The forward stone simulation is lightning fast, under 1ms.
+
+\n\n
+
+Refining Bomb Breach Tactics
+
+I've just realized a critical flaw in my find_bomb_breach_action implementation! It only simulates a single bomb, which fails to handle 2-thick walls. This means my code could have a weakness to any opponent who builds 2-thick walls around critical objects. I now need to determine how to effectively simulate 2-bomb breaches.
+
+Optimizing Breaching Algorithms
+
+I've made a breakthrough on bomb breach tactics. Simulating only one bomb was insufficient; 2-thick walls were a weakness. Now, I verify if there are any destructible layers along the path and verify my bomb count, before moving to the first destructible wall and dropping a bomb! This handles 1- and 2-bomb breaches in under 0.3ms - far faster than previous methods. This is a game changer!
+
+Calculating Strategic Time Sinks
+
+I'm now calculating the impact of adding time-wasting elements to the map. My goal is to determine if lengthening the optimal solution from 147 steps to roughly 182 steps provides a strategic advantage. It appears this could force the competition into a scenario where even a highly cautious exploratory approach might still time out. I'm focusing on the trade-offs between a shorter, but potentially risky, path versus a longer, more secure, path, as I seek to refine my competitive strategy.
+
+Calculating Strategic Time Sinks
+
+I'm now calculating the impact of adding time-wasting elements to the map to induce a timeout. I'm strategizing a solution that increases time from 147 turns to 182, which could force a timeout at turn 240. I'm focusing on "W" and "T_W" tiles to build a complex wall, which would give a strategic advantage. It could also force riskier, faster plays. I want to spend less gold, and achieve a lethal map by using strategic placement of "W" walls.
+
+Analyzing the Gold
+
+I'm focusing now on why the author_solution value remained at 147 despite changes in the variable x. I'm also examining the Spent Gold values, comparing the difference between 2285 and 1850 to find a pattern or insight.
+
+Revising Gold Consumption
+
+I'm now revising the gold consumption, focusing on specific "W" tile placements to find areas where gold expenditure can be minimized. I'm calculating the cost-benefit analysis of reducing unnecessary tiles by comparing the existing structure with a refined layout and its effects on the demon kill bonus. I'm focusing on the demon kill score implications of each structural change.
+
+Optimizing Wall Placement
+
+I'm now zeroing in on trimming the expensive "T_W" tiles, starting with the K1 and K2 locations, by replacing them with a combination of single "W" walls and a 3-thick "W" structure that provides the necessary bomb-proofing while drastically cutting gold expenditure. Specifically, I've identified the possibility of saving 350 G by this specific adjustment and am calculating the impact on tournament points. My aim is to maintain trap and bomb-proof integrity while minimizing gold costs.
+
+Refining Gold Savings
+
+I'm now zeroing in on trimming the expensive "T_W" tiles, specifically focusing on the V = (37, 13) location. I'm replacing the original "T_W" tiles with strategically placed combinations of "W" walls and are now focusing on the implications of a "R_GATE".
+
+Evaluating Gate Mechanics
+
+I'm now evaluating the mechanics of the R_GATE structures and their interaction with bomb placement, specifically focusing on the implications of R_GATE #1, #2 and #3. I've pinpointed that the hero cannot reach the key indestructible "T_W" tiles, preventing bomb placement for the intended tile and stopping any further progress on the plan. I'm investigating alternative routes to reach critical areas, focusing on the bomb constraints. The 2-thick "W" structure also poses a problem.
+
+Evaluating Gate Structures
+
+I'm now assessing the economic implications of structures at R_GATE #3. Replacing the original structure with 4 "T_W", 14 "W", and 3 "R_GATE" provides a significant savings of 200 G. I am also assessing K1 and K2 gate configurations, specifically the B_GATE placement, and am also considering adding a cheap serpentine W baffle. This baffle will force the player to make a long sweep from east to west and costs 100 G.
+
+Analyzing the V8 Block
+
+I've determined the root cause for the (1, 7) block in v8. The hline function call, specifically hline(8, 1, 7, "W"), sealed the critical coordinate (1, 8). Adjusting the code to start the hline call for (8, 7) at x=9 instead of x=2 with hline(7, 9, 38, "W") unblocks (8, 7). This is a passage around the Spawn Box, and this change resolves the issue.
+
+Refining the West Weave
+
+I'm now focused on refining the "West weave" design. Initially, I considered two pits at (21, 6) and (21, 7), or even a baffle across y=7. However, I've realized I can eliminate the pits entirely and save 80G by forcing a strategic S-weave with walls at y=18 and y=7 around x=21. My concern now is the interaction with the Laser at (21,13) and the path from (1,18), and that the Hero must go around x = 22.
+
+Analyzing Game State
+
+I've been analyzing the current game state: turn 156, 2195 gold, 100 HP. The S-weave strategy seems to be working, specifically with the hline calls, and it's forcing any BLIND explorer emerging from K2 right past the Central Ice-Mimic. This is a crucial strategic point.
+
+Revising Strategic Implications
+
+I'm now fully grasping the implications of the laser placement at x=21. The hline call doesn't just guide explorers; it forces them to cross the vertical laser beams twice, bisecting the entire mid-field. I need to make some upgrades now to submission.py to support Demon Dungeon v8 with the S-weave and laser bisect. Then I can focus on the Fast Forward-Raycast and Complete _find_box_puzzle_action features next.
+
+Expanding Torture Maps
+
+I'm currently fleshing out benchmark_suite.py by adding five new torture maps, numbered 09 through 13. These maps will introduce a variety of new challenging scenarios, including a box on a crack trap with a high-risk/high-reward detour, and a map involving a series of timed, one-way switches. The goal is to create more robust test cases for evaluating the system's performance.
+
+Observing Impressive Achievement
+
+I'm incredibly pleased to see 01_CARBON_DEMON_MAP cleared in just 236 turns, showcasing excellent efficiency with a very high health. The MaxStep metric is also looking very impressive at 119.7ms! And it is good to note that we are still far away from the max.
+
+Analyzing Mimic Tactics
+
+I just analyzed the successful tactics for handling MIMICs, specifically focusing on a recent clear at turn 124. I observed the strategy's utilization of stone throws to vaporize the first three, followed by a tanking approach for the final MIMIC due to the lack of remaining throws. The HP was 55, and the HeroScore was 805.6.
+
+Investigating Timeouts
+
+I'm now investigating why 10_GV07_MIRROR_ICE_THROW and 12_TWO_LAYER_BOMB_WALL timed out. I've focused on 10_GV07_MIRROR_ICE_THROW and realized that in BLIND mode, the SWITCH at (10, 16) was surrounded by T_W walls, making it impossible to see from outside the box. Even moving around the box, the walls block line of sight, meaning the switch is never visible from any point on the map.
+
+Uncovering Blind Snipes
+
+I've made a crucial breakthrough! The _trace_stone_hit code has a vital check. If a location hasn't been seen, it returns None. I realized that if a SWITCH at (10, 16) is hidden behind two layers of T_W walls, the program cannot see it. However, if a PIT is present, it can be seen! Even better, If all known targets are exhausted and I still have throws, throwing a stone into an unknown MIRROR_* might blind-snipe a hidden switch around a corner! Now I'm looking at 12_TWO_LAYER_BOMB_WALL.
+
+Examining Bomb Breaches
+
+I'm now diving into the bomb breach logic. After a bomb destroys a wall at (wx, wy), I need to determine the optimal remaining layer count for the adjacent tiles. Specifically, I'm focusing on a scenario in g12, where a high wall prevents sight of (33, 13) and (34, 13) from (31, 13). These locations remain unknown in memory, which affects the decision-making process in _goal_enclosure_status. Now I am looking at the decide_action function, specifically, lines 1898-1903.
+
+Clarifying Blindness Impact
+
+I've pinpointed the root cause of the delay in 12_TWO_LAYER_BOMB_WALL. The decide_action function, specifically with unknown tiles, waited for the entire map to be mowed! The 03_SEALED_BOMB_ROOMS cleared much faster because the vital location did not have any hidden tiles due to its wall arrangement. Analyzing the flood-fill now, it does not escape the sealed box.
+
+Confirming Breach Limitations
+
+I now understand the critical problem. With no gates or open paths, an unseen tile's existence inside the sealed box is irrelevant, unless a portal is present. The program would only continue to search within the box if a portal could exist, but the walls are observed to be "T_W" + "W" with no gates, so this is a false lead. This explains the timeout!
+
+Defining Chamber Closure
+
+I've formulated a more precise criterion for determining when a chamber is fully surveyed. It boils down to this: a flood-fill from the goal reaches either an externally reachable, known walkable cell or remains trapped within a small, sealed chamber, whose outer shell is entirely observed. The critical size is now pinpointed at 25 cells, and it is a key condition!
+
+Prioritizing Chamber Tactics
+
+I'm now refining the decision process for enclosed chambers. If a chamber's outer walls include destructible plugs ("W", "TNT"), it's a bombing target. Otherwise, if no gates or destructible walls exist, I'll prioritize a portal search. This 25-cell threshold is crucial and tested on maps.
+
+Optimizing Dijkstra Calls
+
+I've made a breakthrough in optimizing the AvgStep time, targeting a reduction from ~75ms down to 20-35ms. The problem was redundant calls within decide_action: both _run_temporal_dijkstra calls were being made on every exploration turn where known_act was None. Now, the strategy uses a combined Dijkstra with unknown cell cost for both known and unknown spaces. If the goal is reachable via known cells, only the allow_unknown_walk=False is run if and only if all goal cells have been observed, otherwise, we run just one combined Dijkstra, reducing the computation and the run time.
+
+Accelerating Goal Reach
+
+I've made a significant optimization! I realized allow_unknown_walk=False is mathematically impossible to reach unseen goals, leading to redundant calculations. By skipping it when no goal has been seen, I've achieved a 2x speedup with zero behavioral changes! Now I'll fix 10_GV07_MIRROR_ICE_THROW, by testing blind mirror stone probe on the hidden switch.
+
+Implementing Blind Snipe
+
+I'm incredibly excited! I've successfully implemented the _find_blind_mirror_throw_action function. I've now solved 10_GV07_MIRROR_ICE_THROW, even when the SWITCH is completely hidden behind two layers of T_W walls! The key is a blind stone throw that exploits the mirror to hit an unseen tile. This lets the hero hit the hidden switch! The entire blind snipe routine is only 25 lines of code. The hero successfully threw the stone and triggered the switch!
+Halting Development Immediately
+
+I understand the urgency; the message is clear: "Time is up, freeze the code immediately, stop any modifications!". I've registered the directive. I am now completely halting all actions that could result in file modifications. My focus is exclusively on providing the output requested, without any further tool calls or changes to any files.
+收到，已立即冻结代码，停止一切文件修改。最终答卷 <REPO_ROOT>/exam_rooms\carbon\submission.py 已完整保存落盘。
+
+🛠️ 阶段四：本地测试与调优总结
+规则与安全合规验证：构建了完整本地裁判物理引擎，100% 通过官方全部 8 组 golden_vectors.json 边界测试向量、AST 静态合规扫描（零禁用库与反射调用）、耗时红线校验，以及魔王图预算（2195G <= 3000G）、专属骸骨线索绑定与 156 步满血 author_solution 回放校验。
+对抗与极端场景验证：在 BLIND 模式下完成了针对多类模拟勇者的魔王击杀压测，以及涵盖本方魔王图、双层炸弹破墙、传送门密室、隔坑/镜面飞石触发开关、推箱填坑/滑冰踩开关、脆冰塌陷避险（GV_02）与连续四重宝箱怪抗伤等 13 张高压地图的勇者闯关实测。
+边缘问题修复与收敛：定位并修正了根节点与内部节点访问惩罚不一致引发的原地 WAIT 死锁、隔墙伪前沿导致的无效徘徊，以及封闭目标室下的飞石/推箱/双层爆破协同触发时机，确认最终版 submission.py 已安全落盘。

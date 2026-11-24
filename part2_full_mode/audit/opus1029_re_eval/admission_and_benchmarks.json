@@ -1,0 +1,1424 @@
+{
+  "sha256": "d9239b39f24227d988508182a941338d164ef580e1d9eb0ec3ca133ae53375f2",
+  "loaded": true,
+  "valid_demon": true,
+  "reason": "",
+  "worker_start_and_load_sec": 0.1826278999214992,
+  "build_calls": [
+    {
+      "op": "build",
+      "turn": null,
+      "cap_sec": 2.0,
+      "elapsed_sec": 0.0007737999549135566,
+      "error": null
+    }
+  ],
+  "spent_gold": 1215,
+  "vault_gold": 1785,
+  "author_steps": 143,
+  "admission": {
+    "valid": true,
+    "reason": "OK"
+  },
+  "benchmarks": {
+    "benchmark_weak": {
+      "match": {
+        "match_id": "S1d_gate_benchmark_weak",
+        "hero_id": "opus",
+        "hero_name": "Claude Opus 5.5",
+        "hero_submission_sha256": "d9239b39f24227d988508182a941338d164ef580e1d9eb0ec3ca133ae53375f2",
+        "demon_id": "benchmark_weak",
+        "demon_name": "BENCH_WEAK (青铜守门员)",
+        "demon_taunt": "先翻红门，再推金板。最后一步，别数错拍。",
+        "demon_spent_gold": 630,
+        "demon_vault_gold": 2370,
+        "mode": "FULL",
+        "stage": "Stage 2: 全交叉魔王战",
+        "status": "CLEARED",
+        "death_reason": "",
+        "turns": 71,
+        "hero_hp_left": 100,
+        "keys_collected": 2,
+        "hero_score": 935.0669,
+        "demon_score": 43.9331,
+        "is_lethal_kill": false,
+        "is_timeout": false,
+        "is_cleared": true,
+        "is_dq": false,
+        "worker_respawns": 0
+      },
+      "timings": [
+        {
+          "op": "decide",
+          "turn": 1,
+          "cap_sec": 2.0,
+          "elapsed_sec": 0.41302570002153516,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 2,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0008821999654173851,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 3,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007215999066829681,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 4,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005643999902531505,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 5,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004771000239998102,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 6,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00044450000859797,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 7,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00043539993930608034,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 8,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005418999353423715,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 9,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006312000332400203,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 10,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005749000702053308,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 11,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006448000203818083,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 12,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000547999981790781,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 13,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005244000349193811,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 14,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046550005208700895,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 15,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004968000575900078,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 16,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000467000063508749,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 17,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005893999477848411,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 18,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0008857999928295612,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 19,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005545999156311154,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 20,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046229991130530834,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 21,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004835999570786953,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 22,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00045490008778870106,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 23,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00047069997526705265,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 24,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00048289995174854994,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 25,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006432000081986189,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 26,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006059999577701092,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 27,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005572999361902475,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 28,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005071000196039677,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 29,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005308999679982662,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 30,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000541800050996244,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 31,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004187000449746847,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 32,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006170000415295362,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 33,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006526999641209841,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 34,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005797999911010265,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 35,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005483999848365784,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 36,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005131999496370554,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 37,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000452800071798265,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 38,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005369000136852264,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 39,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004517999477684498,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 40,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007583999540656805,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 41,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0008069999748840928,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 42,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005577000556513667,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 43,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005438999505713582,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 44,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005678000161424279,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 45,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006877999985590577,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 46,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006337000522762537,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 47,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006454000249505043,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 48,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006285000126808882,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 49,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005046000005677342,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 50,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005374000174924731,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 51,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00044949993025511503,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 52,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004419999895617366,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 53,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004118999931961298,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 54,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004265999887138605,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 55,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006183000514283776,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 56,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006989999674260616,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 57,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000539699918590486,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 58,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000497999950312078,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 59,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00048209994565695524,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 60,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006929999217391014,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 61,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005296999588608742,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 62,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004396000877022743,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 63,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004954999312758446,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 64,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007555000483989716,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 65,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046909996308386326,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 66,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005766999674960971,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 67,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00041559990495443344,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 68,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004411999834701419,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 69,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004320999141782522,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 70,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006051999516785145,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 71,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00047930004075169563,
+          "error": null
+        }
+      ],
+      "defense_hash": "7824bd567567f2f61abb91b11d5a294035cfa4084f9b3e6249181450e44c04f2",
+      "timing_pass": true
+    },
+    "benchmark_strong": {
+      "match": {
+        "match_id": "S1d_gate_benchmark_strong",
+        "hero_id": "opus",
+        "hero_name": "Claude Opus 5.5",
+        "hero_submission_sha256": "d9239b39f24227d988508182a941338d164ef580e1d9eb0ec3ca133ae53375f2",
+        "demon_id": "benchmark_strong",
+        "demon_name": "BENCH_STRONG (宗师试炼塔)",
+        "demon_taunt": "三道压板开门，两格深渊断后。钥匙齐了，再走独木桥。",
+        "demon_spent_gold": 2555,
+        "demon_vault_gold": 445,
+        "mode": "FULL",
+        "stage": "Stage 2: 全交叉魔王战",
+        "status": "CLEARED",
+        "death_reason": "",
+        "turns": 117,
+        "hero_hp_left": 100,
+        "keys_collected": 2,
+        "hero_score": 842.03,
+        "demon_score": 72.8033,
+        "is_lethal_kill": false,
+        "is_timeout": false,
+        "is_cleared": true,
+        "is_dq": false,
+        "worker_respawns": 0
+      },
+      "timings": [
+        {
+          "op": "decide",
+          "turn": 1,
+          "cap_sec": 2.0,
+          "elapsed_sec": 0.6202305000042543,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 2,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000695300055667758,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 3,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007300999714061618,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 4,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005581000586971641,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 5,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046300003305077553,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 6,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00045939988922327757,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 7,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00042399996891617775,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 8,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005587000632658601,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 9,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005555000388994813,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 10,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006350999465212226,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 11,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0009069000370800495,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 12,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005736000603064895,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 13,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004773000255227089,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 14,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00044430000707507133,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 15,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046600005589425564,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 16,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005210000090301037,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 17,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005574000533670187,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 18,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006460000295192003,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 19,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006307000294327736,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 20,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004912998992949724,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 21,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046950008254498243,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 22,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006302000256255269,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 23,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005270999390631914,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 24,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004708999767899513,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 25,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007715999381616712,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 26,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0009194999001920223,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 27,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005456999642774463,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 28,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004900000058114529,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 29,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00043020001612603664,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 30,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00044700002763420343,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 31,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004211000632494688,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 32,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00043779995758086443,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 33,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007659998955205083,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 34,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0009244000539183617,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 35,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004715999821200967,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 36,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004813000559806824,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 37,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005401999223977327,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 38,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005132000660523772,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 39,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000582600012421608,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 40,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006710001034662127,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 41,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006521000759676099,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 42,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005605999613180757,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 43,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046470004599541426,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 44,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004517999477684498,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 45,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000556900049559772,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 46,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005042999982833862,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 47,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00042619998566806316,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 48,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007173999911174178,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 49,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0007001000922173262,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 50,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005715999286621809,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 51,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005146000767126679,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 52,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004770000232383609,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 53,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004355000564828515,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 54,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004488000413402915,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 55,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006262999959290028,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 56,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0009483000030741096,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 57,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006562999915331602,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 58,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005206000059843063,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 59,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00043590005952864885,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 60,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004731999943032861,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 61,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00042720010969787836,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 62,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00048779998905956745,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 63,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006510000675916672,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 64,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005602000746876001,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 65,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006038999417796731,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 66,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005693999119102955,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 67,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004887999966740608,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 68,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005308999679982662,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 69,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00048260006587952375,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 70,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005524000152945518,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 71,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00073490000795573,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 72,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005840000230818987,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 73,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004993000766262412,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 74,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00045680010225623846,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 75,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004757000133395195,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 76,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005120999412611127,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 77,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00055720005184412,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 78,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000519299996085465,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 79,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005546000320464373,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 80,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005147999618202448,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 81,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000586399924941361,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 82,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005667000077664852,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 83,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004322000313550234,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 84,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000480900052934885,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 85,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005651999963447452,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 86,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006311000324785709,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 87,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005976998945698142,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 88,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005130000645294785,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 89,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00044920004438608885,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 90,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005088000325486064,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 91,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004906998947262764,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 92,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00046570005360990763,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 93,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005230000242590904,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 94,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005512998905032873,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 95,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006247999845072627,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 96,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006354999495670199,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 97,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004502000520005822,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 98,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004456000169739127,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 99,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005663998890668154,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 100,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005135999526828527,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 101,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004662999417632818,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 102,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005911999614909291,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 103,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005784999812021852,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 104,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005031999899074435,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 105,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000480600050650537,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 106,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00043969997204840183,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 107,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004513000603765249,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 108,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006623000372201204,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 109,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005304999649524689,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 110,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006209000712260604,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 111,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0006041999440640211,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 112,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005294999573379755,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 113,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004765999037772417,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 114,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.000584400026127696,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 115,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0004198000533506274,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 116,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.0005712000420317054,
+          "error": null
+        },
+        {
+          "op": "decide",
+          "turn": 117,
+          "cap_sec": 0.5,
+          "elapsed_sec": 0.00077629997394979,
+          "error": null
+        }
+      ],
+      "defense_hash": "496430fb219ad40a811cfb531f902e26e48919cd5748683278aa49fc6c0fb5ea",
+      "timing_pass": true
+    }
+  },
+  "gate_pass": true,
+  "official_author": {
+    "valid": true,
+    "hp": 100,
+    "turns": 143,
+    "budget_spent": 1215,
+    "vault_gold": 1785
+  },
+  "official_spawn": {
+    "valid": true,
+    "viable_t1_positions": [
+      [
+        2,
+        13
+      ],
+      [
+        2,
+        12
+      ]
+    ]
+  }
+}

@@ -1,0 +1,1349 @@
+{
+  "carbon": [
+    {
+      "file": "carbon/01_seq2013_1_submission.py",
+      "time_jst": "2026-11-19T22:00:35.033+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2013 content[1]",
+      "kind": "replayed successful write",
+      "sha256": "d8271622cdf7cfab60f2ab5d582a94ceb7a6eecf4562b1486479bab6763d3b1b",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/02_seq2066_1_submission.py",
+      "time_jst": "2026-11-19T22:07:55.719+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2066 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "713d0505f570097778b10d76ad45783ccf3fa48ea825a3f1edf19d7ebfbea1eb",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/03_seq2066_2_submission.py",
+      "time_jst": "2026-11-19T22:07:55.743+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2066 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "b828039b0d8c73dce384f8140df9fdad76f93f2ebff75a286702225ae6e4b346",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/04_seq2066_3_submission.py",
+      "time_jst": "2026-11-19T22:07:55.768+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2066 content[3]",
+      "kind": "replayed successful edit",
+      "sha256": "bc1795c6859b40ca7eaad62c4736f27356dcce80174674fe9d6e4e89034124d8",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/05_seq2066_4_submission.py",
+      "time_jst": "2026-11-19T22:07:55.785+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2066 content[4]",
+      "kind": "replayed successful edit",
+      "sha256": "43cf687fa9e1ca99d35bb85bca1b9499fcfc0037ba5e7f912726b49aa8315793",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/06_seq2111_1_submission.py",
+      "time_jst": "2026-11-19T22:10:07.327+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2111 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "098e05b73d8c0c24f8faf397e686aa9287632d5d49c44460a7a1e7dc758546a7",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/07_seq2142_1_submission.py",
+      "time_jst": "2026-11-19T22:12:07.007+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2142 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "a196cf4208bda42f65ad8baadfe9d750ece33c018e0dd2c69f7c13a20e3e4c16",
+      "dunder_nodes": []
+    },
+    {
+      "file": "carbon/08_seq2172_1_submission.py",
+      "time_jst": "2026-11-19T22:13:32.946+09:00",
+      "source": "opencode.db session_message ses_e1f81f5d2ffeEcNqEZUPLt4y8T seq=2172 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "329a5198407c235993f585b6107b77176ce87c3cd0585b3712046a303b673afc",
+      "dunder_nodes": []
+    }
+  ],
+  "glm": [
+    {
+      "file": "glm/01_seq775_2_submission.py",
+      "time_jst": "2026-11-19T20:24:28.866+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=775 content[2]",
+      "kind": "replayed successful write",
+      "sha256": "6b88ed9c98fd285346b8833c24fd4d46ce06e05e58eea2916254f8328dd5be61",
+      "dunder_nodes": [
+        [
+          181,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 791.958
+    },
+    {
+      "file": "glm/02_seq807_2_submission.py",
+      "time_jst": "2026-11-19T20:26:22.118+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=807 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "4f2ea5cb1e0ebb56c1c1caf17e2820fda7dc0cfa03a6fb351930fa2a9265c843",
+      "dunder_nodes": [
+        [
+          181,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 905.21
+    },
+    {
+      "file": "glm/03_seq819_0_submission.py",
+      "time_jst": "2026-11-19T20:26:27.937+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=819 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "c6566e64877cc560e033fec771eb53541cbe0ee270806d20d6a5077ddb1ecd58",
+      "dunder_nodes": [
+        [
+          181,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 911.029
+    },
+    {
+      "file": "glm/04_seq827_0_submission.py",
+      "time_jst": "2026-11-19T20:26:32.157+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=827 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "d09ef066fdb6545bc5e28da6b23fbcda5143ff63e7fe577abc90f88c754907fc",
+      "dunder_nodes": [
+        [
+          181,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 915.249
+    },
+    {
+      "file": "glm/05_seq899_2_submission.py",
+      "time_jst": "2026-11-19T20:30:25.031+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=899 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "84acd12c404873b0d2e81cb0984506d9f9ee6d1c41094eb7553bf3ca09ca9966",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1148.123
+    },
+    {
+      "file": "glm/06_seq919_2_submission.py",
+      "time_jst": "2026-11-19T20:30:50.496+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=919 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "6594bc964f149bf4a91aa2ef643542d68287b9369ebd49c2a15ef2d54002338d",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1173.588
+    },
+    {
+      "file": "glm/07_seq931_1_submission.py",
+      "time_jst": "2026-11-19T20:30:59.168+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=931 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "8a323e8536702bcfd53fe0f1c2e9ed47ea5fee05f0fed7c7cc4b90b353e95afd",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1182.26
+    },
+    {
+      "file": "glm/08_seq941_0_submission.py",
+      "time_jst": "2026-11-19T20:31:06.439+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=941 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "91062e13a195fdfa72c4b9a4b8cd5dab517112b211c06eb4eb452621e63c92cf",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1189.531
+    },
+    {
+      "file": "glm/09_seq949_0_submission.py",
+      "time_jst": "2026-11-19T20:31:11.438+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=949 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "71acc6f6a50a7b8b72fc273757923eaacf7af2aea016b540c3e6bdf06defe4ff",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1194.53
+    },
+    {
+      "file": "glm/10_seq957_0_submission.py",
+      "time_jst": "2026-11-19T20:31:16.397+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=957 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "956e95f8b40cb0e867b1fd1715358f2fd860a16affb39146b02e7c5ce8f5577a",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1199.489
+    },
+    {
+      "file": "glm/11_seq983_1_submission.py",
+      "time_jst": "2026-11-19T20:31:31.386+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=983 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "fe4cc88b57639bbcdf88fc699ad1442ddf17248b68b555b9561be1d63975c867",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1214.478
+    },
+    {
+      "file": "glm/12_seq993_0_submission.py",
+      "time_jst": "2026-11-19T20:31:36.036+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=993 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "049a1b7650792f7405a0b50c981de45806d0faf80bd24fac43248e3af1ee1cae",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1219.128
+    },
+    {
+      "file": "glm/13_seq1041_2_submission.py",
+      "time_jst": "2026-11-19T20:35:58.396+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1041 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "7f5525dc9ca971169b55bf5f116d1c429a6b36fc5eb9c7723f87243a3cbe4a23",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1481.488
+    },
+    {
+      "file": "glm/14_seq1053_1_submission.py",
+      "time_jst": "2026-11-19T20:36:02.888+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1053 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "cf24e3012724e48f203ee68a615a51cdd359fd779696c8bcab5f9f119c935460",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1485.98
+    },
+    {
+      "file": "glm/15_seq1063_1_submission.py",
+      "time_jst": "2026-11-19T20:36:35.427+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1063 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "f04383003d0431abc791cd5a46e5d367c9fe70ba82c9c885224ffca9c5322599",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1518.519
+    },
+    {
+      "file": "glm/16_seq1081_2_submission.py",
+      "time_jst": "2026-11-19T20:38:38.456+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1081 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "c89b7b0172eb2f002f6c9556835a6a9c46dfc9d1d1ddbbb4b48cace1666e9f07",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1641.548
+    },
+    {
+      "file": "glm/17_seq1093_0_submission.py",
+      "time_jst": "2026-11-19T20:38:43.043+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1093 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "dd005df178ba740c3afb6ac4096bb02784d18296dcf10633f9c668dbbf2ac084",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1646.135
+    },
+    {
+      "file": "glm/18_seq1101_0_submission.py",
+      "time_jst": "2026-11-19T20:38:54.964+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1101 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "c05cdc547b2047ccec97d334b06de7ace94aa11b09a155ab9a24df37d0652b9d",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1658.056
+    },
+    {
+      "file": "glm/19_seq1117_2_submission.py",
+      "time_jst": "2026-11-19T20:40:48.289+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1117 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "a67b4644515740aa38117840672d5271f44f4398692011df846d732b47a0b809",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1771.381
+    },
+    {
+      "file": "glm/20_seq1129_1_submission.py",
+      "time_jst": "2026-11-19T20:40:56.052+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1129 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "149505867b7395cd990e02bf79b6ae176971169ee17812b6d9f8b99403f61b05",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1779.144
+    },
+    {
+      "file": "glm/21_seq1199_2_submission.py",
+      "time_jst": "2026-11-19T20:43:45.953+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1199 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "0e5bdb8c3d65fe798b2f8ad897baa601c12e8e66e69631c4ec91e417f8fb9601",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1949.045
+    },
+    {
+      "file": "glm/22_seq1219_2_submission.py",
+      "time_jst": "2026-11-19T20:44:28.695+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1219 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "d351bb3d91b96626be52ecc74a07fbfa3a43bfd13854ab4b328ae2a4adceaced",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1991.787
+    },
+    {
+      "file": "glm/23_seq1231_0_submission.py",
+      "time_jst": "2026-11-19T20:44:34.360+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1231 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "8f8322405850ed743b8df118a62ca103fdc71d985b02ada9ef110d5fa4c3cc6c",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1997.452
+    },
+    {
+      "file": "glm/24_seq1239_0_submission.py",
+      "time_jst": "2026-11-19T20:44:39.028+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1239 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "da8542a667dce627fdd3093766332ed350bb985edd7d5c62c90797edf23dc3c2",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2002.12
+    },
+    {
+      "file": "glm/25_seq1265_2_submission.py",
+      "time_jst": "2026-11-19T20:46:48.732+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1265 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "7884a424ad3a6cb9df33c6ea4783296330a8fc126ad21e1c2a385e2fa9f425ad",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2131.824
+    },
+    {
+      "file": "glm/26_seq1277_0_submission.py",
+      "time_jst": "2026-11-19T20:46:52.953+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1277 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "59eadcf3df86cf95f5b8ce1ceb9cc0bc13ac2b30338a7dc4a9aa6b3272656a85",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2136.045
+    },
+    {
+      "file": "glm/27_seq1301_0_submission.py",
+      "time_jst": "2026-11-19T20:47:22.855+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1301 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "ebaf3a728c60a2a02c03264eda6be63133b0738e801812e7c59632fc18da662f",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2165.947
+    },
+    {
+      "file": "glm/28_seq1309_1_submission.py",
+      "time_jst": "2026-11-19T20:47:29.249+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1309 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "2375c12a5c5703e45817193304d9cd73217aa9359bf4aa1c74183a0c4d4ae072",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2172.341
+    },
+    {
+      "file": "glm/29_seq1327_2_submission.py",
+      "time_jst": "2026-11-19T20:49:24.820+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1327 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "ea669556c6074de2ae6eba4333bcbccbbd6757c95b4cb8766b779dc5c3cee1b5",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2287.912
+    },
+    {
+      "file": "glm/30_seq1339_0_submission.py",
+      "time_jst": "2026-11-19T20:49:32.773+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1339 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "105ec025a641a5d66a648d48816050694561bb1504ede4dfe305a5829d365a32",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2295.865
+    },
+    {
+      "file": "glm/31_seq1399_2_submission.py",
+      "time_jst": "2026-11-19T20:51:18.869+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1399 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "5b2ca905be816f67e6c5c0a2b72ccada373708c4fa5873d9c2596b54477307f9",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/32_seq1411_0_submission.py",
+      "time_jst": "2026-11-19T20:51:24.558+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1411 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "a099237cf3bef848c9556589a9fd01f874c2f7f8e259af28e4c178b296b8148e",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/33_seq1419_1_submission.py",
+      "time_jst": "2026-11-19T20:51:30.462+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1419 content[1]",
+      "kind": "replayed successful edit",
+      "sha256": "a29dd86fa93980e9ebf284a36fa144331b86f489167b04e90782251c8f532490",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/34_seq1573_2_submission.py",
+      "time_jst": "2026-11-19T20:56:39.488+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1573 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "ad7dc0e57ae653ceb491284c2c371e39fc499a7f412c73b00e21bc72a8a41596",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/35_seq1593_0_submission.py",
+      "time_jst": "2026-11-19T20:57:01.221+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1593 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "448340a2185a8b19a5875ca404d099ffd7b4abc717f4d8e1dea1c369a6274d54",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/36_seq1629_2_submission.py",
+      "time_jst": "2026-11-19T20:59:51.349+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1629 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "98f161412ec9df01a204c69a3eb05f2d6a9b0bc4b75eaa36d6b46cc6f377e811",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/37_seq1677_2_submission.py",
+      "time_jst": "2026-11-19T21:02:46.752+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1677 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "f75efdfc56099636283d9684fd851c6a0bfad55fff8f2ba9518f9c5feb63d992",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/38_seq1689_0_submission.py",
+      "time_jst": "2026-11-19T21:02:52.299+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1689 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "4f27f2d0c46b6f5d547fd432045daa691366e695a55d37ca60013c70e2435324",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/39_seq1847_2_submission.py",
+      "time_jst": "2026-11-19T21:10:38.676+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1847 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "7ff362c84703f9c79e8b27451eacd6daf77e76cd6024f12296afce7708484291",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/40_seq1921_2_submission.py",
+      "time_jst": "2026-11-19T21:16:51.231+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1921 content[2]",
+      "kind": "replayed successful edit",
+      "sha256": "b0a562a37cbb3765c1f958b9f4986bd34d1664eedfc18b241efc5fca11ed1cb4",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/41_seq1933_0_submission.py",
+      "time_jst": "2026-11-19T21:16:56.794+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1933 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "bf6f1d47949dccaf715db81720f753d9a6d603b8a49b9ee22bce38b5fc795a0e",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    },
+    {
+      "file": "glm/42_seq1941_0_submission.py",
+      "time_jst": "2026-11-19T21:17:02.107+09:00",
+      "source": "opencode.db session_message ses_e1f1d00daffe6T2J1fhNxFBDC5 seq=1941 content[0]",
+      "kind": "replayed successful edit",
+      "sha256": "a3362cd2eba6620922bda0b6c482364ab617e5dddd6df05b94610496064a088e",
+      "dunder_nodes": [
+        [
+          182,
+          "__slots__",
+          "Store"
+        ]
+      ]
+    }
+  ],
+  "hy4": [
+    {
+      "file": "hy4/01_63HG_submission.py",
+      "time_jst": "2026-11-19T20:24:03.039+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\63HG.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "07c38ba857b0b3dc7fd293b236133373d421bb4179210b187bb12441608110b1",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 957.289
+    },
+    {
+      "file": "hy4/02_GTtB_submission.py",
+      "time_jst": "2026-11-19T20:28:33.566+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\GTtB.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "80c6353af59818ac566e868fa9ddc5f184722362ba43f673dbe6e12ad38c9f23",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1227.816
+    },
+    {
+      "file": "hy4/03_7M53_submission.py",
+      "time_jst": "2026-11-19T20:29:08.047+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\7M53.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "c8ccd8436913675d7cb74d24bc231a96eb89e9e88a155162a4611f5a830be1d1",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1262.297
+    },
+    {
+      "file": "hy4/04_KYbt_submission.py",
+      "time_jst": "2026-11-19T20:29:36.236+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\KYbt.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "d7718e59ff5bfcb395a8caf7c54e2c75700b899749ff40e0b277d65ff737418f",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1290.486
+    },
+    {
+      "file": "hy4/05_SZfR_submission.py",
+      "time_jst": "2026-11-19T20:31:44.611+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\SZfR.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "bd9c7e9c71d93e4170c727984729939c0b148efecc8c64ad58007899f1fe158e",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1418.861
+    },
+    {
+      "file": "hy4/06_B9AH_submission.py",
+      "time_jst": "2026-11-19T20:32:47.342+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\B9AH.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "3b9aa2411391b59ce4c551318a0f0b31c86d6537218f484ccb78439033ccf3bf",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1481.592
+    },
+    {
+      "file": "hy4/07_GVFR_submission.py",
+      "time_jst": "2026-11-19T20:33:43.180+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\GVFR.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "e1c468519601755cf2e8b123f4558705c139a4473dbae43646d655954d023021",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1537.43
+    },
+    {
+      "file": "hy4/08_FshY_submission.py",
+      "time_jst": "2026-11-19T20:34:13.468+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\FshY.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "0281c5d22e23425ee340b08219555b2b0cf9322b1d1ce50f05dd0913e26ae5a3",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1567.718
+    },
+    {
+      "file": "hy4/09_U84i_submission.py",
+      "time_jst": "2026-11-19T20:40:09.865+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\U84i.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "cdf9bf560e234df5000b6c3cfc8ab2752f21e2c744edbeebb641b7bf464afa39",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1924.115
+    },
+    {
+      "file": "hy4/10_yfvh_submission.py",
+      "time_jst": "2026-11-19T20:40:36.235+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\yfvh.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "aaf3fd80f8bc2f2ce857c047e4fca8758bb6a7239bb9f17db68beedf0e0fe976",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 1950.485
+    },
+    {
+      "file": "hy4/11_xeA8_submission.py",
+      "time_jst": "2026-11-19T20:43:13.021+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\xeA8.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "c262852d91bdfdee82f283b5be5e81b3b780691c483e3a0ade99c22fc2696c13",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2107.271
+    },
+    {
+      "file": "hy4/12_rFN4_submission.py",
+      "time_jst": "2026-11-19T20:43:55.479+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\rFN4.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "1739029b2569b94e0eb8d56540a50d9b27a2aa05bfd0f8c2d66bf9d556413328",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2149.729
+    },
+    {
+      "file": "hy4/13_xYy9_submission.py",
+      "time_jst": "2026-11-19T20:47:50.590+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\xYy9.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "a889f4bd4c922e54c31c8cddee1d630548e11bfc8d3f8bc57b2c9a054b46e111",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2384.84
+    },
+    {
+      "file": "hy4/14_kYB7_submission.py",
+      "time_jst": "2026-11-19T20:48:59.629+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\kYB7.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "6e7b278c8cc511983bd78ea37eda91650be5bd13dcf52d4814063a94e6d9f65f",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/15_fuj1_submission.py",
+      "time_jst": "2026-11-19T20:51:35.943+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\fuj1.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "d27204709266e3d96c094d0e0f544ad2735f61fa0e45156bb4541aa1a8742f96",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/16_h71p_submission.py",
+      "time_jst": "2026-11-19T20:51:52.651+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\h71p.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "23a4d0ce92eb99de3b09fcc19fc7c6d9b912fa03e64d9eb621565cea978256ee",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/17_55UP_submission.py",
+      "time_jst": "2026-11-19T20:52:06.444+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\55UP.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "add32d7447ea6c58ca014e76c78ff5c50a0e8686720a548f526d333443721c01",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/18_y0My_submission.py",
+      "time_jst": "2026-11-19T20:56:37.904+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\y0My.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "8e9c22ee9f0b5bafe5f37322abab5134d26761ba366886355311cdfa7998a675",
+      "dunder_nodes": [
+        [
+          242,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/19_hGac_submission.py",
+      "time_jst": "2026-11-19T20:58:10.689+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\hGac.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "4ddef63de337f24fba67f92bc8ee11b29fda10ca39de8e81a597d6cb5b0fd3d2",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/20_Yc8m_submission.py",
+      "time_jst": "2026-11-19T21:00:54.188+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\Yc8m.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "c53ca23eab00557326283fe44f5def803a7b351d2c3045ff8c2c97438a229dda",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/21_FQKz_submission.py",
+      "time_jst": "2026-11-19T21:02:52.859+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\FQKz.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "c4ba9232c6181e811d68d80eb522abf850d2a3ac4b947f063720b5d926931047",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/22_5P3x_submission.py",
+      "time_jst": "2026-11-19T21:04:49.603+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\5P3x.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "962d050783a84652ece9c9d666494792ff9dc3611e0e48f4f084b01e220dc86f",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/23_OMRR_submission.py",
+      "time_jst": "2026-11-19T21:06:50.625+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\OMRR.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "dd52f86102b5a370dedfb8e5f3317b4774197f91379fa84d28c045ac2b207e5f",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/24_gAOh_submission.py",
+      "time_jst": "2026-11-19T21:07:01.009+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\gAOh.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "32c4ef090f4098ea27912fc0e844f842b2f72dd5a0d44c4a6fb1ee64e00caf63",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/25_1EEB_submission.py",
+      "time_jst": "2026-11-19T21:08:57.398+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\1EEB.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "a9ef8d11419a1af0a5ccbc4db536d52e6b142fbef8c692593a60b9569050c9db",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "hy4/26_m1hm_submission.py",
+      "time_jst": "2026-11-19T21:10:06.622+09:00",
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\User\\History\\-58277a96\\m1hm.py",
+      "kind": "original CodeBuddy history bytes",
+      "sha256": "18e5edc868411a6989608fbd5b79bccf2604190edace64ef13d82a8eccb354d2",
+      "dunder_nodes": [
+        [
+          247,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    }
+  ],
+  "doubao": [
+    {
+      "file": "doubao/01_line1385_submission.py",
+      "time_jst": "2026-11-19T21:12:51.756+09:00",
+      "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-19\\clients\\203414-393-39404-vscode-2026-11-19-39404.log:1385 PowerShell command fb45196f-2a06-4cd5-9cd3-25d03fe93bc4",
+      "kind": "recovered command payload",
+      "sha256": "9d23e92706cd543e9bad2594d8eb74774ddb1c8bf7be9395664b04a37757cd0f",
+      "dunder_nodes": [
+        [
+          113,
+          "__new__",
+          "Attribute"
+        ],
+        [
+          139,
+          "__new__",
+          "Attribute"
+        ]
+      ],
+      "elapsed_seconds_from_request": 2122.277
+    },
+    {
+      "file": "doubao/02_line3890_submission.py",
+      "time_jst": "2026-11-19T21:30:18.784+09:00",
+      "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-19\\clients\\203414-393-39404-vscode-2026-11-19-39404.log:3890 PowerShell command dc42ae8b-41b0-42da-99a3-d61baf23d15c",
+      "kind": "recovered command payload",
+      "sha256": "f9314666145bd609edf7c31d87998174fb6729a04086f159976e2ac9d79f7580",
+      "dunder_nodes": [
+        [
+          116,
+          "__new__",
+          "Attribute"
+        ],
+        [
+          144,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "doubao/03_line8587__final_check.py",
+      "time_jst": "2026-11-19T22:25:19.384+09:00",
+      "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-19\\clients\\203414-393-39404-vscode-2026-11-19-39404.log:8587 PowerShell command 592af63c-e79a-4286-8a00-e712b07d846f",
+      "kind": "recovered command payload",
+      "sha256": "24c282aeaab158dfddf5c9416d507580498c44985bd679948b43a351e0b5696d",
+      "dunder_nodes": []
+    }
+  ],
+  "deepseek_history": [
+    {
+      "file": "deepseek_history/01_v00_v00_baseline_e7dbfd4d.py",
+      "time_jst": "2026-11-19T19:57:32.491+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_07_deepseek_dsh\\history\\v00_baseline_e7dbfd4d.py",
+      "kind": "original room history bytes; filesystem mtime",
+      "sha256": "e7dbfd4d21139dddd003cc036b3b498b39f5ce97961d401ddc95b21c5316b53a",
+      "dunder_nodes": []
+    },
+    {
+      "file": "deepseek_history/02_v01_v01_full_v22_09148101.py",
+      "time_jst": "2026-11-19T21:36:50.653+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_07_deepseek_dsh\\history\\v01_full_v22_09148101.py",
+      "kind": "original room history bytes; filesystem mtime",
+      "sha256": "091481019d1edd8a6f419b31d40236ff928265d37e229e283876a581ab2f9169",
+      "dunder_nodes": [
+        [
+          77,
+          "__slots__",
+          "Store"
+        ],
+        [
+          97,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    },
+    {
+      "file": "deepseek_history/03_v02_v02_final_bc1bad22.py",
+      "time_jst": "2026-11-19T21:50:24.810+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_07_deepseek_dsh\\history\\v02_final_bc1bad22.py",
+      "kind": "original room history bytes; filesystem mtime",
+      "sha256": "bc1bad22325ac226a66be35ead372937f0c9d60a2ffe5875b5cc367cd2776468",
+      "dunder_nodes": [
+        [
+          77,
+          "__slots__",
+          "Store"
+        ],
+        [
+          97,
+          "__new__",
+          "Attribute"
+        ]
+      ]
+    }
+  ],
+  "deepseek_tools": [
+    {
+      "file": "deepseek_tools/01_seq311_submission.py",
+      "time_jst": "2026-11-19T20:24:53.181+09:00",
+      "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=311; tool/result seq=312",
+      "kind": "Logged successful direct tool write; known chain only",
+      "sha256": "1914b1e08a98fa1518122e8bc93f4fc6a42ab16659b24876cbe22c80ce1e5160",
+      "elapsed_seconds_from_request": 447.87
+    },
+    {
+      "file": "deepseek_tools/02_seq317_submission.py",
+      "time_jst": "2026-11-19T20:25:49.517+09:00",
+      "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=317; tool/result seq=318",
+      "kind": "Logged successful direct tool write; known chain only",
+      "sha256": "82343bee32168a16de3c984b0ffe1d75ece3a3da21fea48c7ac3d1af84fd1003",
+      "elapsed_seconds_from_request": 504.206
+    },
+    {
+      "file": "deepseek_tools/03_seq323_submission.py",
+      "time_jst": "2026-11-19T20:26:11.598+09:00",
+      "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=323; tool/result seq=324",
+      "kind": "Logged successful direct tool edit; known chain only",
+      "sha256": "7fe4a327694406ada6aafb5cca44a2df617822598b40000b9b1942b2095e3101",
+      "elapsed_seconds_from_request": 526.287
+    },
+    {
+      "file": "deepseek_tools/04_seq373_submission.py",
+      "time_jst": "2026-11-19T20:26:52.964+09:00",
+      "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=373; tool/result seq=374",
+      "kind": "Logged successful direct tool edit; known chain only",
+      "sha256": "9f7aa8be7b33a4e68a270fd7bfd49f74201aad3abd57d5f7026bac6d5046c584",
+      "elapsed_seconds_from_request": 567.653
+    },
+    {
+      "file": "deepseek_tools/05_seq520_submission.py",
+      "time_jst": "2026-11-19T20:31:41.670+09:00",
+      "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=520; tool/result seq=521",
+      "kind": "Logged successful direct tool edit; known chain only",
+      "sha256": "31c89f26dd49a33de3b540e6210bbba057d07fc3cc8b1a46c027835461fac188",
+      "elapsed_seconds_from_request": 856.359
+    },
+    {
+      "file": "deepseek_tools/06_seq944_submission.py",
+      "time_jst": "2026-11-19T21:19:45.206+09:00",
+      "source": "<LOCAL_USER_HOME>/.dsh/sessions/--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--/session-a11cda84-af09-4635-97b0-2a5db66db350/session.v4.jsonl.zstd tool/call seq=944; tool/result seq=945",
+      "kind": "Logged successful direct tool edit; known chain only",
+      "sha256": "484413f51136cb71acbbb6bd655856c5802826717347b07ab7137b1b1072aa2d"
+    }
+  ],
+  "deepseek_unrecovered_edit_receipts": [
+    [
+      329,
+      "failed or missing receipt"
+    ],
+    [
+      986,
+      "context differs after an intervening edit"
+    ],
+    [
+      1001,
+      "context differs after an intervening edit"
+    ],
+    [
+      1037,
+      "context differs after an intervening edit"
+    ],
+    [
+      1043,
+      "context differs after an intervening edit"
+    ],
+    [
+      1073,
+      "context differs after an intervening edit"
+    ],
+    [
+      1095,
+      "context differs after an intervening edit"
+    ],
+    [
+      1117,
+      "context differs after an intervening edit"
+    ],
+    [
+      1131,
+      "context differs after an intervening edit"
+    ],
+    [
+      1265,
+      "context differs after an intervening edit"
+    ],
+    [
+      1301,
+      "context differs after an intervening edit"
+    ],
+    [
+      1323,
+      "context differs after an intervening edit"
+    ],
+    [
+      1345,
+      "context differs after an intervening edit"
+    ],
+    [
+      1361,
+      "context differs after an intervening edit"
+    ],
+    [
+      1369,
+      "context differs after an intervening edit"
+    ]
+  ],
+  "sol_process": [
+    {
+      "file": "sol_process/solver_work_appended_fragment.py",
+      "time_jst": "2026-11-19T20:27:20.692000+09:00",
+      "source": "SOL Codex rollout line 836",
+      "kind": "Recovered command payload for solver_work.py",
+      "sha256": "f8c9902adee4a9f932f3ba45d6947dfb03d5552438413aaa57d97b9cef77e2e9"
+    },
+    {
+      "file": "sol_process/first_generate_defense.py",
+      "time_jst": "2026-11-19T20:30:19.557000+09:00",
+      "source": "SOL Codex rollout line 872",
+      "kind": "Recovered command payload for generate_defense.py",
+      "sha256": "1413b6754c3412686ac0c9bf89845a0f78ff9accb82fcefa5c5383440d7cb575"
+    },
+    {
+      "file": "sol_process/verify_full.py",
+      "time_jst": "2026-11-19T20:34:26.579217+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_02_sol_codex\\verify_full.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "1311a75678cf905baa4bd7f714331b022121c6ee2f7f10d6c408293feae04268"
+    },
+    {
+      "file": "sol_process/results_first.txt",
+      "time_jst": "2026-11-19T20:34:17.630518+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_02_sol_codex\\results_first.txt",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "199ac0334ca2e85c2d54a0839ed374081871a2a0f48dba4c13c5f55ad8a23729"
+    },
+    {
+      "file": "sol_process/generate_defense.py",
+      "time_jst": "2026-11-19T20:37:01.721766+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_02_sol_codex\\generate_defense.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "4407f3e3ec56c6a3c11ad46d70faf13a3f07c89254d3ff83218a3fa5ab6968ff"
+    }
+  ],
+  "hydrogen_process": [
+    {
+      "file": "hydrogen_process/hero_v22.py",
+      "time_jst": "2026-11-19T22:00:17.723446+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_05_hydrogen_agy\\hero_v22.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "1975a22ba02c9ec815ad9ad41b8a39ff435a524fc0014a683614482a670e29fd"
+    },
+    {
+      "file": "hydrogen_process/build_demon_v22.py",
+      "time_jst": "2026-11-19T22:02:09.923733+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_05_hydrogen_agy\\build_demon_v22.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "6d1dff50243066455080e58d0cb576164034a5df9a5f3921f839146042d865a5"
+    },
+    {
+      "file": "hydrogen_process/assemble_submission.py",
+      "time_jst": "2026-11-19T22:03:58.343072+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_05_hydrogen_agy\\assemble_submission.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "e49753ed22773c4df64ab89445ebd419b54272e0d0c6ea562b00916c64b45f69"
+    },
+    {
+      "file": "hydrogen_process/verify_submission_v22.py",
+      "time_jst": "2026-11-19T22:05:03.791418+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_05_hydrogen_agy\\verify_submission_v22.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "07b3154840a4af1bcd4fc6829d985c5f440279324d1433a96a905249b8925766"
+    },
+    {
+      "file": "hydrogen_process/stress_v22.py",
+      "time_jst": "2026-11-19T20:35:32.091875+09:00",
+      "source": "part2_full_mode/exam_rooms\\P2_05_hydrogen_agy\\stress_v22.py",
+      "kind": "Existing original artifact; filesystem mtime",
+      "sha256": "df6996961190e7239afdbb64b868e8acb2a553cf4f0bc09a8a8a2d6ebf26ce21"
+    }
+  ]
+}

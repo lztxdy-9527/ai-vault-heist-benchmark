@@ -1,0 +1,19 @@
+{'name': 'three mandatory jumps', 'turn': 60, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 32.58, 'mean_ms': 10.4, 'position': [35, 13], 'jumps': 0, 'bombs': 2}
+{'name': 'two-wide abyss spring crossing', 'turn': 79, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 53.92, 'mean_ms': 15.81, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'bomb opens key chamber', 'turn': 77, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 205.38, 'mean_ms': 20.5, 'position': [35, 13], 'jumps': 2, 'bombs': 1}
+{'name': 'switch opens key chamber', 'turn': 67, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 220.37, 'mean_ms': 34.92, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'throw to remote switch', 'turn': 67, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 280.88, 'mean_ms': 39.93, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'ice mirror and spring shortcut', 'turn': 32, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 109.48, 'mean_ms': 16.35, 'position': [35, 13], 'jumps': 1, 'bombs': 2}
+{'name': 'crossing lasers and TNT', 'turn': 61, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 244.34, 'mean_ms': 27.55, 'position': [35, 13], 'jumps': 1, 'bombs': 2}
+{'name': 'chest clues', 'turn': 60, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 279.34, 'mean_ms': 35.81, 'position': [35, 13], 'jumps': 0, 'bombs': 2}
+{'name': 'random obstacles 0', 'turn': 86, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 208.26, 'mean_ms': 41.95, 'position': [35, 13], 'jumps': 1, 'bombs': 1}
+{'name': 'random obstacles 1', 'turn': 70, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 265.27, 'mean_ms': 54.83, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'random obstacles 2', 'turn': 80, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 240.5, 'mean_ms': 60.47, 'position': [35, 13], 'jumps': 1, 'bombs': 1}
+{'name': 'random obstacles 3', 'turn': 61, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 274.17, 'mean_ms': 56.96, 'position': [35, 13], 'jumps': 2, 'bombs': 1}
+{'name': 'random obstacles 4', 'turn': 73, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 257.84, 'mean_ms': 70.58, 'position': [35, 13], 'jumps': 2, 'bombs': 1}
+{'name': 'random obstacles 5', 'turn': 60, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 257.99, 'mean_ms': 58.71, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'random obstacles 6', 'turn': 82, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 263.56, 'mean_ms': 67.03, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'random obstacles 7', 'turn': 60, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 167.97, 'mean_ms': 23.79, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'random obstacles 8', 'turn': 62, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 247.03, 'mean_ms': 38.73, 'position': [35, 13], 'jumps': 2, 'bombs': 2}
+{'name': 'random obstacles 9', 'turn': 97, 'hp': 100, 'keys': 3, 'won': True, 'max_ms': 209.6, 'mean_ms': 35.62, 'position': [35, 13], 'jumps': 2, 'bombs': 1}
+CLEARS 18 / 18

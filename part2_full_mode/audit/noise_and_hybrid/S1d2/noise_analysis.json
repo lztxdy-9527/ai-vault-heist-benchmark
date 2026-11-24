@@ -1,0 +1,651 @@
+{
+  "distributions": {
+    "wave3_final_11seats_M053_neon_vs_opus": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 10,
+        "DEAD": 0,
+        "TIMEOUT": 0,
+        "DQ": 0
+      },
+      "worker_respawns": 0,
+      "turns": [
+        121,
+        121.0,
+        123
+      ],
+      "hero_score": [
+        882.931,
+        884.1862,
+        884.1862
+      ],
+      "demon_score": [
+        75.3138,
+        75.3138,
+        76.569
+      ]
+    },
+    "wave3_final_11seats_M058_hunyuan_vs_opus": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 0,
+        "DEAD": 10,
+        "TIMEOUT": 0,
+        "DQ": 0
+      },
+      "worker_respawns": 1,
+      "turns": [
+        80,
+        109.5,
+        240
+      ],
+      "hero_score": [
+        173.913,
+        173.913,
+        541.9355
+      ],
+      "demon_score": [
+        663.2661,
+        755.2717,
+        755.2717
+      ]
+    },
+    "wave3_final_11seats_M052_sol_vs_opus": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 0,
+        "DEAD": 8,
+        "TIMEOUT": 2,
+        "DQ": 0
+      },
+      "worker_respawns": 59,
+      "turns": [
+        90,
+        153.0,
+        240
+      ],
+      "hero_score": [
+        587.0968,
+        587.0968,
+        587.0968
+      ],
+      "demon_score": [
+        447.6008,
+        751.9758,
+        751.9758
+      ]
+    },
+    "wave3_final_11seats_M054_carbon_vs_opus": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 10,
+        "DEAD": 0,
+        "TIMEOUT": 0,
+        "DQ": 0
+      },
+      "worker_respawns": 0,
+      "turns": [
+        111,
+        111.0,
+        111
+      ],
+      "hero_score": [
+        890.4623,
+        890.4623,
+        890.4623
+      ],
+      "demon_score": [
+        69.0377,
+        69.0377,
+        69.0377
+      ]
+    },
+    "wave3_final_11seats_M055_hydrogen_vs_opus": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 10,
+        "DEAD": 0,
+        "TIMEOUT": 0,
+        "DQ": 0
+      },
+      "worker_respawns": 0,
+      "turns": [
+        116,
+        116.0,
+        116
+      ],
+      "hero_score": [
+        887.3243,
+        887.3243,
+        887.3243
+      ],
+      "demon_score": [
+        72.1757,
+        72.1757,
+        72.1757
+      ]
+    },
+    "wave3_final_11seats_M015_opus_vs_sol": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 0,
+        "DEAD": 0,
+        "TIMEOUT": 10,
+        "DQ": 0
+      },
+      "worker_respawns": 0,
+      "turns": [
+        240,
+        240.0,
+        240
+      ],
+      "hero_score": [
+        565.2174,
+        565.2174,
+        565.2174
+      ],
+      "demon_score": [
+        344.9457,
+        344.9457,
+        344.9457
+      ]
+    },
+    "wave3_final_11seats_M045_opus_vs_hydrogen": {
+      "n": 10,
+      "counts": {
+        "CLEARED": 0,
+        "DEAD": 0,
+        "TIMEOUT": 10,
+        "DQ": 0
+      },
+      "worker_respawns": 0,
+      "turns": [
+        240,
+        240.0,
+        240
+      ],
+      "hero_score": [
+        82.0513,
+        82.0513,
+        82.0513
+      ],
+      "demon_score": [
+        458.8622,
+        458.8622,
+        458.8622
+      ]
+    }
+  },
+  "bootstrap": {
+    "draws": 10000,
+    "seed": 20261122,
+    "resampled_matches": [
+      "wave3_final_11seats_M053_neon_vs_opus",
+      "wave3_final_11seats_M058_hunyuan_vs_opus",
+      "wave3_final_11seats_M052_sol_vs_opus",
+      "wave3_final_11seats_M054_carbon_vs_opus",
+      "wave3_final_11seats_M055_hydrogen_vs_opus",
+      "wave3_final_11seats_M015_opus_vs_sol",
+      "wave3_final_11seats_M045_opus_vs_hydrogen"
+    ],
+    "seats": {
+      "astra": {
+        "total_p05_p95": [
+          1226.35,
+          1226.35
+        ],
+        "median": 1226.35,
+        "rank_counts": {
+          "1": 10000
+        }
+      },
+      "neon": {
+        "total_p05_p95": [
+          1157.21,
+          1157.31
+        ],
+        "median": 1157.31,
+        "rank_counts": {
+          "2": 10000
+        }
+      },
+      "hydrogen": {
+        "total_p05_p95": [
+          1131.34,
+          1131.34
+        ],
+        "median": 1131.34,
+        "rank_counts": {
+          "3": 10000
+        }
+      },
+      "carbon": {
+        "total_p05_p95": [
+          1021.73,
+          1021.73
+        ],
+        "median": 1021.73,
+        "rank_counts": {
+          "4": 10000
+        }
+      },
+      "opus": {
+        "total_p05_p95": [
+          891.51,
+          929.71
+        ],
+        "median": 929.56,
+        "rank_counts": {
+          "6": 10000
+        }
+      },
+      "sol": {
+        "total_p05_p95": [
+          994.26,
+          994.26
+        ],
+        "median": 994.26,
+        "rank_counts": {
+          "5": 10000
+        }
+      },
+      "qwen": {
+        "total_p05_p95": [
+          793.91,
+          793.91
+        ],
+        "median": 793.91,
+        "rank_counts": {
+          "7": 10000
+        }
+      },
+      "glm": {
+        "total_p05_p95": [
+          749.19,
+          749.19
+        ],
+        "median": 749.19,
+        "rank_counts": {
+          "8": 10000
+        }
+      },
+      "deepseek": {
+        "total_p05_p95": [
+          540.33,
+          540.33
+        ],
+        "median": 540.33,
+        "rank_counts": {
+          "9": 10000
+        }
+      },
+      "hunyuan": {
+        "total_p05_p95": [
+          467.7,
+          496.01
+        ],
+        "median": 467.7,
+        "rank_counts": {
+          "10": 10000
+        }
+      },
+      "doubao": {
+        "total_p05_p95": [
+          168.75,
+          168.75
+        ],
+        "median": 168.75,
+        "rank_counts": {
+          "11": 10000
+        }
+      }
+    },
+    "adjacent": [
+      {
+        "upper": "astra",
+        "lower": "neon",
+        "gap_p05_p95": [
+          69.04,
+          69.14
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "neon",
+        "lower": "hydrogen",
+        "gap_p05_p95": [
+          25.87,
+          25.97
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "hydrogen",
+        "lower": "carbon",
+        "gap_p05_p95": [
+          109.61,
+          109.61
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "carbon",
+        "lower": "opus",
+        "gap_p05_p95": [
+          92.02,
+          130.22
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "opus",
+        "lower": "sol",
+        "gap_p05_p95": [
+          -102.75,
+          -64.55
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 1.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "sol",
+        "lower": "qwen",
+        "gap_p05_p95": [
+          200.35,
+          200.35
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "qwen",
+        "lower": "glm",
+        "gap_p05_p95": [
+          44.72,
+          44.72
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "glm",
+        "lower": "deepseek",
+        "gap_p05_p95": [
+          208.86,
+          208.86
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "deepseek",
+        "lower": "hunyuan",
+        "gap_p05_p95": [
+          44.32,
+          72.63
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "hunyuan",
+        "lower": "doubao",
+        "gap_p05_p95": [
+          298.95,
+          327.26
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      }
+    ]
+  },
+  "five_match_sensitivity": {
+    "draws": 10000,
+    "seed": 20261122,
+    "resampled_matches": [
+      "wave3_final_11seats_M053_neon_vs_opus",
+      "wave3_final_11seats_M058_hunyuan_vs_opus",
+      "wave3_final_11seats_M052_sol_vs_opus",
+      "wave3_final_11seats_M054_carbon_vs_opus",
+      "wave3_final_11seats_M055_hydrogen_vs_opus"
+    ],
+    "seats": {
+      "astra": {
+        "total_p05_p95": [
+          1226.35,
+          1226.35
+        ],
+        "median": 1226.35,
+        "rank_counts": {
+          "1": 10000
+        }
+      },
+      "neon": {
+        "total_p05_p95": [
+          1157.21,
+          1157.31
+        ],
+        "median": 1157.31,
+        "rank_counts": {
+          "2": 10000
+        }
+      },
+      "hydrogen": {
+        "total_p05_p95": [
+          1131.34,
+          1131.34
+        ],
+        "median": 1131.34,
+        "rank_counts": {
+          "3": 10000
+        }
+      },
+      "carbon": {
+        "total_p05_p95": [
+          1021.73,
+          1021.73
+        ],
+        "median": 1021.73,
+        "rank_counts": {
+          "4": 10000
+        }
+      },
+      "opus": {
+        "total_p05_p95": [
+          891.51,
+          929.71
+        ],
+        "median": 929.56,
+        "rank_counts": {
+          "6": 10000
+        }
+      },
+      "sol": {
+        "total_p05_p95": [
+          994.26,
+          994.26
+        ],
+        "median": 994.26,
+        "rank_counts": {
+          "5": 10000
+        }
+      },
+      "qwen": {
+        "total_p05_p95": [
+          793.91,
+          793.91
+        ],
+        "median": 793.91,
+        "rank_counts": {
+          "7": 10000
+        }
+      },
+      "glm": {
+        "total_p05_p95": [
+          749.19,
+          749.19
+        ],
+        "median": 749.19,
+        "rank_counts": {
+          "8": 10000
+        }
+      },
+      "deepseek": {
+        "total_p05_p95": [
+          540.33,
+          540.33
+        ],
+        "median": 540.33,
+        "rank_counts": {
+          "9": 10000
+        }
+      },
+      "hunyuan": {
+        "total_p05_p95": [
+          467.7,
+          496.01
+        ],
+        "median": 467.7,
+        "rank_counts": {
+          "10": 10000
+        }
+      },
+      "doubao": {
+        "total_p05_p95": [
+          168.75,
+          168.75
+        ],
+        "median": 168.75,
+        "rank_counts": {
+          "11": 10000
+        }
+      }
+    },
+    "adjacent": [
+      {
+        "upper": "astra",
+        "lower": "neon",
+        "gap_p05_p95": [
+          69.04,
+          69.14
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "neon",
+        "lower": "hydrogen",
+        "gap_p05_p95": [
+          25.87,
+          25.97
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "hydrogen",
+        "lower": "carbon",
+        "gap_p05_p95": [
+          109.61,
+          109.61
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "carbon",
+        "lower": "opus",
+        "gap_p05_p95": [
+          92.02,
+          130.22
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "opus",
+        "lower": "sol",
+        "gap_p05_p95": [
+          -102.75,
+          -64.55
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 1.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "sol",
+        "lower": "qwen",
+        "gap_p05_p95": [
+          200.35,
+          200.35
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "qwen",
+        "lower": "glm",
+        "gap_p05_p95": [
+          44.72,
+          44.72
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "glm",
+        "lower": "deepseek",
+        "gap_p05_p95": [
+          208.86,
+          208.86
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "deepseek",
+        "lower": "hunyuan",
+        "gap_p05_p95": [
+          44.32,
+          72.63
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      },
+      {
+        "upper": "hunyuan",
+        "lower": "doubao",
+        "gap_p05_p95": [
+          298.95,
+          327.26
+        ],
+        "interval_overlap": null,
+        "lower_ahead_fraction": 0.0,
+        "equal_score_fraction": 0.0
+      }
+    ]
+  }
+}

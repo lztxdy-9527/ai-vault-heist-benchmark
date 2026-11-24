@@ -1,0 +1,14 @@
+Created At: 2026-11-20T04:04:17+09:00
+Completed At: 2026-11-20T04:04:19+09:00
+Workflow "Debug divergence detail" completed.
+Output:
+63 MOVE_R replay (13, 20, 100) [] W | search (13, 20, 100) [] W ()
+64 MOVE_R replay (14, 20, 100) [] W | search (14, 20, 100) [] W ()
+65 MOVE_R replay (15, 20, 100) [] W | search (15, 20, 100) [] W ()
+66 MOVE_R replay (16, 20, 100) [] W | search (16, 20, 100) [] W ()
+67 MOVE_R replay (17, 20, 100) [] W | search (17, 20, 100) [] W ()
+68 MOVE_R replay (18, 20, 100) [] W | search (18, 20, 100) [] W ()
+69 BOMB replay (18, 20, 100) [{'id': 1000, 'x': 18, 'y': 20, 'timer': 2}] W | search (18, 20, 100) [{'id': 1159, 'x': 18, 'y': 20, 'timer': 2}] W ()
+70 MOVE_R replay (19, 20, 100) [{'id': 1000, 'x': 18, 'y': 20, 'timer': 1}] W | search (19, 20, 100) [{'id': 1159, 'x': 18, 'y': 20, 'timer': 1}] W ()
+71 JUMP_D replay (19, 20, 50) [] EMPTY | search (19, 22, 100) [] EMPTY ()
+72 MOVE_U replay (19, 19, 50) [] EMPTY | search (19, 21, 100) [] EMPTY ()

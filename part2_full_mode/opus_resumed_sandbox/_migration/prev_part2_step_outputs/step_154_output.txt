@@ -1,0 +1,231 @@
+Created At: 2026-11-19T20:52:27+09:00
+Completed At: 2026-11-19T20:52:27+09:00
+Workflow "Inspect benchmark JSON structure" completed.
+Output:
+== part1_dungeons_benchmark.json <class 'dict'>
+schema 'part1_blind_benchmark_v1'
+seat_id 'opus'
+part1_id 'opus'
+note 'Contains all 14 Part-1 effective 40x26 dungeon grids + your 13 Hero matches & 10 Demon-defense trajectories. Strictly z
+dungeons dict 14
+  OFFICIAL_01 dict 8
+    id 'OFFICIAL_01'
+    name '官方裁定席 (OFFICIAL_01)'
+    spent_gold 440
+    vault_gold 2560
+    taunt '顺着冰道一滑到底，但小心三回合一次的激光点名！'
+    is_official True
+    is_dq_backup False
+    grid list 26
+      [0] list
+  OFFICIAL_02 dict 8
+    id 'OFFICIAL_02'
+    name '官方裁定席 (OFFICIAL_02)'
+    spent_gold 105
+    vault_gold 2895
+    taunt '两颗炸弹三道锁，炸错一堵墙就永远留在这里吧！'
+    is_official True
+    is_dq_backup False
+    grid list 26
+      [0] list
+  OFFICIAL_03 dict 8
+    id 'OFFICIAL_03'
+    name '官方裁定席 (OFFICIAL_03)'
+    spent_gold 270
+    vault_gold 2730
+    taunt '传送门直通钥匙，但退路一旦踩碎就再也回不来了！'
+    is_official True
+    is_dq_backup False
+    grid list 26
+      [0] list
+  argon dict 8
+    id 'argon'
+    name 'ARGON'
+    spent_gold 1095
+    vault_gold 1905
+    taunt '盲区折跃锁双钥，冰道双光断归途！欢迎挑战 CARBON 金库！'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  astra dict 8
+    id 'astra'
+    name 'ASTRA'
+    spent_gold 575
+    vault_gold 2425
+    taunt '冰面上那串脚印，为什么只有去程？'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  carbon dict 8
+    id 'carbon'
+    name 'CARBON'
+    spent_gold 2195
+    vault_gold 805
+    taunt '迷雾深处皆幻象，步步惊心金库藏！'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  deepseek dict 8
+    id 'deepseek'
+    name 'DeepSeek'
+    spent_gold 745
+    vault_gold 2255
+    taunt '十二模型同场？先在我盒子里躺六年再说。'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  doubao dict 8
+    id 'doubao'
+    name '豆包'
+    spent_gold 440
+    vault_gold 2560
+    taunt '大家好呀，我是豆包～别担心，不管是造迷宫还是闯关，我都会稳稳地发挥的！'
+    is_official False
+    is_dq_backup True
+    grid list 26
+      [0] list
+  glm dict 8
+    id 'glm'
+    name 'GLM'
+    spent_gold 2140
+    vault_gold 860
+    taunt '沙盘已布，静候葬礼：钥匙在墙后，金库在雾里，而你们在坟里。'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  hunyuan dict 8
+    id 'hunyuan'
+    name '混元 HY4'
+    spent_gold 2735
+    vault_gold 265
+    taunt '迷雾里的捷径都是我挖的坑'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  hydrogen dict 8
+    id 'hydrogen'
+    name 'HYDROGEN'
+    spent_gold 2685
+    vault_gold 315
+    taunt 'Hydrogen trap: count mod 3 or perish!'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  opus dict 8
+    id 'opus'
+    name 'Claude Opus 5.5'
+    spent_gold 440
+    vault_gold 2560
+    taunt '设计迷宫就像谱写管风琴赋格曲，粗鄙地堆砌炸药有失体面，我要用精妙的逻辑锁请各位吃闭门羹。'
+    is_official False
+    is_dq_backup True
+    grid list 26
+      [0] list
+  qwen dict 8
+    id 'qwen'
+    name 'Qwen'
+    spent_gold 2355
+    vault_gold 645
+    taunt '迷雾深处，金库冷笑；勇者枯骨，铺我王座。'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+  sol dict 8
+    id 'sol'
+    name 'SOL'
+    spent_gold 1170
+    vault_gold 1830
+    taunt '向前很容易，活着回来才算本事。'
+    is_official False
+    is_dq_backup False
+    grid list 26
+      [0] list
+my_hero_matches list 13
+  [0] dict
+    demon_id 'OFFICIAL_01'
+    demon_name '官方裁定席 (OFFICIAL_01)'
+    stage 'Stage 1: 官方一图：冰火激光长廊'
+    status 'DEAD'
+    turns 3
+    hero_hp_left 0
+    keys_collected 0
+    hero_score 0.0
+    actions list 3
+      [0] str
+    positions list 4
+      [0] list
+    hp_trace list 4
+      [0] int
+    keys_trace list 4
+      [0] list
+    milestone_events list 1
+      [0] str
+    final_frame_summary dict 7
+      pos list 2
+      hp 0
+      keys list 2
+      gates_flipped False
+      bombs_left 2
+      jumps 3
+      throws 3
+my_demon_defense_matches list 10
+  [0] dict
+    hero_id 'astra'
+    hero_name 'ASTRA'
+    status 'CLEARED'
+    turns 46
+    hero_hp_left 100
+    keys_collected 2
+    demon_score 0.0
+    actions list 46
+      [0] str
+    positions list 47
+      [0] list
+    hp_trace list 47
+      [0] int
+    keys_trace list 47
+      [0] list
+    milestone_events list 3
+      [0] str
+    final_frame_summary dict 7
+      pos list 2
+      hp 100
+      keys list 2
+      gates_flipped False
+      bombs_left 2
+      jumps 0
+      throws 3
+== v22_sparring_benchmarks.json <class 'dict'>
+schema 'v22_sparring_benchmarks_v1'
+note 'Contains two verified v2.2 FULL sparring dungeons (BENCH_WEAK & BENCH_STRONG) with PLATE/P_GATE/LASER2/ONEWAY mechanics
+dungeons dict 2
+  BENCH_WEAK dict 9
+    id 'BENCH_WEAK'
+    tier 'weak'
+    name '弱基准（青铜守门员 · 0分水位线）'
+    spent_gold 630
+    vault_gold 2370
+    author_steps 81
+    author_hp_left 100
+    taunt '先翻红门，再推金板。最后一步，别数错拍。'
+    grid list 26
+      [0] list
+  BENCH_STRONG dict 9
+    id 'BENCH_STRONG'
+    tier 'strong'
+    name '强基准（宗师试炼塔 · 场外满血标尺）'
+    spent_gold 2555
+    vault_gold 445
+    author_steps 115
+    author_hp_left 100
+    taunt '三道压板开门，两格深渊断后。钥匙齐了，再走独木桥。'
+    grid list 26
+      [0] list

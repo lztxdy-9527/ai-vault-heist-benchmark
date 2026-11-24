@@ -1,0 +1,96 @@
+{
+  "generated_at": 1795080368.5379345,
+  "count": 15,
+  "files": [
+    {
+      "path": "<REPO_ROOT>/engine.py",
+      "sha256": "2d15a4a0a9efa4a155e0dbe165d67770ec68e41f5790357a2a1005dcc04ae4b7",
+      "size": 50364,
+      "mtime": 1794745998.9524903
+    },
+    {
+      "path": "<REPO_ROOT>/run_tournament.py",
+      "sha256": "e7334fe6aae4549095e9d4c283f970537dfbd13e7127a7ff36bff4fa91f776db",
+      "size": 67058,
+      "mtime": 1794791653.5426557
+    },
+    {
+      "path": "<REPO_ROOT>/arena_stage.html",
+      "sha256": "86f2e345fc509e4c25a3ded9fa9e7f2d7384c95afcf2d1296afa5287d89392e9",
+      "size": 112802,
+      "mtime": 1795000202.9696743
+    },
+    {
+      "path": "<REPO_ROOT>/replays\\tournament_bundle.json",
+      "sha256": "88124fd638521cce938ef653fecc7392dd8f3e704c57ac92ea06c8eeec0c32b3",
+      "size": 15657721,
+      "mtime": 1794800502.1691983
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\argon\\submission.py",
+      "sha256": "dcddc96e3865311eac6758f6adb478d740708f9461702deca0135f90a5dda908",
+      "size": 50596,
+      "mtime": 1794767121.3942218
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\astra\\submission.py",
+      "sha256": "98d6399c8c9c3c44901b7edd17df993fa1a9041fd30f8657b19ecd2739197a45",
+      "size": 40167,
+      "mtime": 1794793581.2591677
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\carbon\\submission.py",
+      "sha256": "09a1005df223bbb92ac05913a9efac0bb2edfbb8f99319b4e808f3f2f928191d",
+      "size": 87094,
+      "mtime": 1794771924.1115756
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\deepseek\\submission.py",
+      "sha256": "e7dbfd4d21139dddd003cc036b3b498b39f5ce97961d401ddc95b21c5316b53a",
+      "size": 30936,
+      "mtime": 1794776918.1256762
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\doubao\\submission.py",
+      "sha256": "1f6cb92b35c44d89b57f71451cedb6779f85a7df4a27dd0f5f926eaa1dfda1d7",
+      "size": 13044,
+      "mtime": 1794793556.7071576
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\glm\\submission.py",
+      "sha256": "22a62146e23f74e36aa8c74901cfdf4631dbe99415d67cd88c7031d3aac97cbc",
+      "size": 19701,
+      "mtime": 1794777153.6235583
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\hunyuan\\submission.py",
+      "sha256": "363ac007cd14cc7c4a01652e25d0881233cd9c888346bce15499abc66d7d7278",
+      "size": 29956,
+      "mtime": 1794749084.2918663
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\hydrogen\\submission.py",
+      "sha256": "3f932d39f860cd5c52642c3f38a291e9898e17685e382ced57115235ba005076",
+      "size": 51631,
+      "mtime": 1794751477.9722886
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\opus\\submission.py",
+      "sha256": "47b78c89d95d38ee27531e44e27e2d27b46f1db217b4e21ebf7dc8495e28320f",
+      "size": 37338,
+      "mtime": 1794788078.529665
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\qwen\\submission.py",
+      "sha256": "a101ed95f85a15a1ba34eb4d1582b7708247794a326e08863b4ec4842ef1c138",
+      "size": 66921,
+      "mtime": 1794771255.1921654
+    },
+    {
+      "path": "<REPO_ROOT>/submissions\\sol\\submission.py",
+      "sha256": "de93b2e8f068c744204350dcaa8a056d3e482b57a60111b29713e0a238f25849",
+      "size": 41969,
+      "mtime": 1794772974.1768982
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+Created At: 2026-11-20T04:08:30+09:00
+Completed At: 2026-11-20T04:08:33+09:00
+Workflow "Debug sol manual path" completed.
+Output:
+1 MOVE_R (3, 13) 100 False ALIVE []
+2 MOVE_U (3, 12) 100 False ALIVE []
+3 BOMB (3, 12) 100 False ALIVE [{'id': 1000, 'x': 3, 'y': 12, 'timer': 2}]
+4 MOVE_D (3, 13) 100 False ALIVE [{'id': 1000, 'x': 3, 'y': 12, 'timer': 1}]
+5 MOVE_D (3, 14) 100 False ALIVE []
+6 MOVE_U (3, 13) 100 False ALIVE []
+7 MOVE_U (3, 12) 100 False ALIVE []
+8 MOVE_U (3, 11) 100 False ALIVE []
+9 MOVE_R (4, 11) 100 False ALIVE []
+10 BOMB (4, 11) 100 False ALIVE [{'id': 1001, 'x': 4, 'y': 11, 'timer': 2}]
+11 MOVE_L (3, 11) 100 False ALIVE [{'id': 1001, 'x': 4, 'y': 11, 'timer': 1}]
+12 MOVE_L (2, 11) 100 False ALIVE []
+13 WAIT (2, 11) 100 False ALIVE []
+14 MOVE_R (3, 11) 100 False ALIVE []
+15 MOVE_R (4, 11) 100 False ALIVE []
+16 MOVE_D (4, 11) 100 False ALIVE []
+17 MOVE_D (4, 11) 100 False ALIVE []
+18 MOVE_L (3, 11) 100 False ALIVE []
+False 2.650866899988614 ['MOVE_R', 'JUMP_R', 'MOVE_L', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_L', 'WAIT', 'JUMP_R', 'MOVE_U', 'MOVE_U', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_D']

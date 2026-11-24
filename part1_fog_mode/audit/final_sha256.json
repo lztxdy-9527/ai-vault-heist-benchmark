@@ -1,0 +1,18 @@
+{
+  "engine.py": "9fc8460858c0ab448a8731d4da47f5e73f1fc8677bf203d3fe5f5da1261c38aa",
+  "official_maps.py": "18800c2719007d0aed574700beff2efd74095b250bf8cc43b95c5d1e0a354db5",
+  "run_tournament.py": "5353d0da658d9dcbf4e4af6508a667516a55103d7fd9b386aea482acb45609ab",
+  "stage_server.py": "4112d98c10b4dedbb316bfef86af1b42f023c5d61906d364f91fc97207893be6",
+  "test_engine.py": "d7bff6b30af7c974de510072f7710f967b01bab01c07e6c235fed70473e93cbb",
+  "arena_stage.html": "47319f82e2c2b9dfbab4459b7bc49a4e05008d615c64c1d59d89de6884bcdff0",
+  "submission_sandbox.py": "e61ca572ec9f60ff0c02287bd62c01690dc6389116940d7036ea6aa96e65beb6",
+  "submission_worker.py": "cfd1c348431db84db4a99b0000e4690c8f81cedc292f460256b46a636f9d7ab5",
+  "starter_kit\\RULES.md": "c7e6345ff58ac82b47ceef3cdd32d414068591988706faf75f70f10dd964d812",
+  "starter_kit\\golden_vectors.json": "45d625a103f1689ffd0e9a3ba3923c6ad0f6849d6084386a557def2d652c809a",
+  "starter_kit\\submission_template.py": "00c3ba8d44199d38a54ab3c4b5a01342b9312db979d2207344538d01f3f4d55f",
+  "replays\\tournament_bundle.json": "adbcc4b7a4c7b7f53dc83ab402bd2c2e3810053b1c3bdd8a3cb169528e828d21",
+  "replays\\demo_bundle.js": "dff581c0892c20f2b7715b6505c370097a481b6ea564889ac0340de633728449",
+  "WEB_CHAT_ALL_IN_ONE_PROMPT.md": "d6fe3d88d281852069553150ace07660b03d701b59fa09d27f23af2189b73228",
+  "replays/tournament_bundle.js": "dff581c0892c20f2b7715b6505c370097a481b6ea564889ac0340de633728449",
+  "assets/sprites/px_carbon.png": "9b7c061a0f08a4db39e0d93055c8c4f50f5684a5965bf6c57508bc449658ed81"
+}

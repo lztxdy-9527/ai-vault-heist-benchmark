@@ -1,0 +1,752 @@
+我会从指定目录开始，逐份阅读文件，再按其中的题面完成提交并验证。
+
+
+
+
+运行了命令
+rg --files --hidden --no-ignore
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'CONTESTANT_PROMPT.md'
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'submission_template.py'
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'golden_vectors.json'
+
+
+Get-Content -Raw -Encoding utf8 -LiteralPath 'RULES.md'
+
+
+
+
+
+
+
+SOL、CARBON、HYDROGEN、Claude Opus 5.5、DeepSeek、Qwen、Kimi、GLM、混元 HY4、豆包，金库的门我给你们留着。等第三拍灯亮，我倒要看看，谁还站在第一拍选的那块砖上。
+
+
+
+
+运行了命令
+Get-Content -Encoding utf8 -LiteralPath RULES.md | Select-Object -Skip 152 -First 58
+
+
+Get-Content -Encoding utf8 RULES.md | Select-Object -Skip 133 -First 20
+
+
+
+
+
+
+
+魔王图的开局已定为两步逃离交叉火力，后半段另设钥匙和金库谜题。勇者会逐回合更新已见地图，并在规划时把起步格也计入激光暴露轨迹。
+
+
+
+
+运行了命令
+@'
+"""ASTRA / blind vault tournament."""
+from heapq import heappop, heappush
+from time import perf_counter
+
+DIR = {"U": -40, "D": 40, "L": -1, "R": 1}
+NAMES = tuple(DIR)
+DELTA = tuple(DIR.values())
+NEXT = tuple(tuple(y*40+x+d if 0 <= x+(d if abs(d)==1 else 0)<40 and
+                   0 <= y+(d//40 if abs(d)==40 else 0)<26 else -1
+                   for d in DELTA) for y in range(26) for x in range(40))
+WALL = {"W","T_W","LASER_U","LASER_D","LASER_L","LASER_R"}
+IMMUNE = {"T_W","K1","K2","V","PIT","PORTAL_1A","PORTAL_1B","PORTAL_2A","PORTAL_2B"}
+ACTIONS = ("MOVE_U","MOVE_D","MOVE_L","MOVE_R","JUMP_U","JUMP_D","JUMP_L","JUMP_R",
+           "WAIT","BOMB","THROW_U","THROW_D","THROW_L","THROW_R")
+
+
+def build_dungeon():
+    g = [["T_W" if x in (0,39) or y in (0,25) else "EMPTY"
+          for x in range(40)] for y in range(26)]
+    for y in (12,13,14):
+        g[y][4] = "LASER_L"
+    for x in (1,2,3):
+        g[15][x] = "LASER_U"
+        g[11][x] = "W"
+    g[11][1], g[6][12] = "PORTAL_1A","PORTAL_1B"
+    for x,y,name in ((22,5,"K1"),(27,21,"K2")):
+        g[y][x] = name
+        for dx,dy in ((1,0),(-1,0),(0,1),(0,-1)):
+            g[y+dy][x+dx] = "W"
+    for x in range(32,39):
+        for y in range(10,16):
+            if x in (32,38) or y in (10,15):
+                g[y][x] = "T_W"
+    g[13][35],g[13][36] = "PORTAL_2B","V"
+    g[21][10] = "PORTAL_2A"
+    for x,y in ((34,13),(35,12),(35,14)):
+        g[y][x] = "PIT"
+    moves = ["MOVE_L","JUMP_U"]  # portal exit (12,5)
+    def walk(direction,n):
+        moves.extend(["MOVE_"+direction]*n)
+    walk("R",8)  # (20,5)
+    moves.append("BOMB")
+    walk("L",2)
+    walk("R",4)  # K1
+    walk("L",2)
+    walk("D",16)
+    walk("R",5)  # (25,21)
+    moves.append("BOMB")
+    walk("L",2)
+    walk("R",4)  # K2
+    walk("L",2)
+    walk("U",1)
+    walk("L",16)  # (9,20), go around the portal
+    walk("D",1)
+    walk("R",1)
+    return {"grid":g,"taunt":"第三拍灯亮之前，记得回头。","author_solution":moves}
+
+
+def dist(a,b):
+    return abs(a%40-b%40)+abs(a//40-b//40)
+
+
+def high(tile, flip):
+    return tile in WALL or tile == ("B_GATE" if flip else "R_GATE")
+
+
+def reflect(tile,di):
+    if di >= 2:
+        return 0 if tile[-2]=="N" else 1
+    return 3 if tile[-1]=="E" else 2
+
+
+class Board:
+    def __init__(self,s,m):
+        h=s["hero"]
+        self.pos=h["y"]*40+h["x"]
+        self.turn=s["turn"]
+        self.flip=s["gates_flipped"]
+        if "terrain" not in m:
+            m["terrain"]=["T_W" if p%40 in (0,39) or p//40 in (0,25) else "?" for p in range(1040)]
+            m["occ"]={}
+            m["clues"]=[None]*1040
+            m["visits"]={}
+            m["warn"]={}
+        self.t=m["terrain"]
+        self.occ=m["occ"]
+        self.clues=m["clues"]
+        self.visits=m["visits"]
+        self.visits[self.pos]=1+self.visits.get(self.pos,0)
+        self.targets=[v[1]*40+v[0] for v in (s["targets"][k] for k in ("K1","K2","V"))]
+        self.goals=[p for i,p in enumerate(self.targets[:2]) if not h["keys"][i]] or self.targets[2:]
+        for y,row in enumerate(s["visible_mask"]):
+            for x,visible in enumerate(row):
+                if visible:
+                    p=y*40+x
+                    self.t[p]=s["terrain"][y][x]
+                    self.clues[p]=s["clues"][y][x]
+                    o=s["occupant"][y][x]
+                    if o:
+                        self.occ[p]=o
+                    else:
+                        self.occ.pop(p,None)
+        self.portals={t:p for p,t in enumerate(self.t) if t.startswith("PORTAL")}
+        self.lasers=[(p,NAMES.index(t[-1])) for p,t in enumerate(self.t) if t.startswith("LASER")]
+        # Remember lines from unseen cannons; replace information on the next firing sample.
+        self.warn=m["warn"]
+        if self.turn%3==0:
+            for p in list(self.warn):
+                if s["visible_mask"][p//40][p%40]:
+                    del self.warn[p]
+            for w in s["laser_warnings"]:
+                p=w["y"]*40+w["x"]
+                self.warn.setdefault(p,[]).append(w["dir"])
+        self.bombs=tuple((v["y"]*40+v["x"],v["timer"]) for v in s["bombs"])
+        self.initial=(self.pos,h["hp"],h["jumps"],h["throws"],h["bombs"],self.flip,{},self.occ,self.bombs)
+        self.bans=m.setdefault("bans",{})
+        prior=m.get("last")
+        if prior and prior[0]==self.pos and prior[1]<8:
+            self.bans[(self.pos,prior[1])]=self.turn+5
+
+    def pair(self,t):
+        return self.portals.get(t[:-1]+("A" if t[-1]=="B" else "B"))
+
+    def heuristic(self):
+        # Reverse relaxed shortest paths: pass unknown ground, price breaches,
+        # include all known non-local movement so the search can head away from a key.
+        t=self.t
+        rev={}
+        for p,v in enumerate(t):
+            if v.startswith("PORTAL"):
+                q=self.pair(v)
+                if q is not None:
+                    rev.setdefault(q,[]).append((p,0.12))
+            elif v.startswith("SPRING"):
+                di=NAMES.index(v[-1])
+                q=p
+                for k in range(3):
+                    n=NEXT[q][di]
+                    if n<0 or high(t[n],self.flip) or n in self.occ: break
+                    q=n
+                if q!=p: rev.setdefault(q,[]).append((p,0.15))
+        ds=[2000.0]*1040
+        pq=[]
+        for p in self.goals:
+            ds[p]=0
+            heappush(pq,(0,p))
+        while pq:
+            cost,p=heappop(pq)
+            if ds[p]!=cost: continue
+            v=t[p]
+            if v=="T_W": continue
+            w=1.
+            if high(v,self.flip) or self.occ.get(p)=="TNT": w=12
+            elif v=="PIT": w=9
+            elif v=="?": w=1.48
+            elif v=="ICE" or v.startswith("MIRROR"): w=.48
+            for n in NEXT[p]:
+                if n>=0 and cost+w<ds[n] and t[n]!="T_W":
+                    ds[n]=cost+w
+                    heappush(pq,(cost+w,n))
+            for n,w2 in rev.get(p,()):
+                if cost+w2<ds[n]:
+                    ds[n]=cost+w2
+                    heappush(pq,(ds[n],n))
+        return ds
+
+    def simulate(self,node,act,turn):
+        start,hp,jumps,throws,bombs,flip,patch,occ,timers=node
+        pos=start
+        trail={start}
+        armed=set()
+        speculative=False
+        unknown_port=False
+        gain=0
+        oldpatch,oldocc=patch,occ
+        def tile(p):
+            return patch.get(p,self.t[p])
+        def put(p,t):
+            nonlocal patch
+            if patch is oldpatch: patch=dict(patch)
+            patch[p]=t
+        def mutable_occ():
+            nonlocal occ
+            if occ is oldocc: occ=dict(occ)
+        def blocked(p,box=False):
+            return (p<0 or high(tile(p),flip) or p in occ or
+                    (box and (p==start or tile(p) in ("K1","K2","V"))))
+        def move(src,q,di,box):
+            nonlocal hp,flip,speculative,unknown_port,gain
+            passed=0
+            paired=False
+            for tick in range(32):
+                if tile(src)=="CRACK": put(src,"PIT")
+                if box:
+                    mutable_occ()
+                    occ.pop(src,None)
+                    occ[q]="BOX"
+                else:
+                    trail.add(q)
+                v=tile(q)
+                if v=="?": speculative=True
+                if v=="PIT":
+                    if box:
+                        occ.pop(q)
+                        put(q,"EMPTY")
+                    else: hp=0
+                    break
+                if v=="SWITCH": flip=not flip
+                if v=="CHEST":
+                    bad=any(n>=0 and self.clues[n] for n in NEXT[q])
+                    if bad or not box:
+                        if not box:
+                            if bad: hp-=45
+                            elif all(n<0 or self.clues[n] is not None for n in NEXT[q]):
+                                hp=min(100,hp+30)
+                            else: gain+=2
+                        put(q,"EMPTY")
+                if not box and q in self.goals: break
+                if tick==31: break
+                if v.startswith("PORTAL") and not paired:
+                    n=self.pair(v)
+                    if n is None:
+                        unknown_port=True
+                        break
+                    if blocked(n,box): break
+                    passed+=1
+                    paired=True
+                else:
+                    if paired:
+                        paired=False
+                        if passed>=2: break
+                    elif v.startswith("SPRING"):
+                        di=NAMES.index(v[-1])
+                        n=q
+                        for k in range(3):
+                            nxt=NEXT[n][di]
+                            if blocked(nxt,box):
+                                if box and occ.get(nxt)=="TNT": armed.add(nxt)
+                                break
+                            n=nxt
+                        if n==q: break
+                        src,q=q,n
+                        continue
+                    elif v.startswith("MIRROR"):
+                        di=reflect(v,di)
+                    elif v!="ICE": break
+                    n=NEXT[q][di]
+                    if blocked(n,box): break
+                src,q=q,n
+            return q
+        di=act%4
+        if act<8:
+            q=NEXT[pos][di]
+            if act>=4:
+                if not jumps or q<0 or high(tile(q),flip): return None
+                jumps-=1
+                q=NEXT[q][di]
+            elif occ.get(q)=="BOX":
+                n=NEXT[q][di]
+                if blocked(n,True): return None
+                move(q,n,di,True)
+            if blocked(q):
+                if occ is oldocc: return None
+            else: pos=move(pos,q,di,False)
+        elif act==9:
+            if not bombs or any(p==pos for p,_ in timers): return None
+            bombs-=1
+            timers=timers+((pos,3),)
+        elif act>=10:
+            if not throws: return None
+            di=act-10
+            q=pos
+            passed=0
+            hit=False
+            for step in range(38):
+                q=NEXT[q][di]
+                if q<0: break
+                v=tile(q)
+                if high(v,flip) or occ.get(q)=="BOX": break
+                if occ.get(q)=="TNT":
+                    armed.add(q); hit=True; break
+                if v=="SWITCH":
+                    flip=not flip; hit=True; break
+                if v=="CHEST" and any(n>=0 and self.clues[n] for n in NEXT[q]):
+                    put(q,"EMPTY"); hit=True; break
+                if v.startswith("MIRROR"): di=reflect(v,di)
+                elif v.startswith("PORTAL"):
+                    n=self.pair(v)
+                    if n is None or n in occ: break
+                    q=n; passed+=1
+                    if passed>=2 or step==5: break
+                elif step>=5 and v!="ICE": break
+            if not hit: return None
+            throws-=1
+        win=pos in self.goals and self.goals==self.targets[2:]
+        def explode(seeds):
+            nonlocal timers,hp
+            allbomb=dict(timers)
+            sources=set(seeds)
+            todo=list(seeds)
+            cells=set()
+            while todo:
+                p=todo.pop()
+                for y in range(max(0,p//40-1),min(26,p//40+2)):
+                    for x in range(max(0,p%40-1),min(40,p%40+2)):
+                        n=y*40+x
+                        cells.add(n)
+                        if (n in allbomb or occ.get(n)=="TNT") and n not in sources:
+                            sources.add(n); todo.append(n)
+            for p in sources:
+                if abs(p%40-pos%40)<=1 and abs(p//40-pos//40)<=1:
+                    hp-=50 if p in allbomb else 60
+            timers=tuple((p,k) for p,k in timers if p not in sources)
+            for n in cells:
+                if n in occ: mutable_occ(); occ.pop(n)
+                v=tile(n)
+                if v=="CRACK": put(n,"PIT")
+                elif v not in IMMUNE and v not in ("EMPTY","?"): put(n,"EMPTY")
+            if tile(pos)=="PIT": hp=0
+        if not win and hp>0:
+            timers=tuple((p,k-1) for p,k in timers)
+            armed.update(p for p,k in timers if k<=0)
+            if armed: explode(armed)
+            if turn%3==0 and hp>0:
+                hits=set()
+                lit=set()
+                for p,ld in self.lasers:
+                    if not tile(p).startswith("LASER"): continue
+                    q=p
+                    for k in range(10):
+                        q=NEXT[q][ld]
+                        if q<0 or high(tile(q),flip) or occ.get(q)=="BOX": break
+                        if occ.get(q)=="TNT":
+                            lit.add(q); break
+                        if q in trail: hits.add((ld,q%40 if ld<2 else q//40))
+                # Forecast out-of-sight cannons from the last observed firing pattern.
+                if flip==self.flip and patch is oldpatch and not patch and occ is self.occ:
+                    for q in trail:
+                        for name in self.warn.get(q,()):
+                            ld=NAMES.index(name)
+                            hits.add((ld,q%40 if ld<2 else q//40))
+                hp-=50*len(hits)
+                if lit and hp>0: explode(lit)
+        if hp<=0: return None
+        return (pos,hp,jumps,throws,bombs,flip,patch,occ,timers),speculative,unknown_port,gain
+'@ | Set-Content -Encoding utf8 -LiteralPath submission.py
+
+
+@'
+
+def decide_action(state,memory):
+    deadline=perf_counter()+0.25
+    b=Board(state,memory)
+    guide=b.heuristic()
+    turns_left=state["turns_left"]
+    # If the objective is sealed behind unknown topology, route to the nearest
+    # uncharted ground or unpaired portal, even when it lies behind the hero.
+    if guide[b.pos]>=1900:
+        goals=b.goals
+        frontier=[p for p,v in enumerate(b.t) if v=="?" or
+                  (v.startswith("PORTAL") and b.pair(v) is None)]
+        if frontier:
+            b.goals=frontier
+            guide=b.heuristic()
+            b.goals=goals
+    original=b.initial
+    root_h=guide[b.pos]
+    pq=[(0.,0,0.,0,-1,original)]
+    best={}
+    rank=float("inf")
+    answer=8
+    seq=0
+    expanded=0
+    portal_choice=None
+    completed=None
+    has_shot=any(v in ("TNT",) for v in b.occ.values()) or any(
+        v in ("SWITCH","CHEST") for v in b.t)
+    while pq and expanded<650 and perf_counter()<deadline:
+        estimate,_,g,depth,first,node=heappop(pq)
+        p,hp,j,th,bo,flip,patch,occ,timers=node
+        turn=b.turn+depth
+        sig=(p,turn%3,j,th,bo,flip,tuple(sorted(patch.items())),
+             tuple(sorted(occ.items())),timers,hp)
+        if g>=best.get(sig,1e9): continue
+        best[sig]=g
+        if depth:
+            reached=p in b.goals
+            if reached:
+                completed=first
+                break
+            # Compare executable prefixes by progress, including the cost of
+            # turning back out of cul-de-sacs; avoid rewarding a bare WAIT.
+            merit=guide[p]+0.39*g+2.3*min(8,b.visits.get(p,0))
+            if timers: merit+=4
+            if depth==1 and first==8: merit+=6
+            if p==b.pos: merit+=5
+            if b.t[p]=="?": merit-=1.5
+            if merit<rank:
+                rank,answer=merit,first
+        if depth>=min(55,turns_left): continue
+        expanded+=1
+        local=[n for n in NEXT[p] if n>=0]
+        actions=list(range(4))
+        if j: actions.extend((4,5,6,7))
+        if b.lasers or timers or b.warn: actions.append(8)
+        if bo and not timers and any(patch.get(n,b.t[n]) in
+                ("W","R_GATE","B_GATE","LASER_U","LASER_D","LASER_R","LASER_L")
+                or occ.get(n) in ("BOX","TNT") for n in local):
+            actions.append(9)
+        if th and has_shot: actions.extend((10,11,12,13))
+        for act in actions:
+            result=b.simulate(node,act,turn)
+            if result is None: continue
+            new,unknown,portal,caution=result
+            q=new[0]
+            na=act if first<0 else first
+            fee=1.0+max(0,hp-new[1])*.46+caution
+            if act in range(4,8):
+                fee+=1.55 if j>=2 else 2.45
+            if act==9: fee+=4.8
+            if act>=10: fee+=1.8
+            if unknown: fee+=1.1
+            if depth<8 and q!=p:
+                fee+=min(5,b.visits.get(q,0))*.75
+            if depth==0 and b.bans.get((p,act),0)>=turn: fee+=12
+            if portal:
+                # A one-way trip into fog can bypass a sealed region. Commit
+                # only when its approach beats the best currently known route.
+                val=g+fee+max(2.,min(root_h*.40,20.))
+                if portal_choice is None or val<portal_choice[0]:
+                    portal_choice=(val,na)
+                continue
+            ng=g+fee
+            seq+=1
+            heappush(pq,(ng+1.45*guide[q],seq,ng,depth+1,na,new))
+    if completed is not None:
+        answer=completed
+    if portal_choice and (completed is None or portal_choice[0]<g-2):
+        answer=portal_choice[1]
+    memory["last"]=(b.pos,answer)
+    return ACTIONS[answer]
+'@ | Add-Content -Encoding utf8 -LiteralPath submission.py
+python -B -c "import submission as s; from collections import Counter; d=s.build_dungeon(); print(len(d['author_solution']),Counter(t for row in d['grid'][1:-1] for t in row[1:-1]))"
+
+
+@'
+import submission as S
+from time import perf_counter
+import sys
+d=S.build_dungeon()
+def run(g,auth=None,trace=False):
+    world=sum((r[:] for r in g),[])
+    occ={p:v for p,v in enumerate(world) if v in ("TNT","BOX")}
+    for p in occ: world[p]="EMPTY"
+    targets={k:[world.index(k)%40,world.index(k)//40] for k in ("K1","K2","V")}
+    pos=522; hp,j,tr,bb,fl,ts=100,3,3,2,False,()
+    keys=[False,False]; mem={}; peak=0; unknown=['UNKNOWN']*40
+    for turn in range(1,241):
+        h={'x':pos%40,'y':pos//40,'keys':keys[:],'hp':hp,'jumps':j,'throws':tr,'bombs':bb}
+        def state(mask):
+            return dict(turn=turn,turns_left=241-turn,mode="BLIND",hero=h,targets=targets,gates_flipped=fl,visible_mask=[mask[i:i+40] for i in range(0,1040,40)],terrain=[[world[i+x] if mask[i+x] else "UNKNOWN" for x in range(40)] for i in range(0,1040,40)],occupant=[[occ.get(i+x) if mask[i+x] else None for x in range(40)] for i in range(0,1040,40)],clues=[[False]*40 for y in range(26)],laser_warnings=[],bombs=[dict(x=p%40,y=p//40,timer=k) for p,k in ts])
+        full=state([True]*1040); engine=S.Board(full,{})
+        if auth is None:
+            mask=[(q%40-pos%40)**2+(q//40-pos//40)**2<=10 for q in range(1040)]
+            obs=state(mask)
+            t=perf_counter(); a=S.decide_action(obs,mem); peak=max(peak,perf_counter()-t)
+        else: a=auth[turn-1]
+        i=S.ACTIONS.index(a); res=engine.simulate(engine.initial,i,turn)
+        if trace: print(turn,pos%40,pos//40,a,flush=True)
+        if res is None:
+            # For valid test routes a None result indicates death or blocked movement.
+            return ('blocked/dead',turn,a,pos,keys,peak)
+        node=res[0];pos,hp,j,tr,bb,fl,pa,occ,ts=node
+        for q,v in pa.items():world[q]=v
+        if world[pos] in ("K1","K2"):
+            keys[int(world[pos][1])-1]=True;world[pos]="EMPTY"
+        elif world[pos]=="V" and all(keys):return ("win",turn,hp,peak)
+    return ("timeout",pos,keys,peak)
+g=d['grid']
+print('certificate',run(g,d['author_solution']),flush=True)
+for y in range(1,25):
+    for x in range(1,39):
+        if g[y][x] not in ("K1","K2","V"):g[y][x]="EMPTY"
+print("empty",run(g),flush=True)
+print("fortress",run(dungeon:=S.build_dungeon()['grid'],trace='trace' in sys.argv),flush=True)
+'@ | Set-Content -Encoding utf8 -LiteralPath "$env:TEMP\astra_vault_local.py"
+$env:PYTHONPATH=(Get-Location).Path
+python -B "$env:TEMP\astra_vault_local.py" trace
+
+
+Command failed ($f=Get-Content -LiteralPath submission.py -Raw -Encoding utf8
+$f=$f.Replace('g[y][x] = "T_W"','g[y][x] = "W"').Replace('g[13][35],g[13][36]', 'g[13][35],g[14][35]').Replace('g[21][10] = "PORTAL_2A"','g[11][3] = "PORTAL_2A"').Replace('((34,13),(35,12),(35,14))','((34,13),(35,12),(36,13))')
+$f=$f.Replace('    walk("U",1)
+    walk("L",16)  # (9,20), go around the portal
+    walk("D",1)
+    walk("R",1)','    walk("U",11)
+    walk("L",22)  # approach the other entrance from above
+    walk("D",1)')
+Set-Content -Encoding utf8 -LiteralPath submission.py -Value $f
+$env:PYTHONPATH=(Get-Location).Path
+python -B "$env:TEMP\astra_vault_local.py")
+
+
+Get-Content -Encoding utf8 submission.py -TotalCount 75
+
+
+@'
+import submission as s
+from submission_template import TILE_COSTS, VALID_ACTIONS
+from collections import Counter
+from time import perf_counter
+t=perf_counter(); d=s.build_dungeon(); build=perf_counter()-t
+g=d["grid"]; a=d["author_solution"]
+assert len(g)==26 and all(len(r)==40 for r in g)
+assert all(g[y][x]=="T_W" for y in range(26) for x in range(40) if x in (0,39) or y in (0,25))
+assert all(g[y][x]=="EMPTY" for y in (12,13,14) for x in (1,2,3))
+c=Counter(v for row in g[1:-1] for v in row[1:-1]); price=sum(TILE_COSTS[v]*n for v,n in c.items())
+assert price<=3000 and c["LASER_U"]+c["LASER_L"]<=12 and all(c[k]==1 for k in ("K1","K2","V","PORTAL_1A","PORTAL_1B","PORTAL_2A","PORTAL_2B"))
+assert all(v in VALID_ACTIONS for v in a) and 1<=len(a)<=240
+port={v:(x,y) for y,row in enumerate(g) for x,v in enumerate(row) if v.startswith("PORTAL")}
+xy=(2,13); hp=100; fuses=[]; keys=set(); dirs={"U":(0,-1),"D":(0,1),"L":(-1,0),"R":(1,0)}
+jumps,bombs=3,2
+for turn,act in enumerate(a,1):
+    tr={xy}; x,y=xy
+    if act=="BOMB":
+        assert bombs; bombs-=1;fuses.append((x,y,turn+2))
+    else:
+        kind,dr=act.split("_");dx,dy=dirs[dr];k=1+(kind=="JUMP")
+        if k==2:assert jumps; jumps-=1
+        assert all(g[y+n*dy][x+n*dx] not in ("W","T_W") and not g[y+n*dy][x+n*dx].startswith("LASER") for n in range(1,k+1))
+        x+=k*dx;y+=k*dy;tr.add((x,y));v=g[y][x]
+        if v in port:
+            x,y=port[v[:-1]+("A" if v[-1]=="B" else "B")];tr.add((x,y));x+=dx;y+=dy;tr.add((x,y))
+        xy=x,y;v=g[y][x];assert v!="PIT"
+        if v in ("K1","K2"):keys.add(v)
+        if v=="V" and len(keys)==2:
+            assert turn==len(a);print("CERTIFIED",turn,hp,price,build);break
+    for bx,by,k in fuses:
+        if k==turn:
+            if max(abs(bx-x),abs(by-y))<=1:hp-=50
+            for yy in range(by-1,by+2):
+                for xx in range(bx-1,bx+2):
+                    if g[yy][xx]=="W":g[yy][xx]="EMPTY"
+    if turn%3==0:
+        for yy,row in enumerate(g):
+            for xx,v in enumerate(row):
+                if v.startswith("LASER"):
+                    dx,dy=dirs[v[-1]];ray=set()
+                    for n in range(1,11):
+                        q=(xx+n*dx,yy+n*dy);t=g[q[1]][q[0]]
+                        if t in ("W","T_W") or t.startswith("LASER"):break
+                        ray.add(q)
+                    if ray&tr:hp-=50
+    assert hp>0
+else: raise Exception("no win")
+'@ | python -B -
+
+
+
+
+
+
+
+独立回放已确认：地图造价 885G，作者在第 83 个动作首次进入金库，剩余 100 HP。现在核对勇者对弹簧提前落坑、传送出口、飞石折转和同步激光的判断，并检查单步耗时。
+
+
+
+
+编辑了文件运行了命令
+@'
+import submission as s,json,ast
+from time import perf_counter
+vs=json.load(open("golden_vectors.json",encoding="utf-8-sig"))["vectors"]
+def sample(v):
+    g=[["T_W" if x in (0,39) or y in (0,25) else "EMPTY" for x in range(40)] for y in range(26)]
+    oc=[[None]*40 for _ in g];h=dict(x=2,y=13,hp=100,keys=[False,False],throws=3,jumps=3,bombs=2)
+    h.update(v.get("hero",{}))
+    for k,o in v.get("local_tiles",{}).items():
+        x,y=ast.literal_eval(k);g[y][x]=o["terrain"];oc[y][x]=o["occupant"]
+    return dict(turn=v.get("turn",1),hero=h,turns_left=241-v.get("turn",1),terrain=g,occupant=oc,bombs=[],laser_warnings=[],clues=[[False]*40 for _ in g],visible_mask=[[True]*40 for _ in g],targets=dict(K1=[20,5],K2=[20,20],V=[35,13]),gates_flipped=False)
+for i in (1,2,3,4,6,7):
+    v=vs[i];b=s.Board(sample(v["initial"]),{});r=b.simulate(b.initial,s.ACTIONS.index(v["action"]),b.turn)
+    if i in (1,2):assert r is None
+    elif i==3:assert r[0][0]==420
+    elif i==4:assert r[0][1]==50 and r[0][-1][0][1]==2 and r[0][6][368]=="EMPTY"
+    elif i==6:assert r[0][3]==2 and r[0][5]
+    elif i==7:assert r[0][:2]==(555,20)
+    print(v["id"],"ok")
+# 32 adjacent ICE landings terminate before PIT; PIT at the 32nd is fatal.
+for pit,alive in ((35,True),(34,False)):
+    st=sample({});st['terrain'][13][3:pit]=["ICE"]*(pit-3);st['terrain'][13][pit]="PIT"
+    b=s.Board(st,{});r=b.simulate(b.initial,3,1)
+    assert bool(r)==alive
+    if alive:assert r[0][0]==554
+# first-turn samples with all official tiles and mixed inventory
+import random
+rng=random.Random(192)
+tiles=["EMPTY"]*10+["W","T_W","SPRING_R","MIRROR_SW","PIT","ICE","B_GATE","R_GATE","SWITCH","CHEST","LASER_D","CRACK"]
+dur=[]
+for z in range(35):
+    st=sample({}); st['turn']=1+z
+    for y in range(2,24):
+        for x in range(4,38):st['terrain'][y][x]=rng.choice(tiles)
+    t=perf_counter();ans=s.decide_action(st,{});dur.append(perf_counter()-t)
+    assert ans in s.ACTIONS
+print("cutoff OK; mixed states",len(dur),"max seconds",max(dur))
+'@ | python -B -
+
+
+已编辑 submission.py+8-4
+
+
+
+
+已编辑 submission.py+46-1
+
+
+
+
+@'
+import submission as s
+from time import perf_counter
+import json
+from submission_template import TILE_COSTS
+v=json.load(open("golden_vectors.json",encoding="utf-8-sig"))["vectors"][0]
+assert sum(TILE_COSTS[p["tile"]] for p in v["Placed_inner_tiles"])==v["expected"]["spent_gold"]
+def race(kind):
+ g=s.build_dungeon()["grid"]
+ if kind!="fortress":
+    g=[["T_W" if y in (0,25) or x in (0,39) else "EMPTY" for x in range(40)] for y in range(26)]
+    for x,y,t in ((17,5,"K1"),(27,20,"K2"),(36,13,"V")):g[y][x]=t
+ if kind=="detour":
+    for y in range(1,23):g[y][13]="T_W"
+ if kind=="gate":
+    for y in range(1,25):g[y][14]="T_W"
+    g[13][14]="R_GATE";g[18][9]="SWITCH"
+ if kind=="hazards":
+    for y in range(3,23):g[y][12]="PIT"
+    g[14][12]="ICE";g[5][22]="LASER_D";g[10][22]="TNT"
+ if kind=="fuse":
+    for y in range(1,25):g[y][12]="T_W"
+    g[13][12]="W"
+ world=sum(g,[]);targets={k:[world.index(k)%40,world.index(k)//40] for k in ("K1","K2","V")}
+ occ={p:v for p,v in enumerate(world) if v in ("TNT","BOX")}
+ for p in occ:world[p]="EMPTY"
+ pos=522; hp,j,tr,bb,flip,ts=100,3,3,2,False,(); keys=[False,False]; mem={};peak=0
+ for turn in range(1,241):
+    x0,y0=pos%40,pos//40
+    h=dict(x=x0,y=y0,hp=hp,jumps=j,throws=tr,bombs=bb,keys=keys[:])
+    def obs(mask):
+        return dict(turn=turn,turns_left=241-turn,mode="BLIND",hero=h,targets=targets,gates_flipped=flip,visible_mask=[mask[i:i+40] for i in range(0,1040,40)],terrain=[[world[i+x] if mask[i+x] else "UNKNOWN" for x in range(40)] for i in range(0,1040,40)],occupant=[[occ.get(i+x) if mask[i+x] else None for x in range(40)] for i in range(0,1040,40)],clues=[[False]*40 for y in range(26)],laser_warnings=[],bombs=[dict(x=p%40,y=p//40,timer=k) for p,k in ts])
+    full=obs([True]*1040); engine=s.Board(full,{})
+    mask=[False]*1040
+    def op(dx,dy):
+        x=x0+dx;y=y0+dy
+        return 0<=x<40 and 0<=y<26 and mask[y*40+x] and not s.high(world[y*40+x],flip)
+    for n in range(4):
+        for dx in range(-n,n+1):
+            for dy in range(-n,n+1):
+                x=x0+dx;y=y0+dy
+                if max(abs(dx),abs(dy))!=n or dx*dx+dy*dy>10 or not (0<=x<40 and 0<=y<26):continue
+                sx=(dx>0)-(dx<0); sy=(dy>0)-(dy<0)
+                if n<=1: ok=True
+                elif not dx or not dy:ok=op(dx-sx,dy-sy)
+                elif abs(dx)==abs(dy):ok=op(sx,sy) and (op(sx,0) or op(0,sy))
+                elif abs(dx)>abs(dy):ok=op(dx-sx,dy) or op(dx-sx,dy-sy)
+                else:ok=op(dx,dy-sy) or op(dx-sx,dy-sy)
+                mask[y*40+x]=ok
+    st=obs(mask)
+    if turn%3==0:
+        for p,di in engine.lasers:
+            q=p
+            for z in range(10):
+                q=s.NEXT[q][di]
+                if q<0 or s.high(world[q],flip) or q in occ:break
+                if mask[q]: st["laser_warnings"].append(dict(x=q%40,y=q//40,dir=s.NAMES[di]))
+    t=perf_counter(); act=s.decide_action(st,mem);peak=max(peak,perf_counter()-t)
+    r=engine.simulate(engine.initial,s.ACTIONS.index(act),turn)
+    if not r:return (kind,"dead/blocked",turn,act,keys,peak)
+    (pos,hp,j,tr,bb,flip,patch,occ,ts)=r[0]
+    for p,v in patch.items():world[p]=v
+    if world[pos] in ("K1","K2"):
+        keys[int(world[pos][1])-1]=True;world[pos]="EMPTY"
+    elif world[pos]=="V" and all(keys):return (kind,"win",turn,hp,peak)
+ return (kind,"timeout",keys,peak)
+for k in ("empty","detour","gate","hazards","fuse","fortress"):print(race(k),flush=True)
+'@ | python -B -
+
+
+
+
+
+
+
+
+
+
+已交卷：[submission.py](<REPO_ROOT>/exam_rooms/astra/submission.py)。已实现 build_dungeon() 和仅面向 BLIND 模式的 decide_action()，全程离线完成。
+
+魔王图造价 885G，金库留存 2115G。独立回放确认，作者路线在第 83 步首次集齐双钥进入金库，剩余 100 HP。
+
+勇者在本地盲测中通过了空场、绕墙、红蓝门、激光深渊和炸墙五张测试图；挑战自己的魔王图时，第 2 步跳进了错误的传送门，落坑阵亡。35 个混合机关状态的单步压力测试中，最慢约 0.108 秒，低于 0.5 秒限额。以上均为本地验证，正式成绩以裁判回放为准。

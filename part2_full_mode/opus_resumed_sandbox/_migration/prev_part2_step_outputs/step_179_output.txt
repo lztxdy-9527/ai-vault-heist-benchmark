@@ -1,0 +1,28 @@
+Created At: 2026-11-19T20:59:09+09:00
+Completed At: 2026-11-19T20:59:12+09:00
+Workflow "Profile planner search" completed.
+Output:
+h root 82
+         995131 function calls in 1.503 seconds
+
+   Ordered by: cumulative time
+   List reduced from 43 to 14 due to restriction <14>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.104    0.104    1.503    1.503 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:589(search)
+    23052    0.077    0.000    1.111    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:669(_step)
+    26229    0.032    0.000    0.997    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:474(full_turn)
+    26229    0.038    0.000    0.800    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:448(phases)
+     6252    0.486    0.000    0.528    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:346(explode)
+     6516    0.240    0.000    0.249    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:555(h)
+    13693    0.142    0.000    0.235    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:421(beams)
+    26229    0.063    0.000    0.165    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:243(act)
+   224175    0.077    0.000    0.081    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:96(wall)
+     9656    0.038    0.000    0.056    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:282(throw)
+   228562    0.050    0.000    0.050    0.000 {method 'add' of 'set' objects}
+    92352    0.030    0.000    0.030    0.000 {method 'get' of 'dict' objects}
+    32744    0.024    0.000    0.024    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:661(_load)
+    12707    0.020    0.000    0.024    0.000 part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py:131(chain)
+
+
+

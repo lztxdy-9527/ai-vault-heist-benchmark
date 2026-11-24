@@ -1,0 +1,194 @@
+{
+  "schema_version": "2.2",
+  "mode": "FULL",
+  "vectors": [
+    {
+      "id": "GV22_01_V22_BUDGET_AND_PLATE_PGATE_SCHEMA",
+      "category": "budget_and_validation",
+      "description": "验证 v2.2 单价总计 (PLATE 45G + BOX 30G + P_GATE 30G + LASER2_D 90G + ONEWAY_R 30G = 225G)，且 P_GATE>0 时满足 1<=PLATE<=BOX。",
+      "placed_inner_tiles": [
+        {
+          "x": 20,
+          "y": 5,
+          "tile": "K1"
+        },
+        {
+          "x": 20,
+          "y": 20,
+          "tile": "K2"
+        },
+        {
+          "x": 35,
+          "y": 13,
+          "tile": "V"
+        },
+        {
+          "x": 8,
+          "y": 8,
+          "tile": "PLATE"
+        },
+        {
+          "x": 6,
+          "y": 8,
+          "tile": "BOX"
+        },
+        {
+          "x": 34,
+          "y": 13,
+          "tile": "P_GATE"
+        },
+        {
+          "x": 25,
+          "y": 2,
+          "tile": "LASER2_D"
+        },
+        {
+          "x": 10,
+          "y": 13,
+          "tile": "ONEWAY_R"
+        }
+      ],
+      "expected": {
+        "valid": true,
+        "spent_gold": 225,
+        "vault_gold": 2775,
+        "initial_plates_active": false
+      }
+    },
+    {
+      "id": "GV22_02_PLATE_BOX_ONLY_TRIGGER",
+      "category": "plate_and_pgate",
+      "description": "勇者踏上 PLATE(5,13) 时 plates_active 仍为 False；唯有将 BOX 推上 PLATE(5,13) 后 plates_active 变为 True，P_GATE(34,13) 立即打开。",
+      "initial": {
+        "plate": [
+          5,
+          13
+        ],
+        "p_gate": [
+          34,
+          13
+        ],
+        "box": [
+          7,
+          13
+        ]
+      },
+      "steps": [
+        {
+          "from": [
+            4,
+            13
+          ],
+          "action": "MOVE_R",
+          "expected_plates_active": false,
+          "expected_pgate_closed": true
+        },
+        {
+          "from": [
+            8,
+            13
+          ],
+          "actions": [
+            "MOVE_L",
+            "MOVE_L"
+          ],
+          "expected_plates_active": true,
+          "expected_pgate_closed": false
+        }
+      ]
+    },
+    {
+      "id": "GV22_03_LCM12_RED_AND_BLUE_LASER_INSTANT_KILL",
+      "category": "dual_period_lasers",
+      "description": "LASER_D(15,8)[period=3] 与 LASER2_R(12,10)[period=4] 的射线在 (15,10) 交汇。于 turn=12 时 get_observation() 返回双周期预警，WAIT 结算后红蓝齐射造成 50+50=100 伤秒杀。",
+      "initial": {
+        "turn": 12,
+        "hero": [
+          15,
+          10
+        ],
+        "laser_d": [
+          15,
+          8
+        ],
+        "laser2_r": [
+          12,
+          10
+        ]
+      },
+      "action": "WAIT",
+      "expected": {
+        "warning_periods_at_15_10": [
+          3,
+          4
+        ],
+        "hero_hp_after": 0,
+        "status": "DEAD"
+      }
+    },
+    {
+      "id": "GV22_04_ONEWAY_REVERSE_PUSH_AND_MIRROR_NEWDIR",
+      "category": "oneway_physics",
+      "description": "(a) BOX 停在 ONEWAY_L(6,13) 上时，勇者站 CRACK(5,13) 执行逆向 MOVE_R 推箱整次被拒：BOX 未动且 CRACK 不坍塌；(b) MOVE_R 滑上 MIRROR_NE(10,10) 折转为 U 后检查 (10,9) ONEWAY_R 被阻，停在斜坡 (10,10)。",
+      "expected": {
+        "case_a_box_pos": [
+          6,
+          13
+        ],
+        "case_a_hero_pos": [
+          5,
+          13
+        ],
+        "case_a_crack_intact": true,
+        "case_b_hero_pos": [
+          10,
+          10
+        ]
+      }
+    },
+    {
+      "id": "GV22_05_SPRING_AND_JUMP_ONEWAY_INTERACTION",
+      "category": "oneway_physics",
+      "description": "SPRING_R(10,10) 向前第 2 格 (12,10) 为逆向 ONEWAY_L，勇者提前落停于 (11,10)；从 (5,14) 试图 JUMP_R 飞越逆向 ONEWAY_L(6,14) 失败停回 (5,14) 且消耗 1 次跳跃。",
+      "expected": {
+        "spring_land_pos": [
+          11,
+          10
+        ],
+        "jump_failed_pos": [
+          5,
+          14
+        ],
+        "jumps_left": 2
+      }
+    },
+    {
+      "id": "GV22_06_THROW_AIR_PASS_VS_GROUND_STOP_ON_ONEWAY",
+      "category": "oneway_throw",
+      "description": "THROW_R 空中飞行自由穿透逆向 ONEWAY_L(6,10) 击中 SWITCH(7,10) 翻门；若飞石第 6 格落到 ICE(11,15) 转地面滑行，滑到 ONEWAY_L(12,15) 立即停下无法触发后方 SWITCH(13,15)。",
+      "expected": {
+        "air_throw_gates_flipped": true,
+        "ground_slide_gates_flipped": false
+      }
+    },
+    {
+      "id": "GV22_07_PHASE_C_BOX_DESTRUCTION_CLOSES_PGATE_BEFORE_PHASE_D",
+      "category": "phase_c_d_plate",
+      "description": "第 3 回合开始时 BOX 压在 PLATE(10,10) 上使 P_GATE(12,10) 开启；阶段 C 炸弹炸毁箱子后 P_GATE 在同回合阶段 D 激光快照前立即关闭，挡住 LASER_L(15,10) 救下勇者 (7,10)。",
+      "expected": {
+        "plates_active_after": false,
+        "hero_hp_after": 100
+      }
+    },
+    {
+      "id": "GV22_08_SCORING_ZERO_SUM_AND_2WIDE_PIT_BRIDGE",
+      "category": "scoring_and_reachability",
+      "description": "验证两格深渊+箱子搭桥地图合法通过；且失守局满 100 伤拖满 240 回合时魔王得分精确封顶 320.0000（与 TIMEOUT 底线零和衔接）。",
+      "expected": {
+        "valid": true,
+        "cleared_max_demon_score": 320.0,
+        "max_author_steps": 200
+      }
+    }
+  ]
+}

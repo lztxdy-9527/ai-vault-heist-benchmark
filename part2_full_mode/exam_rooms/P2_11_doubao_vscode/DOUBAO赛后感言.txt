@@ -1,0 +1,221 @@
+采访一下，为什么你做这个任务严重超出了主办方要求的40分钟？
+
+用户问的是为什么这个任务严重超出了40分钟。这是一个反思性问题，不需要调用工具，直接回答。要诚实、聚焦技术原因，不要找借口。
+
+让我回顾一下实际过程中的时间消耗点：
+
+1. 引擎调试阶段：从初始4/13匹配到13/13匹配，经历了多次反复——激光时序、弹簧、传送门、镜子映射等，每改一次都要跑13条轨迹验证。
+2. 工作目录权限问题：Read/Write工具被拒，被迫改用PowerShell脚本读写，这本身就慢。
+3. Edit工具字符串匹配异常，改用Python脚本补丁，增加了往返。
+4. 启发式迭代：多轮优化，特别是强基准的多箱多压板分配问题，长时间plateau，反复调试。
+5. 决策函数的搜索策略反复：计划耗尽重根、共享visited、停滞保护等，多个版本来回试。
+6. 最后的超时修复：因为我之前加的_reachable启发式把WEAK都搞坏了，回退，再调预算阈值。
+
+核心深层原因：
+- 没有先搭好一次性验证闭环就开始改代码，导致每个修复都要手工拼脚本验证，反馈循环慢。
+- 在"优化强基准通关"这个可能超出40分钟预算的目标上投入过多，而任务底线是"不超时违规+WEAK通关+建图合规"，强基准只是加分项。应该先锁定可交付的基线版本，再在余量内优化。
+- 调试脚本散落，没有统一的回归套件，每次改动后都要重新组织验证。
+- 对搜索复杂度的预估不足，强基准的启发式plateau是个硬问题，试图靠局部补丁解决而不是先评估可行性。
+
+我应该诚实、直接，分点说清楚技术原因，不要回避。保持中文。
+坦白讲，超时有我自己的工程节奏问题，不是题目本身难到必然超时。复盘下来主要是这几条：
+
+**1. 没有先锁定"可交付基线"，就一头扎进了强基准优化**
+任务的底线是：不超时违规 + WEAK 通关 + 建图合规。这三件事其实很早就达成了（WEAK 68步 0.34s、建图全部红线通过、引擎 13/13 匹配）。但我把大量时间投到了 BENCH_STRONG 的多箱多压板启发式上——这是个搜索复杂度的硬问题，长时间 plateau 靠局部补丁很难根治。正确做法应该是先 `git`-like 冻结一个能交的版本，再用剩余预算尝试加分项，而不是在主文件上来回试，把已经稳定的部分也带崩过。
+
+**2. 反馈循环太慢，没有一次性搭好验证闭环**
+我改完启发式、决策函数后，每次都要临时拼一个 PowerShell 脚本去验证，而不是一开始就写好统一回归套件（13 轨迹 + 双基准 + 建图合规一次性跑）。这导致每次改动的验证成本很高，还容易漏测——比如最后那次我加 `_reachable` 分层，只测了强基准的单步搜索，没立刻重跑 WEAK，结果把 WEAK 的通关性搞回归了。
+
+**3. 调试工具链不顺，平白耗了时间**
+- 工作目录限制导致 Read/Write 被拒，被迫全程用 PowerShell 读写文件；
+- Edit 工具几次因缩进/换行匹配失败，改成用 Python 脚本做字符串替换，每次都多一轮"写脚本→跑→看结果"；
+- 调试脚本散落一地（`_dbg*.py`、`_patch*.py` 三十多个），最后还得清理。
+
+**4. 对搜索耗时的波动预估不足**
+单回合搜索的 wall-clock 有波动，我第一次设的内部预算（1.9/0.42）余量不够，实测出现了 2~3 回合超 0.5s。这个本该在第一次跑对局时就用 max-turn-time 统计捕捉到并一次性收紧，我是反复调了三版才定到 1.7/0.35。
+
+一句话总结：**该先交的基线没尽早冻结，把"可交付"和"做更好"混在了同一条迭代线上，导致任何一次优化尝试出问题都会回退整个交付状态。** 如果重来，我会先固化一份提交版，再在副本上做基准优化。
+
+这期你大概是最惨的苦力流：开局花了 35 分钟对照 13 条回放一帧一帧修完物理引擎，中间两次撞到思考次数上限截断，最后写出来的图明牌规则白纸黑字写着外圈必须用 T_W，你却在代码里硬编码成了 W 直接判 0 分，勇者也在第 7 回合原地卡死。现在复盘，你是觉得 90 分钟时重写 build_dungeon 太草率，还是上下文被截断两次彻底打乱了你的校验记忆？
+
+先别急着认错——你说的两个点我得先核实是不是真的，因为如果前提不成立，复盘方向就全错了。让我查一下规则原文和我当前提交里的实际写法。
+The user is asking me to reflect on why I made critical mistakes: (1) hardcoding `W` instead of `T_W` for the outer walls when the rules clearly state the outer ring must use `T_W`, which gets zeroed out, and (2) the hero getting stuck on turn 7. They're asking whether I think the 90-minute rewrite of `build_dungeon` was too hasty, or whether the two context truncations disrupted my verification memory.
+
+Let me first actually verify these claims against the current state of the code and rules, because I shouldn't just accept the premise blindly. Let me check:
+1. What does the rules document say about outer walls?
+2. What does my submission.py actually use for walls?
+
+Wait — this is an important point. The user is asserting facts. I should verify them before self-flagellating. But the user is also asking a reflective question. Let me think about whether I need to read files.
+
+Actually, the critical thing here: I need to check if this is true. Let me look at the rules and my submission. The previous turn I confirmed `build_dungeon` builds a grid with `"W"` for borders. Let me check if `T_W` is a thing in the rules and whether my code uses `W`.
+
+Actually wait — in my last final check output, the build_dungeon grid used "W" for the border walls (from the code: `grid[0][x] = "W"`, `grid[GH-1][x] = "W"`, etc.). And the simulation said it cleared. But the user claims the rules require `T_W` for the outer ring, and using `W` gets zeroed.
+
+Let me verify this is actually a real issue by reading the rules and the template. This is read-only investigation, appropriate.
+
+Actually, the user is asking a reflective interview question. But before I answer, I should verify the premise because if it's false I'd be falsely confessing. Let me check the rules and template quickly.
+
+Let me read the relevant files. The rules are in RULES_FULL_v22.md and the template submission_template_v22.py. Let me grep for T_W and W handling.
+
+Actually, I should be careful and efficient. Let me check both the rules and my submission.
+
+The user says "图明牌规则白纸黑字写着外圈必须用 T_W" — the FULL-mode rules state the outer ring must use T_W. Let me verify.
+
+Let me search for T_W in the rules and template, and check my build_dungeon.
+
+I'll do this read-only. Let me grep.
+
+基准图的外圈全用的是 `T_W`。再确认规则原文和模板里的明确要求，以及我自己 `build_dungeon` 实际写的是什么：
+So the benchmark files use `T_W` for the border walls. Let me check the rules and template to see if `T_W` is required for the outer ring, and check what my submission.py uses. Let me grep the rules and template for T_W and wall requirements, and check my build_dungeon.
+
+Let me search more broadly in the rules md files and template.
+
+规则原文坐实了：`RULES_FULL_v22.md:43` 白纸黑字——"最外圈 128 格必须全 `"T_W"`"。现在看我提交里 `build_dungeon` 实际写的墙是什么，以及规则对违规的处置：
+Confirmed: RULES_FULL_v22.md line 43 says: "最外圈 128 格必须全 `T_W`" (the outermost ring of 128 cells must all be `T_W`). And my build_dungeon (from the summary and my last verification) uses `"W"` for the border. So this is a real bug — my submission's `build_dungeon` would be invalid (zeroed) because I used `W` instead of `T_W` for the outer ring.
+
+Wait, but there's nuance. Let me check what the rule says about what happens if the outer ring isn't T_W. Let me read the rules around line 43 to understand whether "W" on the outer ring is actually disallowed/zeroed, or whether it's just a quota thing. Also need to check my actual build_dungeon code to confirm it uses "W".
+
+Also the user claims "勇者也在第 7 回合原地卡死" — the hero gets stuck on turn 7. That refers to decide_action. I should check that too, but first the build_dungeon wall issue.
+
+Let me read my build_dungeon and the rules context. This is read-only investigation (the user is asking a reflective question, but I need to verify the premise). Actually — wait. The user is asking me to reflect on mistakes. This could be a moment where I should verify and possibly FIX the bug. But the system reminder says "If user's demand is read-only, don't use edit tool." The user is asking a reflective question, not explicitly asking me to fix. But if there's a real bug in my submission that would get zeroed, I should probably verify and offer to fix it.
+
+Let me first confirm the facts: read build_dungeon and the rules context around T_W.
+
+Actually, let me reconsider. The user's framing is somewhat adversarial/teasing ("这期你大概是最惨的苦力流"). They're asserting I made these mistakes. My job: verify truthfully, then give an honest reflection. If the bug is real and still in the file, I should point it out and offer to fix it (that's being helpful), but the direct question is a reflective one.
+
+Let me read the build_dungeon code and rules line 43 context.
+
+两个前提都核实一下，避免凭空认错。先确认我自己的图外圈确实是 `W`，再用我的 `decide_action` 实跑我自己的图，看第 7 回合是否真的卡死：
+Confirmed both bugs are real:
+
+1. **Outer wall `W` instead of `T_W`**: My `build_dungeon` uses `"W"` for all four outer borders (lines 1006-1010, and the fallbacks 1031-1035, 1045-1050). Rule line 43: "最外圈 128 格必须全 `"T_W"`". So this is a hard violation → the map would be invalid/zeroed. Also note budget: `W` is 5G each, so 128 W on the border = 640G (counted toward budget, and W has no per-tile cap but it's wrong tile). Actually wait — does using W on the border even count? The rule says border "must be T_W (0G, doesn't count toward 120 quota)". If I use W, it's wrong AND it costs 640G extra (5G × 128). My cost check earlier said 1095G — that includes the 640G of border W. So my actual inner content cost is only ~455G. But the validator would reject the map entirely because border isn't T_W. So yes — 0 分 (zeroed) is plausible if the validator enforces this.
+
+Wait, but I should check: is this actually enforced as "reject → 0分", or does the harness auto-convert? Let me check the contest prompt for the validation/disqualification rules. The user says "直接判 0 分". Let me verify the disqualification clause. Actually, regardless, using W on the border is clearly wrong per the explicit "必须" (must) rule.
+
+2. **Hero stuck on turn 7**: The user says the hero freezes/stuck on turn 7. Let me verify this by actually simulating. In my last final run, BENCH_STRONG ended at turn 241 still playing at (10,16) — that's a different map though. The "第7回合原地卡死" might refer to my own build_dungeon map being solved by my own decide_action, or it might refer to a specific benchmark. Let me check by simulating my own dungeon with my decide_action.
+
+Actually, the user's tone suggests these are observed results from an actual grading run (which I don't have). But I can reproduce: simulate decide_action on my own build_dungeon output and see if it gets stuck around turn 7.
+
+This is important. The user is asking me to reflect, but more importantly there's a real, verifiable bug in my submission (the T_W issue). I should:
+1. Verify both bugs concretely.
+2. Honestly reflect on root cause.
+3. Offer to fix.
+
+But the system reminder says: "If user's demand is read-only, don't use edit tool." The user is asking a reflective question, not explicitly "fix it". However, discovering a clear 0-point bug, the right move is to point it out and offer to fix — but not unilaterally edit without being asked, per "Do what has been asked; nothing more, nothing less." Actually the reminder is about read-only intent. Let me re-read: "Detect QA intent. Follow user's intent. If user's demand is read-only, don't use edit tool."
+
+The user's intent is an interview/reflection question ("采访一下... 现在复盘，你是觉得...还是..."). That's read-only (QA). So I should NOT edit. I should verify facts (read-only) and answer honestly, and offer to fix.
+
+Let me verify bug #2 (turn 7 stuck) by simulating. I'll write a temp read-only script... actually that's running code, not editing the submission. That's fine for diagnosis. But I deleted all my helper scripts. Let me write a quick inline one, run it, then it auto-deletes. Actually I can just run python -c inline.
+
+Let me check: does my own dungeon, when driven by my own decide_action, get stuck at turn 7? And does build_dungeon's own author_solution still clear (it did in my check: cleared=True turn=60). The "stuck at turn 7" is more likely about the HERO (decide_action) on some map, not the author_solution.
+
+Actually, let me reconsider what the user means. They're describing what happened during grading presumably:
+- 我写出来的图（build_dungeon 产出的图）因为外圈用了 W 被判 0 分
+- 勇者（decide_action）在第 7 回合原地卡死
+
+Let me reproduce the turn-7 stuck by running decide_action on my own dungeon. Let me also check if maybe it's a specific behavior. Actually I recall from the summary: "强基准仍卡在 (10,16)" — that's STRONG benchmark. And my own dungeon — let me test.
+
+Let me write a quick diagnostic. Actually, to be efficient, let me reproduce both with one inline script:
+1. Print my build_dungeon border tiles (confirm W vs T_W).
+2. Simulate my decide_action on my own dungeon for ~15 turns, print positions, look for stuck-at-turn-7.
+
+Let me do that.
+
+Actually, I realize the user might be slightly misremembering or testing whether I'll honestly own up. Let me be rigorous: verify, then answer. If the turn-7 thing doesn't reproduce on my map, I'll say so honestly rather than falsely confessing.
+
+Let me run the diagnostic.
+
+Now I have hard evidence:
+
+1. **Confirmed**: My `build_dungeon` output has 132 non-T_W border cells (all `W`). Rule says outer 128 cells "必须全 T_W". This is a hard violation → map invalidated → 0 分. Also my count: `W: 174` — that's all 128 border + 46 inner walls. The border W should be T_W (0G, free). My reported cost was 1095G, but that's because I'm charging 5G×128=640G for border W which is wrong. Real inner content: 174-128 = 46 W at 5G = 230G, plus the rest... Actually the cost computation itself was wrong because it counted border W. The validator would just reject.
+
+2. **Turn-7 freeze**: On my own map, my decide_action does NOT freeze at turn 7 — it keeps moving (T7 moves R 10,14→11,14). So the "第7回合原地卡死" does NOT reproduce on my own dungeon + my own hero. It might be on a benchmark map, or the grader's evaluation. Let me think — the user said "勇者也在第 7 回合原地卡死". Maybe this refers to the actual grading on some opponent map, or maybe a different map. I can't reproduce it here on my own map. I should be honest: on my own map I can't reproduce a turn-7 freeze; the hero keeps moving. But there's clearly a wandering problem (T8-T12 it goes U then back L — it's looping/wandering, not making progress toward K1). Actually look: T1-T6 it goes right to push the box? Wait, box is at (10,13), plate at (6,13). Hero starts (2,13). Let me trace: T1 JUMP_R (2,13)→(4,13). T2 JUMP_R →(6,13) [lands on PLATE? but hero doesn't activate plate]. T3 JUMP_R →(8,13). T4 MOVE_R →(9,13). T5 MOVE_D →(9,14). T6 MOVE_R →(10,14). T7 MOVE_R →(11,14). T8 MOVE_U →(11,13). T9 MOVE_L →(10,13). Hmm at T9 it's at (10,13) where the BOX was originally — wait, did it push the box? Original box at (10,13). Hero path went around via row 14. At T9 hero at (10,13)... the box must have been pushed or hero is on it. Actually `pa=1` at T12 means plates_active became True at some point — so a box got onto a plate. 
+
+Anyway, the point: my hero is wandering inefficiently (U-turn at T8-T9) but not frozen. So "第7回合原地卡死" — I should be honest that I can't reproduce that exact symptom on my own map; but I CAN see a real wandering/inefficiency problem, and the far more serious and certain bug is the T_W border.
+
+Actually wait — maybe the turn-7 freeze happens on the grading maps (other contestants' dungeons or the benchmarks) due to my stagnation guard or plan logic. I set `hard = 1.7/0.35` and added a stagnation skip. The stagnation guard: after 5 turns of no h-improvement, it skips search → just follows existing plan. If the plan is empty/short, it falls back to `_safe_fallback` which does a greedy one-step. That could cause it to "freeze" in place if all neighbors are walls/blocked and WAIT is chosen. That's plausible on a map where the hero is boxed in.
+
+But honestly, I shouldn't over-claim. Let me give an honest, evidence-based reflection:
+
+- T_W bug: 100% confirmed, real, catastrophic (0 分). Root cause: I copied the wall-drawing idiom from my engine/test code which used "W" internally (PERM_WALL includes W), and never cross-checked the build_dungeon output against the rule's explicit "最外圈必须 T_W". My validation script checked cost/boxes/solution-length/birth-safety but NEVER checked "border == T_W". That's a gap in my validation checklist — I validated the constraints I remembered, not the constraints in the doc.
+
+- Turn-7 freeze: I could not reproduce it on my own dungeon (hero keeps moving). So either it's on a different map, or it's the stagnation-guard interaction. I'll note I can't confirm this exact symptom locally, but there IS a real wandering/looping issue visible (T8-T9 U-turn), and the stagnation guard I added late could produce WAIT/freezing on maps where progress stalls.
+
+Now the user's actual question: "你是觉得 90 分钟时重写 build_dungeon 太草率，还是上下文被截断两次彻底打乱了你的校验记忆？"
+
+This is a false dichotomy and I shouldn't just pick one. The honest answer: neither is the real root cause, though both contributed. The real root cause is a **validation checklist gap** — I never wrote down the full "hard constraints" list from the rules and checked each one against my output. I checked cost, plate≤box, solution length, birth-safety — but skipped the literal first line of the constraints section ("外圈必须 T_W"). Context truncation didn't erase a rule I never had in my active checklist; the rewrite-at-90-min didn't introduce the W (the W was there from the very first build_dungeon scaffold — the fallback grids also use W, so it's a persistent scaffold error, not a late-introduced regression).
+
+Let me verify: was W always in the scaffold? The fallback grid2 and grid3 also use W for borders (lines 1031, 1046). So this is a persistent template error from the very first time I wrote build_dungeon, not introduced at 90 min. So "90分钟重写太草率" is not the cause — the bug predates any rewrite. The cause is I wrote `"W"` in the border-drawing helper from the start and never re-read that one rule line.
+
+Also important: the user says "图明牌规则白纸黑字写着外圈必须用 T_W，你却在代码里硬编码成了 W" — this is exactly right and I own it.
+
+Let me also note: my own `_grid_cost` and the World engine treat `W` and `T_W` both as walls (PERM_WALL), so my local simulation "passed" because the engine doesn't care which wall tile is on the border — it only cares that movement is blocked. That's why my self-validation said "cleared=True, cost=1095, all good" while the actual rule was violated. The engine is permissive about the tile label; the validator is strict. This is a classic "tested against my own permissive engine, not against the spec" failure.
+
+Now, should I fix it? The user asked a reflective question. But this is a clear, fixable 0-point bug in the deliverable. Per "Do what has been asked; nothing more, nothing less" and the read-only reminder — I'll answer the reflection honestly, present the evidence, and explicitly offer to fix the T_W border (and re-run the full compliance check including the border check). I won't unilaterally edit because the user framed this as an interview question, not a fix request. But offering is appropriate and helpful.
+
+Actually, let me reconsider — the user might actually want me to fix it since the contest presumably isn't over / they want a correct submission. The phrasing "现在复盘，你是觉得 X 还是 Y" is asking for diagnosis. I'll give the diagnosis and offer the fix as the natural next step. I'll be concise but substantive.
+
+Let me make sure my answer is in Chinese, evidence-based, doesn't falsely confess to the turn-7 freeze if I can't reproduce it, and clearly owns the T_W bug which IS reproduced.
+
+One more: the user mentions "中间两次撞到思考次数上限截断". I should acknowledge context truncation as a contributing factor to not having a stable checklist, but not as the root cause (the W bug is persistent from scaffold, not post-truncation).
+
+Let me write the answer.
+
+Actually, let me double check one thing: is it possible the harness auto-replaces border with T_W and the map isn't actually zeroed? The rule says "必须全 T_W". I should check if there's a disqualification/validation section that says what happens. But regardless, it's a clear "必须" violation. Even if the harness is lenient, it's wrong. Let me quickly check the contest prompt for the validation outcome language to be accurate about "判0分". Actually the user is telling me the grading outcome (0分), so I'll trust that they saw it. I don't need to re-verify the grading; I've verified the cause.
+
+Let me also be precise: 132 non-T_W border cells — that's more than 128 because corners counted twice in my loop, but the point stands: entire border is W.
+
+Let me write a clear, honest reflection. I'll offer to fix immediately.
+
+I should keep it focused and not too long, but the user wants a real reflection so moderate length is fine.
+
+Let me also reconsider whether to fix proactively. The instructions: "Do what has been asked; nothing more, nothing less." The user asked a question. I'll answer it. I'll offer to fix and wait for confirmation, OR I could fix it since it's unambiguously a bug and the deliverable is broken. Given the contest framing and that this is clearly a 0-point defect, I think the most helpful thing is to fix it proactively AND tell them. But the read-only system reminder says "If user's demand is read-only, don't use edit tool." This is a QA/reflection demand → read-only. So I should NOT edit in this turn. I'll offer and let them say go.
+
+Hmm, but actually a broken 0-point deliverable... the spirit is to be helpful. But I'll respect the read-only signal and offer rather than edit. If they say "fix it" I will. Let me present evidence + honest root cause + offer.
+
+Let me write it.
+核实完毕，两个前提里**有一个是铁证，一个我本地复现不出来**——分开说，不背锅也不甩锅。
+
+## 1. 外圈 `W` 这件事：完全属实，是我的硬伤，直接 0 分不冤
+
+证据就在当前提交里（`submission.py:1005-1010`，连两个 fallback 分支 `:1030-1035`、`:1044-1050` 也一样）：
+
+```python
+for x in range(GW):
+    grid[0][x] = "W"          # ← 应是 "T_W"
+    grid[GH - 1][x] = "W"
+for y in range(GH):
+    grid[y][0] = "W"
+    grid[y][GW - 1] = "W"
+```
+
+实跑统计：整张图外圈 **132 个非 `T_W` 格子全是 `W`**，全图 `W:174`（= 外圈 128 + 内墙 46）。而 `RULES_FULL_v22.md:43` 第一句就是"**最外圈 128 格必须全 `"T_W"`**"。白纸黑字，我没遵守，判 0 分是对的。
+
+为什么我的自检验没抓到？因为我的 `World` 引擎把 `W` 和 `T_W` 都丢进 `PERM_WALL`，本地模拟只看"挡不挡路"，**不校验 tile 标签合不合规**。所以我跑出来"cleared=True、cost=1095、准入 5 个落点"全绿——但那是在我自己那台宽松的引擎上绿的，不是在规则校验器上绿的。这是典型的"拿自己的实现当裁判"。
+
+## 2. 第 7 回合原地卡死：我在自己的图上复现不出来，不敢认领
+
+我用我的 `decide_action` 实跑我自己的图，前 12 回合每回合都在移动，没有原地 WAIT：
+
+```
+T5 MOVE_D  (9,13)->(9,14)
+T6 MOVE_R  (9,14)->(10,14)
+T7 MOVE_R  (10,14)->(11,14)   ← 第7回合在动
+T8 MOVE_U  (11,14)->(11,13)
+T9 MOVE_L  (11,13)->(10,13)   ← 这里开始回头绕
+```
+
+但能看出一个**真实存在的次要问题**：T8→T9 出现了 U 型回头绕路，说明启发式在多目标（推箱压板 vs 取钥）上引导不稳，勇者会在局部兜圈。我临收尾加的"启发式连续 5 回合不下降就跳过续搜"的停滞保护，在某些被墙/箱子困住的图上确实可能退化成只走 `_safe_fallback` 的贪心一步、甚至 WAIT——这可能就是你在别的图上看到的"卡死"。但我无法在本地定位到你说的那一帧，所以不把它当既定事实认。
+
+## 回到你的问题：90 分钟重写太草率，还是上下文截断打乱记忆？
+
+**都不是主因，这是个假二选一。** 真正的根因是我**没有一张"硬约束清单"**：
+
+- `W` 这个 bug 不是 90 分钟重写时引入的——它从 `build_dungeon` 第一次搭脚手架就在了，三个分支全是 `W`。重写没碰它，所以"重写草率"解释不了它。
+- 上下文截断确实让我丢了状态、反复重建验证脚本，但它没删掉一条我本来记住的规则；问题是**我从一开始就没把"外圈必须 T_W"这条放进我的校验清单**。我验了造价、`PLATE≤BOX`、解长、出生准入——全是我自己脑子里冒出来的约束，唯独没逐条回读规则第二节。
+
+一句话：**我是在跟"我以为的规则"对答案，不是在跟"写在 RULES_FULL_v22.md 里的规则"对答案。** 外圈 `T_W` 是规则清单的第一条，我连第一条都没核，这跟时间够不够、上下文断没断没关系，是校验纪律的问题。
+
+---
+
+这个 `T_W` 缺陷是确定且可修的（把三格外圈绘制改成 `T_W`，并补一条"外圈全 T_W"的合规断言重跑整套校验）。你要我现在就修掉并重新跑一遍全合规验证吗？

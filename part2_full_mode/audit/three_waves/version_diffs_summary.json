@@ -1,0 +1,7186 @@
+{
+  "astra": {
+    "versions": {
+      "astra_21m": {
+        "valid_demon": true,
+        "spent_gold": 2250,
+        "author_steps": 193,
+        "hero_clears": 13,
+        "hero_total": 18,
+        "hero_avg_score": 691.51,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "CLEARED",
+            "turns": 87,
+            "hp": 100,
+            "keys": 2,
+            "score": 919.69,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 62,
+            "hp": 100,
+            "keys": 2,
+            "score": 931.55,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 80,
+            "hp": 100,
+            "keys": 2,
+            "score": 929.92,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 66,
+            "hp": 100,
+            "keys": 2,
+            "score": 938.21,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 111,
+            "hp": 100,
+            "keys": 2,
+            "score": 845.8,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 156,
+            "hp": 50,
+            "keys": 2,
+            "score": 740.72,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "CLEARED",
+            "turns": 72,
+            "hp": 100,
+            "keys": 2,
+            "score": 918.94,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 390.48,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 200.0,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 920.59,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 95,
+            "hp": 100,
+            "keys": 2,
+            "score": 890.5,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 136,
+            "hp": 50,
+            "keys": 2,
+            "score": 772.94,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 84,
+            "hp": 100,
+            "keys": 2,
+            "score": 889.91,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 160,
+            "hp": 100,
+            "keys": 2,
+            "score": 801.04,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "sol_17m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 478.67
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 480.28
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 480.28
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 501.25
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 486.73
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 501.25
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 498.02
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 486.73
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 480.28
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 535.12
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 486.73
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.44
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 491.57
+          }
+        }
+      },
+      "astra_39m": {
+        "valid_demon": true,
+        "spent_gold": 2290,
+        "author_steps": 189,
+        "hero_clears": 13,
+        "hero_total": 18,
+        "hero_avg_score": 701.31,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "CLEARED",
+            "turns": 87,
+            "hp": 100,
+            "keys": 2,
+            "score": 919.69,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 62,
+            "hp": 100,
+            "keys": 2,
+            "score": 931.55,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 80,
+            "hp": 100,
+            "keys": 2,
+            "score": 929.92,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 66,
+            "hp": 100,
+            "keys": 2,
+            "score": 938.21,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 111,
+            "hp": 100,
+            "keys": 2,
+            "score": 845.8,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 156,
+            "hp": 50,
+            "keys": 2,
+            "score": 740.72,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "CLEARED",
+            "turns": 72,
+            "hp": 100,
+            "keys": 2,
+            "score": 918.94,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 390.48,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 362.5,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 920.59,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 95,
+            "hp": 100,
+            "keys": 2,
+            "score": 890.5,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 136,
+            "hp": 50,
+            "keys": 2,
+            "score": 772.94,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 84,
+            "hp": 100,
+            "keys": 2,
+            "score": 889.91,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 138,
+            "hp": 100,
+            "keys": 2,
+            "score": 814.85,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "sol_17m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 478.62
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 478.62
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 499.58
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 485.07
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 499.58
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 496.36
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 485.07
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 478.62
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 475.39
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 485.07
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 473.78
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 489.91
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 200.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 362.5,
+          "resp": 0
+        },
+        "score_delta": 162.5
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "CLEARED",
+          "turns": 160,
+          "hp": 100,
+          "keys": 2,
+          "score": 801.04,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 138,
+          "hp": 100,
+          "keys": 2,
+          "score": 814.85,
+          "resp": 0
+        },
+        "score_delta": 13.81
+      }
+    ]
+  },
+  "sol": {
+    "versions": {
+      "sol_17m": {
+        "valid_demon": true,
+        "spent_gold": 2610,
+        "author_steps": 192,
+        "hero_clears": 11,
+        "hero_total": 18,
+        "hero_avg_score": 612.08,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "CLEARED",
+            "turns": 103,
+            "hp": 100,
+            "keys": 2,
+            "score": 909.65,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 65,
+            "hp": 100,
+            "keys": 2,
+            "score": 929.67,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 82,
+            "hp": 100,
+            "keys": 2,
+            "score": 928.66,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 72,
+            "hp": 100,
+            "keys": 2,
+            "score": 934.44,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 126,
+            "hp": 100,
+            "keys": 2,
+            "score": 836.38,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 90.32,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 150,
+            "hp": 50,
+            "keys": 2,
+            "score": 744.49,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 185.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 150.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DEAD",
+            "turns": 87,
+            "hp": 0,
+            "keys": 2,
+            "score": 587.1,
+            "resp": 6
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 121,
+            "hp": 100,
+            "keys": 2,
+            "score": 874.19,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 142,
+            "hp": 100,
+            "keys": 2,
+            "score": 844.17,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 88,
+            "hp": 100,
+            "keys": 2,
+            "score": 887.4,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 62,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.72,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 235,
+            "hp": 50,
+            "keys": 2,
+            "score": 678.97,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 156,
+            "keys": 2,
+            "demon_score": 182.28
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 156,
+            "keys": 2,
+            "demon_score": 182.28
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 150,
+            "keys": 2,
+            "demon_score": 178.51
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 150,
+            "keys": 2,
+            "demon_score": 178.51
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 394.58
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 341.51
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 436.25
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 436.25
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 486.25
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 398.75
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 486.25
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.42
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.42
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 459.17
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 459.17
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 442.5
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 442.5
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 486.25
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 394.58
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.42
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 480.0
+          }
+        }
+      },
+      "sol_39m": {
+        "valid_demon": true,
+        "spent_gold": 2610,
+        "author_steps": 192,
+        "hero_clears": 10,
+        "hero_total": 18,
+        "hero_avg_score": 580.43,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "CLEARED",
+            "turns": 74,
+            "hp": 100,
+            "keys": 2,
+            "score": 927.85,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 65,
+            "hp": 100,
+            "keys": 2,
+            "score": 929.67,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 82,
+            "hp": 100,
+            "keys": 2,
+            "score": 928.66,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 72,
+            "hp": 100,
+            "keys": 2,
+            "score": 934.44,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 126,
+            "hp": 100,
+            "keys": 2,
+            "score": 836.38,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 150,
+            "hp": 50,
+            "keys": 2,
+            "score": 744.49,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 1,
+            "score": 242.11,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 150.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DEAD",
+            "turns": 165,
+            "hp": 0,
+            "keys": 2,
+            "score": 587.1,
+            "resp": 14
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 116,
+            "hp": 100,
+            "keys": 2,
+            "score": 877.32,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 181.82,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 88,
+            "hp": 100,
+            "keys": 2,
+            "score": 887.4,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 235,
+            "hp": 50,
+            "keys": 2,
+            "score": 678.97,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 156,
+            "keys": 2,
+            "demon_score": 182.28
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 156,
+            "keys": 2,
+            "demon_score": 182.28
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 150,
+            "keys": 2,
+            "demon_score": 178.51
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 150,
+            "keys": 2,
+            "demon_score": 178.51
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 394.58
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 341.51
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 436.25
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 436.25
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 486.25
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 398.75
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 486.25
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.42
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.42
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 459.17
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 459.17
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 442.5
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 442.5
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 486.25
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 394.58
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.42
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 480.0
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "CLEARED",
+          "turns": 103,
+          "hp": 100,
+          "keys": 2,
+          "score": 909.65,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 74,
+          "hp": 100,
+          "keys": 2,
+          "score": 927.85,
+          "resp": 0
+        },
+        "score_delta": 18.2
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 90.32,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "score_delta": 12.91
+      },
+      {
+        "map": "neon_40m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 185.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 1,
+          "score": 242.11,
+          "resp": 0
+        },
+        "score_delta": 57.11
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "DEAD",
+          "turns": 87,
+          "hp": 0,
+          "keys": 2,
+          "score": 587.1,
+          "resp": 6
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 165,
+          "hp": 0,
+          "keys": 2,
+          "score": 587.1,
+          "resp": 14
+        },
+        "score_delta": 0.0
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "CLEARED",
+          "turns": 121,
+          "hp": 100,
+          "keys": 2,
+          "score": 874.19,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 116,
+          "hp": 100,
+          "keys": 2,
+          "score": 877.32,
+          "resp": 0
+        },
+        "score_delta": 3.13
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "CLEARED",
+          "turns": 142,
+          "hp": 100,
+          "keys": 2,
+          "score": 844.17,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 181.82,
+          "resp": 0
+        },
+        "score_delta": -662.35
+      },
+      {
+        "map": "qwen_39m",
+        "old": {
+          "status": "CLEARED",
+          "turns": 62,
+          "hp": 100,
+          "keys": 2,
+          "score": 961.72,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 60,
+          "hp": 100,
+          "keys": 2,
+          "score": 962.97,
+          "resp": 0
+        },
+        "score_delta": 1.25
+      }
+    ]
+  },
+  "neon": {
+    "versions": {
+      "neon_40m": {
+        "valid_demon": true,
+        "spent_gold": 1095,
+        "author_steps": 76,
+        "hero_clears": 2,
+        "hero_total": 18,
+        "hero_avg_score": 350.3,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 200.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 581.82,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 400.0,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 64.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 366.67,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "CLEARED",
+            "turns": 106,
+            "hp": 100,
+            "keys": 2,
+            "score": 897.6,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "DEAD",
+            "turns": 44,
+            "hp": 0,
+            "keys": 0,
+            "score": 100.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 41.03,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 2,
+            "score": 587.1,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 252.94,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "DEAD",
+            "turns": 32,
+            "hp": 0,
+            "keys": 1,
+            "score": 200.0,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 566.67,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 62,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.72,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 318.52,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 72,
+            "keys": 2,
+            "demon_score": 44.56
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 72,
+            "keys": 2,
+            "demon_score": 44.56
+          },
+          "sol_17m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 503.12
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 538.85
+          },
+          "neon_40m": {
+            "status": "CLEARED",
+            "turns": 106,
+            "keys": 2,
+            "demon_score": 65.9
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 100,
+            "keys": 2,
+            "demon_score": 62.13
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 100,
+            "keys": 2,
+            "demon_score": 62.13
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 100,
+            "keys": 2,
+            "demon_score": 62.13
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 549.38
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 503.12
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 549.38
+          },
+          "deepseek_79m": {
+            "status": "DEAD",
+            "turns": 6,
+            "keys": 0,
+            "demon_score": 898.75
+          },
+          "deepseek_95m": {
+            "status": "DEAD",
+            "turns": 6,
+            "keys": 0,
+            "demon_score": 898.75
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 549.38
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 549.38
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 501.88
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 501.88
+          },
+          "qwen_39m": {
+            "status": "DEAD",
+            "turns": 6,
+            "keys": 0,
+            "demon_score": 898.75
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 454.64
+          },
+          "doubao_35m": {
+            "status": "DEAD",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 898.75
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 549.38
+          }
+        }
+      },
+      "neon_54m": {
+        "valid_demon": true,
+        "spent_gold": 2890,
+        "author_steps": 183,
+        "hero_clears": 11,
+        "hero_total": 18,
+        "hero_avg_score": 670.16,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "CLEARED",
+            "turns": 82,
+            "hp": 100,
+            "keys": 2,
+            "score": 922.83,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 62,
+            "hp": 100,
+            "keys": 2,
+            "score": 931.55,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 41,
+            "hp": 100,
+            "keys": 2,
+            "score": 954.4,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 80,
+            "hp": 100,
+            "keys": 2,
+            "score": 929.42,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 119,
+            "hp": 100,
+            "keys": 2,
+            "score": 840.77,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 83.87,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 83.87,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 578.95,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "CLEARED",
+            "turns": 100,
+            "hp": 100,
+            "keys": 2,
+            "score": 901.37,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 169,
+            "hp": 100,
+            "keys": 2,
+            "score": 796.89,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "DEAD",
+            "turns": 108,
+            "hp": -50,
+            "keys": 1,
+            "score": 200.0,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DEAD",
+            "turns": 123,
+            "hp": 0,
+            "keys": 2,
+            "score": 586.67,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "hp": 100,
+            "keys": 2,
+            "score": 874.81,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 10,
+            "keys": 2,
+            "score": 546.15,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 103,
+            "hp": 100,
+            "keys": 2,
+            "score": 877.98,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.09,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 154,
+            "hp": 100,
+            "keys": 2,
+            "score": 804.81,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "sol_17m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 430.83
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 474.58
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 449.58
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 474.58
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.21
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 451.15
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.21
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.21
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 438.65
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 427.71
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 440.21
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 373.33,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 82,
+          "hp": 100,
+          "keys": 2,
+          "score": 922.83,
+          "resp": 0
+        },
+        "score_delta": 549.5
+      },
+      {
+        "map": "OFFICIAL_FULL_02",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 200.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 62,
+          "hp": 100,
+          "keys": 2,
+          "score": 931.55,
+          "resp": 0
+        },
+        "score_delta": 731.55
+      },
+      {
+        "map": "OFFICIAL_FULL_03",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 581.82,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 41,
+          "hp": 100,
+          "keys": 2,
+          "score": 954.4,
+          "resp": 0
+        },
+        "score_delta": 372.58
+      },
+      {
+        "map": "benchmark_weak",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 400.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 80,
+          "hp": 100,
+          "keys": 2,
+          "score": 929.42,
+          "resp": 0
+        },
+        "score_delta": 529.42
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 64.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 119,
+          "hp": 100,
+          "keys": 2,
+          "score": 840.77,
+          "resp": 0
+        },
+        "score_delta": 776.77
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 83.87,
+          "resp": 0
+        },
+        "score_delta": -19.36
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 83.87,
+          "resp": 0
+        },
+        "score_delta": -19.36
+      },
+      {
+        "map": "sol_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 366.67,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 578.95,
+          "resp": 0
+        },
+        "score_delta": 212.28
+      },
+      {
+        "map": "neon_40m",
+        "old": {
+          "status": "CLEARED",
+          "turns": 106,
+          "hp": 100,
+          "keys": 2,
+          "score": 897.6,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 100,
+          "hp": 100,
+          "keys": 2,
+          "score": 901.37,
+          "resp": 0
+        },
+        "score_delta": 3.77
+      },
+      {
+        "map": "carbon_108m",
+        "old": {
+          "status": "DEAD",
+          "turns": 44,
+          "hp": 0,
+          "keys": 0,
+          "score": 100.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 169,
+          "hp": 100,
+          "keys": 2,
+          "score": 796.89,
+          "resp": 0
+        },
+        "score_delta": 696.89
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 41.03,
+          "resp": 0
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 108,
+          "hp": -50,
+          "keys": 1,
+          "score": 200.0,
+          "resp": 0
+        },
+        "score_delta": 158.97
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 2,
+          "score": 587.1,
+          "resp": 0
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 123,
+          "hp": 0,
+          "keys": 2,
+          "score": 586.67,
+          "resp": 0
+        },
+        "score_delta": -0.43
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 252.94,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 120,
+          "hp": 100,
+          "keys": 2,
+          "score": 874.81,
+          "resp": 0
+        },
+        "score_delta": 621.87
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "DEAD",
+          "turns": 32,
+          "hp": 0,
+          "keys": 1,
+          "score": 200.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 10,
+          "keys": 2,
+          "score": 546.15,
+          "resp": 0
+        },
+        "score_delta": 346.15
+      },
+      {
+        "map": "hunyuan_63m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 566.67,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 103,
+          "hp": 100,
+          "keys": 2,
+          "score": 877.98,
+          "resp": 0
+        },
+        "score_delta": 311.31
+      },
+      {
+        "map": "qwen_39m",
+        "old": {
+          "status": "CLEARED",
+          "turns": 62,
+          "hp": 100,
+          "keys": 2,
+          "score": 961.72,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 63,
+          "hp": 100,
+          "keys": 2,
+          "score": 961.09,
+          "resp": 0
+        },
+        "score_delta": -0.63
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 318.52,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 154,
+          "hp": 100,
+          "keys": 2,
+          "score": 804.81,
+          "resp": 0
+        },
+        "score_delta": 486.29
+      }
+    ]
+  },
+  "opus": {
+    "versions": {
+      "opus_40m": {
+        "valid_demon": false,
+        "spent_gold": 0,
+        "author_steps": 0,
+        "hero_clears": 0,
+        "hero_total": 18,
+        "hero_avg_score": 0.0,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          }
+        },
+        "defense_details": {}
+      },
+      "opus_quota": {
+        "valid_demon": true,
+        "spent_gold": 1215,
+        "author_steps": 143,
+        "hero_clears": 7,
+        "hero_total": 18,
+        "hero_avg_score": 500.17,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 573.91,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 64,
+            "hp": 100,
+            "keys": 2,
+            "score": 930.29,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 87,
+            "hp": 100,
+            "keys": 2,
+            "score": 925.53,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 72,
+            "hp": 100,
+            "keys": 2,
+            "score": 934.44,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 504.35,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 58.06,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 58.06,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 350.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 185.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 100.0,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 295.24,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 143,
+            "hp": 100,
+            "keys": 2,
+            "score": 870.38,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 105,
+            "hp": 100,
+            "keys": 2,
+            "score": 884.23,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 172.73,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 98,
+            "hp": 100,
+            "keys": 2,
+            "score": 881.12,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 62,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.72,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 133.33,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "sol_17m": {
+            "status": "DEAD",
+            "turns": 87,
+            "keys": 2,
+            "demon_score": 751.98
+          },
+          "sol_39m": {
+            "status": "DEAD",
+            "turns": 165,
+            "keys": 2,
+            "demon_score": 751.98
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 447.6
+          },
+          "neon_54m": {
+            "status": "DEAD",
+            "turns": 123,
+            "keys": 2,
+            "demon_score": 752.08
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 111,
+            "keys": 2,
+            "demon_score": 69.04
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 116,
+            "keys": 2,
+            "demon_score": 72.18
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 544.38
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 143,
+            "keys": 2,
+            "demon_score": 89.12
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 544.38
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 431.04
+          },
+          "deepseek_95m": {
+            "status": "DEAD",
+            "turns": 88,
+            "keys": 2,
+            "demon_score": 752.08
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 500.9
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 500.9
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 397.6
+          },
+          "hunyuan_63m": {
+            "status": "DEAD",
+            "turns": 189,
+            "keys": 2,
+            "demon_score": 652.08
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 524.81
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 409.38
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 449.64
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 539.11
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 573.91,
+          "resp": 0
+        },
+        "score_delta": 573.91
+      },
+      {
+        "map": "OFFICIAL_FULL_02",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 64,
+          "hp": 100,
+          "keys": 2,
+          "score": 930.29,
+          "resp": 0
+        },
+        "score_delta": 930.29
+      },
+      {
+        "map": "OFFICIAL_FULL_03",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 87,
+          "hp": 100,
+          "keys": 2,
+          "score": 925.53,
+          "resp": 0
+        },
+        "score_delta": 925.53
+      },
+      {
+        "map": "benchmark_weak",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 72,
+          "hp": 100,
+          "keys": 2,
+          "score": 934.44,
+          "resp": 0
+        },
+        "score_delta": 934.44
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 504.35,
+          "resp": 0
+        },
+        "score_delta": 504.35
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 58.06,
+          "resp": 0
+        },
+        "score_delta": 58.06
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 58.06,
+          "resp": 0
+        },
+        "score_delta": 58.06
+      },
+      {
+        "map": "sol_39m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 350.0,
+          "resp": 0
+        },
+        "score_delta": 350.0
+      },
+      {
+        "map": "neon_40m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 185.0,
+          "resp": 0
+        },
+        "score_delta": 185.0
+      },
+      {
+        "map": "neon_54m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 100.0,
+          "resp": 0
+        },
+        "score_delta": 100.0
+      },
+      {
+        "map": "carbon_108m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 295.24,
+          "resp": 0
+        },
+        "score_delta": 295.24
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 184.62,
+          "resp": 0
+        },
+        "score_delta": 184.62
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 143,
+          "hp": 100,
+          "keys": 2,
+          "score": 870.38,
+          "resp": 0
+        },
+        "score_delta": 870.38
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 105,
+          "hp": 100,
+          "keys": 2,
+          "score": 884.23,
+          "resp": 0
+        },
+        "score_delta": 884.23
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 172.73,
+          "resp": 0
+        },
+        "score_delta": 172.73
+      },
+      {
+        "map": "hunyuan_63m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 98,
+          "hp": 100,
+          "keys": 2,
+          "score": 881.12,
+          "resp": 0
+        },
+        "score_delta": 881.12
+      },
+      {
+        "map": "qwen_39m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 62,
+          "hp": 100,
+          "keys": 2,
+          "score": 961.72,
+          "resp": 0
+        },
+        "score_delta": 961.72
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 133.33,
+          "resp": 0
+        },
+        "score_delta": 133.33
+      }
+    ]
+  },
+  "deepseek": {
+    "versions": {
+      "deepseek_14m": {
+        "valid_demon": false,
+        "spent_gold": 0,
+        "author_steps": 0,
+        "hero_clears": 0,
+        "hero_total": 18,
+        "hero_avg_score": 0.0,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "DQ",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          }
+        },
+        "defense_details": {}
+      },
+      "deepseek_79m": {
+        "valid_demon": true,
+        "spent_gold": 1515,
+        "author_steps": 120,
+        "hero_clears": 4,
+        "hero_total": 18,
+        "hero_avg_score": 371.95,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 61,
+            "hp": 100,
+            "keys": 2,
+            "score": 932.18,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 96,
+            "hp": 100,
+            "keys": 2,
+            "score": 919.38,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 128.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 183.33,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "DEAD",
+            "turns": 6,
+            "hp": 0,
+            "keys": 0,
+            "score": 40.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 180.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 453.33,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 341.18,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 181.82,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 175,
+            "hp": 100,
+            "keys": 2,
+            "score": 832.79,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 214.81,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 95,
+            "keys": 2,
+            "demon_score": 59.0
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 95,
+            "keys": 2,
+            "demon_score": 59.0
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 121,
+            "keys": 2,
+            "demon_score": 75.31
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 116,
+            "keys": 2,
+            "demon_score": 72.18
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 468.64
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "keys": 2,
+            "demon_score": 74.69
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "keys": 2,
+            "demon_score": 74.69
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "keys": 2,
+            "demon_score": 74.69
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 531.88
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 105,
+            "keys": 2,
+            "demon_score": 65.27
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 531.88
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 446.58
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 446.58
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 526.88
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 148,
+            "keys": 2,
+            "demon_score": 92.26
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 468.64
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 98,
+            "keys": 2,
+            "demon_score": 60.88
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 511.88
+          },
+          "qwen_105m": {
+            "status": "DEAD",
+            "turns": 48,
+            "keys": 1,
+            "demon_score": 798.75
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 467.17
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 468.64
+          }
+        }
+      },
+      "deepseek_95m": {
+        "valid_demon": true,
+        "spent_gold": 1515,
+        "author_steps": 120,
+        "hero_clears": 4,
+        "hero_total": 18,
+        "hero_avg_score": 408.41,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 61,
+            "hp": 100,
+            "keys": 2,
+            "score": 932.18,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 92,
+            "hp": 100,
+            "keys": 2,
+            "score": 921.89,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 507.69,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 183.33,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "DEAD",
+            "turns": 6,
+            "hp": 0,
+            "keys": 0,
+            "score": 40.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 180.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DEAD",
+            "turns": 88,
+            "hp": 0,
+            "keys": 2,
+            "score": 586.67,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 341.18,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 181.82,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 175,
+            "hp": 100,
+            "keys": 2,
+            "score": 832.79,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 355.56,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 95,
+            "keys": 2,
+            "demon_score": 59.0
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 95,
+            "keys": 2,
+            "demon_score": 59.0
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 121,
+            "keys": 2,
+            "demon_score": 75.31
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 116,
+            "keys": 2,
+            "demon_score": 72.18
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 468.64
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "keys": 2,
+            "demon_score": 74.69
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "keys": 2,
+            "demon_score": 74.69
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 120,
+            "keys": 2,
+            "demon_score": 74.69
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 531.88
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 105,
+            "keys": 2,
+            "demon_score": 65.27
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 531.88
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 446.58
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 446.58
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 526.88
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 148,
+            "keys": 2,
+            "demon_score": 92.26
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 468.64
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 98,
+            "keys": 2,
+            "demon_score": 60.88
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 511.88
+          },
+          "qwen_105m": {
+            "status": "DEAD",
+            "turns": 48,
+            "keys": 1,
+            "demon_score": 798.75
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 467.17
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 468.64
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 373.33,
+          "resp": 0
+        },
+        "score_delta": 373.33
+      },
+      {
+        "map": "OFFICIAL_FULL_02",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 61,
+          "hp": 100,
+          "keys": 2,
+          "score": 932.18,
+          "resp": 0
+        },
+        "score_delta": 932.18
+      },
+      {
+        "map": "OFFICIAL_FULL_03",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 373.33,
+          "resp": 0
+        },
+        "score_delta": 373.33
+      },
+      {
+        "map": "benchmark_weak",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 92,
+          "hp": 100,
+          "keys": 2,
+          "score": 921.89,
+          "resp": 0
+        },
+        "score_delta": 921.89
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 507.69,
+          "resp": 0
+        },
+        "score_delta": 507.69
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "score_delta": 103.23
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "score_delta": 103.23
+      },
+      {
+        "map": "sol_39m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 183.33,
+          "resp": 0
+        },
+        "score_delta": 183.33
+      },
+      {
+        "map": "neon_40m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 6,
+          "hp": 0,
+          "keys": 0,
+          "score": 40.0,
+          "resp": 0
+        },
+        "score_delta": 40.0
+      },
+      {
+        "map": "neon_54m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 187.5,
+          "resp": 0
+        },
+        "score_delta": 187.5
+      },
+      {
+        "map": "carbon_108m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 180.0,
+          "resp": 0
+        },
+        "score_delta": 180.0
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 184.62,
+          "resp": 0
+        },
+        "score_delta": 184.62
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 88,
+          "hp": 0,
+          "keys": 2,
+          "score": 586.67,
+          "resp": 0
+        },
+        "score_delta": 586.67
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 341.18,
+          "resp": 0
+        },
+        "score_delta": 341.18
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 181.82,
+          "resp": 0
+        },
+        "score_delta": 181.82
+      },
+      {
+        "map": "hunyuan_63m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 175,
+          "hp": 100,
+          "keys": 2,
+          "score": 832.79,
+          "resp": 0
+        },
+        "score_delta": 832.79
+      },
+      {
+        "map": "qwen_39m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 60,
+          "hp": 100,
+          "keys": 2,
+          "score": 962.97,
+          "resp": 0
+        },
+        "score_delta": 962.97
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "DQ",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 355.56,
+          "resp": 0
+        },
+        "score_delta": 355.56
+      }
+    ]
+  },
+  "glm": {
+    "versions": {
+      "glm_38m": {
+        "valid_demon": true,
+        "spent_gold": 2020,
+        "author_steps": 155,
+        "hero_clears": 4,
+        "hero_total": 18,
+        "hero_avg_score": 286.27,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 160.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 64,
+            "hp": 100,
+            "keys": 2,
+            "score": 930.29,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.0,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 74,
+            "hp": 100,
+            "keys": 2,
+            "score": 933.18,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 104.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 108.33,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 137.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 70.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 87.18,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 173.91,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 20.0,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 90.91,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 167,
+            "hp": 100,
+            "keys": 2,
+            "score": 837.82,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.09,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 148.15,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 136,
+            "keys": 2,
+            "demon_score": 169.73
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 136,
+            "keys": 2,
+            "demon_score": 169.73
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 142,
+            "keys": 2,
+            "demon_score": 88.49
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "neon_40m": {
+            "status": "DEAD",
+            "turns": 32,
+            "keys": 1,
+            "demon_score": 781.67
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 464.29
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 395.45
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 124,
+            "keys": 2,
+            "demon_score": 77.2
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 510.83
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 467.65
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 510.83
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 488.11
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 476.74
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 469.92
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 467.65
+          },
+          "qwen_39m": {
+            "status": "DEAD",
+            "turns": 55,
+            "keys": 0,
+            "demon_score": 786.21
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 368.24
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          }
+        }
+      },
+      "glm_68m": {
+        "valid_demon": true,
+        "spent_gold": 2020,
+        "author_steps": 155,
+        "hero_clears": 5,
+        "hero_total": 18,
+        "hero_avg_score": 311.42,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 136.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 64,
+            "hp": 100,
+            "keys": 2,
+            "score": 930.29,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.0,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 74,
+            "hp": 100,
+            "keys": 2,
+            "score": 933.18,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 64.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 12.9,
+            "resp": 13
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 12.9,
+            "resp": 4
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 108.33,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 93.75,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 100.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 56.41,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 173.91,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 148,
+            "hp": 100,
+            "keys": 2,
+            "score": 857.24,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 136.36,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 167,
+            "hp": 100,
+            "keys": 2,
+            "score": 837.82,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.09,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 7.41,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 136,
+            "keys": 2,
+            "demon_score": 169.73
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 136,
+            "keys": 2,
+            "demon_score": 169.73
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 142,
+            "keys": 2,
+            "demon_score": 88.49
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "neon_40m": {
+            "status": "DEAD",
+            "turns": 32,
+            "keys": 1,
+            "demon_score": 781.67
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 464.29
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 395.45
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 124,
+            "keys": 2,
+            "demon_score": 77.2
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 510.83
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 467.65
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 510.83
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 488.11
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 476.74
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 469.92
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 467.65
+          },
+          "qwen_39m": {
+            "status": "DEAD",
+            "turns": 55,
+            "keys": 0,
+            "demon_score": 786.21
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 368.24
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 465.38
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 160.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 136.0,
+          "resp": 0
+        },
+        "score_delta": -24.0
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 104.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 64.0,
+          "resp": 0
+        },
+        "score_delta": -40.0
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 12.9,
+          "resp": 13
+        },
+        "score_delta": -90.33
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 12.9,
+          "resp": 4
+        },
+        "score_delta": -90.33
+      },
+      {
+        "map": "neon_54m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 137.5,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 93.75,
+          "resp": 0
+        },
+        "score_delta": -43.75
+      },
+      {
+        "map": "carbon_108m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 70.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 100.0,
+          "resp": 0
+        },
+        "score_delta": 30.0
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 87.18,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 56.41,
+          "resp": 0
+        },
+        "score_delta": -30.77
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 20.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 148,
+          "hp": 100,
+          "keys": 2,
+          "score": 857.24,
+          "resp": 0
+        },
+        "score_delta": 837.24
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 90.91,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 136.36,
+          "resp": 0
+        },
+        "score_delta": 45.45
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 148.15,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 7.41,
+          "resp": 0
+        },
+        "score_delta": -140.74
+      }
+    ]
+  },
+  "hunyuan": {
+    "versions": {
+      "hunyuan_39m": {
+        "valid_demon": true,
+        "spent_gold": 1740,
+        "author_steps": 170,
+        "hero_clears": 4,
+        "hero_total": 18,
+        "hero_avg_score": 371.17,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 71,
+            "hp": 100,
+            "keys": 2,
+            "score": 925.9,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 69,
+            "hp": 100,
+            "keys": 2,
+            "score": 936.32,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 64.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 58.06,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 58.06,
+            "resp": 1
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 175.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 190.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 137.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 100.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 174.36,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 587.1,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 252.94,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 163.64,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "hp": 100,
+            "keys": 2,
+            "score": 854.13,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.09,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 296.3,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 84,
+            "keys": 2,
+            "demon_score": 52.09
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 84,
+            "keys": 2,
+            "demon_score": 52.09
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 88,
+            "keys": 2,
+            "demon_score": 54.6
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 88,
+            "keys": 2,
+            "demon_score": 54.6
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 380.83
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 103,
+            "keys": 2,
+            "demon_score": 64.02
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "keys": 2,
+            "demon_score": 87.87
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 103,
+            "keys": 2,
+            "demon_score": 64.02
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 522.5
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 98,
+            "keys": 2,
+            "demon_score": 60.88
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 522.5
+          },
+          "deepseek_79m": {
+            "status": "CLEARED",
+            "turns": 175,
+            "keys": 2,
+            "demon_score": 109.2
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 175,
+            "keys": 2,
+            "demon_score": 109.2
+          },
+          "glm_38m": {
+            "status": "CLEARED",
+            "turns": 167,
+            "keys": 2,
+            "demon_score": 104.18
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 167,
+            "keys": 2,
+            "demon_score": 104.18
+          },
+          "hunyuan_39m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "keys": 2,
+            "demon_score": 87.87
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "keys": 2,
+            "demon_score": 87.87
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 522.5
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 135,
+            "keys": 2,
+            "demon_score": 84.1
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 481.88
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 519.38
+          }
+        }
+      },
+      "hunyuan_63m": {
+        "valid_demon": true,
+        "spent_gold": 1740,
+        "author_steps": 170,
+        "hero_clears": 7,
+        "hero_total": 18,
+        "hero_avg_score": 466.67,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 0,
+            "score": 184.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 71,
+            "hp": 100,
+            "keys": 2,
+            "score": 925.9,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "CLEARED",
+            "turns": 83,
+            "hp": 100,
+            "keys": 2,
+            "score": 928.04,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 69,
+            "hp": 100,
+            "keys": 2,
+            "score": 936.32,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 108,
+            "hp": 100,
+            "keys": 2,
+            "score": 847.68,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 0,
+            "score": 83.87,
+            "resp": 1
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 83.87,
+            "resp": 1
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 175.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 190.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 137.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 0,
+            "score": 80.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 179.49,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "DEAD",
+            "turns": 189,
+            "hp": 0,
+            "keys": 2,
+            "score": 586.67,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 98,
+            "hp": 100,
+            "keys": 2,
+            "score": 888.62,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 172.73,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "hp": 100,
+            "keys": 2,
+            "score": 854.13,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.09,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 185.19,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 84,
+            "keys": 2,
+            "demon_score": 52.09
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 84,
+            "keys": 2,
+            "demon_score": 52.09
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 88,
+            "keys": 2,
+            "demon_score": 54.6
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 88,
+            "keys": 2,
+            "demon_score": 54.6
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 380.83
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 103,
+            "keys": 2,
+            "demon_score": 64.02
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "keys": 2,
+            "demon_score": 87.87
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 103,
+            "keys": 2,
+            "demon_score": 64.02
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 522.5
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 98,
+            "keys": 2,
+            "demon_score": 60.88
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 522.5
+          },
+          "deepseek_79m": {
+            "status": "CLEARED",
+            "turns": 175,
+            "keys": 2,
+            "demon_score": 109.2
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 175,
+            "keys": 2,
+            "demon_score": 109.2
+          },
+          "glm_38m": {
+            "status": "CLEARED",
+            "turns": 167,
+            "keys": 2,
+            "demon_score": 104.18
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 167,
+            "keys": 2,
+            "demon_score": 104.18
+          },
+          "hunyuan_39m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "keys": 2,
+            "demon_score": 87.87
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 141,
+            "keys": 2,
+            "demon_score": 87.87
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 522.5
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 135,
+            "keys": 2,
+            "demon_score": 84.1
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 481.88
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 519.38
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 373.33,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 0,
+          "score": 184.0,
+          "resp": 0
+        },
+        "score_delta": -189.33
+      },
+      {
+        "map": "OFFICIAL_FULL_03",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 373.33,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 83,
+          "hp": 100,
+          "keys": 2,
+          "score": 928.04,
+          "resp": 0
+        },
+        "score_delta": 554.71
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 64.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 108,
+          "hp": 100,
+          "keys": 2,
+          "score": 847.68,
+          "resp": 0
+        },
+        "score_delta": 783.68
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 58.06,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 0,
+          "score": 83.87,
+          "resp": 1
+        },
+        "score_delta": 25.81
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 58.06,
+          "resp": 1
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 83.87,
+          "resp": 1
+        },
+        "score_delta": 25.81
+      },
+      {
+        "map": "carbon_108m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 100.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 0,
+          "score": 80.0,
+          "resp": 0
+        },
+        "score_delta": -20.0
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 174.36,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 179.49,
+          "resp": 0
+        },
+        "score_delta": 5.13
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 587.1,
+          "resp": 0
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 189,
+          "hp": 0,
+          "keys": 2,
+          "score": 586.67,
+          "resp": 0
+        },
+        "score_delta": -0.43
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 252.94,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 98,
+          "hp": 100,
+          "keys": 2,
+          "score": 888.62,
+          "resp": 0
+        },
+        "score_delta": 635.68
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 163.64,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 172.73,
+          "resp": 0
+        },
+        "score_delta": 9.09
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 296.3,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 185.19,
+          "resp": 0
+        },
+        "score_delta": -111.11
+      }
+    ]
+  },
+  "qwen": {
+    "versions": {
+      "qwen_39m": {
+        "valid_demon": true,
+        "spent_gold": 0,
+        "author_steps": 63,
+        "hero_clears": 0,
+        "hero_total": 18,
+        "hero_avg_score": 55.01,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 56.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 96.0,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 57.14,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 40.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 0,
+            "score": 64.52,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 96.77,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "DEAD",
+            "turns": 6,
+            "hp": 0,
+            "keys": 0,
+            "score": 40.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 143.75,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 78.26,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 80.0,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "DEAD",
+            "turns": 55,
+            "hp": 0,
+            "keys": 0,
+            "score": 181.82,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 56.0,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 62,
+            "keys": 2,
+            "demon_score": 38.28
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          },
+          "neon_40m": {
+            "status": "CLEARED",
+            "turns": 62,
+            "keys": 2,
+            "demon_score": 38.28
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "carbon_108m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 595.0
+          },
+          "opus_quota": {
+            "status": "CLEARED",
+            "turns": 62,
+            "keys": 2,
+            "demon_score": 38.28
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 595.0
+          },
+          "deepseek_79m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          },
+          "deepseek_95m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          },
+          "glm_38m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "glm_68m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "hunyuan_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 581.0
+          },
+          "qwen_105m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "keys": 2,
+            "demon_score": 38.91
+          },
+          "doubao_35m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          },
+          "doubao_117m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "keys": 2,
+            "demon_score": 37.03
+          }
+        }
+      },
+      "qwen_105m": {
+        "valid_demon": true,
+        "spent_gold": 2975,
+        "author_steps": 194,
+        "hero_clears": 5,
+        "hero_total": 18,
+        "hero_avg_score": 500.47,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 573.91,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "CLEARED",
+            "turns": 68,
+            "hp": 100,
+            "keys": 2,
+            "score": 927.78,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 373.33,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 69,
+            "hp": 100,
+            "keys": 2,
+            "score": 936.32,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "CLEARED",
+            "turns": 112,
+            "hp": 100,
+            "keys": 2,
+            "score": 845.17,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 58.06,
+            "resp": 4
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 58.06,
+            "resp": 2
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 366.67,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 378.95,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 3
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 1,
+            "score": 376.19,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 3
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 540.0,
+            "resp": 2
+          },
+          "deepseek_95m": {
+            "status": "DEAD",
+            "turns": 48,
+            "hp": 0,
+            "keys": 1,
+            "score": 300.0,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 570.37,
+            "resp": 5
+          },
+          "hunyuan_63m": {
+            "status": "CLEARED",
+            "turns": 135,
+            "hp": 100,
+            "keys": 2,
+            "score": 857.9,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 63,
+            "hp": 100,
+            "keys": 2,
+            "score": 961.09,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 2,
+            "score": 512.5,
+            "resp": 0
+          }
+        },
+        "defense_details": {
+          "astra_21m": {
+            "status": "CLEARED",
+            "turns": 160,
+            "keys": 2,
+            "demon_score": 99.79
+          },
+          "astra_39m": {
+            "status": "CLEARED",
+            "turns": 138,
+            "keys": 2,
+            "demon_score": 85.98
+          },
+          "sol_17m": {
+            "status": "CLEARED",
+            "turns": 235,
+            "keys": 2,
+            "demon_score": 231.86
+          },
+          "sol_39m": {
+            "status": "CLEARED",
+            "turns": 235,
+            "keys": 2,
+            "demon_score": 231.86
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 391.41
+          },
+          "neon_54m": {
+            "status": "CLEARED",
+            "turns": 154,
+            "keys": 2,
+            "demon_score": 96.03
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 382.15
+          },
+          "hydrogen_64m": {
+            "status": "CLEARED",
+            "turns": 137,
+            "keys": 2,
+            "demon_score": 85.36
+          },
+          "opus_40m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 471.04
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 437.71
+          },
+          "deepseek_14m": {
+            "status": "DQ",
+            "turns": 3,
+            "keys": 0,
+            "demon_score": 471.04
+          },
+          "deepseek_79m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 417.34
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 382.15
+          },
+          "glm_38m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 434.0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 469.19
+          },
+          "hunyuan_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 396.97
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 424.75
+          },
+          "qwen_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 471.04
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 2,
+            "demon_score": 342.92
+          },
+          "doubao_35m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 1,
+            "demon_score": 382.15
+          },
+          "doubao_117m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "keys": 0,
+            "demon_score": 456.23
+          }
+        }
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_01",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 573.91,
+          "resp": 0
+        },
+        "score_delta": 573.91
+      },
+      {
+        "map": "OFFICIAL_FULL_02",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 56.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 68,
+          "hp": 100,
+          "keys": 2,
+          "score": 927.78,
+          "resp": 0
+        },
+        "score_delta": 871.78
+      },
+      {
+        "map": "OFFICIAL_FULL_03",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 96.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 373.33,
+          "resp": 0
+        },
+        "score_delta": 277.33
+      },
+      {
+        "map": "benchmark_weak",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 57.14,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 69,
+          "hp": 100,
+          "keys": 2,
+          "score": 936.32,
+          "resp": 0
+        },
+        "score_delta": 879.18
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 40.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 112,
+          "hp": 100,
+          "keys": 2,
+          "score": 845.17,
+          "resp": 0
+        },
+        "score_delta": 805.17
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 0,
+          "score": 64.52,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 58.06,
+          "resp": 4
+        },
+        "score_delta": -6.46
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 96.77,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 58.06,
+          "resp": 2
+        },
+        "score_delta": -38.71
+      },
+      {
+        "map": "sol_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 366.67,
+          "resp": 0
+        },
+        "score_delta": 366.67
+      },
+      {
+        "map": "neon_40m",
+        "old": {
+          "status": "DEAD",
+          "turns": 6,
+          "hp": 0,
+          "keys": 0,
+          "score": 40.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 378.95,
+          "resp": 0
+        },
+        "score_delta": 338.95
+      },
+      {
+        "map": "neon_54m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 143.75,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 187.5,
+          "resp": 3
+        },
+        "score_delta": 43.75
+      },
+      {
+        "map": "carbon_108m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 1,
+          "score": 376.19,
+          "resp": 0
+        },
+        "score_delta": 376.19
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 184.62,
+          "resp": 3
+        },
+        "score_delta": 184.62
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 78.26,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 540.0,
+          "resp": 2
+        },
+        "score_delta": 461.74
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 80.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "DEAD",
+          "turns": 48,
+          "hp": 0,
+          "keys": 1,
+          "score": 300.0,
+          "resp": 0
+        },
+        "score_delta": 220.0
+      },
+      {
+        "map": "glm_68m",
+        "old": {
+          "status": "DEAD",
+          "turns": 55,
+          "hp": 0,
+          "keys": 0,
+          "score": 181.82,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 570.37,
+          "resp": 5
+        },
+        "score_delta": 388.55
+      },
+      {
+        "map": "hunyuan_63m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 135,
+          "hp": 100,
+          "keys": 2,
+          "score": 857.9,
+          "resp": 0
+        },
+        "score_delta": 857.9
+      },
+      {
+        "map": "qwen_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 56.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 63,
+          "hp": 100,
+          "keys": 2,
+          "score": 961.09,
+          "resp": 0
+        },
+        "score_delta": 905.09
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 2,
+          "score": 512.5,
+          "resp": 0
+        },
+        "score_delta": 512.5
+      }
+    ]
+  },
+  "doubao": {
+    "versions": {
+      "doubao_35m": {
+        "valid_demon": false,
+        "spent_gold": 0,
+        "author_steps": 0,
+        "hero_clears": 1,
+        "hero_total": 18,
+        "hero_avg_score": 262.9,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "DEAD",
+            "turns": 60,
+            "hp": 0,
+            "keys": 2,
+            "score": 572.73,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.0,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 380.95,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 128.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 103.23,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 183.33,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "DEAD",
+            "turns": 3,
+            "hp": 0,
+            "keys": 0,
+            "score": 40.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 187.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 180.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.62,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 378.95,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 258.82,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 181.82,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 162.5,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 355.56,
+            "resp": 0
+          }
+        },
+        "defense_details": {}
+      },
+      "doubao_117m": {
+        "valid_demon": false,
+        "spent_gold": 0,
+        "author_steps": 0,
+        "hero_clears": 2,
+        "hero_total": 18,
+        "hero_avg_score": 233.13,
+        "attack_details": {
+          "OFFICIAL_FULL_01": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 184.0,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_02": {
+            "status": "DEAD",
+            "turns": 60,
+            "hp": 0,
+            "keys": 2,
+            "score": 572.73,
+            "resp": 0
+          },
+          "OFFICIAL_FULL_03": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 1,
+            "score": 266.67,
+            "resp": 0
+          },
+          "benchmark_weak": {
+            "status": "CLEARED",
+            "turns": 68,
+            "hp": 100,
+            "keys": 2,
+            "score": 936.95,
+            "resp": 0
+          },
+          "benchmark_strong": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 64.0,
+            "resp": 0
+          },
+          "astra_21m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 38.71,
+            "resp": 0
+          },
+          "astra_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 38.71,
+            "resp": 0
+          },
+          "sol_39m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 25.0,
+            "resp": 0
+          },
+          "neon_40m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 0.0,
+            "resp": 0
+          },
+          "neon_54m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 137.5,
+            "resp": 0
+          },
+          "carbon_108m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 180.0,
+            "resp": 0
+          },
+          "hydrogen_64m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 61.54,
+            "resp": 0
+          },
+          "opus_quota": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 50,
+            "keys": 1,
+            "score": 221.05,
+            "resp": 0
+          },
+          "deepseek_95m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 1,
+            "score": 252.94,
+            "resp": 0
+          },
+          "glm_68m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 181.82,
+            "resp": 0
+          },
+          "hunyuan_63m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 12.5,
+            "resp": 0
+          },
+          "qwen_39m": {
+            "status": "CLEARED",
+            "turns": 60,
+            "hp": 100,
+            "keys": 2,
+            "score": 962.97,
+            "resp": 0
+          },
+          "qwen_105m": {
+            "status": "TIMEOUT",
+            "turns": 240,
+            "hp": 100,
+            "keys": 0,
+            "score": 59.26,
+            "resp": 0
+          }
+        },
+        "defense_details": {}
+      }
+    },
+    "attack_deltas_first_to_last": [
+      {
+        "map": "OFFICIAL_FULL_03",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 184.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 1,
+          "score": 266.67,
+          "resp": 0
+        },
+        "score_delta": 82.67
+      },
+      {
+        "map": "benchmark_weak",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 380.95,
+          "resp": 0
+        },
+        "new": {
+          "status": "CLEARED",
+          "turns": 68,
+          "hp": 100,
+          "keys": 2,
+          "score": 936.95,
+          "resp": 0
+        },
+        "score_delta": 556.0
+      },
+      {
+        "map": "benchmark_strong",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 128.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 64.0,
+          "resp": 0
+        },
+        "score_delta": -64.0
+      },
+      {
+        "map": "astra_21m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 38.71,
+          "resp": 0
+        },
+        "score_delta": -64.52
+      },
+      {
+        "map": "astra_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 103.23,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 38.71,
+          "resp": 0
+        },
+        "score_delta": -64.52
+      },
+      {
+        "map": "sol_39m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 183.33,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 25.0,
+          "resp": 0
+        },
+        "score_delta": -158.33
+      },
+      {
+        "map": "neon_40m",
+        "old": {
+          "status": "DEAD",
+          "turns": 3,
+          "hp": 0,
+          "keys": 0,
+          "score": 40.0,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 0.0,
+          "resp": 0
+        },
+        "score_delta": -40.0
+      },
+      {
+        "map": "neon_54m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 187.5,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 137.5,
+          "resp": 0
+        },
+        "score_delta": -50.0
+      },
+      {
+        "map": "hydrogen_64m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 184.62,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 61.54,
+          "resp": 0
+        },
+        "score_delta": -123.08
+      },
+      {
+        "map": "opus_quota",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 378.95,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 50,
+          "keys": 1,
+          "score": 221.05,
+          "resp": 0
+        },
+        "score_delta": -157.9
+      },
+      {
+        "map": "deepseek_95m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 258.82,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 252.94,
+          "resp": 0
+        },
+        "score_delta": -5.88
+      },
+      {
+        "map": "hunyuan_63m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 162.5,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 12.5,
+          "resp": 0
+        },
+        "score_delta": -150.0
+      },
+      {
+        "map": "qwen_105m",
+        "old": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 1,
+          "score": 355.56,
+          "resp": 0
+        },
+        "new": {
+          "status": "TIMEOUT",
+          "turns": 240,
+          "hp": 100,
+          "keys": 0,
+          "score": 59.26,
+          "resp": 0
+        },
+        "score_delta": -296.3
+      }
+    ]
+  }
+}

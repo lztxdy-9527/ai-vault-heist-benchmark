@@ -1,0 +1,9 @@
+{
+  "inputTokens": 36016294,
+  "outputTokens": 157900,
+  "totalTokens": 36174194,
+  "cacheTokens": 35641216,
+  "cachedWriteTokens": 0,
+  "cachedMissTokens": 375078,
+  "thinkingTokens": 101963
+}

@@ -1,0 +1,857 @@
+[
+  {
+    "time": "2026-11-20T01:00:45.777000+09:00",
+    "kind": "用户指令",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=4 message=msg_1f489fa20001kiyj4bo4bB5Ft3"
+  },
+  {
+    "time": "2026-11-20T01:00:45.860000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=8 message=msg_1f489fb0a0012kgtrcVaSXJibz"
+  },
+  {
+    "time": "2026-11-20T01:00:45.860000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=8 message=msg_1f489fb0a0012kgtrcVaSXJibz"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:00:52.908000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=19 message=msg_1f48a16a5001inMVx4sgaD19eJ"
+  },
+  {
+    "time": "2026-11-20T01:01:06.111000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=51 message=msg_1f48a4a38001mKjP2FpPOOZIYU"
+  },
+  {
+    "time": "2026-11-20T01:01:06.111000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=51 message=msg_1f48a4a38001mKjP2FpPOOZIYU"
+  },
+  {
+    "time": "2026-11-20T01:01:06.111000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=51 message=msg_1f48a4a38001mKjP2FpPOOZIYU"
+  },
+  {
+    "time": "2026-11-20T01:01:17.086000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=67 message=msg_1f48a7516001OhgwEZ2nYyK7re"
+  },
+  {
+    "time": "2026-11-20T01:01:17.086000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=67 message=msg_1f48a7516001OhgwEZ2nYyK7re"
+  },
+  {
+    "time": "2026-11-20T01:01:17.086000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=67 message=msg_1f48a7516001OhgwEZ2nYyK7re"
+  },
+  {
+    "time": "2026-11-20T01:01:23.342000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=81 message=msg_1f48a8d880017wnKqs65E93WYX"
+  },
+  {
+    "time": "2026-11-20T01:01:23.342000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=81 message=msg_1f48a8d880017wnKqs65E93WYX"
+  },
+  {
+    "time": "2026-11-20T01:01:33.630000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=91 message=msg_1f48ab5b9001lzgEdi8kBczMGM"
+  },
+  {
+    "time": "2026-11-20T01:01:33.630000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=91 message=msg_1f48ab5b9001lzgEdi8kBczMGM"
+  },
+  {
+    "time": "2026-11-20T01:01:41.157000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=101 message=msg_1f48ad319001TetkcY0WbLA1vP"
+  },
+  {
+    "time": "2026-11-20T01:01:41.157000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=101 message=msg_1f48ad319001TetkcY0WbLA1vP"
+  },
+  {
+    "time": "2026-11-20T01:02:26.377000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=111 message=msg_1f48b83c3001KgOvwuXmYzcm7q"
+  },
+  {
+    "time": "2026-11-20T01:02:26.377000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=111 message=msg_1f48b83c3001KgOvwuXmYzcm7q"
+  },
+  {
+    "time": "2026-11-20T01:02:38.802000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=121 message=msg_1f48bb44c001y9gQdhhE0VszgT"
+  },
+  {
+    "time": "2026-11-20T01:02:46.602000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=129 message=msg_1f48bd2c30015HxdFHwls87OXK"
+  },
+  {
+    "time": "2026-11-20T01:02:46.602000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=129 message=msg_1f48bd2c30015HxdFHwls87OXK"
+  },
+  {
+    "time": "2026-11-20T01:02:58.790000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=139 message=msg_1f48c025d001y7SNTSrzt29DII"
+  },
+  {
+    "time": "2026-11-20T01:03:04.377000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=147 message=msg_1f48c1833001bniEj8vF3f5RVH"
+  },
+  {
+    "time": "2026-11-20T01:03:04.377000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=147 message=msg_1f48c1833001bniEj8vF3f5RVH"
+  },
+  {
+    "time": "2026-11-20T01:04:45.413000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=157 message=msg_1f48da2dd001StToNZHRPcxZO8"
+  },
+  {
+    "time": "2026-11-20T01:04:50.766000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=165 message=msg_1f48db7c8001M0cpHyGt3SK4iM"
+  },
+  {
+    "time": "2026-11-20T01:04:50.766000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=165 message=msg_1f48db7c8001M0cpHyGt3SK4iM"
+  },
+  {
+    "time": "2026-11-20T01:07:00.544000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=175 message=msg_1f48fb2bb0017Mf6TovkvON0oY"
+  },
+  {
+    "time": "2026-11-20T01:07:00.544000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=175 message=msg_1f48fb2bb0017Mf6TovkvON0oY"
+  },
+  {
+    "time": "2026-11-20T01:10:07.898000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=185 message=msg_1f4928e920011murZQdL1vNjhE"
+  },
+  {
+    "time": "2026-11-20T01:10:16.847000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=193 message=msg_1f492b187001cBnps9loPbk8MI"
+  },
+  {
+    "time": "2026-11-20T01:10:43.497000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=201 message=msg_1f49319a0001EE0XDPcVF4s5yT"
+  },
+  {
+    "time": "2026-11-20T01:10:43.497000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=201 message=msg_1f49319a0001EE0XDPcVF4s5yT"
+  },
+  {
+    "time": "2026-11-20T01:13:23.022000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=211 message=msg_1f49588c10012JwcA2Gx7iPZlG"
+  },
+  {
+    "time": "2026-11-20T01:13:38.510000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=219 message=msg_1f495c548001xWY7nrw3dJjHFC"
+  },
+  {
+    "time": "2026-11-20T01:13:38.510000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=219 message=msg_1f495c548001xWY7nrw3dJjHFC"
+  },
+  {
+    "time": "2026-11-20T01:13:56.430000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=229 message=msg_1f4960b470013e1LeH5DNT4XOv"
+  },
+  {
+    "time": "2026-11-20T01:14:01.054000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=237 message=msg_1f4961d56001MVL76Q7dHzFrv3"
+  },
+  {
+    "time": "2026-11-20T01:14:01.054000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=237 message=msg_1f4961d56001MVL76Q7dHzFrv3"
+  },
+  {
+    "time": "2026-11-20T01:14:49.291000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=247 message=msg_1f496d9c40017KQzPYL5TkRyzU"
+  },
+  {
+    "time": "2026-11-20T01:15:13.645000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=255 message=msg_1f49738e5001nYekUSIwkCImRj"
+  },
+  {
+    "time": "2026-11-20T01:15:26.367000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=263 message=msg_1f4976a98001voNkIQGtQAcMSW"
+  },
+  {
+    "time": "2026-11-20T01:15:40.636000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=271 message=msg_1f497a256001jvlRCnso9W5I9g"
+  },
+  {
+    "time": "2026-11-20T01:15:40.636000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=271 message=msg_1f497a256001jvlRCnso9W5I9g"
+  },
+  {
+    "time": "2026-11-20T01:15:54.852000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=281 message=msg_1f497d9dd001iRSbyqiMY7gGu9"
+  },
+  {
+    "time": "2026-11-20T01:16:04.657000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=289 message=msg_1f498002b001tSthqY2M26DfbZ"
+  },
+  {
+    "time": "2026-11-20T01:16:04.657000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=289 message=msg_1f498002b001tSthqY2M26DfbZ"
+  },
+  {
+    "time": "2026-11-20T01:16:36.173000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=299 message=msg_1f4987b44001hrGQvqwLElyPWF"
+  },
+  {
+    "time": "2026-11-20T01:17:00.914000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=307 message=msg_1f498dbe6001ZnXozsaw2nXJrL"
+  },
+  {
+    "time": "2026-11-20T01:17:10.555000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=315 message=msg_1f4990192001fi3QKOXzzAKKCx"
+  },
+  {
+    "time": "2026-11-20T01:17:36.048000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=323 message=msg_1f4996526001IwC2HZRcSJJeWU"
+  },
+  {
+    "time": "2026-11-20T01:17:46.631000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=331 message=msg_1f4998e81001z4A4gd3tOXTWeO"
+  },
+  {
+    "time": "2026-11-20T01:17:46.631000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=331 message=msg_1f4998e81001z4A4gd3tOXTWeO"
+  },
+  {
+    "time": "2026-11-20T01:18:06.553000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=341 message=msg_1f499dc53001nzR7OLshRe7He3"
+  },
+  {
+    "time": "2026-11-20T01:18:06.553000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=341 message=msg_1f499dc53001nzR7OLshRe7He3"
+  },
+  {
+    "time": "2026-11-20T01:18:32.313000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=351 message=msg_1f49a40f2001b50sTUFOgJnr9O"
+  },
+  {
+    "time": "2026-11-20T01:18:32.313000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=351 message=msg_1f49a40f2001b50sTUFOgJnr9O"
+  },
+  {
+    "time": "2026-11-20T01:19:00.273000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=361 message=msg_1f49aae27001J24mgwil8he9Jc"
+  },
+  {
+    "time": "2026-11-20T01:19:00.273000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=361 message=msg_1f49aae27001J24mgwil8he9Jc"
+  },
+  {
+    "time": "2026-11-20T01:19:20.175000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=371 message=msg_1f49afbe4001QzgpFvdcV2NXZ0"
+  },
+  {
+    "time": "2026-11-20T01:19:37.719000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=379 message=msg_1f49b4071001UXApZtuqJ5aSVq"
+  },
+  {
+    "time": "2026-11-20T01:19:37.719000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=379 message=msg_1f49b4071001UXApZtuqJ5aSVq"
+  },
+  {
+    "time": "2026-11-20T01:20:01.243000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=389 message=msg_1f49b9c520016huxXheK2FJTLS"
+  },
+  {
+    "time": "2026-11-20T01:20:01.243000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=389 message=msg_1f49b9c520016huxXheK2FJTLS"
+  },
+  {
+    "time": "2026-11-20T01:20:09.790000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=399 message=msg_1f49bbdb6001TMQ5PVZJu7N4E5"
+  },
+  {
+    "time": "2026-11-20T01:20:17.824000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=407 message=msg_1f49bdd19001DypjSH3UxM1bP6"
+  },
+  {
+    "time": "2026-11-20T01:20:17.824000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=407 message=msg_1f49bdd19001DypjSH3UxM1bP6"
+  },
+  {
+    "time": "2026-11-20T01:23:34.933000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=417 message=msg_1f49edf07001yVAUKbPgIe1sqO"
+  },
+  {
+    "time": "2026-11-20T01:23:44.129000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=425 message=msg_1f49f02f50019Fcy2JuZxpqYCE"
+  },
+  {
+    "time": "2026-11-20T01:23:44.129000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=425 message=msg_1f49f02f50019Fcy2JuZxpqYCE"
+  },
+  {
+    "time": "2026-11-20T01:24:33.363000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=435 message=msg_1f49fc34a001syBXTVac5Gd3X4"
+  },
+  {
+    "time": "2026-11-20T01:24:44.280000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=443 message=msg_1f49fedf0001fLvXbCRHzKvb89"
+  },
+  {
+    "time": "2026-11-20T01:24:44.280000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=443 message=msg_1f49fedf0001fLvXbCRHzKvb89"
+  },
+  {
+    "time": "2026-11-20T01:25:11.447000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=453 message=msg_1f4a0580c00179IAn0tAWxIyCN"
+  },
+  {
+    "time": "2026-11-20T01:25:20.559000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=461 message=msg_1f4a07ba6001amFAIJJHOFtLyy"
+  },
+  {
+    "time": "2026-11-20T01:25:32.438000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=469 message=msg_1f4a0aa10001urOQ9V99aaViiP"
+  },
+  {
+    "time": "2026-11-20T01:25:32.438000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=469 message=msg_1f4a0aa10001urOQ9V99aaViiP"
+  },
+  {
+    "time": "2026-11-20T01:26:24.805000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=479 message=msg_1f4a1769c001Vhdo9olXyk0ewo"
+  },
+  {
+    "time": "2026-11-20T01:26:24.805000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=479 message=msg_1f4a1769c001Vhdo9olXyk0ewo"
+  },
+  {
+    "time": "2026-11-20T01:26:39.819000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=489 message=msg_1f4a1b141001oX2Az7IJrX3ubG"
+  },
+  {
+    "time": "2026-11-20T01:26:39.819000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=489 message=msg_1f4a1b141001oX2Az7IJrX3ubG"
+  },
+  {
+    "time": "2026-11-20T01:26:51.964000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=499 message=msg_1f4a1e0b4001bilSP4sEFuqGNH"
+  },
+  {
+    "time": "2026-11-20T01:26:57.492000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=507 message=msg_1f4a1f64c001bfmZ23gDZ6jh7k"
+  },
+  {
+    "time": "2026-11-20T01:27:03.866000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=515 message=msg_1f4a20f2e001Kadk00lKnyy5BZ"
+  },
+  {
+    "time": "2026-11-20T01:27:03.866000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=515 message=msg_1f4a20f2e001Kadk00lKnyy5BZ"
+  },
+  {
+    "time": "2026-11-20T01:27:18.185000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=525 message=msg_1f4a2471e001oIdDucVcWHKv3A"
+  },
+  {
+    "time": "2026-11-20T01:27:18.185000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=525 message=msg_1f4a2471e001oIdDucVcWHKv3A"
+  },
+  {
+    "time": "2026-11-20T01:27:39.154000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=535 message=msg_1f4a29909001i2tJI3jgzN4o2N"
+  },
+  {
+    "time": "2026-11-20T01:27:47.474000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=543 message=msg_1f4a2b98c001tZyjhdRC551g5u"
+  },
+  {
+    "time": "2026-11-20T01:27:47.474000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=543 message=msg_1f4a2b98c001tZyjhdRC551g5u"
+  },
+  {
+    "time": "2026-11-20T01:28:14.291000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=553 message=msg_1f4a3224800138ovyffiy41hAL"
+  },
+  {
+    "time": "2026-11-20T01:28:14.291000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=553 message=msg_1f4a3224800138ovyffiy41hAL"
+  },
+  {
+    "time": "2026-11-20T01:28:20.333000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=563 message=msg_1f4a339e4001JcCFqxI4Tgq8dZ"
+  },
+  {
+    "time": "2026-11-20T01:28:20.333000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=563 message=msg_1f4a339e4001JcCFqxI4Tgq8dZ"
+  },
+  {
+    "time": "2026-11-20T01:28:29.649000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=573 message=msg_1f4a35e48001vkdo9FdkiRnuyZ"
+  },
+  {
+    "time": "2026-11-20T01:28:44.989000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=581 message=msg_1f4a39a34001aSomWxBn0SRIFk"
+  },
+  {
+    "time": "2026-11-20T01:28:52.431000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=589 message=msg_1f4a3b7490015X7blkeH71b9yi"
+  },
+  {
+    "time": "2026-11-20T01:29:00.082000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=597 message=msg_1f4a3d52d001L1J1CJP3yga1YW"
+  },
+  {
+    "time": "2026-11-20T01:29:00.082000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=597 message=msg_1f4a3d52d001L1J1CJP3yga1YW"
+  },
+  {
+    "time": "2026-11-20T01:29:26.921000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=607 message=msg_1f4a43e01001N5K0wzHs4zyacf"
+  },
+  {
+    "time": "2026-11-20T01:29:37.589000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=615 message=msg_1f4a467ac001FRZ2c02Z5Fj2gp"
+  },
+  {
+    "time": "2026-11-20T01:29:37.589000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=615 message=msg_1f4a467ac001FRZ2c02Z5Fj2gp"
+  },
+  {
+    "time": "2026-11-20T01:33:03.705000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=625 message=msg_1f4a78cc9001r57GP8L7dqzu3O"
+  },
+  {
+    "time": "2026-11-20T01:33:15.837000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=633 message=msg_1f4a7bc33001T75xhcJ2F8Vj2I"
+  },
+  {
+    "time": "2026-11-20T01:33:15.837000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=633 message=msg_1f4a7bc33001T75xhcJ2F8Vj2I"
+  },
+  {
+    "time": "2026-11-20T01:34:57.144000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=643 message=msg_1f4a947ec001Jp2gKuTl9uApZk"
+  },
+  {
+    "time": "2026-11-20T01:35:04.411000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=651 message=msg_1f4a9644f001qjzUaKllKETaiX"
+  },
+  {
+    "time": "2026-11-20T01:35:04.411000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=651 message=msg_1f4a9644f001qjzUaKllKETaiX"
+  },
+  {
+    "time": "2026-11-20T01:36:27.544000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=661 message=msg_1f4aaa908001Rjcc7bkeEw4Dq0"
+  },
+  {
+    "time": "2026-11-20T01:36:35.465000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=669 message=msg_1f4aac7fe001K2wOWikvqLiMjZ"
+  },
+  {
+    "time": "2026-11-20T01:36:35.465000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=669 message=msg_1f4aac7fe001K2wOWikvqLiMjZ"
+  },
+  {
+    "time": "2026-11-20T01:36:54.413000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=679 message=msg_1f4ab12020014VEl624dSFSnr0"
+  },
+  {
+    "time": "2026-11-20T01:37:19.225000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=687 message=msg_1f4ab72f30013YjhVk1dpEXPcK"
+  },
+  {
+    "time": "2026-11-20T01:37:19.225000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=687 message=msg_1f4ab72f30013YjhVk1dpEXPcK"
+  },
+  {
+    "time": "2026-11-20T01:38:14.814000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=697 message=msg_1f4ac4c15001W5aLXfD9gfoH6E"
+  },
+  {
+    "time": "2026-11-20T01:38:14.814000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=697 message=msg_1f4ac4c15001W5aLXfD9gfoH6E"
+  },
+  {
+    "time": "2026-11-20T01:38:24.034000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=707 message=msg_1f4ac70170016jXucH22PvPYXi"
+  },
+  {
+    "time": "2026-11-20T01:38:39.243000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=715 message=msg_1f4acab7d001K5MntrIIcbt1BU"
+  },
+  {
+    "time": "2026-11-20T01:38:39.243000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=715 message=msg_1f4acab7d001K5MntrIIcbt1BU"
+  },
+  {
+    "time": "2026-11-20T01:38:50.421000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=725 message=msg_1f4acd72b001615S8pg7BfAKAj"
+  },
+  {
+    "time": "2026-11-20T01:39:05.581000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=733 message=msg_1f4ad1264001NxpDokrpT6dINe"
+  },
+  {
+    "time": "2026-11-20T01:39:05.581000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=733 message=msg_1f4ad1264001NxpDokrpT6dINe"
+  },
+  {
+    "time": "2026-11-20T01:40:12.260000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=743 message=msg_1f4ae16dc001oWWGQ7xEjPwdAt"
+  },
+  {
+    "time": "2026-11-20T01:40:12.260000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=743 message=msg_1f4ae16dc001oWWGQ7xEjPwdAt"
+  },
+  {
+    "time": "2026-11-20T01:40:27.320000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=753 message=msg_1f4ae51ae001msGdYvD2WGw0e4"
+  },
+  {
+    "time": "2026-11-20T01:40:45.920000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=761 message=msg_1f4ae9a5a001HPsvqFDtWH0vhU"
+  },
+  {
+    "time": "2026-11-20T01:40:45.920000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=761 message=msg_1f4ae9a5a001HPsvqFDtWH0vhU"
+  },
+  {
+    "time": "2026-11-20T01:41:27.846000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=771 message=msg_1f4af3e1c001tfbQyc9MAVSN2b"
+  },
+  {
+    "time": "2026-11-20T01:41:39.884000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=779 message=msg_1f4af6d240012OBqOKSa9d7E87"
+  },
+  {
+    "time": "2026-11-20T01:42:00.714000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=787 message=msg_1f4afbe82001BSLO4c1N0511gL"
+  },
+  {
+    "time": "2026-11-20T01:42:00.714000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=787 message=msg_1f4afbe82001BSLO4c1N0511gL"
+  },
+  {
+    "time": "2026-11-20T01:45:38.381000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=797 message=msg_1f4b310bd001nLMUR5hDGluBPB"
+  },
+  {
+    "time": "2026-11-20T01:45:38.381000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=797 message=msg_1f4b310bd001nLMUR5hDGluBPB"
+  },
+  {
+    "time": "2026-11-20T01:46:02.828000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=807 message=msg_1f4b3703d001XVmDvHp7F0gDUj"
+  },
+  {
+    "time": "2026-11-20T01:46:24.316000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=815 message=msg_1f4b3c435001v2Vce1cxFSZb91"
+  },
+  {
+    "time": "2026-11-20T01:46:24.316000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=815 message=msg_1f4b3c435001v2Vce1cxFSZb91"
+  },
+  {
+    "time": "2026-11-20T01:46:34.460000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=825 message=msg_1f4b3ebd4001G5LLRHPZ62Oksh"
+  },
+  {
+    "time": "2026-11-20T01:48:14.706000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=833 message=msg_1f4b5736a001bI5dFw2tOMrbt7"
+  },
+  {
+    "time": "2026-11-20T01:48:14.706000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=833 message=msg_1f4b5736a001bI5dFw2tOMrbt7"
+  },
+  {
+    "time": "2026-11-20T01:48:35.956000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=843 message=msg_1f4b5c669001VLqUaXF6gtf4Bp"
+  },
+  {
+    "time": "2026-11-20T01:49:30.088000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=851 message=msg_1f4b699e0001N13qL7OvkDQSja"
+  },
+  {
+    "time": "2026-11-20T01:49:30.088000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=851 message=msg_1f4b699e0001N13qL7OvkDQSja"
+  },
+  {
+    "time": "2026-11-20T01:49:43.704000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=861 message=msg_1f4b6cf0f001LUA6lndXbj4YB8"
+  },
+  {
+    "time": "2026-11-20T01:49:43.704000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=861 message=msg_1f4b6cf0f001LUA6lndXbj4YB8"
+  },
+  {
+    "time": "2026-11-20T01:49:59.208000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=871 message=msg_1f4b70ba2001lGcqb6tvragGzv"
+  },
+  {
+    "time": "2026-11-20T01:49:59.208000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=871 message=msg_1f4b70ba2001lGcqb6tvragGzv"
+  },
+  {
+    "time": "2026-11-20T01:50:19.536000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=881 message=msg_1f4b75b05001twD3CcmdednW7D"
+  },
+  {
+    "time": "2026-11-20T01:50:19.536000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=881 message=msg_1f4b75b05001twD3CcmdednW7D"
+  },
+  {
+    "time": "2026-11-20T01:50:38.441000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=891 message=msg_1f4b7a4df001SkfJ7zJsDigE52"
+  },
+  {
+    "time": "2026-11-20T01:51:25.965000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=899 message=msg_1f4b85e81001RbjJ8dOHfJc1oc"
+  },
+  {
+    "time": "2026-11-20T01:51:25.965000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=899 message=msg_1f4b85e81001RbjJ8dOHfJc1oc"
+  },
+  {
+    "time": "2026-11-20T01:52:15.886000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=909 message=msg_1f4b92186001N2VrQLlBm04hYk"
+  },
+  {
+    "time": "2026-11-20T01:53:09.914000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=917 message=msg_1f4b9f48e0016In7eA7hJO1w22"
+  },
+  {
+    "time": "2026-11-20T01:53:09.914000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=917 message=msg_1f4b9f48e0016In7eA7hJO1w22"
+  },
+  {
+    "time": "2026-11-20T01:53:44.861000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=927 message=msg_1f4ba7d11001h8A9nIBRucbdBw"
+  },
+  {
+    "time": "2026-11-20T01:54:35.839000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=935 message=msg_1f4bb4439001LHWI9MqLGHZXYu"
+  },
+  {
+    "time": "2026-11-20T01:54:35.839000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=935 message=msg_1f4bb4439001LHWI9MqLGHZXYu"
+  },
+  {
+    "time": "2026-11-20T01:54:56.927000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=945 message=msg_1f4bb9692001sEAPXHcluE4Nuz"
+  },
+  {
+    "time": "2026-11-20T01:55:46.710000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=953 message=msg_1f4bc590b001wTK0KZzl1KogKn"
+  },
+  {
+    "time": "2026-11-20T01:55:46.710000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=953 message=msg_1f4bc590b001wTK0KZzl1KogKn"
+  },
+  {
+    "time": "2026-11-20T01:55:59.930000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=963 message=msg_1f4bc8cb2001irNdA5h7ywZzw8"
+  },
+  {
+    "time": "2026-11-20T01:56:30.880000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=971 message=msg_1f4bd0598001fg103pOfkoNZLs"
+  },
+  {
+    "time": "2026-11-20T01:56:30.880000+09:00",
+    "kind": "工具决策/执行证据",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=971 message=msg_1f4bd0598001fg103pOfkoNZLs"
+  },
+  {
+    "time": "2026-11-20T01:56:42.619000+09:00",
+    "kind": "reasoning",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=981 message=msg_1f4bd3371001AJatWUytZuCcd4"
+  },
+  {
+    "time": "2026-11-20T01:56:42.619000+09:00",
+    "kind": "text",
+    "locator": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db session=ses_e0b7605dbffedZYz5Lo6geIMxN seq=981 message=msg_1f4bd3371001AJatWUytZuCcd4"
+  }
+]

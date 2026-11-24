@@ -1,0 +1,16 @@
+Created At: 2026-11-19T20:51:51+09:00
+Completed At: 2026-11-19T20:51:58+09:00
+Workflow "List exam folder files" completed.
+Output:
+part2_full_mode/exam_rooms\P2_06_opus_agy\.baseline_sha256 66
+part2_full_mode/exam_rooms\P2_06_opus_agy\CONTESTANT_PROMPT_FULL.md 3210
+part2_full_mode/exam_rooms\P2_06_opus_agy\golden_vectors_v22.json 5547
+part2_full_mode/exam_rooms\P2_06_opus_agy\PART1_BATTLE_REPORT.md 49819
+part2_full_mode/exam_rooms\P2_06_opus_agy\part1_dungeons_benchmark.json 394623
+part2_full_mode/exam_rooms\P2_06_opus_agy\RULES_FULL_v22.md 12854
+part2_full_mode/exam_rooms\P2_06_opus_agy\submission.py 37338
+part2_full_mode/exam_rooms\P2_06_opus_agy\submission_template_v22.py 1701
+part2_full_mode/exam_rooms\P2_06_opus_agy\v22_sparring_benchmarks.json 43104
+part2_full_mode/exam_rooms\P2_06_opus_agy\.agents\hooks.json 402
+part2_full_mode/exam_rooms\P2_06_opus_agy\history\timeline.jsonl 313
+part2_full_mode/exam_rooms\P2_06_opus_agy\history\v00_baseline_47b78c89.py 37338

@@ -1,0 +1,60 @@
+8 golden vectors and additional one-way/phase checks pass
+TRACE MATCH hydrogen sol 86
+TRACE MATCH OFFICIAL_01 sol 32
+TRACE MATCH OFFICIAL_02 sol 240
+TRACE MATCH OFFICIAL_03 sol 66
+TRACE MATCH astra sol 3
+TRACE MATCH carbon sol 84
+TRACE MATCH opus sol 32
+TRACE MATCH deepseek sol 6
+TRACE MATCH qwen sol 63
+TRACE MATCH argon sol 6
+TRACE MATCH glm sol 240
+TRACE MATCH hunyuan sol 119
+TRACE MATCH doubao sol 32
+TRACE MATCH sol deepseek 1
+TRACE MATCH sol astra 240
+TRACE MATCH sol carbon 240
+TRACE MATCH sol hydrogen 2
+TRACE MATCH sol qwen 2
+TRACE MATCH sol argon 240
+TRACE MATCH sol glm 240
+TRACE MATCH sol hunyuan 1
+TRACE MATCH sol doubao 144
+OFFICIAL_02 CLEAR 70 HP 100 keys 3 first_ms 47 later_max_ms 16
+sol TIMEOUT 240 HP 100 keys 3 first_ms 1375 later_max_ms 375
+astra CLEAR 56 HP 100 keys 3 first_ms 31 later_max_ms 16
+carbon CLEAR 143 HP 100 keys 3 first_ms 437 later_max_ms 16
+deepseek CLEAR 62 HP 50 keys 3 first_ms 32 later_max_ms 16
+argon TIMEOUT 240 HP 100 keys 0 first_ms 1562 later_max_ms 391
+glm TIMEOUT 240 HP 100 keys 0 first_ms 1563 later_max_ms 390
+BENCH_WEAK CLEAR 72 HP 100 keys 3 first_ms 63 later_max_ms 62
+10 MOVE_R (4, 21) 100 0 1 2 [363, 543, 728, 848] plates True 4 73
+20 MOVE_U (5, 16) 100 0 0 2 [363, 543, 728, 888] plates True 19 25
+30 MOVE_L (2, 9) 100 0 0 2 [323, 543, 728, 888] plates True 9 25
+39 MOVE_U (7, 7) 100 0 0 2 [247, 543, 728, 888] plates True 0 25
+40 MOVE_D (7, 8) 100 0 0 2 [247, 543, 728, 888] bridge True 22 23
+50 MOVE_R (12, 13) 100 0 0 2 [247, 543, 728, 888] bridge True 12 23
+60 MOVE_R (22, 13) 100 0 0 2 [247, 543, 728, 888] bridge True 2 23
+62 MOVE_R (24, 13) 100 0 0 2 [247, 728, 888] bridge True 0 23
+70 MOVE_L (22, 7) 100 0 0 2 [247, 728, 888] bridge False 1 2416
+73 MOVE_U (20, 6) 100 1 0 2 [247, 728, 888] bridge False 1 2544
+80 MOVE_L (19, 12) 100 1 0 2 [247, 728, 888] bridge False 0 2608
+90 THROW_D (18, 20) 100 1 0 2 [247, 728, 888] bridge False 2 2624
+93 MOVE_R (19, 22) 100 3 0 2 [247, 728, 888] bridge False 2 2464
+100 MOVE_U (20, 16) 100 3 0 2 [247, 728, 888] bridge False 1 2704
+110 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 2720
+120 MOVE_D (25, 15) 100 3 0 2 [247, 728, 888] bridge False 2 4528
+130 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 4576
+140 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 4896
+150 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 4624
+160 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 5136
+170 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 4960
+180 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 4192
+190 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 2944
+200 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 3792
+210 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 2784
+220 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 2544
+230 WAIT (25, 13) 100 3 0 2 [247, 728, 888] bridge False 0 791
+240 MOVE_D (25, 14) 100 3 0 2 [247, 728, 888] bridge False 0 5
+BENCH_STRONG TIMEOUT 240 HP 100 keys 3 first_ms 63 later_max_ms 375

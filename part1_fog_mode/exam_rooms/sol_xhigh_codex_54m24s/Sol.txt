@@ -1,0 +1,516 @@
+我会先读取目录内的文件和任务说明，只使用本对话及该目录中的内容，不查阅其他对话记录，也不连接网络。
+
+
+
+
+已读取文件运行了命令
+Get-ChildItem -LiteralPath . -Force | Select-Object Mode,Length,Name; rg --files --hidden -g '!.git' -g '!.codex' -g '!.agents'
+
+
+已读取 RULES.md
+
+
+Get-Content -LiteralPath CONTESTANT_PROMPT.md -Raw; Get-Content -LiteralPath submission_template.py -Raw
+
+
+已读取 golden_vectors.json
+
+
+$lines = Get-Content -LiteralPath RULES.md; for ($i = 105; $i -lt [Math]::Min(245,$lines.Length); $i++) { '{0}: {1}' -f ($i+1), $lines[$i] }
+
+
+$lines = Get-Content -LiteralPath RULES.md; for ($i = 84; $i -lt 106; $i++) { '{0}: {1}' -f ($i+1), $lines[$i] }; python --version
+
+
+
+
+
+
+
+ASTRA、ARGON、CARBON、HYDROGEN、Claude Opus 5.5、DeepSeek、Qwen、GLM、混元HY4、豆包：SOL拆你们的金库，请你们闯我的死局！
+
+四个文件已读完。我会把勇者重点放在增量建图和陷阱预判上，并为魔王地图提供可逐步回放的通关自证。
+
+
+
+
+规则里有两个关键点：激光会命中本回合经过的所有落点，传送门也会延续入门方向。魔王地图将围绕这两点设计；勇者则会在行动前模拟位移、爆炸和激光结算，尽量避免进入后才发现无法刹车。
+
+
+
+
+编辑了文件运行了命令
+已创建 submission.py+428-0
+
+
+
+
+python -m py_compile submission.py
+
+
+
+
+
+
+
+魔王地图已写出第一版：两把钥匙各有独立的传送门入口，正向冲入会被动量带进深渊，反向入门有安全路线。接下来补齐勇者的地图记忆与搜索，并用规则样例核对模拟器。
+
+
+
+
+编辑了文件运行了命令
+已编辑 submission.py+376-2
+
+
+
+
+python -m py_compile submission.py; Get-Content -LiteralPath submission.py | Measure-Object -Line
+
+
+已创建 verify_submission.py+383-0
+
+
+
+
+python -u verify_submission.py
+
+
+
+
+
+
+
+8 条规则边界样例均已通过，地图花费为 925G；独立回放确认，自证路线第 42 步首次通关、剩余 100 HP。勇者自测发现了一个问题：炮座还未进入视野时，仅记住已见光束片段会低估后方危险。我正在补上基于射程和已知地形的危险范围推断。
+
+
+
+
+编辑了文件运行了命令
+已编辑 submission.py+25-3
+
+
+
+
+python -u verify_submission.py
+
+
+已编辑 submission.py+44-7
+
+
+
+
+已创建 stress_submission.py+94-0
+
+
+
+已编辑 submission.py+2-1
+
+
+
+
+python -u -c "import stress_submission as t; import verify_submission as v; name,grid=next(t.maps()); v.play(grid,name,True)"
+
+
+已编辑 submission.py+3-6
+
+
+
+
+python -u -c "import stress_submission as t; import verify_submission as v; name,grid=next(t.maps()); v.play(grid,name)"
+
+
+
+
+
+
+
+补齐光束推断后，勇者在自建地图上已能满血通关。压力测试还发现了一次资源规划错误：为提前一步拿钥匙耗掉了后续跨坑必需的跳跃次数。已修正这一点，三道必须跳越的深渊测试现已通关；其余测试继续覆盖开关、投石、炸墙和随机障碍。
+
+
+
+
+编辑了文件运行了命令
+python -u stress_submission.py
+
+
+已编辑 submission.py+15-7
+
+
+
+
+python -u verify_submission.py
+
+
+已编辑 submission.py+28-2
+
+
+
+
+python -u verify_submission.py
+
+
+
+
+
+
+
+目前已覆盖的炸墙、开关、隔坑投石、冰道与弹簧、激光与 TNT 测试均能通关。魔王的第二个传送门也改用了相反的安全入门方向，避免对手解开第一处后直接照搬。下一轮重点检查长迷宫中的探索效率，以及机关变化后旧记忆是否会误导行动。
+
+
+
+
+编辑了文件运行了命令
+已创建 maze_submission.py+57-0
+
+
+
+已编辑 submission.py+17-6
+
+
+
+
+python -u -c "import time; import verify_submission as v; import submission as s; import stress_submission as t; g=t.landmarks(v.empty_grid()); [g[y].__setitem__(x,'ICE') for y in range(6,20) for x in range(4,25) if g[y][x]=='EMPTY']; w=v.decode(g); targets={z:[x,y] for y in range(26) for x in range(40) if (z:=g[y][x]) in ('K1','K2','V')}; st=v.observation(w,1,targets,{}); st['visible_mask']=[[True]*40 for z in range(26)]; st['terrain']=g; m={}; start=time.perf_counter(); a=s.decide_action(st,m); print(a,time.perf_counter()-start,m['search_nodes'],m['search_reason'])"
+
+
+已编辑 submission.py+16-3
+
+
+
+
+python -u verify_submission.py
+
+
+已编辑 verify_submission.py+3-1
+
+
+
+
+python -u -c "import maze_submission as m; import verify_submission as v; v.play(m.maze(1),'maze 1 revised',True)" > maze1_trace.txt
+
+
+python -u maze_submission.py
+
+
+Get-Content -LiteralPath maze1_trace.txt -Tail 24; rg -n 'BOMB| 1 jumps| 3 jumps|partial' maze1_trace.txt | Select-Object -First 30
+
+
+@'
+import collections
+import maze_submission as m
+g=m.maze(1)
+points=[(2,13),(31,3),(31,21),(35,13)]
+for a in points:
+    q=collections.deque([a]);d={a:0}
+    while q:
+        x,y=q.popleft()
+        for dx,dy in ((0,-1),(0,1),(-1,0),(1,0)):
+            p=x+dx,y+dy
+            if 0<=p[0]<40 and 0<=p[1]<26 and g[p[1]][p[0]] not in ('W','T_W') and p not in d:
+                d[p]=d[(x,y)]+1;q.append(p)
+    print(a,[d.get(p) for p in points])
+'@ | python -
+
+
+已编辑 submission.py+18-8
+
+
+
+
+python -u -c "import maze_submission as m; import verify_submission as v; v.play(m.maze(1),'maze 1 global order',True); v.play(m.maze(7),'maze 7 global order',True)" > maze_order_trace.txt
+
+
+Get-Content -LiteralPath maze_order_trace.txt -Tail 10; rg -n '^\{| 1 jumps| 2 jumps| 3 jumps' maze_order_trace.txt | Select-Object -Last 8
+
+
+rg -n '^\{' maze_order_trace.txt
+
+
+
+
+
+
+
+长迷宫测试暴露了目标顺序问题：先拿距离近的钥匙，可能让最后去金库的路大幅变长。现在会估算“第一把钥匙→第二把钥匙→金库”的完整路线，并保持目标稳定；此前两个超时案例已分别在第 194、158 回合满血通关。
+
+
+
+
+编辑了文件运行了命令
+已创建 physics_checks.py+109-0
+
+
+
+
+python -u physics_checks.py
+
+
+python -u stress_submission.py > stress_final.txt
+if ($LASTEXITCODE -eq 0) { python -u maze_submission.py > maze_final.txt }
+
+
+Get-Content -LiteralPath stress_final.txt -Tail 5; Get-Content -LiteralPath maze_final.txt -Tail 8
+
+
+@'
+import collections
+import maze_submission as m
+for seed in (0,4,6,7):
+    g=m.maze(seed);ps=[(2,13),(31,3),(31,21),(35,13)];ds=[]
+    for a in ps:
+        q=collections.deque([a]);d={a:0}
+        while q:
+            x,y=q.popleft()
+            for dx,dy in ((0,-1),(0,1),(-1,0),(1,0)):
+                p=x+dx,y+dy
+                if 0<=p[0]<40 and 0<=p[1]<26 and g[p[1]][p[0]] not in ('W','T_W') and p not in d:
+                    d[p]=d[(x,y)]+1;q.append(p)
+        ds.append([d.get(p) for p in ps])
+    print(seed,ds)
+'@ | python -
+
+
+python -u -c "import maze_submission as m; import verify_submission as v; v.play(m.maze(4),'maze 4 global order',True)" > maze4_trace.txt
+
+
+
+
+
+
+
+新一轮 18 个机关与随机障碍案例全部通关，另有 33 项物理和接口检查通过。长迷宫中仍有一个案例因未知拓扑与取钥顺序超时；我会继续检查这种分支下的探索和资源使用，争取减少无效绕路。
+
+
+
+
+编辑了文件运行了命令
+Get-Content -LiteralPath maze4_trace.txt -First 38; rg -n 'BOMB| 1 jumps| 2 jumps| 3 jumps' maze4_trace.txt | Select-Object -First 15; Get-Content -LiteralPath maze4_trace.txt -Tail 20
+
+
+已编辑 submission.py+16-5
+
+
+
+已编辑 verify_submission.py+15-0
+
+
+
+
+python -u -c "import submission as s; import verify_submission as v; d=s.build_dungeon(); print('COST',v.validate(d)); print('INDEPENDENT',v.independent_author_replay(d)); w=v.decode(d['grid']); [(None) for z in []];
+for i,a in enumerate(d['author_solution'],1):
+ w=w.step(a,i)
+ assert w.hp>0,(i,w.p,w.hp)
+ assert not w.won or i==len(d['author_solution'])
+print('FULL',i,w.hp,w.keys,w.jumps,w.stock,w.won)
+assert w.won"
+
+
+已编辑 submission.py+10-1
+
+
+
+
+python -u -c "import submission as s; import verify_submission as v; v.play(s.build_dungeon()['grid'],'inventory lock selfplay',True)" > inventory_trace.txt
+
+
+Get-Content -LiteralPath inventory_trace.txt -First 20; Get-Content -LiteralPath inventory_trace.txt -Tail 18
+
+
+
+
+
+
+
+魔王地图又补上了末端资源关卡：金库前必须连续使用三次跳跃，前期若用跳跃绕过传送门，最后就无法通关。安全自证路线改为用两枚炸弹开路，造价 1220G，已由两套回放确认第 60 步满血通关。勇者也加入了为未知坑道保留跳跃的策略，自测能解开这张图。
+
+
+
+
+编辑了文件运行了命令
+已编辑 submission.py+20-1
+
+
+
+
+$lines=Get-Content -LiteralPath maze4_trace.txt; $lines[40..85]; $lines[110..140]
+
+
+python -u physics_checks.py
+python -u verify_submission.py > core_final.txt
+python -u stress_submission.py > stress_final.txt
+
+
+Get-Content -LiteralPath core_final.txt -First 14; Get-Content -LiteralPath core_final.txt -Tail 2; Get-Content -LiteralPath stress_final.txt -Tail 3
+
+
+
+
+
+
+
+边界检查又发现了同一行串联多门激光炮的情况：它们的光束会被炮座分成不同区段，不能合并成一束。我正在修正未知炮座的光束记忆，确保看见一门炮后，另一侧的危险提示仍会被计算。
+
+
+
+
+编辑了文件运行了命令
+已编辑 submission.py+51-1
+
+
+
+
+已编辑 submission.py+52-27
+
+
+
+
+python -m py_compile submission.py
+python -u physics_checks.py
+python -u verify_submission.py > core_final.txt
+
+
+已编辑 physics_checks.py+36-0
+
+
+
+
+python -u physics_checks.py
+
+
+已编辑 physics_checks.py+10-0
+
+
+
+已编辑 submission.py+2-2
+
+
+
+
+python -u physics_checks.py
+python -u verify_submission.py > core_final.txt
+python -u stress_submission.py > stress_final.txt
+
+
+已编辑 physics_checks.py+12-0
+
+
+
+已编辑 submission.py+10-8
+
+
+
+
+python -u physics_checks.py
+
+
+
+
+
+
+
+串联炮座、箱子遮光、开关翻门和不确定 TNT 爆炸的检查均已通过，额外检查现为 42 项。还修正了地图全部探索完后可能把当前位置误设为探索目标、导致来回走动的问题。现在进行最终语法、合规与回放复查。
+
+
+
+
+编辑了文件运行了命令
+python -m py_compile submission.py
+python -u physics_checks.py > physics_final.txt
+python -u verify_submission.py > core_final.txt
+python -u stress_submission.py > stress_final.txt
+python -u maze_submission.py > maze_final.txt
+
+
+已编辑 physics_checks.py+18-0
+
+
+
+已编辑 submission.py+7-3
+
+
+
+
+python -u physics_checks.py
+
+
+
+
+
+
+
+最后补查了两种跳跃保命情况：炸弹即将爆炸时跳出九宫格，以及在激光发射前一回合跳离射线。优化搜索时不能把这些平地跳跃当作无用动作删掉；这两项也已通过，额外检查合计 44 项。最终答卷已完整保存，正在收尾复跑。
+
+
+
+
+编辑了文件运行了命令
+python -m py_compile submission.py
+python -u physics_checks.py > physics_final.txt
+python -u verify_submission.py > core_final.txt
+python -u stress_submission.py > stress_final.txt
+python -u maze_submission.py > maze_final.txt
+
+
+Get-Content -LiteralPath core_final.txt -Tail 1; Get-Content -LiteralPath stress_final.txt -Tail 1; Get-Content -LiteralPath maze_final.txt -Tail 2
+
+
+已编辑 submission.py+6-0
+
+
+
+
+python -u verify_submission.py > core_final.txt
+python -u physics_checks.py > physics_final.txt
+
+
+Get-Content -LiteralPath core_final.txt -First 13; Get-Content -LiteralPath core_final.txt -Tail 1; Get-Content -LiteralPath physics_final.txt; rg -n 'won.: False' maze_final.txt
+
+
+
+
+
+
+
+最终回放通过。利用免费外框作两处钥匙房的边界后，造价降到 1170G，自证仍为第 60 步首次通关、100 HP；勇者自测也能满血解开最终地图。规则样例和 44 项补充检查全部通过，18 个机关案例全部通关；6 个长迷宫中仍有 1 个超时。
+
+
+
+
+已运行 @'
+import collections
+import time
+started=time.perf_counter()
+import submission as s
+import verify_submission as v
+import physics_checks as p
+print('IMPORT_AND_TEST_HELPERS_MS', round((time.perf_counter()-started)*1000,3))
+d=s.build_dungeon();g=d['grid'];dist=[1000000]*1040
+spawn=13*40+2;dist[spawn]=0;q=collections.deque([spawn])
+def allowed(i):
+    return i>=0 and g[i//40][i%40] not in ('T_W','PIT')
+while q:
+    at=q.popleft()
+    for direction in range(4):
+        mid=s.NEIGHBORS[at][direction]
+        if allowed(mid) and dist[at]<dist[mid]:
+            dist[mid]=dist[at];q.appendleft(mid)
+        land=s._neighbor(at,direction,2)
+        if mid>=0 and g[mid//40][mid%40]!='T_W' and allowed(land) and dist[at]+1<dist[land]:
+            dist[land]=dist[at]+1;q.append(land)
+assert dist[13*40+37]==3
+assert dist[2*40+32]>=1000000 and dist[23*40+34]>=1000000
+print('TOPOLOGY_PROOF vault_minimum_jumps=3; keys_require_portals=True')
+print('FINAL_BUILD',v.validate(d),'G',len(d['author_solution']),'actions')
+print('INDEPENDENT_REPLAY',v.independent_author_replay(d))
+v.compliance()
+'@ | python -
+python -m py_compile submission.py
+
+
+
+
+
+
+已完成并保存 [submission.py](<REPO_ROOT>/exam_rooms/sol_xhigh/submission.py)，两个接口均已实现。
+- 魔王造价 1170G，自证第 60 步首次通关，100 HP。
+- 本地验证：8 条规则样例、44 项补充检查通过；机关案例 18/18 通关，长迷宫 5/6 通关，1 例超时。
+全程未联网，未查阅其他对话。

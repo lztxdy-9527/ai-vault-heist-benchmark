@@ -1,0 +1,1153 @@
+{
+  "stage_order": [
+    "part1_blind",
+    "wave1_40m_ontime",
+    "wave2_60m",
+    "wave3_final_overtime"
+  ],
+  "stage_sources": {
+    "part1_blind": "part2_full_mode/frontend_v2\\data\\part2_wave_data.js",
+    "wave1_40m_ontime": "part2_full_mode/frontend_v2\\data\\part2_wave_data.js",
+    "wave2_60m": "wave2_60m_reinforcements",
+    "wave3_final_overtime": "wave3_final_11seats"
+  },
+  "points": [
+    {
+      "model_id": "astra",
+      "name": "ASTRA 6.2",
+      "hero": 745.92,
+      "demon": 480.43,
+      "total": 1226.35,
+      "dual_average": 613.18,
+      "hero_rank": 1,
+      "demon_rank": 1,
+      "wins": 10,
+      "kills": 0,
+      "timeouts": 3,
+      "breaches": 0,
+      "rank": 1,
+      "lines": 1189
+    },
+    {
+      "model_id": "neon",
+      "name": "Neon",
+      "hero": 700.46,
+      "demon": 433.96,
+      "total": 1134.42,
+      "dual_average": 567.21,
+      "hero_rank": 2,
+      "demon_rank": 4,
+      "wins": 8,
+      "kills": 0,
+      "timeouts": 3,
+      "breaches": 0,
+      "rank": 2,
+      "lines": 2258
+    },
+    {
+      "model_id": "hydrogen",
+      "name": "HYDROGEN",
+      "hero": 683.7,
+      "demon": 447.64,
+      "total": 1131.34,
+      "dual_average": 565.67,
+      "hero_rank": 3,
+      "demon_rank": 3,
+      "wins": 9,
+      "kills": 1,
+      "timeouts": 3,
+      "breaches": 0,
+      "rank": 3,
+      "lines": 1716
+    },
+    {
+      "model_id": "carbon",
+      "name": "CARBON",
+      "hero": 597.61,
+      "demon": 424.12,
+      "total": 1021.73,
+      "dual_average": 510.87,
+      "hero_rank": 4,
+      "demon_rank": 5,
+      "wins": 7,
+      "kills": 1,
+      "timeouts": 6,
+      "breaches": 1,
+      "rank": 4,
+      "lines": 2141
+    },
+    {
+      "model_id": "opus",
+      "name": "Claude Opus 5.5",
+      "hero": 533.31,
+      "demon": 468.34,
+      "total": 1001.65,
+      "dual_average": 500.83,
+      "hero_rank": 6,
+      "demon_rank": 2,
+      "wins": 6,
+      "kills": 4,
+      "timeouts": 7,
+      "breaches": 3,
+      "rank": 5,
+      "lines": 1029
+    },
+    {
+      "model_id": "sol",
+      "name": "SOL 6.2",
+      "hero": 582.31,
+      "demon": 411.95,
+      "total": 994.26,
+      "dual_average": 497.13,
+      "hero_rank": 5,
+      "demon_rank": 6,
+      "wins": 7,
+      "kills": 0,
+      "timeouts": 5,
+      "breaches": 1,
+      "rank": 6,
+      "lines": 1471
+    },
+    {
+      "model_id": "qwen",
+      "name": "Qwen4-Max",
+      "hero": 481.8,
+      "demon": 312.11,
+      "total": 793.91,
+      "dual_average": 396.96,
+      "hero_rank": 7,
+      "demon_rank": 8,
+      "wins": 3,
+      "kills": 0,
+      "timeouts": 9,
+      "breaches": 4,
+      "rank": 7,
+      "lines": 2014
+    },
+    {
+      "model_id": "glm",
+      "name": "GLM",
+      "hero": 341.5,
+      "demon": 407.69,
+      "total": 749.19,
+      "dual_average": 374.6,
+      "hero_rank": 10,
+      "demon_rank": 7,
+      "wins": 4,
+      "kills": 0,
+      "timeouts": 9,
+      "breaches": 2,
+      "rank": 8,
+      "lines": 996
+    },
+    {
+      "model_id": "deepseek",
+      "name": "DeepSeek",
+      "hero": 417.42,
+      "demon": 122.91,
+      "total": 540.33,
+      "dual_average": 270.17,
+      "hero_rank": 9,
+      "demon_rank": 9,
+      "wins": 3,
+      "kills": 1,
+      "timeouts": 9,
+      "breaches": 8,
+      "rank": 9,
+      "lines": 1519
+    },
+    {
+      "model_id": "hunyuan",
+      "name": "混元 HY4",
+      "hero": 420.84,
+      "demon": 78.61,
+      "total": 499.45,
+      "dual_average": 249.73,
+      "hero_rank": 8,
+      "demon_rank": 10,
+      "wins": 4,
+      "kills": 0,
+      "timeouts": 8,
+      "breaches": 9,
+      "rank": 10,
+      "lines": 1341
+    },
+    {
+      "model_id": "doubao",
+      "name": "豆包",
+      "hero": 168.75,
+      "demon": 0.0,
+      "total": 168.75,
+      "dual_average": 84.38,
+      "hero_rank": 11,
+      "demon_rank": 11,
+      "wins": 0,
+      "kills": 0,
+      "timeouts": 12,
+      "breaches": 10,
+      "rank": 11,
+      "lines": 1056
+    }
+  ],
+  "spearman": {
+    "lines_avg": {
+      "rho": 0.39090909,
+      "p": 0.23454007,
+      "n": 11
+    },
+    "lines_demon": {
+      "rho": 0.08181818,
+      "p": 0.81099039,
+      "n": 11
+    }
+  },
+  "revenge_curves": [
+    {
+      "model_id": "astra",
+      "blind_model_id": "astra",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 1,
+            "final_score": 622.76,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 1,
+            "final_score": 949.11,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 1,
+            "final_score": 898.96,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "astra_39m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 3,
+            "final_score": 477.81,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "astra_39m",
+            "revenge_delta_demon": -2
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 1,
+            "final_score": 793.3,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "astra_39m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 2,
+            "final_score": 480.92,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "astra_39m",
+            "revenge_delta_demon": -1
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 1,
+            "final_score": 745.92,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "astra_39m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 1,
+            "final_score": 480.43,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "astra_39m",
+            "revenge_delta_demon": 0
+          }
+        }
+      }
+    },
+    {
+      "model_id": "neon",
+      "blind_model_id": "argon",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 6,
+            "final_score": 518.21,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 3,
+            "final_score": 773.36,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 4,
+            "final_score": 488.95,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "neon_40m",
+            "revenge_delta_hero": 2
+          },
+          "demon": {
+            "rank": 1,
+            "final_score": 590.22,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "neon_40m",
+            "revenge_delta_demon": 2
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 3,
+            "final_score": 711.75,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "neon_54m",
+            "revenge_delta_hero": 3
+          },
+          "demon": {
+            "rank": 4,
+            "final_score": 437.98,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "neon_54m",
+            "revenge_delta_demon": -1
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 2,
+            "final_score": 700.46,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "neon_54m",
+            "revenge_delta_hero": 4
+          },
+          "demon": {
+            "rank": 4,
+            "final_score": 433.96,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "neon_54m",
+            "revenge_delta_demon": -1
+          }
+        }
+      }
+    },
+    {
+      "model_id": "hydrogen",
+      "blind_model_id": "hydrogen",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 2,
+            "final_score": 603.59,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 6,
+            "final_score": 533.64,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": null,
+            "final_score": null,
+            "unsubmitted": true,
+            "dashed": true,
+            "status": "未交卷",
+            "ver_id": null,
+            "revenge_delta_hero": null
+          },
+          "demon": {
+            "rank": null,
+            "final_score": null,
+            "unsubmitted": true,
+            "dashed": true,
+            "status": "未交卷",
+            "ver_id": null,
+            "revenge_delta_demon": null
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 2,
+            "final_score": 728.66,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hydrogen_64m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 3,
+            "final_score": 454.83,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hydrogen_64m",
+            "revenge_delta_demon": 3
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 3,
+            "final_score": 683.7,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hydrogen_64m",
+            "revenge_delta_hero": -1
+          },
+          "demon": {
+            "rank": 3,
+            "final_score": 447.64,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hydrogen_64m",
+            "revenge_delta_demon": 3
+          }
+        }
+      }
+    },
+    {
+      "model_id": "carbon",
+      "blind_model_id": "carbon",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 4,
+            "final_score": 545.77,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 5,
+            "final_score": 650.6,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": null,
+            "final_score": null,
+            "unsubmitted": true,
+            "dashed": true,
+            "status": "未交卷",
+            "ver_id": null,
+            "revenge_delta_hero": null
+          },
+          "demon": {
+            "rank": null,
+            "final_score": null,
+            "unsubmitted": true,
+            "dashed": true,
+            "status": "未交卷",
+            "ver_id": null,
+            "revenge_delta_demon": null
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": null,
+            "final_score": null,
+            "unsubmitted": true,
+            "dashed": true,
+            "status": "未交卷",
+            "ver_id": null,
+            "revenge_delta_hero": null
+          },
+          "demon": {
+            "rank": null,
+            "final_score": null,
+            "unsubmitted": true,
+            "dashed": true,
+            "status": "未交卷",
+            "ver_id": null,
+            "revenge_delta_demon": null
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 4,
+            "final_score": 597.61,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "carbon_108m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 5,
+            "final_score": 424.12,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "carbon_108m",
+            "revenge_delta_demon": 0
+          }
+        }
+      }
+    },
+    {
+      "model_id": "sol",
+      "blind_model_id": "sol",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 3,
+            "final_score": 582.92,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 4,
+            "final_score": 702.58,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 2,
+            "final_score": 695.3,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "sol_39m",
+            "revenge_delta_hero": 1
+          },
+          "demon": {
+            "rank": 5,
+            "final_score": 427.98,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "sol_39m",
+            "revenge_delta_demon": -1
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 4,
+            "final_score": 648.2,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "sol_39m",
+            "revenge_delta_hero": -1
+          },
+          "demon": {
+            "rank": 6,
+            "final_score": 421.58,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "sol_39m",
+            "revenge_delta_demon": -2
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 5,
+            "final_score": 582.31,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "sol_39m",
+            "revenge_delta_hero": -2
+          },
+          "demon": {
+            "rank": 6,
+            "final_score": 411.95,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "sol_39m",
+            "revenge_delta_demon": -2
+          }
+        }
+      }
+    },
+    {
+      "model_id": "opus",
+      "blind_model_id": "opus",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 11,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 11,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 3,
+            "final_score": 684.33,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "opus_resumed_39m",
+            "revenge_delta_hero": 8
+          },
+          "demon": {
+            "rank": 4,
+            "final_score": 477.49,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "opus_resumed_39m",
+            "revenge_delta_demon": 7
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 5,
+            "final_score": 627.06,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "opus_quota",
+            "revenge_delta_hero": 6
+          },
+          "demon": {
+            "rank": 1,
+            "final_score": 499.42,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "opus_quota",
+            "revenge_delta_demon": 10
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 6,
+            "final_score": 533.31,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "opus_quota",
+            "revenge_delta_hero": 5
+          },
+          "demon": {
+            "rank": 2,
+            "final_score": 468.34,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "opus_quota",
+            "revenge_delta_demon": 9
+          }
+        }
+      }
+    },
+    {
+      "model_id": "qwen",
+      "blind_model_id": "qwen",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 8,
+            "final_score": 441.14,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 9,
+            "final_score": 224.27,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 8,
+            "final_score": 59.18,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "qwen_39m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 7,
+            "final_score": 37.87,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "qwen_39m",
+            "revenge_delta_demon": 2
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 9,
+            "final_score": 62.9,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "qwen_39m",
+            "revenge_delta_hero": -1
+          },
+          "demon": {
+            "rank": 8,
+            "final_score": 38.11,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "qwen_39m",
+            "revenge_delta_demon": 1
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 7,
+            "final_score": 481.8,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "qwen_105m",
+            "revenge_delta_hero": 1
+          },
+          "demon": {
+            "rank": 8,
+            "final_score": 312.11,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "qwen_105m",
+            "revenge_delta_demon": 1
+          }
+        }
+      }
+    },
+    {
+      "model_id": "hunyuan",
+      "blind_model_id": "hunyuan",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 9,
+            "final_score": 387.96,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 7,
+            "final_score": 421.79,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 6,
+            "final_score": 484.56,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "hunyuan_39m",
+            "revenge_delta_hero": 3
+          },
+          "demon": {
+            "rank": 6,
+            "final_score": 267.48,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "hunyuan_39m",
+            "revenge_delta_demon": 1
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 6,
+            "final_score": 488.19,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hunyuan_63m",
+            "revenge_delta_hero": 3
+          },
+          "demon": {
+            "rank": 7,
+            "final_score": 193.15,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hunyuan_63m",
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 8,
+            "final_score": 420.84,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hunyuan_63m",
+            "revenge_delta_hero": 1
+          },
+          "demon": {
+            "rank": 10,
+            "final_score": 78.61,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "hunyuan_63m",
+            "revenge_delta_demon": -3
+          }
+        }
+      }
+    },
+    {
+      "model_id": "deepseek",
+      "blind_model_id": "deepseek",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 5,
+            "final_score": 526.65,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 2,
+            "final_score": 932.17,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 9,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "deepseek_14m",
+            "revenge_delta_hero": -4
+          },
+          "demon": {
+            "rank": 8,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "deepseek_14m",
+            "revenge_delta_demon": -6
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 10,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "deepseek_14m",
+            "revenge_delta_hero": -5
+          },
+          "demon": {
+            "rank": 9,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "deepseek_14m",
+            "revenge_delta_demon": -7
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 9,
+            "final_score": 417.42,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "deepseek_95m",
+            "revenge_delta_hero": -4
+          },
+          "demon": {
+            "rank": 9,
+            "final_score": 122.91,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "deepseek_95m",
+            "revenge_delta_demon": -7
+          }
+        }
+      }
+    },
+    {
+      "model_id": "glm",
+      "blind_model_id": "glm",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 7,
+            "final_score": 441.93,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 8,
+            "final_score": 398.01,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 5,
+            "final_score": 486.53,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "glm_38m",
+            "revenge_delta_hero": 2
+          },
+          "demon": {
+            "rank": 2,
+            "final_score": 526.81,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "glm_38m",
+            "revenge_delta_demon": 6
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 7,
+            "final_score": 448.97,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "glm_68m",
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 5,
+            "final_score": 430.13,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "glm_68m",
+            "revenge_delta_demon": 3
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 10,
+            "final_score": 341.5,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "glm_68m",
+            "revenge_delta_hero": -3
+          },
+          "demon": {
+            "rank": 7,
+            "final_score": 407.69,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "glm_68m",
+            "revenge_delta_demon": 1
+          }
+        }
+      }
+    },
+    {
+      "model_id": "doubao",
+      "blind_model_id": "doubao",
+      "points": {
+        "part1_blind": {
+          "hero": {
+            "rank": 10,
+            "final_score": 325.34,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_hero": 0
+          },
+          "demon": {
+            "rank": 10,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": null,
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave1_40m_ontime": {
+          "hero": {
+            "rank": 7,
+            "final_score": 321.39,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "doubao_35m",
+            "revenge_delta_hero": 3
+          },
+          "demon": {
+            "rank": 9,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": null,
+            "status": null,
+            "ver_id": "doubao_35m",
+            "revenge_delta_demon": 1
+          }
+        },
+        "wave2_60m": {
+          "hero": {
+            "rank": 8,
+            "final_score": 322.29,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "doubao_35m",
+            "revenge_delta_hero": 2
+          },
+          "demon": {
+            "rank": 10,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "doubao_35m",
+            "revenge_delta_demon": 0
+          }
+        },
+        "wave3_final_overtime": {
+          "hero": {
+            "rank": 11,
+            "final_score": 168.75,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "doubao_117m",
+            "revenge_delta_hero": -1
+          },
+          "demon": {
+            "rank": 11,
+            "final_score": 0.0,
+            "unsubmitted": false,
+            "dashed": false,
+            "status": null,
+            "ver_id": "doubao_117m",
+            "revenge_delta_demon": -1
+          }
+        }
+      }
+    }
+  ],
+  "rank_delta_definition": "基期名次减当前名次，正数为上升"
+}

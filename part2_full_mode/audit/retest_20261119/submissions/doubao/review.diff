@@ -1,0 +1,31 @@
+--- D:\publish\part2_full\exam_rooms\P2_11_doubao_vscode\submission.py
++++ D:\publish\part2_full\audit\retest_20261119\submissions\doubao\submission.py
+@@ -81,7 +81,9 @@
+ 
+ 
+ class World:
+-    def __init__(self, grid):
++    def __init__(self, grid=None):
++        if grid is None:
++            return
+         self.terrain = [row[:] for row in grid]
+         self.occ = [[None] * GW for _ in range(GH)]
+         for y in range(GH):
+@@ -141,7 +143,7 @@
+ 
+     @classmethod
+     def from_state(cls, state):
+-        w = cls.__new__(cls)
++        w = cls()
+         terrain = [row[:] for row in state["terrain"]]
+         occ = [row[:] for row in state["occupant"]]
+         clues = state.get("clues")
+@@ -170,7 +172,7 @@
+         return w
+ 
+     def clone(self):
+-        w = World.__new__(World)
++        w = World()
+         if self.static_terrain:
+             w.terrain = self.terrain
+         else:

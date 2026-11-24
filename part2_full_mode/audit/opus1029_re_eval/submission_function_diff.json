@@ -1,0 +1,44 @@
+{
+  "Planner.h": {
+    "before_line": 566,
+    "after_line": 659,
+    "continuation_note": "4",
+    "description": "按剩余钥匙和金库计算跳跃下界，对预计所需跳步超过剩余资源的状态加罚。"
+  },
+  "Planner._step": {
+    "before_line": 693,
+    "after_line": 806,
+    "continuation_note": "1",
+    "description": "先从变更日志取地形坐标及占位变化标志，再 undo。重放后更新地形差异并移除已恢复原值的条目。"
+  },
+  "Planner.init": {
+    "before_line": 514,
+    "after_line": 602,
+    "continuation_note": "3、4",
+    "description": "对目标构建距离场与跳跃场。有箱格的图跳跃不足罚重 30，其余 200。"
+  },
+  "_jump_field": {
+    "before_line": null,
+    "after_line": 549,
+    "continuation_note": "4",
+    "description": "新增最少跳跃次数估计，纳入传送门与弹簧落点。"
+  },
+  "_choose": {
+    "before_line": 769,
+    "after_line": 882,
+    "continuation_note": "5、6",
+    "description": "空计划时从安全走动与 WAIT 里择优。首回合尝试三组权重，通解按 1.5×血量−0.63×步数择优，后续用单组参数。"
+  },
+  "_dist_field": {
+    "before_line": 489,
+    "after_line": 489,
+    "continuation_note": "3",
+    "description": "在反向距离场中加入有向传送门及反向连边，作为搜索估计。"
+  },
+  "Planner.search": {
+    "before_line": 600,
+    "after_line": 706,
+    "continuation_note": "2、5、6",
+    "description": "去重键过滤原地形为 CRACK、HEAL、MIMIC 的条目。部分解初值升至 10¹²，权重可传参，每四个展开节点检查时限。"
+  }
+}

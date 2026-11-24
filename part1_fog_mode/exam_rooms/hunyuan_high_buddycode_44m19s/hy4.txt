@@ -1,0 +1,1931 @@
+校验地图合法性、作者解回放以及勇者在多张地图上的自测表现
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+The author solution works (CLEARED at 229, HP 100, D=0). Map valid, spent 2585G.
+
+But decide_action always returns WAIT — there's a bug. Let me debug. Likely an exception in _decide swallowed by the try/except. Let me call _decide directly to see the exception.
+
+Probable cause: _simulate uses ctx["bombs"] set, but state_bombs(ctx) — fine. Maybe _recompute_beams fails because known[cy][cx] with cy/cx in range — fine. Or _enter_cost with t.startswith(...) on None? known values are strings. Hmm. Or occ_grid may be a list of lists; ok.
+
+Let me directly call _decide and print traceback.
+
+作者解已通过回放（229 步恰好通关、100 HP）。但勇者决策一直返回 WAIT，说明有异常被兜底吞掉了，我来定位。
+
+直接调用内部决策函数以查看被捕获的异常堆栈
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys,traceback; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import engine,submission; g=submission.build_dungeon()['grid']; gm=engine.Game(g,'BLIND'); st=gm.state(); mem={}; print('warn',st['laser_warnings']); try: print('DECIDE',submission._decide(st,mem)) except Exception: traceback.print_exc()"
+深度思考
+Bug: I reused ctx["bombs"] for two meanings: hero bomb count and bomb list. Let me rename: use ctx["bomb_count"] for count and ctx["bomb_list"] for the list; state_bombs returns ctx["bomb_list"].
+
+Let me fix.
+
+ctx["bombs"] 同时被用作库存数和炸弹列表，冲突了。修正命名：
+
+submission.py
+(修改)
++1
+-1
+查看变更
+submission.py
+(修改)
++2
+-2
+查看变更
+深度思考
+Now _simulate accesses ctx["bombs"] for count (int) — yes, in _simulate: used_bomb = act == "BOMB" doesn't use count, fine. ctx["jumps"], ctx["throws"] used. OK.
+
+Also _decide uses ctx["bombs"] > 0 for adding BOMB candidate — now int. Good.
+
+Let me rerun tests.
+
+修复后重新运行完整校验与自测
+
+cd d:/ai_work/hunyuan_lab; python test.py
+Progress:
+
+Empty map: cleared in 60 turns at 100 HP.
+
+Random0: cleared in 66.
+
+Engine bug in visible() ICE extension with diagonal direction — VEC2DIR only maps orthogonal vectors. Need to fix engine (test harness only): clamp diagonal to a valid direction or skip. Let me handle: if (vx,vy) not in VEC2DIR, skip the mirror turn / break.
+
+Own map: TIMEOUT with keys=[False, True] (K2 only), HP 10, D=90. Interesting — my agent got damaged by 90 (two 45s? or laser 50 + 40?). It got K2 but not K1, and wandered. Hmm. The agent's behavior on my own maze is poor: it doesn't find the serpentine gaps. Let me analyze.
+
+Actually, wait: the agent on my own map found K2 (at (20,18)) by turn ~119 and then wandered trying to reach K1 (14,2). It never made it. Possibly because the maze requires going through gaps at x=1/x=38 and the agent's Dijkstra with unknown=1.15 doesn't prefer exploring along walls; it may oscillate. Also HP 10 — took 90 damage from MIMICs/lasers. Need to improve hazard avoidance.
+
+Let me first fix the engine's ICE extension bug, then investigate the agent's decisions on own map. Also note: the agent lost HP from lasers (50 each) or MIMICs (45 each) — 90 = 45+45 or 50+40? D=90 effective trap damage. Let me trace HP changes.
+
+Let me fix the engine bug first.
+
+Also — importantly — I should check whether the agent's damage is avoidable. In my map, laser beams are dangerous on turn%3==0. The agent has laser_warnings and remembers beams. But _simulate counts hit_dirs from beam dict — the beam keys are cells, values are sets of dirs. Hmm, but I add beam cells from _recompute_beams for known cannons — can the agent see the cannons? Cannons are at (4,5), (34,7), etc., far from spawn. It only sees them when nearby. Warnings are given on laser turns for beam cells within the visible mask. Since the agent moves around, it accumulates beam cells. But if it's on a beam cell on a laser turn and that cell wasn't previously recorded, it gets hit. Actually warnings on that turn would include the beam cells within the visible mask — so the agent knows at the start of the turn. But exposed includes the starting cell, so if the hero is already standing on a beam cell on a laser turn, it's hit regardless of the action. The agent tries to avoid ending on a beam cell when the next turn is a laser turn (penalty -30), but -30 may be too small vs progress. Let me increase.
+
+Actually, more importantly: the agent might be hit by lasers because the penalty for a hit is -3 * 50 = -150, and progress -12*d: moving 1 cell reduces d by ~1 → +12. So -150 strongly discourages. But if ALL moves are hit (because start cell is in beam) then it can't avoid. The -30 for ending on beam before a laser turn may be insufficient: ending on beam cell → next turn start in beam → unavoidable hit of -150. So the penalty should be ~-150 too (i.e., -3*50 = -150) scaled by probability. Let me set -120 for ending on a beam cell when next turn is laser. But careful: beam cells are only dangerous on laser turns; ending on a beam cell on turn 1 (next turn 2, not laser), turn 2 → next turn 3 is laser → penalty. But the agent can then move off on turn 3 — however exposed includes start → still hit. Actually rule: phase D counts lasers whose ray intersects exposed_cells, which includes the start. So if the hero starts on a beam cell on a laser turn, it gets hit no matter what. So yes, must avoid being on beam cells on laser turns. Penalize strongly.
+
+But also — hmm, wait. Is that right? "每回合开始时，初始化 exposed_cells = {(hx, hy)}" — yes, includes start. And "统计所有激活激光炮中，其射线格集合与勇者本回合的暴露轨迹集合 exposed_cells 有交集的激光炮数量 m" — so if the start cell is in the ray, m≥1 → hit. Correct.
+
+So the agent must never be on a beam cell when turn%3==0. Our forward penalty should be strong.
+
+But there's another problem: the agent doesn't know all beam cells until it sees the cannon or gets warnings on a laser turn. On a laser turn, warnings reveal beam cells within mask; the agent can avoid them for that turn. But to avoid starting on a beam cell on a laser turn, it needs to know at the previous turn. The remembered beam set accumulates from warnings each laser turn, so after the first laser turn it knows beams within its mask at that time. As it moves, it should learn more. Reasonable.
+
+Alternatively, I could make the agent avoid all beam cells at all times (not just on laser turns) by adding a cost in _enter_cost (already +2.5) — could increase to +20 on turns leading to laser turns. Hmm.
+
+Let me first fix the engine bug and add better diagnostics: log when HP drops and what caused it. Let me modify engine to record damage events. Actually simpler: in the test harness, track HP changes and print turn + action + position + damage. Let me add a debug run.
+
+Also, the agent's failure to find K1 on my own maze is a concern for hero score on maze-like maps (other contestants may build mazes). Let me improve exploration. I'll analyze the trajectory.
+
+Let me fix the engine's ICE extension first.
+
+engine.py
+(修改)
++2
+-0
+查看变更
+深度思考
+Now let me add a debug harness to inspect the agent on my own map: log HP changes, actions, positions, and known-map exploration. Let me write a debug script.
+
+debug.py
+(写入)
++25
+-0
+查看变更
+追踪勇者在自建地图上的移动、掉血与探索进度
+
+cd d:/ai_work/hunyuan_lab; python debug.py
+深度思考
+Observations:
+
+The agent took two 45-damage hits at t=126 and t=130 — those are MIMICs (CHEST). It stepped onto CHEST cells. Why? The scoring penalty: CHEST has _enter_cost 24.0 (or INF if adjacent clue). But _simulate treats CHEST as -45 damage → score -135. Yet the agent stepped on them anyway. Possibly because the CHEST was not visible when the agent planned the move? No — the adjacent cell is always visible. Hmm, but maybe the terrain at that cell was 'UNKNOWN' in memory because the visible_mask didn't include it? The 8 neighbors are always visible, so it should be known. Unless the landing cell is 2 cells away (JUMP) — then not necessarily visible. The actions were MOVE_D and MOVE_U — 1 cell. Hmm.
+Wait, maybe the damage came from MIMIC via a different mechanism: the hero stepped on a CHEST that was 'CHEST' in state, and I marked clue cells. But there's a subtlety: in _simulate, terrain_at returns the known tile. If the known tile is 'CHEST', damage += 45. So the agent should have avoided. Unless the agent's _decide raised an exception on those turns and returned WAIT... no, HP dropped 45 while moving. Hmm. Maybe the CHEST was consumed earlier (HEAL/MIMIC becomes EMPTY in terrain) — but known is only updated for visible cells each turn. If the agent moved away and came back, the cell would be observed as 'EMPTY' after consumption. Fine.
+
+Wait — maybe the damage is from a **MIMIC hidden behind 'CHEST' but my clue_cells logic made it INF... no, INF means avoid.
+
+Let me look at t=126: MOVE_D (3,18)->(3,19) hp 55. Let me check the grid at (3,19). Perhaps it's a PIT? No, 45 damage means MIMIC. Let me check what's at (3,19) in the built grid. Also t=130 MOVE_U (5,20)->(5,19) hp 10, 45 damage → MIMIC.
+
+Hmm, wait — maybe those are not MIMICs but "CHEST" cells in state where the underlying is HEAL, and my simulation says -45; but actual engine says MIMIC -45. Both are 45. Let me check the grid.
+
+Actually, I bet the issue is: my known map is updated from state["terrain"] for visible cells. But state["terrain"] for a MIMIC is 'CHEST'. However, _enter_cost returns INF only if a clue cell is adjacent. Otherwise 24. The _simulate for a MOVE onto CHEST adds 45 damage → -135 score. But if all other moves are worse (e.g., all blocked or high d), the agent might still pick it. With -12*d, moving toward the goal reduces d by ~1 → +12. So -135 should dominate. Unless... dg is INF for all safe alternatives and the fallback abs(...)+30 gives a big negative, making the CHEST move look better? Hmm. Possible: if the agent is in a dead-end area where all other moves lead to cells with dg >= INF (e.g., walls/known traps), the fallback adds +30 to Manhattan distance → very negative. Then stepping on CHEST (which has a finite dg) could win. Hmm.
+
+Actually wait — there's a bug: dg is Dijkstra from the goal. _enter_cost gives INF for CHEST with adjacent clue. But for CHEST without clue, cost 24 — so dg[chest] is finite (24 + surrounding). Fine.
+
+Let me inspect the actual decisions at t=126 and t=130 with a detailed dump: candidate scores. Let me write a debug snippet that reconstructs the game state at those turns (by replaying) and prints all candidate results/scores. That will show why.
+
+Bigger issue: the agent flip-flops between goals (K1/K2) because when both keys are uncollected it chooses whichever has smaller Dijkstra distance from hero, and as it wanders, the preferred one changes → oscillation! Looking at logs: goal switches between (20,18) and (14,2) repeatedly. That's a major bug causing aimless wandering. Fix: commit to a goal until it's collected (store mem["goal"] and don't change it unless the chosen key is collected). That will fix a lot.
+Actually careful: if the chosen key becomes unreachable, we might want to switch. But primary: commit. Let me implement: mem["plan_goal"] — if it's None or already collected, pick the closer key and store. Keep it until collected. Then after collecting, switch to the other. This avoids oscillation.
+
+The agent explores slowly: known cells 662/1040 by turn 240 — it wanders a lot. With goal commitment, it should head to one key steadily.
+
+Also, the first three actions were JUMP_R — using all 3 jumps immediately. That's fine for speed but wasteful (jumps could be used to cross hazards). Actually using jumps early is good for speed (2 cells/turn). But it consumes all jumps. Let me increase the jump penalty slightly or reserve 1 jump for emergencies. Hmm. Actually speed matters for hero score: 150*(240-T)/239 → ~0.63 per turn. Using 3 jumps saves 3 turns ≈ 2 points. But keeping 1 jump can save from death. Let me set the jump penalty to 4 (so it's used only when it gives 2-cell progress which is +12*2 = +24 > 4; still used). Hmm, it will still use them. Let me add a rule: keep at least 1 jump in reserve (only use if jumps >= 2). Actually, simplest: don't include JUMP candidates when jumps <= 1. That reserves one jump. Good.
+
+Another issue: the agent's path following in a maze. With goal commitment, Dijkstra with unknown=1.15 should guide it toward the goal. When it hits a barrier wall (y=17 etc.), the known wall blocks, and unknown cells beyond are passable with cost 1.15 → Dijkstra suggests going around through unknown cells → it will explore along the wall until it finds the gap. That's the desired behavior. With goal commitment, it should work.
+
+Let me fix these issues:
+
+Goal commitment.
+Stronger penalty for ending on beam cells before laser turns (-120).
+Reserve 1 jump.
+Investigate CHEST damage.
+Let me first dump the candidate scores at t=126. I'll write a script that replays to turn 126 and prints details.
+
+Actually, let me just check the grid at (3,19) and (5,19).
+
+查看掉血位置周围的地形，确认伤害来源
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import submission; g=submission.build_dungeon()['grid']; for y in (17,18,19,20,21): print(y,[(x,g[y][x]) for x in range(1,9)])"
+深度思考
+Yes, MIMICs at (3,19), (5,19), (1,19). The agent stepped on them. Why? Let me check the clue binding: MIMIC at (3,19) → clue at (3,18)? Let's see: the clue binding order U,D,L,R: (3,18) is EMPTY, so clue binds there. Similarly (5,19) → clue at (5,18). So state["clues"] should show True at (3,18), (5,18) when visible. My agent accumulates clue cells in mem["clue_cells"] and then _enter_cost for a CHEST cell checks its 4 neighbors for clue cells → INF. So the agent should treat these MIMICs as impassable.
+
+Hmm — but wait, the clue cells might be visible later. At t=126 the hero was at (3,18) and moved to (3,19). Position (3,18) is the clue cell itself. The agent had been there. But did state["clues"] mark (3,18) True? The clue is bound to the MIMIC at (3,19) — yes if binding succeeded. Let me check whether the engine bound clues correctly for all MIMICs. _bind_clues in engine: clue at (nx,ny) must have terrain EMPTY, occupant None, not in spawn, no other chest adjacent. For MIMIC (3,19): U=(3,18) EMPTY ✓. Its 4-neighbors: (3,17)=W, (3,19)=MIMIC itself, (2,18)=EMPTY, (4,18)=EMPTY → no other chest. Good, clue binds at (3,18).
+
+But careful — my generator reserved clue cells as EMPTY and skipped placing other traps there. Good.
+
+So why did the agent step on (3,19)? Let me dump the candidate scores at that turn. Possibly because mem["clue_cells"] wasn't populated: state["clues"] is a 26x40 list of bools, but only visible clue cells are True. At t=125, the hero may not have had (3,18) visible... but it moved from (3,18) to (3,19) — so at t=126 it was at (3,18), which is the hero's own cell; it's always visible. So clues[18][3] should be True → mem["clue_cells"] includes (3,18). Then for CHEST at (3,19), neighbor (3,18) in clue_cells → INF in _enter_cost. But _simulate doesn't use _enter_cost; it just adds 45 damage. The score uses dg[pos] where dg is Dijkstra from goal; dg[(3,19)] = INF because _enter_cost returns INF for that CHEST → then fallback d = manhattan + 30, which is a large but finite value. Meanwhile other candidate moves might land on cells whose dg is also INF → fallback with similar or larger Manhattan+30. If (3,19) is closer to the goal (K1 at (14,2)), its fallback might be the smallest → agent picks it despite -135 damage. That's the bug: the fallback treats impassable cells comparably.
+
+Fix: for result positions where dg >= INF (i.e., cells that are known-bad: PIT/CHEST-with-clue/wall/TNT/BOX proximity), apply a huge penalty (e.g., -5000) instead of using Manhattan fallback. But careful: unknown cells have finite dg (cost 1.15), walls have INF. If a MOVE is blocked (no movement), the result is the hero's current cell, which has finite dg. So a blocked move would score better than a step into a "dead" cell — that's desirable (avoid stepping into known-bad cells).
+
+But hold on: sometimes stepping into a cell with INF dg is required (e.g., the goal itself is behind a closed gate with cost 13 — finite). Also the final approach to V: V is 'V' → cost 1, finite. Fine.
+
+However, there's a subtlety: dg from the goal with _enter_cost INF for CHEST-with-clue means the goal-side Dijkstra can't pass through that cell — fine. But cells beyond a wall might have INF dg if the wall fully encloses; the fallback gives them Manhattan+30. Hmm. For unknown regions behind known walls, Dijkstra can still reach through unknown cells (cost 1.15) so finite. OK.
+
+So: if dg[p] >= INF, set score -= 2000 (strong penalty) but still allow if it's a win. Let me use: if d >= INF: score -= 800 and use fallback for ranking. Actually a cleaner approach: d = min(dg, manhattan*3 + 60) which keeps ordering but penalizes. Then add an extra -200 if dg>=INF. Let me do that.
+
+Also: the damage penalty of -3*45 = -135 plus -200 = -335 should be enough.
+
+Additionally, _simulate should treat CHEST with adjacent clue as deadly? No, just -45. But combined with -200 → avoid.
+
+Another important fix: clue cells — the agent should remember them (it does). Good.
+
+Also: MIMIC without visible clue — my agent still treats as -45. Fine.
+
+Let me also check: are the MIMICs in my map placed with clue cells correctly? Let me verify engine's clue_bind_failed — earlier check printed nothing, so all bound. Good.
+
+Now let's also fix the goal oscillation and the beam forward penalty.
+
+Let me also reconsider: the agent's beam set has 51 cells by turn 240, but my map's lasers produce 7*10 = 70 beam cells (some overlapped). Fine.
+
+Let me apply the fixes:
+
+In _decide, goal commitment:
+if keys[0] and keys[1]: goal = tv
+elif keys[0]: goal = t2
+elif keys[1]: goal = t1
+else:
+    pg = mem.get("plan_goal")
+    if pg not in (t1, t2):
+        d1=..., d2=...; pg = t1 if d1<=d2 else t2
+        mem["plan_goal"] = pg
+    goal = pg
+Note: after collecting one key, keys changes → goal switches to the other key automatically. Good. But plan_goal remains stale; when keys[0] is True we use t2. Fine. If the agent somehow loses... no.
+
+Reserve 1 jump: if ctx["jumps"] > 1: candidates += jumps. Hmm, but then the last jump is never used. That's OK — one jump held for emergencies. Actually, is it better to use all jumps for speed? Speed gain ~3 turns = ~2 points. Keeping a jump can avoid death = huge. Keep 1.
+Actually, better: allow JUMP when jumps>=1 but only if there's a hazard to cross (PIT/CHEST/ICE) or it saves progress. Simpler: reserve 1. Let me do jumps > 1.
+
+Hmm, but JUMP is also useful to skip a 2-cell stretch of beam cells on laser turns (fewer exposed cells). Eh.
+
+Beam forward penalty: -120 instead of -30. But also consider: if the hero is currently on a beam cell and it's a laser turn, moving off still gets hit (start cell exposed). Our score includes that hit for all candidates (since exposed includes start), so all get -150 equally; the agent picks the best progress. Fine.
+
+dg INF handling.
+
+Also: increase the exploration weight? With goal commitment, hopefully not needed.
+
+Another thought: the agent at t=120 chose THROW_U and stuck=2 — it was stuck near (6,20). With goal commitment, it should not wander there.
+
+Let me apply fixes.
+
+发现三处关键缺陷：目标在双钥之间反复横跳、结局落在 dg=INF 的陷阱格时回退评分过低、以及提前一回合停进激光射线格的惩罚太轻。逐一修正：
+
+submission.py
+(修改)
++1
+-0
+查看变更
+submission.py
+(修改)
++11
+-3
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+submission.py
+(修改)
++4
+-1
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+重新跑校验与自测，观察目标锁定等修复效果
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+Great improvement: HP 100 on own map, no damage; random maps mostly cleared. But own map still times out with both keys collected at t≈239 — it got both keys but didn't reach V. It needs 240 turns for a 229-step optimal path; the agent wastes ~20+ turns exploring. That's expected for BLIND on a long maze. Hero score if timeout with P≈3 = 200*P ≈ 600 (r near 1). Actually for timeout with both keys, P = 2 + r where r is progress toward V — if it never got close to V, r small → score ~400-450. Hmm.
+
+But more importantly: on random2 and random3 the agent times out. Let me investigate those. Those random maps may have unreachable keys (random walls/boxes), or the agent gets stuck oscillating. Let me debug random2/random3.
+
+Also random5 cleared with HP 50 (took 50 laser damage). Need to improve laser avoidance. Let's check.
+
+Let me first debug random3 (no keys at all → couldn't reach either key). Maybe the map is genuinely blocked (random walls could surround the key). Let me check if a FULL-mode BFS path exists. Actually the random grids place 100-250 random tiles; could block. Let me check with a simple BFS on known map (FULL) whether the key is reachable. Also, the agent may be stuck due to oscillation between equally-scored cells.
+
+Let me write a debug for random3 that logs positions and actions over time.
+
+Actually, more valuable: let's create more realistic adversarial test maps — other contestants' maps will likely be mazes with traps. My own map is a good test. The agent's performance on my own map (timeout after getting both keys at ~t=239) is mediocre but not terrible. Let me focus on making the agent more efficient: reduce wandering.
+
+Key insight: the agent's Dijkstra treats UNKNOWN cells as cost 1.15 vs EMPTY 1.0, which biases it to stay on known cells. In a maze with wide open bands, it tends to wander along known open cells rather than beelining toward the goal through unknown cells. Also the visited penalty (-2 per visit) and exploration bonus (+1.2 per unknown nearby) push it toward new areas — that might cause wandering. Let me examine: with explore_w=1.2 and up to ~37 unknown cells in view, the bonus can be ~40, which is comparable to ~3 cells of progress (12 each = 36). So the exploration bonus might dominate and cause the agent to wander toward unexplored areas instead of following the shortest path. That's likely a big cause of inefficiency. Let me reduce explore_w to ~0.3 normally, and only boost when stuck (5.0). Also reduce the visited penalty a bit? It helps avoid loops, keep.
+
+Actually let's think: the Dijkstra dg from the goal already accounts for unknown cells (cost 1.15) — so moving toward the goal through unknowns naturally reduces dg. The exploration bonus should be a small tie-breaker, not a driver. Set explore_w = 0.25 when not stuck, and 3.0 when stuck ≥3. Let's test.
+
+Also, the agent uses JUMP for the first 2 turns — fine.
+
+Let me also reconsider: on my own map, the optimal path is 229 steps. The agent got both keys by t≈239 (at (21,2) at t=239). Wait, the log says at t=239 goal=(37,13) and keys [True,True], so it collected K1 around t=235 and K2 earlier (~t=110). Then it needs to travel from K1 (14,2) to V (37,13) which is ~? In my maze, the path from K1 to V goes through several sweeps — maybe ~100 steps. So it can't finish in 240. Timeout is inevitable for a blind agent on a 229-step maze unless it's near-optimal. OK.
+
+Hmm, that raises a strategic point: my own map is so long that even a good hero times out → good for demon score! And my hero on other maps matters more. So hero efficiency on other maps is what matters. Let me focus on:
+
+Avoid damage (HP).
+Clear faster on typical maps.
+Handle maze-like maps (other contestants may build mazes).
+Let me debug random3 to see if it's a genuine unreachable map or agent oscillation.
+
+Let me write a script.
+
+勇者已能零伤通关多数地图，但自建长迷宫里探索效率偏低、且 random2/3 卡住。我来定位徘徊原因。
+
+debug2.py
+(写入)
++42
+-0
+查看变更
+检查 random3 地图的可达性与勇者卡住的原因
+
+cd d:/ai_work/hunyuan_lab; python debug2.py 3
+深度思考
+Clear oscillation bug: from t=60 onwards, alternating (14,2) ↔ (14,3) forever. Why? The visited penalty should discourage revisiting... but mem["visited"] counts every visit, so both cells have huge counts (e.g., 90 each), and the difference is ~1 → penalty differs by 2. Hmm. The agent is stuck in a 2-cycle because moving to the other cell has slightly better score (due to visited counts or exploration), and then back. Classic oscillation. Need a stronger anti-oscillation mechanism.
+
+Root cause: dg from the goal. At (14,2), moving to (14,3) should increase dg (farther from goal)... unless (14,3) has a lower dg due to cost differences (e.g., (14,2) is a CRACK with cost 2.2, (14,3) is EMPTY cost 1). Actually dg is distance to goal, computed with node-entry costs. If (14,2) is a high-cost cell (e.g., ICE/CRACK/CHEST), then dg[(14,2)] could be larger than dg[(14,3)] even though (14,2) is geometrically closer to the goal — because dg[p] = cost to reach p from goal, which includes the cost of entering p. Hmm, dg[p] includes entering p's cost. For p=(14,2) with high cost, dg is high; for (14,3) with cost 1, dg is lower. So the agent prefers (14,3). But at (14,3), moving back to (14,2) — why would it prefer that? Because from (14,3), the other neighbors are bad, and (14,2) has some other advantage (e.g., unknown cells around → exploration bonus). Hmm.
+
+Actually more likely: the goal is blocked — K1 at (20,5) may be surrounded by walls/boxes so dg is INF for all cells in that pocket, and the fallback abs(p-goal)+30 dominates. Then the agent oscillates between the two cells with the smallest Manhattan distance to goal. (14,2) has distance |14-20|+|2-5| = 9; (14,3) = 8. So (14,3) is better (smaller fallback). But then why move back to (14,2)? Because of visited penalty and exploration bonus: at (14,3), moving to (14,2) has a Manhattan fallback of 9 (worse by 12) but maybe the exploration bonus (unknown cells near (14,2)) is bigger. Hmm, at t=60 known=192 and stops growing — so no new cells. Exploration bonus would be 0 for both (all visible cells known). Hmm.
+
+Wait — actually the log shows "MOVE_D (14,2)->(14,3)" at t=60,80,...,240, meaning at even tens the agent is at (14,2) moving down to (14,3). So it oscillates with period 2. Let's think: at (14,2), the best action is MOVE_D to (14,3); at (14,3), the best action is MOVE_U back to (14,2). Why would moving back to (14,2) be better than staying/other moves? Possibly because (14,2) has a lower visited count? No, both visited equally.
+
+Hmm, maybe dg values: computed from goal with node costs. If the region around (14,2)/(14,3) is enclosed by walls such that dg from goal can't reach them → INF → fallback = Manhattan+30. From (14,3): candidates: (14,2) fallback = 9+30=39; (14,4)=? |14-20|+|4-5|=7 →37; hmm that'd be better. Unless (14,4) is a wall or has INF cost. And (13,3), (15,3) etc. might be walls. So the region is a small pocket: (14,2) and (14,3) are the only passable cells, and the agent oscillates because from (14,3), (14,2) has fallback 39 vs (14,4) 37 if passable... but the log shows it goes back to (14,2). Hmm.
+
+Maybe the real cause: exposed/beam penalty: On laser turns (turn%3==0), all candidates get laser damage if the start cell is in a beam. That's constant across candidates, so no oscillation. Hmm.
+
+Let me actually dump candidate scores at t=100 for this case. Let me write a quick script to replay to t=100 and print each candidate's score components. I need to instrument _decide. Easier: replicate the scoring in a debug script using the same ctx/results. Let me write a debug that reconstructs the state at t=100 by replaying, then calls the internals to get results, dg, etc., and prints sorted scores. I can import submission's helpers.
+
+Actually — a simpler and more robust fix regardless of root cause: explicit anti-oscillation memory. Track the last N positions (e.g., last 8). Penalize candidate result positions that appeared in the recent history, with a penalty that grows for more recent revisits (e.g., -25 * (1 if in last 4 else 0.5 if in last 8)). Also add a "no-progress" detector: if the agent has been within a small region for many turns without reaching the goal, force exploration toward unknown cells (or pick a different goal).
+
+But if the agent is truly trapped in a 2-cell pocket (walls all around), it can't progress anyway; then it should try BOMB to break a W wall or THROW/JUMP. Our stuck handler requires stuck>=2 and not moved — but here the agent IS moving (oscillating), so stuck stays 0 and BOMB never triggers. Need a better stuck detector based on lack of new information / lack of progress toward goal, not just lack of movement.
+
+Let me implement:
+
+mem["recent"]: list of last 12 positions. Penalize returning to a position in recent with -30 * (number of times in recent) or stronger. This breaks 2-cycles because the other cell is in recent.
+mem["best_d"]: track the best dg (or fallback) achieved so far. If no improvement for, say, 12 turns, switch to "escape mode": boost exploration weight massively (e.g., 15) and reduce the visited penalty's effect; also consider BOMB to break walls.
+Add explicit BOMB usage: if in escape mode and bombs>0 and adjacent W/LASER/GATE, place BOMB.
+Also, importantly, I should fix the dg-INF fallback to use a consistent metric that doesn't create local minima oscillations. Actually the fallback abs(p-goal)+30 is a Manhattan distance to goal — a good potential. If the agent were purely greedy on that, it would move to the cell with smallest Manhattan distance and then WAIT (since moving away increases it). But WAIT has -3 penalty; moving away has -12*(Δdistance) = -12. So WAIT should be preferred over moving away! Unless blocked_goal penalty differs... Hmm. Let's compute: at (14,3), distance to goal (20,5) = 6+2=8. At (14,2) = 6+3=9. So moving up increases fallback by 1 → -12. Plus visited penalty. WAIT: stays at (14,3), d=8. So WAIT should win by 12... unless the whole region has dg finite for some cells and INF for others. Hmm.
+
+Actually maybe the issue is different: the goal K1 at (20,5) — the agent's dg Dijkstra from the goal treats cells with PIT, walls, CHEST-with-clue, TNT as INF. But unknown cells have cost 1.15 → finite. So dg is finite for most cells. So the agent should be pulled toward the goal. If it's oscillating near (14,2)/(14,3), maybe those cells are the closest reachable points to the goal given walls, and moving to any other cell increases dg. Then WAIT should win (staying at min dg). But the agent moves — meaning the score of moving is higher than WAIT. Why? Because of the visited penalty: score -= 2*min(visited.get(p,0),8) — WAIT's result position is the current cell, which has been visited many times → -16. Moving to the other cell also -16. Hmm, equal.
+
+Exploration bonus: _unknown_around(known, p) — if the current cell has 0 unknown neighbors but the other cell has some unknown neighbors within radius 3, moving gives +1.2*n. At t=60 known=192 and stops growing at 192 — so no new cells are revealed; but _unknown_around counts UNKNOWN cells within radius 3 (not necessarily visible). If the agent is in a pocket surrounded by walls, unknown cells beyond the walls are counted! So both cells might have ~10 unknown cells around → bonus ~12. And moving between them could differ by a few points. That could drive oscillation: from (14,2), moving to (14,3) has more unknown cells nearby (by 1-2) → +2.4; from (14,3), moving to (14,2) similarly. Hmm, but that would need asymmetry.
+
+Actually the cleanest fix: make the score dominated by progress toward goal, and add explicit anti-oscillation. Let me implement both:
+
+Reduce explore_w to 0.25 normally.
+Add recent-position penalty.
+Add escape mode when no improvement.
+Let me also reconsider the visited penalty: -2*min(count,8) = up to -16 — that's larger than one cell of progress (-12). That could cause the agent to prefer a farther cell that hasn't been visited over the closer visited cell. Hmm. That's probably intentional to avoid loops, but combined with exploration bonus it can create cycles. Let me lower it to -1.0*min(count,6) (max -6) and rely on recent-position penalty for loop-breaking.
+
+Let me implement a robust "progress tracking":
+
+# after choosing best_act:
+cur_d = dg[goal-from-hero]... Actually track from_hero[goal[1]][goal[0]] (distance from hero to goal).
+That's a clean scalar: progress = from_hero[goal_y][goal_x] (finite if reachable). Track mem["best_progress"]. If current progress < best_progress - 0.5 → improvement, reset stagnation. Else stagnation += 1. If stagnation > 10 → escape mode.
+
+In escape mode: increase explore_w to 8, and add a "random-ish" deterministic perturbation to break ties: e.g., prefer the least-visited candidate among near-equal scores. Also consider BOMB.
+
+Actually simpler and very effective: if stagnation > 8, temporarily set the goal to a frontier cell — i.e., choose the unexplored cell that is closest to the true goal and path toward it. Hmm, more complex.
+
+Let me implement a simpler, strong anti-oscillation:
+
+mem["recent"] = list of last 10 positions (append current each turn).
+penalty = 40 if p in recent[-4:] else 12 if p in recent else 0
+Since WAIT's result is the current position (which is in recent), WAIT gets penalized too — good, avoids stalling. The agent will be forced to find a new cell. If all 4 neighbors are in recent (2-cycle), all moves get -40; then the recently-vs-not differences still decide. Hmm. In a 2-cycle, both cells are in recent → both -40 → tie broken by dg → the agent would go to the one with lower dg and then WAIT (also -40, but WAIT has additional -3). Hmm, WAIT result = current cell in recent → -40; moving to other cell also -40. So no help.
+
+Better: penalize by the number of recent visits with recency weighting, and make the penalty for the immediately-previous position larger. E.g., penalty = sum(60 / (i+1) for i, q in enumerate(reversed(recent)) if q == p). In a 2-cycle, the other cell appears at positions t-1, t-3, t-5..., current at t, t-2,... The current cell (WAIT) appears at t (most recent) and t-2, etc. — actually similar. Hmm.
+
+Alternative robust approach: force exploration by choosing the candidate that reveals the most unknown cells when stagnant, i.e., a pure exploration objective for a few turns. Let me implement:
+
+if stagnation >= 8:
+    # explore mode: pick action maximizing (new unknown cells in radius 3) - 0.5*visited - damage, ignoring dg
+This will push the agent toward genuinely new areas. But if the pocket has unknown cells behind walls that are never visible, _unknown_around stays constant → no gradient. Hmm. Need a real frontier target: choose the nearest UNKNOWN cell adjacent to a KNOWN passable cell, compute a path to it via Dijkstra (with unknown-as-passable), and set that as the goal for a few turns. That's a standard frontier-based exploration. Let me implement that:
+
+def _frontier_goal(known, start, true_goal):
+    # find known passable cells adjacent to UNKNOWN cells; choose the one minimizing (dist from start + 0.5*dist to true goal)
+Actually simpler: when stagnant, set goal = the UNKNOWN cell (in known map) that minimizes manhattan(cell, true_goal) + 2*manhattan(cell, hero), reachable via Dijkstra through unknown-as-passable. Then compute dg from that frontier cell (instead of true goal) and score candidates by dg_from_frontier. The agent will move toward unexplored territory near the goal. Once new cells are revealed, recompute.
+
+Hmm, this is getting complex but it's the right fix for mazes. Let me implement a simpler variant:
+
+When stagnation >= 8, set goal to a frontier cell: the cell with known == 'UNKNOWN' that is adjacent to a known non-wall cell and minimizes abs(x-gx)+abs(y-gy) + 0.3*(abs(x-hx)+abs(y-hy)). Then run Dijkstra from that cell to get dg. This gives a gradient toward unexplored cells near the true goal. Add mem["explore_goal"] and hold it for a few turns until it becomes known (then pick a new one). Actually simpler: recompute each turn while stagnant; it will naturally shift.
+
+Also, when stagnant and bombs available and adjacent W, place BOMB. That helps break through walls.
+
+Let me also handle the case where the true goal is unreachable in the known map: from_hero[goal] = INF. Then stagnation tracking on INF is awkward. Use a scalar progress_metric = from_hero[gy][gx] if finite else manhattan(hero,goal) (with a cap). Hmm. When from_hero[goal] = INF, we're in fallback mode — oscillation likely. Let me use metric = min(from_hero[gy][gx], 500 + manhattan(hero,goal)). Then progress is finite.
+
+Actually, let me step back and consider a cleaner overall approach for the "potential" field: use Dijkstra from the true goal treating unknown cells as passable with cost 1.0 and known walls as blocked, which gives a finite potential in most cases. The INF cells are known-bad cells (walls, pits, chests). For result positions that are INF, use a huge penalty. The key issue: if the goal is enclosed by known walls, dg is INF for all cells outside → all candidates get the same fallback (Manhattan+30), leading to a Manhattan-based greedy that can get stuck in local minima (walls). In that case, exploration is needed. So the frontier approach is the right complement.
+
+Let me implement:
+
+mem["recent"] (last 10 positions) with a penalty of -8 per occurrence (capped).
+mem["stagnation"], mem["best_metric"].
+metric = from_hero[goal_y][goal_x] (distance from hero to goal, finite normally). If INF, use 500 + manhattan.
+If metric < best_metric - 0.6: best_metric = metric, stagnation=0. Else stagnation += 1.
+If stagnation >= 8: compute a frontier cell and use it as the Dijkstra source for dg; set explore_w higher; also allow BOMB.
+But note from_hero is computed from the hero's position — it decreases as the hero approaches the goal. Good.
+
+However, there's a subtlety: when the hero collects a key, the goal changes → best_metric should reset. I'll reset when goal != mem["last_goal_for_metric"].
+
+Let me now also reconsider: is this over-engineering? The main test cases: empty maps and moderate random maps mostly clear. The stuck cases are random maps with random walls forming pockets. Other contestants' maps will be deliberately maze-like; so robustness matters. Let's implement.
+
+Also, I want to reduce general wandering to improve speed. Let me lower explore_w and visited penalty.
+
+Let me now edit _decide. I'll read the current region first to make precise edits.
+
+读取
+submission.py
+L640-769
+读取
+submission.py
+L769-813
+深度思考
+I see a bug in the BOMB stuck handler: ctx["bombs"] is the integer count, but I index b[2] over it — that would throw an exception → caught by decide_action → WAIT. Actually for b in ctx["bombs"] on an int raises TypeError. But this branch is only reached when stuck>=2 and hp>55 and adjacent W. In tests it might not trigger. Let me fix to ctx["bomb_list"].
+
+Now let me implement the anti-stagnation changes. I'll add a helper _frontier_goal and modify _decide.
+
+Plan for edits:
+
+Fix ctx["bombs"] → ctx["bomb_list"] in the stuck handler.
+Add to _init_memory: mem["recent"] = [], mem["best_metric"] = None, mem["stagnation"] = 0, mem["metric_goal"] = None.
+After goal selection: compute metric = from_hero[goal[1]][goal[0]], if INF → 500 + manhattan. Update best_metric/stagnation. If goal changed, reset.
+If stagnation >= 8: compute explore_target (frontier cell) and use it as Dijkstra source for dg instead of goal. Also set explore_w = 6.0. Also consider forcing BOMB.
+Add recent-position penalty in scoring.
+Lower explore_w to 0.25 and visited penalty to 1.0*min(count,6).
+Let me define _frontier_goal(known, hero, true_goal):
+
+best = None; bestv = INF
+for y in 1..24: for x in 1..38:
+    if known[y][x] != 'UNKNOWN': continue
+    # must be adjacent to a known passable cell
+    adjacent_known = False
+    for dx,dy in NEI4:
+        t = known[y+dy][x+dx]
+        if t in ('EMPTY','K1','K2','V','ICE','CRACK','SWITCH','CHEST',...): adjacent_known=True
+    if not adjacent_known: continue
+    v = 2.0*(abs(x-hx)+abs(y-hy)) + 1.0*(abs(x-gx)+abs(y-gy))
+    # prefer frontier cells closer to the true goal and close to hero
+    if v < bestv: bestv=v; best=(x,y)
+return best
+Hmm, but if we choose a frontier cell too close to the hero, it's just the adjacent unknown cell — which is fine (move into it). That breaks loops. Good. Actually we want to avoid choosing the cell we're oscillating around. The frontier cells adjacent to known cells — in the pocket case, unknown cells are behind walls (not adjacent to known passable cells... actually a wall cell is known as 'W', so an UNKNOWN cell adjacent to a 'W' cell wouldn't count as adjacent to a known passable cell). Hmm — in the pocket case, the hero is in a 2-cell pocket surrounded by W walls; behind those walls are UNKNOWN cells. Those UNKNOWN cells are adjacent to known W cells (not passable) → we'd skip them → no frontier found → fallback to true goal. Bad.
+
+Let me instead treat "adjacent to any known cell" as frontier. That includes cells behind walls. Then the agent will head toward unknown cells even if a wall is in between — Dijkstra will route around walls through other unknown cells (optimistic). Good.
+
+Simplify: any UNKNOWN cell adjacent (4-neighbor) to a cell with known != 'UNKNOWN'. Choose the one minimizing manhattan(hero, cell) + manhattan(cell, true_goal) but with a penalty for cells very close to hero that we've already been near (to avoid picking the same spot). Actually, to break a 2-cycle, picking a frontier cell a few cells away is good.
+
+Hmm, but there's a risk: the frontier target may be an unknown cell that is actually a wall; Dijkstra from it (with cost 1.15 for unknown) will still yield a finite field, and the agent moves toward it, revealing new cells. Good.
+
+Let me define:
+
+def _frontier_goal(known, hero, goal):
+    best=None; bv=INF
+    for y in range(1,25):
+      for x in range(1,39):
+        if known[y][x] != 'UNKNOWN': continue
+        adj = any(known[y+dy][x+dx] != 'UNKNOWN' for dx,dy in NEI4)
+        if not adj: continue
+        dh = abs(x-hx)+abs(y-hy)
+        if dh < 3: continue   # skip too-close cells to force real exploration
+        v = dh + 0.6*(abs(x-gx)+abs(y-gy))
+        if v < bv: bv=v; best=(x,y)
+    return best
+Hmm, skipping dh<3 might skip all candidates if hero is in a small pocket with unknown cells only 2 away. Let me not skip; just use dh + 0.6*dg. If the chosen frontier is adjacent, fine — the agent steps into it (if known passable). Actually if it's an UNKNOWN cell adjacent to the hero, it IS visible (near ring always visible) → known would be set, not UNKNOWN. So UNKNOWN cells are at distance ≥2 from hero (due to LOS occlusion, could be closer but behind walls). So it's fine.
+
+Also: to avoid repeatedly choosing the same frontier target, add a penalty for cells within 2 of mem["recent"] positions. Let me keep it simple.
+
+Also handle: if no frontier found (all cells known), just use the true goal.
+
+Now, when in explore mode, dg from the frontier cell is used for scoring. Note that _dijkstra with start=frontier cell: the start cell is UNKNOWN → dist=0 there regardless of cost. Fine.
+
+Let me also handle stagnation reset: when the agent actually discovers new terrain, reset. I can compare the number of known cells: mem["known_count"]. If it increased, reset stagnation (but keep best_metric). Hmm, in a maze the agent may reveal new cells while not making progress, so resetting on discovery could prevent escape mode. Let me reset stagnation only when metric improves or known_count increases by ≥5. Simpler: reset when metric improves. And if stagnation >= 8, keep explore mode until metric improves.
+
+Actually, let me use a simpler robust rule: use explore mode when stagnation >= 6, and hold it for 12 turns (mem["explore_until"] = turn + 12), then re-evaluate. This gives a periodic exploration push.
+
+Let me implement:
+
+metric = from_hero[goal[1]][goal[0]]
+if metric >= INF: metric = 500 + abs(hx-goal[0]) + abs(hy-goal[1])
+if mem.get("metric_goal") != goal:
+    mem["metric_goal"] = goal
+    mem["best_metric"] = metric
+    mem["stagnation"] = 0
+    mem["explore_until"] = 0
+else:
+    if metric < mem["best_metric"] - 0.6:
+        mem["best_metric"] = metric
+        mem["stagnation"] = 0
+    else:
+        mem["stagnation"] += 1
+if mem["stagnation"] >= 8:
+    mem["explore_until"] = turn + 10
+    mem["stagnation"] = 0
+Then:
+
+dijkstra_goal = goal
+explore_w = 0.25
+if mem.get("explore_until",0) > turn:
+    fg = _frontier_goal(known,(hx,hy),goal)
+    if fg: dijkstra_goal = fg
+    explore_w = 4.0
+dg = _dijkstra(..., dijkstra_goal, ...)
+Also in explore mode, add a bonus for reaching the frontier: score includes -12*dg[p] where dg is from the frontier → gradient toward it. Good.
+
+Recent-position penalty:
+
+recent = mem["recent"]
+# appended at end of _decide: recent.append((hx,hy)); keep last 12
+# penalty:
+rp = 0
+for i, q in enumerate(reversed(recent)):
+    if q == p: rp += 10.0 / (1 + i*0.3)
+score -= rp
+Hmm, in a 2-cycle, the current cell (WAIT) and the other cell are both in recent. WAIT's current cell appears at indices 0 (most recent? wait, recent contains positions from previous turns; the current position was appended at the END of the previous turn, so it's in recent[-1]). Let me think: at the start of turn t, recent contains positions at turns t-1, t-2, ..., t-12 (appended after each decision). So:
+
+WAIT result = current position (hx,hy) = recent[-1] → highest recency weight.
+Move to other cell = recent[-2] → slightly lower weight. So WAIT gets a slightly larger penalty than the other cell → agent prefers moving to the other cell. That's still a cycle! Hmm.
+I need to penalize revisiting only, not the current position. WAIT is "staying", which should be penalized too (to avoid stalling) but slightly less. Let me make the recent penalty applied only to positions in recent excluding recent[-1] (the current position):
+
+penalized = set(recent[:-1])
+if p in penalized: score -= 25.0
+Then in a 2-cycle: at (14,2), the other cell (14,3) was visited at t-1 → in recent[:-1] → -25. WAIT (stay at (14,2)) → not penalized (only recent[-1] = (14,2)) → WAIT wins. Then the agent stops moving (stalls) → stuck increments → after 2 turns, BOMB handler triggers (if adjacent W). That's actually good! It will bomb the wall and escape. If no W wall adjacent (e.g., T_W or PIT), it will WAIT until explore mode kicks in (stagnation ≥8 → frontier goal → gradient toward unknown cells) → it will move toward new cells.
+
+But careful: recent should store positions from previous turns, and I need recent[:-1] to exclude the current. Let me append at the end of _decide AFTER scoring. Then at the start of the next turn, recent[-1] = position at previous turn = current position. Yes. Good.
+
+Penalty: -25 for revisiting a position from 2..12 turns ago. That might be too strong (discourages backtracking which is sometimes necessary in a maze). Let me use -18 and decay: -18 if in last 6, -6 if older (up to 12). Hmm. Let's use a simple -15 for positions in recent[:-1] (last 11 positions). Backtracking through a corridor would be penalized but not forbidden (progress gradient can override). Since -12*d gives ~12 per cell, a 15 penalty means backtracking one cell costs ~1.25 cells of progress — acceptable.
+
+Hmm, but in a maze, the agent may need to backtrack a long way to reach a gap. With -15 per revisited cell, it might refuse. But the Dijkstra gradient toward the goal through unknown cells should still pull it. Let me use -12.
+
+Actually, in the oscillation case at (14,2)/(14,3), the difference in dg between them might be ~1-2 (12-24 points). With -12 penalty, moving to the other cell is worse; WAIT wins. Good.
+
+Let me implement, then test.
+
+Also fix: stuck currently resets when moved — with WAIT, stuck increments → BOMB handler triggers. Good.
+
+One more thing: the BOMB handler checks known[...] == "W" for adjacent cells. In the pocket case, walls are 'W' → BOMB triggers. Bomb destroys W in 3x3 → opens the pocket.
+
+But careful: the hero must be away from the bomb at explosion. Our scoring's bomb risk (timer==1 → +50 damage) will push it away. But if the pocket is small (2 cells), the hero can't get ≥2 cells away! It would take damage. Hmm. HP>55 condition. With 50 damage, HP 50 → survives. OK. Actually, the bomb also destroys CRACK→PIT, etc. Fine.
+
+Let me now apply the edits.
+
+submission.py
+(修改)
++5
+-0
+查看变更
+submission.py
+(修改)
++26
+-0
+查看变更
+submission.py
+(修改)
++27
+-1
+查看变更
+submission.py
+(修改)
++2
+-1
+查看变更
+submission.py
+(修改)
++3
+-1
+查看变更
+submission.py
+(修改)
++4
+-1
+查看变更
+验证反振荡与前沿探索修复后的整体表现
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+Progress on random2/3 (now cleared). But new regressions:
+
+own-map: HP 50 (took 50 damage) and timeout with only K2. Worse.
+random4: DEAD (100 damage = PIT fall). That's a serious bug — the agent stepped into a PIT, likely via ICE momentum or an unknown cell. Need to investigate.
+random5: HP 50 (laser hit).
+Let me debug random4 death first — most critical.
+
+Also, the "explore mode" seems to be causing wandering on my own map (stagnation triggers repeatedly). Let's examine.
+
+Let me first check random4 death.
+
+random2/3 已能通关，但出现新问题：random4 坠坑暴毙、自建地图掉 50 血且更慢。先查最严重的坠坑。
+
+追踪 random4 勇者阵亡的具体回合与地形
+
+cd d:/ai_work/hunyuan_lab; python debug2.py 4
+深度思考
+At t=93, MOVE_L (6,19)->(5,19) death. Let me check the terrain at (5,19). Likely a PIT. But the agent should have known it (adjacent cell visible). Let me check. Also note the hero took 50 damage at t=66 (laser?) — moving from (26,13) to (27,16) via a spring/portal. And then it wandered far away from the goal (20,20) — from t=77 onwards it went west and north, away from the goal! That suggests explore mode was active and dragging it away, or the Dijkstra field. Hmm, at t=77-93 it goes from (20,21) all the way west to (5,19) — that's moving away from goal (20,20). This is likely the explore-mode frontier target pulling it to unexplored regions. That's bad — it wandered away and died.
+
+Let me check what's at (5,19) and around.
+
+Also — important: at t=66, MOVE_R (26,13)->(27,16) — that's a 3-cell move, probably a SPRING_D or portal. HP 50 → took 50 damage (laser). Hmm.
+
+Let me inspect the grid around (5,19) and (6,19).
+
+检查阵亡格子的实际地形
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); from test import random_grid; g=random_grid(4,220); for y in range(17,23): print(y,[(x,g[y][x]) for x in range(2,10)]) print('(5,19)',g[19][5],'(6,19)',g[19][6],'(6,20)',g[20][6])"
+深度思考
+(5,19) is EMPTY in the initial grid, but the hero died with 100 damage. So the cell became a PIT — likely a CRACK that collapsed earlier, or an explosion turning a CRACK into PIT. Wait, initial (5,19) is EMPTY. Could it be a CRACK created by... no. Maybe it's a PIT created by a TNT/bomb explosion turning a CRACK into PIT? But (5,19) is EMPTY initially. Hmm. Or the hero died from a bomb explosion (-100? no, bomb 50). D=100 effective trap damage; HP went 50 → 0. So 50 damage killed it. Actually hp=0 from 50 → damage = 50. D=100.0 total (50 earlier + 50 now). So the second hit was 50 damage, not 100. Could be a laser hit (50) or bomb (50). Hmm! At t=93 (turn 93 = 3*31 → laser turn!). So it's a laser hit of 50. HP was 50 → dead. Right.
+
+So the agent died from a laser on a laser turn. Why didn't it avoid? Because the beam cell wasn't known (the cannon is off-screen and warnings only cover visible cells). Hmm, at t=93 the hero moved from (6,19) to (5,19); exposed = {(6,19),(5,19)}. If (5,19) is a beam cell from a cannon, the agent should have avoided (score -150). Unless the beam cell was not in mem["beam"] because the cannon was never seen and warnings on prior laser turns didn't include it (outside visible mask at that time). Warnings at turn 93 should include beam cells within the visible mask centered at (6,19) → includes (5,19) if it's a beam cell! Let me check: warnings are computed from the pre-action snapshot (state at start of turn 93), and include beam cells within visible_mask. (5,19) is adjacent → visible. So warnings should include (5,19) if it's in a laser ray. Then mem["beam"] gets it. Then _simulate would add 50 damage → -150. Unless... hmm.
+
+Wait — maybe the beam ray is computed in my engine's state() via self.rays() which uses self.high() with current gates_flipped. If the beam passes through a SWITCH-triggered gate change... hmm. Or the laser cannon fires along a row and the beam cell (5,19) is beyond the visible mask in the engine's visible() due to LOS. Let me debug: print warnings at t=93 and the beam set.
+
+Actually, there's a possible bug: my engine's state() computes warnings based on self.rays() using the CURRENT terrain/occupant, but it uses self.high(cx,cy,terr=terr,flip=f) in rays() — fine. But warnings only include cells where mask[y][x] is True. (5,19) is adjacent to hero → visible. OK.
+
+Let me dump warnings and _simulate results at t=93. Let me write a targeted script.
+
+Actually, I realize: at t=93 the hero is at (6,19) and moves LEFT to (5,19). But look at the earlier trajectory: at t=91 MOVE_U (9,21)->(6,20) — a 3-cell jump? That's a SPRING_U at (9,21)? Actually (9,20) is SPRING_L... hmm, MOVE_U from (9,21) to (6,20) is weird (x changed by -3, y by -1). That must be a spring/portal chain. So the hero's movement is unpredictable due to springs. Anyway.
+
+Let me dump the state at t=93.
+
+debug3.py
+(写入)
++29
+-0
+查看变更
+检查第 93 回合激光警告、已记录射线与地形视图
+
+cd d:/ai_work/hunyuan_lab; python debug3.py 4 93
+深度思考
+Key insight: the beam is at column x=6, rows 16..22 (dir D). The hero is at (6,19) — which IS a beam cell. On turn 93 (laser turn), the hero starts on a beam cell → unavoidable hit, regardless of action. My _simulate adds 50 damage to ALL candidates equally (since exposed includes start). So all candidates lose 150 equally, and the agent picks the best progress — which was MOVE_L. HP=50 → dies.
+
+Why was the hero on (6,19) at the start of a laser turn? At turn 92, the hero moved from (6,20) to (6,19) — and (6,19) will be a beam cell on turn 93. My forward penalty is -140 for ending on a beam cell when the next turn is a laser turn. But maybe the beam cell wasn't in mem["beam"] at turn 92? Actually warnings are only given on laser turns (turn 93), not on turn 92. But _recompute_beams from known cannons — the cannon at (6,15) is known (in mem["cannons"]). It should have generated beams at (6,16)..(6,22) — but wait, mem["cannons"] includes (6,15) with dir D. _recompute_beams extends from (6,15) downward 10 cells, but stops at _known_high or occ BOX. Cells (6,16): known terrain is 'MIRROR_NE'? Let's see the printed view: row y=16, x = hx-3..hx+3 = 3..9. Values: x=3 UNKNOWN, x=4 UNKNOWN, x=5 MIRROR_NE, x=6 R_GATE, x=7 EMPTY, x=8 UNKNOWN, x=9 UNKNOWN. So (6,16) is R_GATE (closed → high wall). Hmm, but the engine's rays on turn 93 show beam at (6,16) — meaning the gate must be open at that time (gates_flipped True). Indeed there's a SWITCH at (6,18) that flips gates. So on turn 93 with gates flipped, R_GATE is open and the beam passes; on turn 92, gates may have been flipped differently, so my _recompute_beams saw R_GATE as closed and stopped the beam at (6,16). Then the agent didn't know (6,19) was a beam cell → no forward penalty → stepped there on turn 92.
+
+But at turn 93, the warnings reveal the beam. However, the hero is already standing on it → unavoidable. So the agent's death was caused by a gate flip changing laser propagation. That's a subtle dynamic. To prevent, the agent should be conservative: treat beam cells from known cannons as dangerous even when the current gate state blocks them — i.e., compute beams optimistically ignoring gate blocking (assume gates may open). Or more simply: avoid the entire ray line from a known cannon regardless of current blockers. Let me change _recompute_beams to NOT stop at closed gates (only stop at W/T_W/LASER/BOX/TNT). Actually stop at W, T_W, LASER_*, and out-of-bounds; ignore gate state. That way it remembers the full potential ray. Also for warnings — those come from the engine and reflect current state; fine.
+
+But there's still a general problem: the hero at HP 50 should be extra careful. When HP is low, the agent should strongly avoid any laser exposure, and ideally avoid beam cells on all turns (since gate flips can change beams). Let me add: treat beam cells as high-cost in Dijkstra when hp is low, and add a general (weaker) penalty for ending on beam cells regardless of next turn, e.g., -40 (scaled by hp). Plus fix _recompute_beams to be optimistic about gates.
+
+Actually, better: make the agent avoid beam cells at all times with a moderate penalty, since a beam cell can become dangerous at any time (and being on one at the start of a laser turn is unavoidable). The cost of avoiding is small (go around). Let me add:
+
+if p in beam_cells: score -= 45.0  (all turns)
+And keep -140 on the turn before a laser turn. Hmm, both would stack → -185. Fine.
+
+But careful: if the hero is currently ON a beam cell, WAIT has the penalty too — that's fine, it'll move off.
+
+Also, _recompute_beams should not stop at closed gates. Let me change the condition from _known_high(...) to check only hard walls. Actually also should we ignore TNT occupant? The beam stops at TNT and arms it, but also the TNT explodes — dangerous. Let me keep TNT as a stop but record the beam cell before it (already does). Fine.
+
+Let me also reconsider: the bigger problem is that the agent wandered far from the goal during "explore mode" (explore_until=100 at turn 93; metric=4.0 meaning it's only 4 cost away from the goal (20,20)! But it was at (6,19) — far away. Hmm, metric=4.0 is best_metric (the best ever), not current. The agent was near the goal earlier (at (20,21) at t=76-77) but couldn't step onto K2 at (20,20) because... let me check. At t=77 it did THROW_D from (20,21) — stuck=1, meaning MOVE_U was blocked. What's at (20,20)? K2. Why couldn't it step onto K2? Maybe a BOX or TNT occupant, or a closed gate. Let me check. Actually maybe (20,20) had a 'TNT' occupant → blocked. Hmm. Or the terrain at (20,20) is K2 but the agent's known says something else (e.g., 'CHEST'?). Let's check random4 grid at (20,20) and neighbors.
+
+Actually, reach K2 True in debug2. Let me check the actual tiles around (20,20).
+
+Let me also reconsider: the agent at t=76 was at (20,21), one step below K2 (20,20). MOVE_U should step onto K2 → keys[1]=True → then goal=V. But instead it threw a stone and wandered away. So MOVE_U was blocked. Let me look at the grid.
+
+检查目标 K2 附近与激光炮路径的地形
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); from test import random_grid; g=random_grid(4,220); for y in range(18,23): print(y,[(x,g[y][x]) for x in range(18,24)]) print('6,15',g[15][6],'6,16',g[16][6],'6,18',g[18][6])"
+深度思考
+(20,20) is K2, and (20,19) has TNT occupant, (21,19) BOX. From (20,21), MOVE_U to (20,20) should be possible... unless the hero's movement chain from (20,21) to (20,20) was fine. But wait — at t=76 the hero was at (20,21), and at t=77 it did THROW_D (stuck=1). Maybe MOVE_U was blocked because (20,20) had a TNT occupant from a moved box? No, TNT is at (20,19), not (20,20).
+
+Hmm, actually maybe the hero was at (20,21) but MOVE_U from (20,21) → (20,20) — the terrain is K2. Why blocked? Let me check _simulate: khigh(*p1) — known[20][20] should be 'K2' → not high. occ_at(p1) = occupant at (20,20) = None. So chain runs → keys[1] = True, keys_gain=1, +60 score. That should be strongly preferred. Unless known[20][20] was 'UNKNOWN' (never visible)... but (20,20) is adjacent to (20,21), always visible. So it should be 'K2'.
+
+Hmm, unless the hero at t=77 wasn't actually able to move up because (20,20) had been consumed? No.
+
+Wait — maybe the issue is a laser at (18,20) LASER_D — its beam goes down column 18, not 20. Not relevant.
+
+Let me debug turn 77 specifically with candidate scores. Let me write a script to dump all candidate results and scores at a given turn. I'll instrument by replicating the scoring logic in a debug script (import helpers). Actually easier: temporarily add a debug print inside _decide? I don't want to modify submission.py for debugging. Let me write a debug script that reconstructs ctx and results using the same helper functions and prints scores. That duplicates the scoring but is fine for diagnosis.
+
+Actually, simpler: let me use monkeypatching — replace submission._simulate with a wrapper that logs inputs/results? Or better: call submission._dijkstra etc. manually.
+
+Hmm. Let me think about a likely cause: the _unknown_around/explore_w and recent penalties might make THROW_D score higher than MOVE_U. THROW_D has used_throw -2, no movement -3, flip bonus maybe +20 if it hits a switch and there's a closed gate. At (20,21), THROW_D flies down 6 cells: (20,22)=HEAL, (20,23)... could hit a SWITCH → flip → +20 bonus. That could make THROW_D attractive (+20 -2 -3 = +15) over MOVE_U. But MOVE_U gains a key (+60) — should still win. Unless the agent's known[20][20] was not 'K2'.
+
+Hold on — maybe the agent had already collected K1 at t≈60 and set goal = t2 = (20,20). But plan_goal reset to None when keys[0]=True. Then when it reaches (20,21), MOVE_U → keys[1]=True → +60. Should win.
+
+Wait, look at t=75: MOVE_U (24,22)->(21,21) — a 3-cell move (spring). t=76: MOVE_L (21,21)->(20,21). t=77: THROW_D. Hmm.
+
+Could (20,20) be a TNT occupant? The TNT is at (20,19). But a BOX at (21,19) could be pushed... no.
+
+Let me just dump the state at t=77.
+
+检查为何勇者在 K2 旁边没有直接踩上去
+
+cd d:/ai_work/hunyuan_lab; python debug3.py 4 77
+深度思考
+At t=77, (20,20) is K2 and visible. The agent chose THROW_D. Why? Let's compute: MOVE_U from (20,21) → (20,20) K2 → keys[1]=True, keys_gain=1 → +60 score. But wait — _simulate for MOVE_U: chain(start,(20,20),d). In the chain, t = terrain_at((20,20)) = 'K2' → keys[1]=True, keys_gain += 1. Then step 8: t == 'K2' → not ICE/etc → return. So result: pos (20,20), keys_gain 1, moved True, damage 0 (no laser since turn 77 not divisible by 3). Score: dg[(20,20)] — the Dijkstra from goal (20,20) has dist 0 at the goal! So d=0 → score = 0 + 60 + exploration bonus etc. That should be the best.
+
+Unless dijkstra_goal is a frontier cell because explore mode is active (explore_until 84 > 77). Yes! Explore mode was active, so dg is from a frontier cell, not from the goal. Then moving to (20,20) doesn't reduce dg much, and the +60 key bonus might be outweighed by... hmm, THROW_D gives a flip bonus +20 and maybe better dg (staying at (20,21) might be closer to the frontier than (20,20)?). Also THROW_D stays at current position which might have lower dg from the frontier. Hmm, +60 is big though.
+
+Wait — actually there's a subtlety: _simulate for MOVE_U checks the CHEST at (20,22)... no. Hmm.
+
+Hmm, let me reconsider: maybe MOVE_U into (20,20) triggers a laser? No, turn 77 not laser.
+
+Wait — actually maybe khigh at (20,20) is True because known[20][20] == 'K2'... no.
+
+Hmm, let me look at score components more concretely. Let me write a debug that reconstructs the exact scoring for turn 77. I'll copy the scoring logic into a script (or monkeypatch). Actually, easier: I'll add a temporary debug hook in submission.py via an environment-like module variable... but no file I/O. I can monkeypatch submission._dijkstra to log what dijkstra_goal is. Let me do that: wrap _dijkstra to print the start argument. And wrap _simulate? Let me print all results with a manual replication of scoring.
+
+Actually, let me write a script that, at turn 77, calls the internals to get results and dg, then prints each candidate's d, blocked_goal, damage, keys_gain, win, moved, pos, flip, and the computed score using the same formula. This duplicates ~40 lines but is straightforward.
+
+Hmm, this is getting deep. Let me think about the likely root cause differently: explore_w=4.0 with _unknown_around. At turn 77, the hero at (20,21) has many unknown cells within radius 3 (from the printed view, lots of UNKNOWN). _unknown_around counts UNKNOWN within a circle radius ~3 — maybe ~10-15 cells → bonus 40-60. Moving to (20,20) vs staying at (20,21) — the unknown count could differ by a few cells (e.g., 4 cells) → 16 points. Not enough to beat +60.
+
+But THROW_D has flip != flipped bonus +20 if it hits a switch and there's a closed gate. From (20,21), THROW_D goes (20,22)=CHEST/HEAL, (20,23)=SWITCH → flips gates → +20. Combined with staying at a position with lower dg (from frontier), it might beat MOVE_U if dg[(20,20)] is much larger than dg[(20,21)]. Hmm, but dg is from a frontier cell (explore goal) that could be far away, and stepping to (20,20) might increase dg by 1-2 (12-24 points). So MOVE_U: -12*Δ + 60 ≈ +40; THROW_D: +20 -2 -3 + (unknown bonus diff) ≈ +15-30. MOVE_U should still win...
+
+Unless keys_gain isn't 1 because keys[1] was already True? At t=77 keys=[True, False] → K1 collected, K2 not. So keys_gain=1.
+
+Hmm wait, maybe the problem is that _simulate for MOVE_U treats (20,20) as a 'K2' but ctx["keys"] is a list that was mutated by other candidate simulations! In _decide, I call _simulate(act, ctx) for each candidate in a loop, passing the SAME ctx dict. Inside _simulate, keys = list(ctx["keys"]) — a copy. Good, no mutation of ctx["keys"]. But ctx["pos"], etc., are not mutated. OK.
+
+Hmm, but ctx["known"] is mem["known"] — shared, read-only in _simulate. Fine.
+
+What about ctx["beam"] — shared dict, read-only. Fine.
+
+Hmm. Let me just write the diagnostic. Actually — I bet the issue is the blocked_goal penalty -400: if dg[(20,20)] is INF because _enter_cost for 'K2' is... wait, _enter_cost for t == 'K2': it falls to else: c = 1.0. Fine. Not INF.
+
+But dg from the frontier cell: _dijkstra starts at dijkstra_goal (frontier). If the frontier cell is separated from (20,20) by known walls (all paths blocked), dg[(20,20)] could be INF → -400 penalty! Then MOVE_U gets -400 + 60 = -340, while THROW_D (staying at (20,21)) also INF → -400... plus flip bonus +20. Hmm! If both are INF, the fallback uses Manhattan distance to dijkstra_goal (frontier), not the true goal. Since I use goal in the fallback (abs(p[0]-goal[0]) + ...) — wait, I use goal (true goal) in the fallback, not dijkstra_goal. Let me check the code:
+
+if blocked_goal:
+    d = abs(p[0] - goal[0]) + abs(p[1] - goal[1]) + 30
+Yes, uses goal (true goal). So at (20,20), fallback = 0 + 30 = 30 → -360 -400 + 60 = -700. At (20,21), fallback = 1+30 = 31 → -372 -400 + ... → -772 + 20 (flip) = -752. So MOVE_U wins by ~50. Hmm, still should win.
+
+OK let me just write the diagnostic to be sure. Actually, maybe THROW_D's flip bonus is +20 and there's also a large _unknown_around difference. Let me just do it.
+
+Actually, hold on. Maybe the issue is that MOVE_U is not blocked but the actual engine blocked it — but the log shows the agent CHOSE THROW_D, so MOVE_U wasn't chosen. Let me just get the numbers.
+
+Let me write debug4.py that replays to turn 77 and recomputes everything with prints. I'll import submission's helpers and replicate the score loop.
+
+Actually simpler: monkeypatch submission._simulate to record the results dict for each call at the target turn, and monkeypatch submission._dijkstra to record the start. Then after decide_action, I can compute the scores myself using the recorded results + dg (I can call _dijkstra again with the recorded start). Let me do that.
+
+debug4.py
+(写入)
++52
+-0
+查看变更
+打印第 77 回合所有候选动作的评分要素
+
+cd d:/ai_work/hunyuan_lab; python debug4.py 4 77
+深度思考
+Interesting: dij starts shows (2,13) then (20,20) — so at turn 77 the dijkstra_goal was (20,20), i.e., the true goal (no frontier found or explore mode not active?). But explore_until 84 > 77 → explore mode should be active. It called _frontier_goal and it may have returned None (no UNKNOWN adjacent to known?) — but the view shows UNKNOWN cells. Hmm, _frontier_goal requires known[y][x] == 'UNKNOWN' and adjacent to a known cell. There are UNKNOWN cells in view, so it should find one. But the debug dg I recomputed used mem.get("frontier_goal_dbg", goal) which isn't set → I used goal. So my printed d values are from the TRUE goal, not the actual frontier goal used by _decide. That's the flaw in my diagnostic. The actual dijkstra_goal was probably the frontier — the second _dijkstra start would be that. But dij_starts only captured the first 10 calls (from earlier turns). Let me not worry.
+
+Given the actual chosen action was THROW_D despite MOVE_U having d=0 (if dg were from the true goal) — clearly the actual dg was from a frontier target far away, making MOVE_U's d large. So explore mode is actively hurting: it overrides the goal gradient even when the hero is one step from a key.
+
+Fix: never let explore mode override the final approach — if the hero is close to the goal (e.g., from_hero[goal] <= 6 or Manhattan ≤ 4), disable explore mode. More generally, when a candidate action would gain a key or win, ensure it wins regardless of the frontier gradient. Let me add a strong bonus for key gain / win that dominates: currently +60 for key, +100000 for win. With dg from frontier, moving to (20,20) might have d ~ say 60 → -720 + 60 = -660, while THROW_D d ~ 55 → -660 + 20 - 5 = -645 → THROW wins. So +60 isn't enough. Boost key gain to +400 (still less than win). That guarantees key pickup. Actually, is picking up a key always good? Yes — it's required to win and never harmful. So a huge bonus is fine: +500.
+
+Also: disable explore mode when the hero is within Manhattan distance ≤ 5 of the true goal. Let me add that.
+
+Also: the deeper issue — explore mode triggers too often on my own map and drags the agent away. Let me reconsider explore mode's design. Better approach: instead of replacing the goal with a frontier cell, add a bonus for moving toward the frontier as a secondary term, while keeping the true goal gradient primary. E.g., score = -12dg_true + 3(-dg_frontier) ... hmm. Simpler: keep dg from the TRUE goal always, and in explore mode add a bonus + 4.0 * (unknown cells revealed) and a penalty for revisits. That avoids overriding the goal. But then the oscillation problem (random3) — where the true goal gradient is flat (all dg INF or local minimum) — wouldn't be solved. Hmm.
+
+Compromise: use the frontier gradient only when the true-goal field is "flat" or unreachable, i.e., when from_hero[goal] >= INF OR stagnation is high AND the hero is far from the goal (Manhattan > 8). Let me add the condition: if explore_mode and manhattan(hero, goal) > 8: use frontier. That keeps the final approach intact.
+
+Also, boost key gain bonus to +400.
+
+Let me also fix _recompute_beams for gate flips, and add a general beam-cell avoidance penalty.
+
+Additionally, I noticed at t=66 of random4, the hero took 50 damage from a laser while at (27,16)... it's fine.
+
+Let me also consider: HP 50 → death from one laser hit. The agent should be much more cautious at low HP. Add: if hp <= 55, increase the beam penalties further (e.g., double), and avoid any action that results in damage > 0 strongly. Currently damage penalty is -3 per HP → 50 damage = -150. With low HP, death → -1,000,000 (dead flag). Wait — dead is set if hp - damage <= 0. At t=93, hp=50 and damage=50 → dead=True → score -1,000,000. But ALL candidates had damage=50 (since start cell in beam) → all dead. So no way to avoid. The only fix is to never be on a beam cell at the start of a laser turn. Which requires knowing the beam earlier. Fix _recompute_beams to ignore gate blocking.
+
+Let me apply these fixes:
+
+_recompute_beams: stop only at hard walls (W/T_W/LASER) or boundary/BOX/TNT, not gates. Also, maybe extend through unknown cells (currently _known_high returns False for UNKNOWN → continues). Good.
+
+Add general beam penalty: if p in beam_cells: score -= 45.0 (all turns), and keep -140 when next turn is laser. Hmm, but if the hero is already on a beam cell on a non-laser turn, WAIT gets -45 too; moving off gets 0 → good.
+
+Actually careful: on a laser turn, if the hero's start cell is a beam cell, all candidates take 50 damage → all equally penalized; that's unavoidable. Fine.
+
+Explore mode guard: only use frontier if manhattan(hero, goal) > 8.
+
+Key gain bonus +400.
+
+Also: maybe reduce explore mode duration/frequency: explore_until = turn + 6 instead of 10, and require stagnation >= 10. Let me keep 8 but with the guard.
+
+Let me also reconsider the own-map regression: with explore mode active, the agent wandered. With the guard (Manhattan > 8) — on my own map the hero is usually far from the goal, so explore mode still triggers and may cause wandering. Hmm. Let me think about whether explore mode is actually needed on my own map. Earlier (before explore mode) the agent got both keys by t=239 and timed out with HP 100. With explore mode it got only K2 and HP 50 — worse. So explore mode hurts on my map. But it fixed random2/3 (which were stuck). Hmm.
+
+Maybe a better approach for stagnation: instead of a frontier gradient that overrides the goal, add a "random walk" perturbation to break cycles without abandoning the goal. E.g., when stagnant, temporarily boost the penalty for revisits and add a small deterministic pseudo-random tie-breaker based on turn & position so the agent explores a different direction but still generally toward the goal. Hmm.
+
+Alternative: when stagnant, temporarily set the goal's cost field to use unknown = 1.0 (optimistic) — no.
+
+Let me think about why random3 got stuck originally: the hero was in a 2-cell pocket near (14,2)/(14,3), and the true goal K1 (20,5) was probably enclosed by walls so all reachable cells had dg = INF → fallback Manhattan gradient → local minimum at (14,3) → oscillation between (14,2)/(14,3). With the recent penalty, WAIT would win → stuck → BOMB handler → break wall. Actually the recent penalty alone might fix random3! And explore mode may not be needed. Let me test: disable explore mode (set explore_until never) and keep the recent penalty, then see if random2/3 still clear. Let me try that as an experiment.
+
+Actually, from the earlier test BEFORE explore mode but WITH goal commitment and dg-INF penalty, random3 timed out (no keys) — that was the version before recent/explore. Then I added both at once. Let me isolate: temporarily disable explore mode and test. I can do this by editing a flag in submission.py... but I don't want to leave debug flags. Let me instead create a copy of submission.py in the lab folder with explore disabled, and test with it. Simpler: monkeypatch submission._frontier_goal to return None in the test harness, and re-run the test suite. Let me do that.
+
+Actually, I can just set mem["explore_until"] = 0 every turn via a wrapper around decide_action in the harness — but _decide sets it internally. Monkeypatching _frontier_goal to return None means dijkstra_goal = goal always (but explore_w becomes 4.0 still). Hmm, explore_w=4.0 would still boost exploration. Let me monkeypatch _frontier_goal to return None AND also patch _unknown_around to return 0? That's messy.
+
+Let me instead modify submission.py: add a module-level constant EXPLORE_MODE = True and test with monkeypatching it to False. Actually, I can just test the effect by editing the file, running tests, and reverting if needed. Let's do it in a controlled way: I'll change explore mode to only apply when manhattan(hero, goal) > 12 AND from_hero[goal] >= INF (i.e., truly unreachable in the known map). That's a strong condition: only when the goal is unreachable do we explore. In random3's pocket, from_hero[goal] would be INF (goal enclosed by walls) → explore triggers. In my own map, the goal is always reachable through unknown cells (unknown=1.15) → from_hero[goal] finite → explore never triggers.
+
+Wait, is from_hero[goal] finite on my own map? Yes — unknown cells are passable with cost 1.15, so Dijkstra reaches any cell. So explore mode would never trigger on my map. In random4, at turn 77, from_hero[goal] = 1 (one step) → finite → no explore mode.
+
+In random3's pocket: the goal K1 at (20,5) — is it reachable through unknown cells? The pocket around (14,2)/(14,3) is surrounded by W walls; Dijkstra from the hero can only reach cells in the pocket (all other neighbors are W → INF). So from_hero[goal] = INF → explore triggers, frontier gradient pulls the agent toward unknown cells adjacent to known cells (behind walls). Then the agent will move... but it can't move into W walls. Hmm, the frontier gradient would suggest moving toward the wall, and the BOMB handler (stuck) would break the wall. That's how random3 got unstuck. Good.
+
+So condition: if explore_mode and metric >= INF (i.e., from_hero[goal] INF) OR manhattan > 15 and stagnation high. Let me just use metric >= INF or abs(hx-goal[0])+abs(hy-goal[1]) > 18. Hmm, on my own map the hero is often >18 Manhattan from the goal. So keep just metric >= INF. Actually let me also allow explore mode when the hero has been stagnant for a long time AND is far from the goal — but with a weak frontier influence rather than replacing dg. Let me keep it simple: only when metric >= INF.
+
+Hmm, but metric is set to 500 + manhattan when INF; so metric >= INF after replacement is never true. I need to track the raw value. Let me store mem["goal_unreachable"] = (from_hero[goal_y][goal_x] >= INF).
+
+Let me restructure:
+
+raw_goal_dist = from_hero[goal[1]][goal[0]]
+goal_unreachable = raw_goal_dist >= INF
+...
+if mem.get("explore_until",0) > turn and goal_unreachable:
+    fg = _frontier_goal(...)
+    if fg: dijkstra_goal = fg
+    explore_w = 4.0
+Also boost key gain to +400.
+
+Let me also handle the case where the goal is unreachable but the hero is near it (e.g., behind a closed gate) — explore mode may pull it away. Add: and abs(hx-goal[0])+abs(hy-goal[1]) > 5. Good.
+
+Let me apply all fixes now.
+
+找到根因：前沿探索模式在勇者离钥匙仅一格时仍覆盖了目标梯度；另外门翻转会改变激光传播，导致射线记忆不全。现在做针对性修正。
+
+submission.py
+(修改)
++5
+-1
+查看变更
+深度思考
+Note: _recompute_beams now has an unused flipped variable and state param — fine.
+
+Now let me update the explore mode condition and key bonus and general beam penalty.
+
+submission.py
+(修改)
++4
+-2
+查看变更
+submission.py
+(修改)
++3
+-1
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+submission.py
+(修改)
++5
+-1
+查看变更
+验证探索模式约束、钥匙奖励与射线记忆修复
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+Oops, massive regression: now everything times out, and the agent barely moves. Likely the general beam penalty (-45) is too strong: since mem["beam"] now includes the full ray lines (ignoring gates), and my map has many beam cells, the agent avoids them so strongly that it gets stuck. Also on random maps the cannons' rays cover many cells. Hmm. But -45 vs -12*d: moving one cell reduces d by 12, so -45 means it refuses to enter a beam cell even if it's the only path — that leads to stalling. And the recent penalty -14 also discourages backtracking. Combined with stuck and BOMB handling, it stalls.
+
+Also, D=0 on own map but HP 50 — meaning the hero took 50 damage from a laser but trap_damage is 0? Wait, D=0.0 and hp=50. That's odd: HP dropped but trap damage 0. Hmm — maybe HP dropped due to a BOMB self-damage (b = 50, a = 0 → ΔD = 0, hp -= 50). Yes! The agent placed a bomb (stuck handler) and got self-damaged by its own bomb. That's a problem: the bomb handler triggers too easily and the agent blows itself up. And on random maps, hp=100 with D=0 → no damage, but no progress.
+
+I think the general -45 beam penalty is too aggressive. Let me reduce it to -12 (just a tie-breaker) and keep the -140 for the turn before laser turns and the hp<=55 extra. Actually, the -140 forward penalty is what prevents the unavoidable hit; the general penalty can be small. Let me set general -12, and hp<=55 extra -40. And -140 when next turn is laser.
+
+Also, the stuck/BOMB handler is triggering too often (stuck>=2 with adjacent W and hp>55). The agent then places a bomb but doesn't retreat far enough → takes 50 self-damage. Let me improve: only place BOMB if there's a safe retreat cell (≥2 Chebyshev) reachable, and add a stronger "bomb timer==2" penalty so the hero retreats early. Actually, the bomb risk model uses the result position at the end of the current turn. When timer==2, I add +6 damage (soft). Let me increase to +25 (score penalty 325=75) so the hero moves away on the turn before explosion. Hmm, but that would just push it away one cell; need ≥2. Let me compute the bomb risk based on Chebyshev distance: if cheb <= 1 and timer==2 → penalty 330 = -90, enough to force moving ≥2 cells away if possible. Let me set damage += 30 for timer==2. Then on turn t+1 (timer 2), the agent moves away; on turn t+2 (timer 1), it stays away. Good.
+
+Actually wait, the sequence: bomb placed at turn t (timer 3). Phase C of turn t → timer 2. State at turn t+1 shows timer 2. My sim adds damage 30 if result pos within 1 of bomb → -90 penalty → agent moves to a cell ≥2 away. Then phase C of turn t+1 → timer 1. State at turn t+2 shows timer 1 → sim adds 50 → -150 penalty → agent stays ≥2 away. Then phase C of turn t+2 → timer 0 → explosion; hero is ≥2 away → safe.
+
+But note: state["bombs"] only includes bombs on the map. The judge's state includes all bombs (ours and any pre-existing). Fine.
+
+Also: the BOMB handler condition stuck >= 2 — with the recent penalty making WAIT attractive, stuck increments and BOMB triggers. That's intended to break walls. But if the wall is T_W (indestructible), bombing is pointless and self-damaging. I check known[...] == "W" only — good. But the agent might bomb when a wall is adjacent but not actually blocking the goal. Let me require that at least one adjacent W is in the direction of the goal (roughly), or simply require stuck >= 4 to reduce frequency. Let me use stuck >= 3.
+
+Also, I should reconsider: the "recent" penalty of -14 combined with "no movement" -3 could cause WAIT loops. Let me check whether WAIT's own result (current pos) is in recent_set — recent_set = set(recent[:-1]), and recent[-1] is the current position from the previous turn. So current pos is excluded from recent_set → WAIT not penalized. So WAIT gets -3 vs moving to a visited cell -14. Thus WAIT is preferred over backtracking. That's fine for breaking cycles but can stall. With explore mode (now restricted), the stall may persist. Hmm.
+
+Let me reconsider the overall approach. Maybe I'm overcomplicating. Let me reconsider the anti-oscillation: the core issue is that the agent can get stuck in a local minimum of the potential field. Classic solution: when stuck, temporarily increase the "unknown cell" optimism so that the agent is willing to explore through unknown cells. Actually, a simpler and very effective approach: use a "wall-following / systematic exploration" fallback: when stagnant, pick the least-visited neighboring cell (deterministic), ignoring the goal gradient, for a few turns. This guarantees exploration without abandoning the goal for long.
+
+Let me implement a cleaner stagnation handler:
+
+Track mem["stagnation"] based on metric improvement.
+When stagnation >= 6, enter "wander mode" for 6 turns: choose the action whose result position has the lowest visited count (and isn't deadly), with a bonus for unknown cells. Ignore dg entirely during wander mode. This forces systematic exploration.
+After wander mode ends, resume normal goal gradient.
+This is robust: it breaks local minima by physically moving to new cells. And it doesn't override the goal when close (since we only enter wander mode when stagnant, and we can suppress it if the goal is within 5 Manhattan).
+
+Combined with the recent penalty (mild), this should work.
+
+Let me also revert the frontier-based dg override entirely (it caused issues). Replace with wander mode.
+
+Let me restructure:
+
+# stagnation tracking as before
+wander = mem.get("wander_until",0) > turn
+if wander:
+    # score based on exploration only
+    for each candidate:
+        score = -3*damage - 1e6*dead + 8*(unknown_around(p) - unknown_around(start)) + 6*(1 if p not visited else -visited) + 400*keys_gain + ...
+        # prefer least visited, and prefer moving
+else:
+    normal score with dg
+Hmm, computing unknown_around for each candidate is fine.
+
+Let me define wander scoring:
+
+score = -4.0*r["damage"] - 1e6*dead + 100000*win + 400*keys_gain
+      + 6.0 * (_unknown_around(known,p) - _unknown_around(known,start))
+      - 8.0*min(visited.get(p,0),8)
+      - 20.0*(p in recent_set)
+      - (3 if not moved else 0)
+      - beam penalties
+Wait, _unknown_around counts unknown cells within radius 3 — when the agent moves into a new area, more unknown cells → positive difference → encourages exploration. Good.
+
+Actually, simpler: during wander, use dg from a frontier cell (as before) but only when goal_unreachable — no, let's do the explicit least-visited approach.
+
+Hmm, but a subtlety: _unknown_around uses the known map, which is updated each turn with visible cells. So as the agent moves into new areas, those cells become known; the count of unknowns around may not increase much. The gradient is weak. The -8*visited term is stronger: moving to a never-visited cell gives 0 vs 8*count for old cells. That drives exploration. Good.
+
+Let me implement wander mode with these terms, and keep normal mode with mild penalties.
+
+Also remove the general -45 beam penalty → set to -12; keep -140 when next turn is laser; add hp<=55 extra -40 only on laser-adjacent turns.
+
+Let me rewrite the scoring section carefully. Let me read the current full scoring region.
+
+探索/避险权重过猛导致整体停滞。我把「前沿梯度覆盖」改成受控的短期游走模式，并放缓射线格惩罚。
+
+读取
+submission.py
+L700-824
+读取
+submission.py
+L824-873
+深度思考
+Let me restructure with a cleaner design:
+
+Replace the "explore_until/frontier" with wander_until.
+wander = mem.get("wander_until",0) > turn and far_from_goal.
+In wander mode, score = exploration-based; else goal-gradient-based.
+Common penalties (damage, dead, beam, keys, win, action costs) applied in both.
+Let me write a single scoring loop with a conditional on wander.
+
+Also fix bomb risk: in _simulate, change timer==2 damage from 6 to 30.
+
+Also reduce general beam penalty to -12, keep -140 for laser-eve turns, hp<=55 extra -40 on those turns.
+
+Also reduce recent penalty to -10.
+
+Let me do the edits.
+
+submission.py
+(修改)
++1
+-1
+查看变更
+submission.py
+(修改)
++5
+-12
+查看变更
+深度思考
+Now _frontier_goal is unused — I can remove it, but leaving an unused function is harmless (no linter error since it's a definition). Actually let me keep it for now; it's dead code but fine. Actually, better to remove to keep the file clean. Let me remove later.
+
+Now rewrite the scoring loop.
+
+submission.py
+(修改)
++13
+-8
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+验证游走模式与惩罚权重调整后的表现
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+Better: 5/6 random maps cleared, own map timeout but HP 100, D=0. The remaining issues:
+
+random4: TIMEOUT, no keys, HP 50. Need to check.
+random1/5: 50 HP (laser hit).
+own map: timeout (expected for a 229-step maze; a blind agent can't do better than ~229+ exploration). Actually, could we make our own agent clear our own map? It would be nice (demon case C vs timeout). But timeout gives demon more points actually (320+... vs 200+...). Hmm, for our own hero score, timeout with P ≈ 2+r. If it got K2 only and wandered, r for the K1 stage might be decent. Whatever.
+Wait, actually there's an important consideration: if our own hero plays our own map and times out, the demon gets a timeout score — good for us. So no need to optimize that.
+
+But random4 needs investigation: no keys at all. Let me debug.
+
+Also laser hits: 50 damage on random1/5. Let me check if they're unavoidable or avoidable.
+
+Let me debug random4 first.
+
+查看 random4 卡住的后半段轨迹
+
+cd d:/ai_work/hunyuan_lab; python debug2.py 4 2>&1 | Select-Object -Last 30
+深度思考
+Still a 2-cycle (17,20)↔(17,21) in random4. The recent penalty doesn't break it because... let me think. At (17,20), recent contains positions from previous turns: ..., (17,21), (17,20), (17,21), (17,20). recent_set = set(recent[:-1]) includes both (17,20) and (17,21) — wait, recent[:-1] excludes recent[-1] which is the position from the previous turn = (17,20) (current). But (17,20) also appears earlier in recent (2 turns ago), so it's still in the set! So both cells are penalized -10 equally → no help.
+
+I need a different anti-oscillation approach: penalize by visit count heavily, or explicitly detect a cycle and force a different action. Let me think: mem["visited"] counts visits; both cells have ~100 visits → -1.0*min(count,6) = -6 each, equal. So no gradient.
+
+The root cause: the potential field has a local minimum that makes both cells look equally good, and the agent alternates due to tie-breaking with some asymmetric term (maybe _unknown_around or the flip bonus). To break a 2-cycle, the standard fix: if the agent detects it's in a cycle, force an action leading to a cell NOT in the recent set (any third cell), even if its potential is worse. If no such cell exists (truly pocket), use BOMB/JUMP/THROW.
+
+Let me implement explicit cycle detection:
+
+recent = mem["recent"]  # last 12 positions
+# detect 2-cycle: recent[-1] == recent[-3] and recent[-2] == recent[-4]
+At turn t, recent = positions at turns t-1, t-2, ..., t-12. If the last 4 are A,B,A,B (i.e., recent[-1]=A=current, recent[-2]=B, recent[-3]=A, recent[-4]=B), we're in a 2-cycle. Then:
+
+Prefer candidate results NOT in the set {A,B}; choose the one with the best score among those; if none, set mem["force_wander"] = turn+8 (wander mode) and if still none, trigger BOMB.
+Actually, a simpler robust approach: make the recent penalty proportional to the number of visits in the last N positions, with strong weight:
+
+cnt = recent.count(p)
+score -= 25.0 * cnt
+In a 2-cycle, WAIT's result (current cell A) appears ~5 times in recent; moving to B appears ~5 times. Still equal. Hmm.
+
+But WAIT has an extra -3 for no movement; moving to B has -10 (recent_set). So moving to B slightly worse... but the observed behavior alternates, so something else must favor moving. Likely the dg difference: maybe dg[(17,21)] < dg[(17,20)] by 1, and at (17,21) dg[(17,20)] < dg[(17,21)] by 1? That can't be (dg is a fixed field). Unless dg changes each turn because known changes (it doesn't here — known=188 constant). Hmm, so dg is fixed. If dg[B] < dg[A], then at A the agent moves to B; at B, moving back to A increases dg → should WAIT. But it moves back — so some other term favors A. What could favor A at B but not B at A? _unknown_around(known,p) — symmetric? It depends on position; A and B are adjacent, so their unknown counts can differ. If A has more unknown cells nearby than B, then at B moving to A gains 6*(unknown_A - unknown_B) in wander mode, or 0.25*(...) in normal mode. In wander mode weight 6 — that could dominate! So if wander mode is active, the agent oscillates between cells with different unknown counts... no, if A has more unknowns, it would always prefer A from both A (WAIT) and B (move). Hmm, WAIT at A stays at A — should win. Unless WAIT has -3 and recent penalty -10 but moving to A from B is moved=True (no -3) plus... Hmm.
+
+Wait — maybe the cycle is driven by the beam penalty: (turn+1)%3==0 and p in beam_cells → -140 on some turns. That changes every 3 turns. Could cause oscillation with period 6, not 2. Hmm.
+
+Let me just dump candidate scores at one of the cycle turns (e.g., t=220) using debug4 with seed 4, turn 220. But debug4's scoring replication is outdated. Let me update debug4 to print the actual results and the key score components for the current code. Actually, easier: monkeypatch submission._simulate to record results, then compute scores with the current formula. Let me rewrite debug4 to replicate the current scoring precisely.
+
+Actually, a more efficient approach: implement a general cycle-breaker that doesn't require understanding the exact cause:
+
+# After computing best_act, check for repetition
+recent = mem["recent"]
+if len(recent) >= 4 and recent[-1] == recent[-3] and recent[-2] == recent[-4]:
+    # in a 2-cycle: force a move to a cell not seen in the last 10 positions
+    cyc = set(recent[-6:])
+    alts = [a for a in candidates if results[a]["pos"] not in cyc and results[a]["moved"] and not results[a]["dead"]]
+    if alts:
+        best_act = max(alts, key=lambda a: (-results[a]["damage"], -mem["visited"].get(results[a]["pos"],0)))
+    else:
+        # no new cell reachable → wander mode / bomb
+        mem["wander_until"] = turn + 8
+        ...
+Hmm, but if no new cell is reachable (pocket), we need BOMB. Let me handle: if no alts and adjacent W and bombs>0 → BOMB.
+
+Actually, let me make it more general: check if the sequence of the last 6 positions contains only ≤2 distinct cells → oscillation. Then force an alternative.
+
+Also, there's another important consideration: the goal might be genuinely unreachable in random4 — K2 at (20,20) — reach check said True. Hmm.
+
+Let me look at the map around (17,20)/(17,21) and K2 (20,20).
+
+查看 2-cycle 附近地形，判断是否有出口
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); from test import random_grid; g=random_grid(4,220); for y in range(18,23): print(y,[(x,g[y][x]) for x in range(14,23)])"
+深度思考
+The area is wide open! The hero at (17,20)/(17,21) could easily walk right to (20,20) K2. Why is it oscillating? There must be a strong reason: perhaps dg from goal (20,20) is much larger at (18,20) because (18,20) is a LASER_D (high wall → INF). So from (17,20), moving right to (18,20) is blocked (it's a laser cannon = high wall). Moving down to (17,21) then right to (18,21) → (19,21) → (20,21) → up to (20,20)? Wait (20,19) has TNT; (20,20) is K2; from (20,21) move up → (20,20) K2 — that works. So a path exists: (17,21)→(18,21)→(19,21)→(20,21)→(20,20).
+
+Why does the agent prefer to go back to (17,20) instead of right along y=21? Possibly because of the recent penalty and wander mode — or because dg from goal: dg[(18,21)] might be high due to a SPRING/CRACK etc. Let me compute: from goal (20,20), Dijkstra: (20,21) cost 1, (19,21) cost 2, (18,21) cost 3, (17,21) cost 4, (17,20) cost 5. So moving right from (17,21) to (18,21) reduces d by 1 → +12. Moving up to (17,20) increases d by 1 → -12. So the agent should move right. Unless (18,21) has a huge cost (e.g., beam_cells +2.5 → still ~3.5). Hmm.
+
+Wait — maybe the hero's actual position isn't (17,20)/(17,21) as reported? The debug prints pos from st["hero"] before the action, and -> after. At t=212: MOVE_D (17,20)->(17,21). At t=213: MOVE_U (17,21)->(17,20). So yes.
+
+Let me reconsider: maybe the hero's keys are [False,False] and goal is (20,20) = K2. Hmm, plan_goal = K2. Fine.
+
+Could the beam penalty be the driver? mem["beam"] includes rays from known cannons, e.g., (18,20) LASER_D shoots down column 18 → (18,21),(18,22)... all beam cells. So (18,21) is a beam cell → -12 and on laser-eve turns -140. That could make moving right to (18,21) unattractive on some turns but not all. But the oscillation is period 2 (every turn), not period 3. Hmm, if (18,21) is a beam cell and (17,20) is not, then on laser-eve turns, moving to (18,21) gets -140. But moving to (17,20) from (17,21) gives d+1 (-12). So on laser-eve turns the agent moves up. On other turns, it should move right... but the log shows strict alternation every turn. Hmm.
+
+Wait — maybe the cannon at (18,20) LASER_D beam goes down column 18: (18,21)...(18,25). And _recompute_beams now ignores gates, so all those are beam cells. Also there might be other cannons whose rays cover (17,21) and (17,20) etc. Let me just dump the scores.
+
+Actually, let me take a completely different, much more robust approach to the oscillation problem: explicitly forbid returning to a recently visited cell unless it's the only safe option, with a large penalty that depends on how far back the visit was. Specifically, penalize p if p in recent by -60 * (1 if p appears in recent[-4:] else 0.3). In a 2-cycle, from (17,21): moving to (17,20) → recent → -60; WAIT at (17,21) → also recent → -60; moving right to (18,21) → new cell → 0. So the agent moves right! That breaks the cycle. The key insight: I need a THIRD cell to be more attractive than both cycle cells. Penalizing all recently visited cells (including the current one) equally achieves that, as long as an unvisited cell is reachable.
+
+Earlier I excluded recent[-1] from the penalty set to avoid penalizing WAIT. That was a mistake — WAIT should also be penalized during a cycle. But penalizing WAIT always (because current position is always in recent) would add a constant -60 to WAIT; that's fine — WAIT is rarely the best action anyway.
+
+So: if p in set(recent): score -= 45.0 (including current position). But careful: this penalizes backtracking in narrow corridors where it's necessary. However, -45 is comparable to ~4 cells of progress; in a dead-end corridor, the agent must backtrack — with -45 it might refuse and stall. Hmm. But wander mode / stuck handler can help. Alternatively, apply the strong penalty only when a cycle is detected:
+
+cycle = len(recent)>=4 and len(set(recent[-4:]))<=2
+if cycle:
+    recent_penalty = 60
+else:
+    recent_penalty = 8
+That's targeted: strong penalty only when oscillating. Let me implement that.
+
+Also, note wander mode currently uses -9*min(visited,8) and +6*Δunknown, which can also cause oscillation. With the cycle penalty applied, it'll break.
+
+Let me implement:
+
+cycle = len(recent) >= 4 and len(set(recent[-4:])) <= 2
+...
+if p in recent_set_all:  # all recent positions including current
+    score -= 60.0 if cycle else 8.0
+Where recent_set_all = set(recent).
+
+Hmm, but in normal (non-cycle) mode, penalizing the current position by -8 makes WAIT worse — fine.
+
+Also, let me add: when a cycle is detected, force wander mode for a few turns (to encourage new cells). Actually the -60 penalty should suffice.
+
+Let me also consider that recent has 12 entries; in a 2-cycle all 12 are 2 cells. So set(recent) = {A,B}, and any third cell is unpenalized.
+
+Let me implement this. Also remove the now-unused _frontier_goal function? It's harmless; but let me remove to keep cleanliness. Actually, dead code is fine but let me remove it since it's ~26 lines. I'll remove it later.
+
+Let me apply the cycle detection.
+
+random4 仍是二格往返。原因是近期回访惩罚把「原地等待」和「折返」同等对待。我改成只在检测到周期时才施加强惩罚，迫使它走向第三个格子。
+
+submission.py
+(修改)
++3
+-1
+查看变更
+submission.py
+(修改)
++2
+-2
+查看变更
+验证周期检测是否解开 random4 的二格往返
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+random4 now clears (T=134). But random3 now DEAD with hp=-50 (took 150 damage?). D=100 cap. Hmm. Need to investigate — probably a laser + explosion or walking into PIT.
+
+Also several maps have 50 HP (laser hit). Let me investigate the laser hits — maybe they're due to my engine's visible() warning behavior or my agent's incomplete beam knowledge.
+
+Actually, let me step back and assess priorities. The hero agent is decent: clears most maps, but takes 50 damage often and occasionally dies. Key improvements needed:
+
+Avoid laser damage robustly.
+Avoid death.
+Let me investigate random3 death.
+
+定位 random3 阵亡原因
+
+cd d:/ai_work/hunyuan_lab; python debug2.py 3 2>&1 | Select-Object -Last 25
+深度思考
+At t=81 HP 50, t=84 HP -50 (100 damage = PIT fall? or two lasers = 100?). D=100. Let me check: at t=84, MOVE_U (24,4)->(24,4) — no movement but HP -50, meaning damage 100. That's likely a PIT under the hero created by a CRACK collapse (explosion?) or a TNT blast (60) + laser (50) = 110. Hmm.
+
+Actually HP 50 → -50 means 100 damage in one turn. Could be laser from 2 cannons (2*50=100) — that would happen if exposed cells intersect rays from 2 cannons. Since hit_dirs counts distinct dirs, if 2 cannons have the same dir, we'd underestimate → agent might not avoid. Hmm. Or a bomb+TNT explosion.
+
+Let me debug turn 84 with debug3.
+
+检查 random3 第 84 回合的伤害来源与视野
+
+cd d:/ai_work/hunyuan_lab; python debug3.py 3 84
+深度思考
+At turn 84, the hero is at (24,4), which IS a beam cell (from cannon (22,4) LASER_R, beam covers (23,4),(24,4),...). The hero starts on a beam cell on a laser turn (84 = 3*28) → unavoidable 50 damage. HP was 50 → dead. But hp went to -50, i.e., 100 damage. Hmm, maybe two cannons' rays both hit: (22,4) LASER_R and something else. Actually m = number of cannons whose ray intersects exposed_cells. At (24,4), rays from (22,4)LASER_R (row 4) and maybe (24,1)? SPRING_D not a cannon. Hmm, warnings at (24,4) has dir R, from one cannon. But (24,3) has dir R too — same cannon? The warnings list (21,3),(22,3),(23,3),(24,3),(25,3) dir R → from a cannon at (20,3) LASER_R. And (23,4),(24,4) dir R → from cannon (22,4) LASER_R. So two cannons with dir R. hit_dirs counts distinct dirs = {'R'} → damage 50. But actual engine counted m=2 → 100 damage. So my simulation underestimates when multiple cannons share the same direction. That's a bug: I should count beams per cell with multiplicity of cannons, not distinct dirs.
+
+Fix: store for each beam cell a count of cannons (or a list of cannon coordinates) rather than just a set of dirs. Then laser damage = 50 * number of distinct cannons whose ray intersects exposed cells. Simplest: beam[(x,y)] = set of cannon coordinates (cx,cy) that light this cell. Then hit_cannons = union over exposed cells of beam[c] → damage = 50 * len(hit_cannons). Warnings give cells + dir but not cannon coords; we can derive: for warnings, we don't know the cannon. But _recompute_beams from known cannons gives exact coords. For warnings-only cells (cannon not yet seen), we can add a synthetic key ("W", x, y, dir) — hmm. Let me handle both:
+
+mem["beam"]: dict cell → set of "source ids". Source id for a known cannon = (cx,cy) tuple. For a warning cell whose source is unknown, use a string like ("warn", dir, y) — but multiple cells from the same unknown cannon share dir; using ("warn", dir) as the id would group them (good). But if two unknown cannons share a dir, underestimate — acceptable.
+Let me restructure:
+
+In _recompute_beams: beam.setdefault((x,y), set()).add((cx,cy)) (tuple of ints).
+For warnings: beam.setdefault(cell, set()).add(("w", w["dir"])).
+In _simulate: hits = set(); for c in exposed: hits |= beam.get(c,set()); damage += 50*len(hits).
+But careful: beam values are currently sets of dir strings; changing to sets of mixed types is fine.
+
+Also, _enter_cost checks (x,y) in beam — still fine.
+
+But there's still the deeper problem: the hero was standing on a beam cell at the start of a laser turn. At turn 83, the hero was at (24,4) and chose MOVE_U which was blocked (stayed). At turn 82 it moved (24,5)→(24,4), i.e., it stepped onto (24,4), which would be a beam cell on turn 84 (laser turn). My forward penalty at turn 82: (turn+1)%3 == 0? turn 82 → 83%3 = 2 → no. Hmm, the hero stepped onto (24,4) at turn 82 and stayed there through turn 83; turn 84 is the laser turn. At turn 83, (turn+1)%3 == 0 → the forward penalty should apply to any candidate ending on (24,4) → -140. But the chosen action MOVE_U was blocked → result position (24,4) → should be penalized -140. Yet it chose MOVE_U anyway. Why? Because all candidate actions that could move off (24,4) were blocked or worse. Looking at terrain: (24,4) surroundings:
+
+y=3: (24,3) = SPRING_U? From the view: row y=3, x=21..27: EMPTY, EMPTY, EMPTY, SPRING_U, EMPTY, EMPTY, EMPTY. So x=24 = SPRING_U.
+y=4: x=22 LASER_R (high wall), x=23 EMPTY, x=24 EMPTY (hero), x=25 W (high wall), x=26 UNKNOWN.
+y=5: x=21..27: EMPTY, EMPTY, EMPTY, EMPTY, LASER_D, ... so (24,5) EMPTY, (25,5) LASER_D.
+MOVE_L from (24,4) → (23,4) EMPTY (passable) — that's a beam cell too (from (22,4)LASER_R covers (23,4),(24,4)...). So moving left stays in the beam.
+MOVE_D → (24,5) EMPTY — not a beam? warnings don't include (24,5). Actually beam from (22,4) row 4 only. So (24,5) is not in the beam. So MOVE_D should have been chosen at turn 83 to escape. But the agent chose MOVE_U (blocked, since (24,3) is SPRING_U — not a high wall, so MOVE_U should succeed and land... wait, MOVE_U into SPRING_U would launch the hero upward. Hmm, the debug shows (24,4)->(24,4) meaning no movement. Why? khigh(24,3) — SPRING_U not high → passable. occ_at — maybe a BOX at (24,3)? Hmm. Actually _simulate predicted movement to (24,3) but the engine blocked it? Let me check: engine's MOVE_U from (24,4): p1=(24,3). self.high(24,3) — terrain 'SPRING_U' not high → OK. occupant[3][24]? Could be a BOX/TNT. Then chain → spring launches... Hmm, but the engine shows no movement. Maybe the hero's chain via spring returned to (24,4)? Or the hero was pushed back by a spring into a wall and stopped at (24,4)? Actually spring at (24,3) SPRING_U: after arriving, step 8 sets dir=U and probes (24,2),(24,1),(24,0). If (24,2) is EMPTY and (24,1) is... etc. It could land somewhere. But the engine recorded (24,4) as final position — maybe because the spring was blocked at k=1 (e.g., (24,2) is a high wall) → hero stays at spring cell (24,3), not (24,4). Hmm.
+Wait, the debug2 output at t=83 shows MOVE_U (24,4)->(24,4). So the hero ended at (24,4). Could be that MOVE_U was blocked because p1=(24,3) had a BOX occupant → engine treats occupant BOX: push check p2=(24,2); if p2 not passable → hero stays. Yes! That's plausible.
+
+OK so at turn 83 the agent chose MOVE_U but it was blocked, leaving it on the beam cell. Its simulation predicted... hmm, _simulate treats BOX push with cleared_override if p2 passable. If p2 isn't passable, no movement. So _simulate should also predict no movement. Then why choose MOVE_U over MOVE_D? Because in explore/wander mode maybe, or because of recent penalties: (24,5) was visited at turn 81/82 → penalty -8 (or -60 if cycle). The cycle detection: recent[-4:] at turn 83 might be {(24,5),(24,4)} → cycle → penalty -60 for both (24,5) and (24,4). Hmm, then MOVE_D to (24,5) gets -60, WAIT at (24,4) gets -60, MOVE_U (blocked → (24,4)) also -60... all equal. Then other terms decide. Hmm.
+
+Anyway — the strong -140 forward penalty should have made WAIT/MOVE_U (both ending on beam) much worse than MOVE_D (ending off beam). Unless (24,5) is ALSO a beam cell in mem["beam"]! Let me check: _recompute_beams ignores gates and extends 10 cells from each known cannon. Cannon (25,5) LASER_D shoots down column 25; cannon (22,4) LASER_R shoots right along row 4; cannon (15,3) LASER_R shoots right along row 3 (up to x=25). Hmm, warnings at turn 84 include (25,6),(25,7) dir D → from (25,5)LASER_D. There might also be a cannon at (24,1)? No.
+
+Wait — actually warnings include (23,4),(24,4) dir R but not (24,5). So (24,5) isn't lit in the engine's snapshot. But mem["beam"] might have stale entries for (24,5) from a cannon whose ray changed (e.g., gate flip or destroyed cannon). My _recompute_beams accumulates and never removes stale entries. E.g., a cannon at (15,5) LASER_D shoots down column 15 — not (24,5). Hmm. Or cannon (19,7) LASER_D shoots down column 19. Not (24,5).
+
+Actually, known beam near printed: (21,3)..(25,3) R, (23,4),(24,4),(25,4),(26,4),(27,4) R, (25,7),(25,6) D. No (24,5). So (24,5) is not in beam. Then MOVE_D should avoid the -140. Hmm.
+
+Hold on — at turn 83, is (turn+1)%3 == 0? turn=83 → 84%3=0 → yes. So the penalty applies. The chosen action MOVE_U ends at (24,4) (beam) → -140. MOVE_D ends at (24,5) (not beam) → no -140. So MOVE_D should win by 140, unless MOVE_D was predicted to be blocked too. Let me check the terrain at (24,5): from the view row y=5, x=21..27: EMPTY, EMPTY, EMPTY, EMPTY(? x=24), LASER_D (x=25), UNKNOWN, UNKNOWN. Wait the printed row y=5: "y= 5 EMPTY EMPTY EMPTY EMPTY LASER_D UNKNOWN UNKNOWN" for x=21,22,23,24,25,26,27. So (24,5)=EMPTY. Passable.
+
+Hmm, unless the hero at turn 83 was at (24,4) and MOVE_D would land on (24,5), which has visited count high and recent penalty -60 (cycle) → -60, plus dg difference. But -140 should dominate.
+
+Wait, maybe the problem is that at turn 83 the hero was actually at (24,4) but the state's gates_flipped changed and my mem["beam"] had (24,5) as a beam from some cannon. Let me just dump turn 83's warnings and beam near. Actually warnings are empty on turn 83 (not a laser turn), so I can't see them. But mem["beam"] is accumulated. Let me dump at turn 83 with debug3 (which prints warnings and beam near for that turn).
+
+检查第 83 回合为何没能离开激光射线格
+
+cd d:/ai_work/hunyuan_lab; python debug3.py 3 83
+深度思考
+At turn 83, (24,5) is not a beam cell. So MOVE_D should be strongly preferred. Why did the agent choose MOVE_U? Let me dump candidate results for turn 83 with a proper diagnostic. Let me update debug4 to match the current scoring. Actually, I can monkeypatch _simulate to record results and then compute the exact scores. Let me rewrite debug4 fully with the current scoring logic.
+
+Actually, maybe the issue: MOVE_U from (24,4) — the destination (24,3) is SPRING_U. My _simulate chain: arrives at (24,3), then step 8 spring: dir=U, probes (24,2),(24,1),(24,0). If (24,2) is EMPTY, (24,1) is... from the view y=1: x=21..27 = UNKNOWN, UNKNOWN, ICE, SPRING_D, MIRROR_NE, UNKNOWN, UNKNOWN. So x=24 → SPRING_D, x=25 → MIRROR_NE. Hmm, so (24,1) is SPRING_D (not a high wall). (24,0) is T_W (border, high wall) → blocked at k=3 → land at (24,2). So the chain: (24,4)→(24,3)→(24,2)... then at (24,2) EMPTY → stop. So _simulate predicts final pos (24,2), damage 0, moved True. And dg[(24,2)] might be much better than dg[(24,5)] (since the goal is (35,13), moving up is away from goal though). Hmm, but also (24,2) is NOT in beam → no -140. So MOVE_U would be chosen over MOVE_D if dg[(24,2)] is smaller. But the engine shows no movement — meaning the engine blocked MOVE_U. Why? Because (24,3) has a BOX/TNT occupant? Let me check the occupant map. Actually the engine's passable check for MOVE_U: p1=(24,3), self.high(24,3) false, self.occupant[3][24] — if 'BOX' → push check p2=(24,2); if p2 passable → box chain runs; hero then moves to p1 if free. But if the box's spring launches it and it ends back... hmm.
+
+Actually wait: the engine's chain('BOX', p1, p2, d): the box moves from (24,3) to (24,2) with dir U. At (24,2), terrain EMPTY → stop. Then hero re-enters p1=(24,3) (now free) → hero chain from (24,4) to (24,3): arrives at SPRING_U → spring launches hero up: probes (24,2) — now occupied by BOX → blocked at k=1 → hero stays at (24,3). Hmm, that would give final pos (24,3), not (24,4).
+
+Hmm, the debug says (24,4)->(24,4). Let me check if (24,3) has a TNT occupant (blocks movement entirely). Actually, if occupant[3][24] == 'TNT', self.high doesn't consider TNT, but the MOVE handler checks self.occupant[p1] == "TNT" → blocked → hero stays. So yes! (24,3) likely has a TNT occupant. Let me check the grid: earlier random3 grid... let me check (24,3).
+
+Actually, from the terrain view, (24,3) is 'SPRING_U' — that's terrain, and TNT would be an occupant on top (terrain would be EMPTY after decode). But the view shows 'SPRING_U', so no TNT occupant (TNT's terrain becomes EMPTY). Hmm, unless the state's terrain at (24,3) shows 'SPRING_U' while occupant is 'TNT' — no, decode turns TNT's terrain to EMPTY.
+
+Hmm. Wait — the view shows y=3 row: "EMPTY EMPTY EMPTY SPRING_U EMPTY EMPTY EMPTY" for x=21..27. So (24,3) = SPRING_U. So no TNT there.
+
+Maybe occ[3][24] == 'BOX'. Then push check p2=(24,2). Is (24,2) passable for a BOX? _simulate checks passable(p2) — if (24,2) is EMPTY → yes → cleared_override = p1 → hero chain from start to p1, ignoring the box entirely. So _simulate predicts hero at (24,3) then spring chain. But the engine: box chain from (24,3)→(24,2) with dir U. At (24,2), terrain EMPTY → box stops at (24,2). Then hero moves to (24,3) and springs → blocked by box at (24,2) → hero stays at (24,3). So final pos (24,3) — still not (24,4).
+
+Hmm. Let me directly check the engine's state at turn 83: the occupant grid around (24,4). Let me add that to debug3... Actually, let me just write a small script to print occupant and terrain around at turn 83. Let me use debug4-ish but simpler.
+
+Actually, maybe the hero's position at turn 83 is (24,4) and MOVE_U is blocked because (24,3) is a high wall in the engine but my known says SPRING_U? No — known is updated from state each turn, so it matches.
+
+Hmm, wait. Actually the state's terrain at (24,4) — from the view, x=24 is the 4th element (x=21,22,23,24): row y=4 shows "UNKNOWN LASER_R EMPTY EMPTY W UNKNOWN UNKNOWN" → x=21 UNKNOWN, x=22 LASER_R, x=23 EMPTY, x=24 EMPTY, x=25 W, x=26 UNKNOWN, x=27 UNKNOWN. Hmm, (24,4) EMPTY. OK.
+
+Let me just dump the exact engine state (occupant) at turn 83.
+
+Actually — I realize there may be a simpler explanation: the hero's MOVE_U was blocked by the high wall at (24,3)? No.
+
+Let me just check. I'll write a quick script.
+
+检查第 83 回合的实际占用层，解释 MOVE_U 被阻挡的原因
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import engine,submission; from test import random_grid; g=random_grid(3,190); gm=engine.Game(g,'BLIND'); mem={}; for t in range(1,84): st=gm.state(); a=submission.decide_action(st,mem) if t==83: hx,hy=st['hero']['x'],st['hero']['y']; print('act',a,'pos',hx,hy) for y in range(hy-2,hy+3): print(y,[(x,st['terrain'][y][x],st['occupant'][y][x]) for x in range(hx-2,hx+3)]) gm.action(a) print('after',gm.hero['x'],gm.hero['y'])"
+深度思考
+The occupant is None everywhere. So MOVE_U from (24,4) → (24,3) SPRING_U → spring launches up. Why does the engine end at (24,4)?
+
+Let's trace the engine's chain:
+
+chain('hero', p0=(24,4), p1=(24,3), d=(0,-1)).
+Step 1: arrive at (24,3), terrain SPRING_U. exposed adds (24,3).
+Step 8: nt = 'SPRING_U', d = DIRS['U'] = (0,-1). Probe k=1: pk=(24,2). self.high(24,2)? terrain EMPTY → not high. occupant None → not blocked. k=2: pk=(24,1). terrain at (24,1)? From initial grid, (24,1) = SPRING_D (from earlier view y=1: x=24 SPRING_D). Not high. k=3: pk=(24,0) → border T_W → high → blocked at k=3 → land = (24,1) (k-1=2). So hero lands at (24,1) — but wait, land = (cur[0] + (k-1)*dx, cur[1] + (k-1)*dy) = (24, 3-2) = (24,1). Then p0=(24,3), p1=(24,1), continue.
+Next iteration: arrive at (24,1), terrain SPRING_D → spring launches down. Probe k=1: (24,2) EMPTY; k=2: (24,3) SPRING_U; k=3: (24,4) EMPTY — none blocked → land at (24,4+? ) wait: land = (24, 1+3) = (24,4). So hero lands at (24,4)! Then continue: at (24,4) terrain EMPTY → stop. Final pos (24,4).
+So the spring chain bounced the hero back to (24,4)! That explains it. My _simulate predicted something different? Let me check my _simulate's spring logic: it should do the same. Hmm, in _simulate, terrain_at((24,1)) — but known[1][24] is 'UNKNOWN' (from the view y=1, x=24 shows SPRING_D actually — the view printed "y= 1 UNKNOWN UNKNOWN ICE SPRING_D MIRROR_NE UNKNOWN UNKNOWN" for x=21..27 → x=24 = SPRING_D). So known has it. Hmm, in _simulate, at (24,3) SPRING_U → probe (24,2),(24,1),(24,0): khigh(24,0) → True (border T_W) → blocked at k=3 → land=(24,1). Then at (24,1) SPRING_D → probe k=1 (24,2), k=2 (24,3), k=3 (24,4) — none blocked → land=(24,4). Then at (24,4) EMPTY → stop. So _simulate should also predict (24,4). So MOVE_U's result is (24,4) — no movement, but moved = pos != start → False. Hmm, so moved=False. Then score includes -3 for no movement.
+
+So MOVE_U ends on the beam cell (24,4) → -140 forward penalty. MOVE_D ends on (24,5) → no beam penalty. So MOVE_D should be much better. Unless (24,5) is in recent_all with cycle penalty -60 and dg[(24,5)] is much worse than dg[(24,4)]... Hmm, but -140 is big.
+
+Wait — maybe my _simulate for MOVE_D from (24,4) → (24,5) EMPTY → stop at (24,5). Then dg[(24,5)] vs dg[(24,4)]: goal (35,13). (24,5) is closer (distance 11+8=19) vs (24,4) (11+9=20). So (24,5) is better by 1 → +12. Plus no -140. So MOVE_D should win by a lot. Yet the agent chose MOVE_U.
+
+Unless MOVE_D's simulation predicts something bad, e.g., (24,5) has a laser hit this turn? Turn 83 is not a laser turn (83%3=2), so no. Hmm. But turn 84 is the laser turn — the forward penalty applies to the result position at turn 83's end. if (turn + 1) % 3 == 0 and p in beam_cells: score -= 140. turn=83 → 84%3=0 → applies. (24,4) in beam → -140; (24,5) not → 0. So MOVE_D wins.
+
+Hmm, is there something else? Let me actually dump the candidate scores for turn 83 with the current code. Let me update debug4 to replicate the current scoring. Actually, easier: I'll add a temporary debug print inside _decide guarded by a module-level flag that I can set from the harness. But modifying submission.py for debugging then removing is risky. Let me instead monkeypatch: I can wrap submission._simulate to record results, and wrap submission._dijkstra to record dg. Then after decide_action returns, I can compute the scores using the exact formula (copy it). Let me write debug5.py carefully.
+
+Actually — maybe the issue is that known was updated at turn 83 with visible cells, and state["laser_warnings"] is empty, but mem["beam"] has (24,5) too from a stale source. The printed "known beam near" at turn 83 shows no (24,5). So no.
+
+Hmm, wait. Let me re-read the code for the flip-bonus loop — it adds +20 for THROW actions. Not relevant.
+
+Let me look at the wander flag: at turn 83, stagnation 1, explore_until 0 (from debug3, which reads mem.get("explore_until") — but the code now uses wander_until; debug3 prints explore_until which is 0 by default). wander_until might be > 83! If wander mode is active, the score ignores dg and uses exploration terms: 6*(unknown(p)-start_unknown) - 9*min(visited(p),8). In wander mode, moving to (24,5) (visited ~2 times) → -18; WAIT/no-move at (24,4) (visited ~2) → -18; hmm. And _unknown_around differences. The -140 beam penalty still applies though. Hmm, but in wander mode, score doesn't include dg, so no +12. Still -140 on (24,4) should push to (24,5).
+
+Unless... (24,5) is ALSO in beam_cells at turn 83 but the printed "known beam near" filter only showed cells with |dx|<=3, |dy|<=3 — (24,5) is within (hx=24,hy=4) → dy=1, so it would be shown if present. It's not. OK.
+
+Hmm, let me just dump scores. Let me write debug5.
+
+debug5.py
+(写入)
++72
+-0
+查看变更
+打印第 83 回合各候选动作的精确评分
+
+cd d:/ai_work/hunyuan_lab; python debug5.py 3 83
+深度思考
+Now I see! MOVE_U predicted final pos (24,0) — the border T_W cell! My _simulate's spring logic has a bug: it treats the border cell (24,0) as a valid landing because it checks khigh only for probes k=1,2,3, and lands at cur + 3*d when no blocking — but the landing cell itself might be a high wall. Actually, in the engine, khigh(24,0) is True (border T_W) → blocked at k=3 → land at (24,1). In my _simulate, khigh(24,0) should also be True → blocked at k=3 → land at (24,1). But it predicted (24,0). Hmm, why?
+
+Look at the _simulate spring code:
+
+for k in (1, 2, 3):
+    pk = (cur[0] + k*dx, cur[1] + k*dy)
+    blocked = khigh(*pk) or occ_at(pk) in ("BOX","TNT")
+khigh(24,0) → _known_high(known, 24, 0, flip) → known[0][24] is... from state, the border row y=0 is visible? At (24,4) with radius 3, y=1..7 are visible; y=0 is NOT visible (distance 4). So known[0][24] == 'UNKNOWN' → _known_high returns False (optimistic)! Thus the spring probe saw no blocker at k=3 and landed at (24,0) — an out-of-view cell assumed EMPTY. That's the bug: treating UNKNOWN as passable is fine generally, but the border frame is always T_W. I should explicitly treat x==0 or x==W-1 or y==0 or y==H-1 as high walls (known fact from the rules!). That's a solid fix: the outer frame is always T_W. Let me add that to _known_high.
+
+Then _simulate would predict the spring chain correctly: (24,3)→(24,1)→...→(24,4), matching the engine. Then MOVE_U's score becomes -241 (like WAIT) and MOVE_D (-17) would win.
+
+Also, this fix is generally important: my agent should know the border is always T_W. Let me add to _known_high:
+
+if x==0 or x==W-1 or y==0 or y==H-1: return True
+But careful: the hero can never be on the border anyway. This only affects probes/visibility. Good. Also update known memory: for border cells, we could set them to 'T_W' in _init_memory, but they're never visible except near edges. Adding the check in _known_high is enough. Also _enter_cost should mark border cells INF in Dijkstra — let me add there too (or rely on _dijkstra not using _known_high... it uses _enter_cost; border 'UNKNOWN' → cost 1.15 → Dijkstra might route through the border. Hmm, that could produce bad paths. Let me add border → INF in _enter_cost too.
+
+Actually simplest: in _init_memory, initialize known with 'T_W' on the border instead of 'UNKNOWN'. Then everything follows: _known_high sees T_W, _enter_cost sees T_W → INF. And _unknown_around won't count border cells as unknown (good). Let me do that.
+
+Also, note the wander mode was active (wander_until=88), and in wander mode dg is ignored. MOVE_U predicted a far-away new cell (24,0) with high exploration value → +30. After the fix, MOVE_U predicts (24,4) → no exploration value → -241. Good.
+
+Also, the multiple-cannon laser count bug: let me fix that too.
+
+Let me implement:
+
+Border initialization in _init_memory.
+Beam source counting.
+Also remove unused _frontier_goal (optional).
+Let me do the beam source change carefully:
+
+_init_memory: mem["beam"] = {} (cell → set of source ids).
+_recompute_beams: beam.setdefault((x,y), set()).add((cx,cy)).
+warnings: mem["beam"].setdefault(c, set()).add(("w", w["dir"])).
+_simulate:
+hit_cannons = set()
+for c in exposed:
+    s = beam.get(c)
+    if s: hit_cannons |= s
+if hit_cannons: damage += 50 * len(hit_cannons)
+Note: if a cell is lit by both a known cannon and a warning from the same cannon, we'd double count. Hmm. The warning source id ("w", dir) and cannon id (cx,cy) are different → double count → overestimate damage → agent overly cautious. To avoid, I could just use warning cells as a fallback only when no known-cannon source exists for that cell. Let me do: when processing warnings, add ("w",dir) only if the cell is not already in beam from _recompute_beams. But warnings are processed BEFORE _recompute_beams in _decide. Let me reorder: recompute beams from cannons first, then add warning-only cells. Actually _decide currently: warnings loop → _recompute_beams. Let me swap: call _recompute_beams first, then warnings, and in warnings loop only add if cell not in beam. That avoids duplicates. Good.
+
+But careful: _recompute_beams uses occ_grid and known cannons; warnings come from the engine's actual snapshot which may include cannons we haven't seen. So warning-only cells add coverage. Good.
+
+Also note: beam is used in _enter_cost as a set-like membership test — works with dict.
+
+Let me apply.
+
+找到关键模拟偏差：我的物理预判把越界的边框格当成 UNKNOWN（可通行），导致弹簧链预测错误；另外同向多门激光的伤害被低估。一并修正。
+
+submission.py
+(修改)
++6
+-1
+查看变更
+深度思考
+submission.py
+(修改)
++1
+-1
+查看变更
+submission.py
+(修改)
++3
+-2
+查看变更
+submission.py
+(修改)
++4
+-4
+查看变更
+深度思考
+Also need to remove the flipped variable usage in _recompute_beams — no, it's still a parameter but unused; fine.
+
+Also _frontier_goal is now unused. Let me remove it to keep the code clean. Actually let me leave it for now — no, dead code adds bloat. Let me remove.
+
+Actually, keep focus. Let me run tests first.
+
+验证边框先验与多激光计数修复后的整体结果
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+Now all 6 random maps clear with HP ≥ 50, no deaths. Own map times out (expected, good for demon).
+
+Remaining: 50 HP on 3 maps (one laser hit each). Let's see if we can eliminate. It might be unavoidable due to unknown beam cells. Let me check random5's hit.
+
+Actually, let me consider a broader test suite: more random seeds, plus specifically crafted maps (mazes, laser gauntlets, PIT fields, ICE traps, gates). Let me generate a larger batch and compute average hero score to see robustness. Also test FULL mode? Not needed (first round is BLIND only). But the agent should still work in FULL (it will, since all cells visible).
+
+Let me also verify the engine against golden vectors to ensure my map's author solution is safe under the real judge. The biggest risk: my engine differs from the judge. Let me validate the engine on the golden vectors (GV_02, 03, 04, 05, 07, 08) to gain confidence. Since the author path only uses MOVE over EMPTY/K/V, the relevant physics is minimal; but laser phase D is involved (we avoid beams). Actually, since the author never enters beam cells, phase D never damages it — that's robust even if my engine's laser logic has minor differences, as long as my _laser_beams computation matches the judge's ray computation. Let me double-check _laser_beams in submission.py: it computes rays from all LASER_* tiles, stopping at _wall_blocks (W, T_W, LASER, closed gates) — but the judge also stops at occupant == BOX and occupant == TNT (TNT truncates but the TNT cell is not a lit cell). My map has no BOX/TNT, so fine. Also the judge's ray length is 10 — mine is 10. Also the judge's rays are computed from the phase-C snapshot, which for our author is static. Good. And gates: no gates. Good.
+
+But wait — one important thing: the judge's laser cannons can be destroyed by explosions; no explosions in our map. Fine.
+
+Another: the hero's exposed_cells includes the starting cell and each cell entered. Our author path avoids beam cells entirely, so no intersection. Good.
+
+Another: MIMIC clue binding — validated in my engine; but the judge's clue binding might differ subtly. Let me re-verify: my generator reserves the U neighbor as the clue cell. The judge checks U first: terrain[nx][ny] == "EMPTY" and occupant is None ✓; not in spawn zone ✓; the clue cell's orthogonal neighbors must not contain any other HEAL/MIMIC besides this MIMIC ✓ (my generator checks that); and clues[ny][nx] not already used. Could two MIMICs bind to the same clue cell? My generator reserves clue cells in reserved, so no. But careful: the judge's condition 3 says "该格 (nx,ny) 的正交四邻中不存在任何其他宝箱（即除了当前 (mx,my) 外，不与任何其他 HEAL 或 MIMIC 正交相邻）". My generator checks grid[c[1]][c[0]] in ("HEAL","MIMIC") for c != p. Good. But it doesn't check MIMICs placed later — since later MIMICs are chosen from cands sorted, and I reserve their clue cells, but a later MIMIC could be placed adjacent to an earlier clue cell! Let me check: for each MIMIC candidate p, I check its own clue cell's neighbors. But I don't check whether p is adjacent to an already-reserved clue cell of another MIMIC. If a later MIMIC is orthogonally adjacent to an earlier clue cell, then the earlier clue cell's neighbors include another chest → the judge would reject the earlier binding and try another direction (D, L, R), possibly still finding one. Hmm, this could cause a bind failure if none. Let me add a check in the generator: when choosing a MIMIC at p, ensure p is not adjacent (4-neighbor) to any reserved clue cell, and also that no reserved clue cell has p as a neighbor. Simplest: track clue_cells set separately and reject a MIMIC candidate p if p is in the 4-neighborhood of any existing clue cell (excluding its own clue). Also reject if its clue cell is adjacent to any existing MIMIC.
+
+Let me add that to be safe. Actually, my engine's _bind_clues reported no failure, so currently it's fine. But to be robust against the judge's exact implementation (same as mine), it's fine. Still, let me harden it.
+
+Actually more important: let me verify with my engine that clue binding succeeds for all 3 MIMICs — printed nothing, so yes.
+
+Let me now also double check the budget and component caps: spent 2585G. Let me print the counts to verify caps: CRACK 38 ≤ 40 ✓; LASER 7 ≤ 12 ✓; MIMIC 3 ≤ 4 ✓; PIT 8 (no cap); ICE 16? (unlimited); W = 4*37 = 148 (no cap); T_W inner 0 ≤ 120 ✓. Let me print counts to be sure. Also portal pairs none. Good.
+
+Let me also verify the spawn clearance: x∈[1,3], y∈[12,14] must be EMPTY. The generator excludes those cells from traps; barriers are at y=4,8,17,21 (not 12-14); lasers at y=5,7,11,19,23 (not 12-14). Landmarks at (14,2),(20,18),(37,13) — V at (37,13) is not in spawn zone (x=37). Good. My validate checks this and returned True.
+
+Also K1/K2/V position constraints ✓ (validated).
+
+Also author_solution length 229 ≤ 240 ✓ and the last action lands on V (validated by engine: CLEARED at 229, win_turn 229, hp 100, D=0).
+
+Now, one concern: the judge might check that author_solution does NOT contain any action after the winning action — mine has exactly 229 and wins on the last. ✓.
+
+Another concern: the judge replays author_solution on the map decoded from grid. My engine's decode matches the rules. ✓.
+
+Another: "未恰好在最后一个动作首次达成通关" — the win happens on action 229 (last). ✓.
+
+OK. Now let me improve the hero agent further. Let me run a broader benchmark with more random seeds and some crafted adversarial maps, and compute average scores. Let me also check the 50-HP laser hits to see if avoidable.
+
+Let me first check random5 at the damage turn.
+
+定位 random5 掉 50 血的回合
+
+cd d:/ai_work/hunyuan_lab; python debug2.py 5 2>&1 | Select-String -Pattern "hp= 50|hp= 0|hp=-|END"
+深度思考
+The damage happened at some turn ≤18 (likely a laser turn 3,6,9,12,15,18). Let me get the first few turns. Let me just check turn 18 with debug3.
+
+Actually, let's think about the general cause: on early laser turns (turn 3), the agent has no beam memory yet (warnings only appear on turn 3 itself, before the action — so it DOES have warnings on turn 3). Hmm, warnings are provided on turn%3==0 BEFORE the action. So the agent knows beam cells in its visible mask at turn 3. But beam cells outside the visible mask (e.g., 4+ cells away) aren't warned. If the hero moves into such a cell on turn 3 (via jump or momentum), it gets hit. Also, on turn 3, if the starting cell is in a beam, unavoidable.
+
+Let me check turn 3 for random5.
+
+检查 random5 早期掉血回合的激光警告情况
+
+cd d:/ai_work/hunyuan_lab; python debug3.py 5 18
+深度思考
+At turn 18, the hero is at (13,21), which is a beam cell (warning dir D from an unseen cannon at (13,17) presumably). The hero starts on a beam cell on a laser turn → unavoidable 50 damage. Why did it end up there at turn 17? Let's see: at turn 17 the hero moved to (13,21). The warning for (13,21) dir D was not known at turn 17 because the cannon at (13,17) hadn't been seen (it's 4 cells away — actually (13,17) is 4 rows above (13,21), outside the radius-3 mask). So the agent couldn't know.
+
+Hmm, can we do better? The hero could be more conservative on the turn before a laser turn: avoid cells that are NOT known-safe? But that's too restrictive.
+
+Actually, note: at turn 15 (a laser turn), warnings would have been given for beam cells within the visible mask at the hero's position at turn 15. If the hero was near (13,21) then, it might have seen (13,21) as a beam cell. Let me check turn 15's position... The debug2 output for random5 early turns isn't shown. Let me check quickly. Actually, let me accept one 50-HP hit occasionally — it's not fatal. hero score loses 75 points (1.5*50). But avoiding death is more important.
+
+Hmm, but there's a smarter general heuristic: on the turn before a laser turn, prefer cells that are known NOT to be beam cells, and prefer cells from which there are safe escape options. Since we can't know unseen beams, a conservative agent could avoid moving into cells that are 3+ cells from any known cannon line... too complex.
+
+Alternative: track laser damage taken on previous laser turns and infer: if the hero got hit at a cell, add that cell to the beam set. That's already implicitly done via warnings (the warnings on the laser turn include the beam cells within the mask; the hero's cell would be included if it's in the mask — it is, since it's the hero's own cell!). So after turn 18, the agent knows (13,21) is a beam cell. Good, it won't repeat.
+
+Actually, hmm: at turn 18, the warning includes (13,21) dir D. So the agent's beam gets ("w","D") for it. But _simulate at turn 18 computed damage for all candidates (since exposed includes start) → all 50 → no way to avoid. It's a one-time hit.
+
+Could we have avoided by not being at (13,21) at the start of turn 18? At turn 17, the agent chose to move to (13,21). If it had known that (13,21) would be a beam cell... it didn't. But a conservative agent on turn 17 (turn%3=2, i.e., the turn before a laser turn) might prefer to stay in a cell that was already "verified" as safe on a previous laser turn. Hmm, that's an interesting idea: cells that have been observed as beam-free on laser turns are "verified safe". But maintaining that is complex.
+
+Given the score impact (75 points out of 1000) and the fact that all maps clear, I'll accept occasional 50 damage. But note: two such hits = death. Across 11 maps, there's a risk. Let me estimate: on random maps with dense lasers, ~1 hit per game. On my own map, 0 hits. Might be OK.
+
+But let me add a mild general precaution: on the turn before a laser turn (turn%3==2), prefer to move to cells that are already known (visible) rather than unknown cells? Doesn't help.
+
+Alternatively: increase the beam memory by extrapolating from warnings: warnings give (x,y,dir) for lit cells. From a lit cell and dir, we can infer the cannon's row/column and extend the beam line up to 10 cells, even if the cannon isn't visible! E.g., warning at (13,21) dir D → the cannon is somewhere above at (13, 21-k) for k=1..10, and the beam extends from the cannon down to 10 cells. So cells (13, 12..25) could be lit. We can conservatively mark the entire line (x=13, y from 21-10 to 21+10) as potential beam cells. That would give the agent advance warning of beam corridors even before seeing the cannon. Since warnings appear on turn 3 (the first laser turn), the agent would learn all beam lines early! That's a big improvement.
+
+Let me implement: for each warning w, mark cells along the line in direction dir from w, both forward and backward, up to 10 cells (clamped to grid), as beam cells with source id ("line", dir, line_key). But careful: this over-generalizes — a beam might be blocked by walls, and the line extension could mark cells that are actually safe. Over-cautiousness could slow the agent. But -12 penalty per beam cell is mild; the -140 on laser-eve turns is strong. Marking an entire column as beam would make the agent avoid that column on the turn before laser turns — costing some detours but avoiding death.
+
+Hmm, but there's a risk: if many lines are marked, the agent may be overly constrained (e.g., my own map has 7 lasers with horizontal beams; marking entire rows would cover many cells). That could hurt navigation. Let me be moderate: extend from each warning cell forward along dir up to 10 cells (the beam continues in that direction from the cannon), and backward up to 10 cells (toward the cannon). Actually the full beam line is at most 10 cells from the cannon; a warning cell at distance k from the cannon means the beam extends at most (10-k) cells further forward and k cells backward. Without knowing k, we can conservatively extend up to 10 in both directions. That's ~20 cells per warning — with many warnings, that's a lot. But we can deduplicate by line: for a horizontal warning (dir L/R), the line is row y; mark x from w.x-10 to w.x+10. For vertical, column x, y from w.y-10 to w.y+10. This is at most 21 cells per unique line, and there are few unique lines (one per cannon). That's manageable.
+
+Let me implement: for each warning, add a "line source" id and mark the cells along that line ±10. Use a set of lines already processed to avoid repeated work. Mark with a source id like ("line", dir_axis, coordinate). Then in _simulate, damage = 50 * number of distinct sources among exposed cells. If a cell is both a real beam and a line-marked beam, we'd double count → overestimate. To avoid, use a single source id for a line and, when a real cannon is known, remove line-marked entries? Simpler: put line-marked cells in a separate dict beam_lines, and in _simulate compute sources as union of beam[c] (exact) and beam_lines[c] (approximate), but deduplicate by "line identity": for exact sources (cannon coords), map them to a line id too. Hmm, complexity.
+
+Alternative simpler approach: keep a separate mem["beam_risk"] set of cells that are "possibly lit" (from line extrapolation). Use it only for the scoring penalty (avoid ending there before laser turns), not for damage counting. That avoids double counting and keeps damage estimation accurate. Let me do that:
+
+mem["beam_lines"]: set of cells along extrapolated lines.
+In scoring: risk_beam = beam_cells (dict) or beam_lines (set). Use p in beam_cells or p in beam_lines for the -12 general penalty and the -140 laser-eve penalty.
+In _simulate damage: use only exact beam (with cannon sources) — accurate.
+Also add to _enter_cost a small cost for beam_lines cells? That would require passing it; skip.
+Hmm, but the -140 laser-eve penalty on extrapolated lines could cause the agent to detour a lot. Let me use a smaller penalty for line-only cells: -60 on laser-eve turns, -140 for exact beam cells.
+
+Actually, simpler: just add line cells to the same beam dict but with a source id that is shared per line, so damage counting doesn't blow up. E.g., for warning w at (x,y,dir), line_id = ("line", axis, y or x). Add beam.setdefault(cell, set()).add(line_id) for cells along the line. Then when the real cannon is later discovered, its exact source (cx,cy) is also added to those cells → damage count would be 2 for cells lit by both → overestimate 50. Hmm. But actually if a cell is on a real beam AND we've marked the same line with line_id, the union has 2 sources → 100 damage predicted instead of 50 → agent overly cautious. That's safer but could cause it to avoid necessary cells.
+
+Given the complexity, let me go with the separate beam_lines set for scoring only. Implementation:
+
+In _init_memory: mem["beam_lines"] = set(). In _decide, after processing warnings:
+
+for w in warnings:
+    x,y,dr = ...
+    if dr in ("L","R"):
+        for xx in range(max(1,x-10), min(W-1,x+10)+1):
+            mem["beam_lines"].add((xx,y))
+    else:
+        for yy in range(max(1,y-10), min(H-1,y+10)+1):
+            mem["beam_lines"].add((x,yy))
+Also when a known cannon is found, its line is already in exact beam. Fine.
+
+Then in scoring:
+
+in_beam = p in beam_cells
+in_line = p in mem["beam_lines"]
+if in_beam: score -= 12
+elif in_line: score -= 6
+if (turn+1)%3==0:
+    if in_beam: score -= 140 (... + hp bonus)
+    elif in_line: score -= 50
+Hmm, -50 on laser-eve turns for line cells. That should push the agent to avoid potentially-lit lines before laser turns.
+
+But careful: warnings are only emitted on laser turns, so beam_lines grows on turns 3,6,9,... On turn 3, the warnings include cells within the visible mask — for a hero at spawn, that's ~37 cells. The line extrapolation from those cells can cover long rows/columns. On turn 3, the agent can then avoid those lines before turn 6. Good.
+
+Risk: over-avoidance could slow the agent. Let's test and compare.
+
+Actually, hold on. There's a subtlety: the -140 laser-eve penalty applies when p is a beam cell. If a cell is on an extrapolated line but NOT actually lit (e.g., beyond the cannon's 10-cell range or behind a wall), the agent avoids it unnecessarily. On my own map, the lasers are horizontal rows; the extrapolated lines would mark entire rows y=5,7,11,19,23 across x range. My author path uses the safe rows... hmm, actually the golden path avoids beam cells but may use cells in the same rows beyond the beam range. The agent would avoid those too, possibly causing detours. But it already times out on my map anyway. On other maps, could slow it down. Let's test.
+
+Let me implement and measure. If it hurts, I'll dial back.
+
+再加一层保险：从激光警告反推整条射线所在的直线，提前把「可能致命」的行/列记入风险集，减少首次踩进未知射线的概率。
+
+submission.py
+(修改)
++1
+-0
+查看变更
+submission.py
+(修改)
++11
+-2
+查看变更
+submission.py
+(修改)
++12
+-5
+查看变更
+评估炮线反推对掉血与通关效率的影响
+
+cd d:/ai_work/hunyuan_lab; python test.py
+深度思考
+Mixed: random3 improved to 100 HP, random2 slowed from 87 to 154. random1 still 50, random4 50, random5 50. Net effect roughly neutral. The line-extrapolation didn't prevent the early hits (those happen on turn 3/6 before warnings accumulate). Let me check: random5 hit at turn ≤18; with warnings at turn 3 covering lines near spawn, maybe the agent avoided column 13? Hmm, still 50.
+
+Let me consider a different strategy: avoid laser damage by waiting on laser turns in a known-safe cell. Actually, the key insight: on a laser turn (turn%3==0), if the hero's starting cell is NOT in any beam, it can still get hit if it moves into a beam cell. But warnings are given for beam cells within the visible mask at the start of the turn — so the agent knows them. Our _simulate accounts for them (exact beam sources from warnings). But if the hero moves into a beam cell outside its visible mask (e.g., 4+ cells away via ICE/spring), it can get hit. That's rare.
+
+The unavoidable hits happen when the hero starts a laser turn on a beam cell it didn't know about. To prevent, on the turn before a laser turn, the agent should prefer cells that were verified safe on previous laser turns — i.e., cells that were within a laser turn's visible mask and NOT in the warnings. Let me maintain mem["verified_safe"]: on each laser turn, for all visible cells not in warnings (and not extrapolated lines), mark as verified safe. Then on the turn before a laser turn, add a bonus for ending on a verified-safe cell (and penalty for unverified cells). Hmm, but verified-safe only covers cells visible at past laser turns — which is a small area around past positions. If the hero moves to a new area, no verified cells nearby → no guidance. Hmm.
+
+Alternative: extrapolate from known laser cannon positions — we do that. The problem is cannons not yet seen. Warnings on the first laser turn (turn 3) reveal beam lines near spawn. The line set persists. So by turn 6, the agent knows the lines near spawn. But the hero may move into a NEW area where an unseen cannon's beam exists — the first warning for that area comes on the laser turn itself, too late. Hmm. But the agent could avoid unexplored areas on the turn before a laser turn... too restrictive.
+
+Actually, let's think about it differently: the damage is 50, and hero HP starts at 100. One hit is survivable; two hits are fatal. On random maps we see exactly 1 hit. That's acceptable. On maps with dense lasers, maybe 2. Let me test more random seeds to see the death rate.
+
+Actually, let me reconsider the line extrapolation: it slowed random2 from 87 to 154 (a 67-turn penalty, ~42 hero score points) while saving 75 points (HP) on random3. Roughly break-even. Let me reduce the line penalty from -55 to -25 so it's a mild preference rather than a strong detour. That should recover speed while keeping some protection.
+
+Let me also consider a more direct approach to avoid the "start on beam cell" problem: on the turn before a laser turn, prefer to stay in a cell that is not on any beam line (exact or extrapolated), with a penalty moderate enough to avoid big detours. -55 is strong. Let me use -25.
+
+Also add: if hp <= 55 (already hit once), be much more careful: double the penalties. Let me add if hp <= 55 and line_beam: score -= 60 on laser-eve turns. Actually already hp<=55 adds -60 only for exact beam. Let me extend to lines.
+
+Let me tune:
+
+exact beam, laser-eve: -140 (+ -60 if hp<=55)
+line beam, laser-eve: -25 (+ -60 if hp<=55)
+Let me apply and test.
+
+Also, I want to run a larger benchmark (e.g., 20 random seeds) to get a statistical picture. Let me add that to the test harness as a separate script.
+
+Also — I should double-check the golden vectors against my engine to validate the engine's physics (which validates my map's author solution indirectly). Let me do that. Actually, the author solution only relies on MOVE over EMPTY and no laser intersections — robust. But let me at least validate the engine with GV_02, GV_03, GV_08 to make sure my engine isn't wildly wrong (which would undermine my confidence in the map's safety). Let me write a small golden-vector test.
+
+Actually, time/effort: I've done a lot. Let me prioritize:
+
+Tune the line penalty.
+Run broader benchmark.
+Validate golden vectors with engine (quick).
+Clean up dead code, final checks (imports, syntax, no forbidden imports, runtime limits).
+Update todos and finish.
+Let me do the tuning first.
+
+submission.py
+(修改)
++3
+-1
+查看变更
+深度思考
+Now let me write a benchmark script that runs many random maps and computes average hero score using the scoring formula, plus a few crafted maps. Also validate golden vectors.
+
+Let me write bench.py:
+
+Generate 20 random maps with varying density.
+Also craft: (a) a map with laser gauntlet, (b) a pit field, (c) a maze similar to mine, (d) the template's default map (mostly empty).
+Run BLIND games, compute hero score per RULES:
+Cleared: 600 + 1.5hp + 150(240-T)/239 + 100*g. g depends on map spend; I can compute g from grid cost.
+Failure: 200*P where P = k + r. r requires distance tracking — complex. Let me approximate with k + min(1, ...) or just report status/T/hp/keys. Actually for comparison, just report clear rate, average T, average HP, deaths.
+Report aggregate.
+Also golden vector checks. Let me write them.
+
+Actually, for the golden vectors, my engine's Game always starts hero at (2,13), but I can override gm.hero and gm.terrain for local tests. Let me implement checks for GV_02, GV_03, GV_04, GV_07, GV_08 (skip GV_05/GV_06 which need special setups). Actually let me do a few quick ones.
+
+Let me write bench.py.
+
+bench.py
+(写入)
++106
+-0
+查看变更
+用黄金向量校验本地引擎，并在 20 张随机地图上做统计压测
+
+cd d:/ai_work/hunyuan_lab; python bench.py
+深度思考
+Excellent! Golden vectors all match expected (GV_02, 03, 04, 07, 08, 01). Benchmark: 19/20 cleared, 0 deaths, avg T=93.2, avg HP=85, worst step 0.052s (well under 0.5s limit).
+
+The remaining TIMEOUT is seed 7 with keys [False, True]. Let me investigate briefly — maybe an unreachable key or oscillation. Also several 50-HP hits (one laser each). Let's see if we can reduce further, but it's decent.
+
+Let me check seed 7.
+
+引擎与黄金向量完全一致；20 张随机图 19 通关、0 阵亡、单步最慢 0.052s。再看唯一超时的 seed 7。
+
+检查唯一超时地图的卡点
+
+cd d:/ai_work/hunyuan_lab; python debug2.py 7 2>&1 | Select-Object -Last 22
+深度思考
+Hmm, the bench reported seed 7 TIMEOUT with hp=100, but debug2 uses n=100+30*seed while bench uses n=60+12*seed → different maps. So debug2's seed 7 map is different from bench's. Let me not worry; debug2 shows a death at T=171 (hp 0) for its own map, which is a different map. Let me instead debug bench's seed 7 map with the right n. Let me modify debug2 to accept n as a param. Actually simpler: write a quick script that plays bench seed 7 and logs.
+
+Actually, more valuable: let me check whether the bench's seed 7 map has an unreachable key (K1). Let me write a quick check.
+
+Also note debug2's seed7 (n=310) shows a death — that's a denser map. In the earlier test.py (n=100+30seed), seed 7 wasn't tested. Let me extend the benchmark to more/denser maps to see death rate. Let me run a second benchmark with denser random maps (n=100+30seed for seeds 0..9) to gauge robustness.
+
+But first, let me consider the risk: other contestants' maps will be adversarial — they may include PIT fields, laser gauntlets, ICE traps, etc. My agent's death rate on dense random maps matters. Let me run that.
+
+Let me create a quick script.
+
+在更密集的随机地图上统计阵亡率与通关率
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); from test import random_grid, play; import engine; for seed in range(10): g=random_grid(seed,100+30*seed); gm,el,wo=play(g,'BLIND'); print(seed,gm.status,'T',gm.win_turn or gm.turn-1,'hp',gm.hero['hp'],'keys',gm.hero['keys'],'D',gm.trap_damage)"
+深度思考
+Dense maps: 7/10 cleared, 1 dead, 2 timeouts. Death at seed 7 (the one debug2 showed): at t=171 moving from (8,22) to (7,22) → death. Let me check the terrain at (7,22) — maybe a PIT created by CRACK collapse (the hero stepped on a CRACK earlier and left → PIT, then backtracked). Let me check.
+
+Actually, the debug2 log shows the hero wandering in the lower-left area avoiding something. Let me check the terrain at (7,22) and whether it's a CRACK that became PIT.
+
+Let me write a quick script that replays seed7 dense map to t=171 and prints the terrain at (7,22) at that time and the hero's known map.
+
+确认密集地图阵亡是否源于脆冰坍塌后回踩
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import engine,submission; from test import random_grid; g=random_grid(7,310); print('initial (7,22)',g[22][7]); gm=engine.Game(g,'BLIND'); mem={}; for t in range(1,172): st=gm.state(); a=submission.decide_action(st,mem) if t==171: print('act',a,'pos',st['hero']['x'],st['hero']['y'],'hp',st['hero']['hp']) print('view (7,22)',st['visible_mask'][22][7],st['terrain'][22][7]) print('known (7,22)',mem['known'][22][7]) print('7,22 real',gm.terrain[22][7]) gm.action(a) print('after',gm.hero['hp'],gm.status,'D',gm.trap_damage)"
+深度思考
+(7,22) is EMPTY and visible, yet the hero died with 100 damage (hp 50→0, D=100). Hmm, D=100 means 100 effective trap damage in that turn. Could be a laser from 2 cannons (100 damage). Turn 171 = 3*57 → laser turn! So the hero moved from (8,22) to (7,22), and exposed_cells = {(8,22),(7,22)}. If two lasers' rays intersect those cells → 100 damage → death. My _simulate should have predicted that if the beam sources were known. Let me check warnings at turn 171 and the beam set.
+
+Let me dump.
+
+检查第 171 回合的激光警告与已记录炮线
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import engine,submission; from test import random_grid; g=random_grid(7,310); gm=engine.Game(g,'BLIND'); mem={}; for t in range(1,172): st=gm.state(); a=submission.decide_action(st,mem) if t==171: print('warnings',st['laser_warnings']) print('beam lines sample',[c for c in mem['beam_lines'] if c[1]==22][:25]) print('beam near',[(c,v) for c,v in mem['beam'].items() if c[1] in (21,22,23) and 5<=c[0]<=12]) print('cannons',[(c,d) for c,d in mem['cannons'].items() if 5<=c[0]<=12 and 18<=c[1]<=25]) gm.action(a)"
+深度思考
+At turn 171, the hero is at (8,22) — which is a beam cell (from cannon (8,21) LASER_D). So it starts on a beam cell on a laser turn → unavoidable 50 damage. HP was 50 → should drop to 0 with 50 damage. But D=100 total (50 earlier + 50 now). Actually hp 50→0 = 50 damage. So one laser hit killed it. The engine's m might be 1 (50 damage). Yes.
+
+So the hero was at (8,22) at the start of a laser turn, and it was a known beam cell (mem["beam"] has (8,22) with source (8,21)). Why did the agent stay there at turn 170? At turn 170, (turn+1)%3 == 0 (171) → the -140 penalty for ending on (8,22). The agent moved from (9,23) to (8,23) at turn 170? Let's see the log: t=170 MOVE_U (8,23)->(8,22). So it moved INTO (8,22) on turn 170, the turn before a laser turn. It should have avoided that. Why? Because (8,22) is a beam cell with -140 penalty. Perhaps all other candidate cells were worse (e.g., all recent cells with -60 cycle penalty, or beam lines). Hmm.
+
+Let me dump the candidate scores at turn 170 with debug5 adapted for this map. debug5 uses random_grid(SEED, n=100+30*SEED) → for seed 7 that's n=310, which matches. Let me run debug5.py 7 170.
+
+打印第 170 回合候选评分，确认为何踩进已知射线格
+
+cd d:/ai_work/hunyuan_lab; python debug5.py 7 170
+深度思考
+Note: debug5's score replication is outdated (it doesn't include the new line_beam penalties and the -140 laser-eve penalty). Let me note: it shows beam=True for (8,22), (8,24), (8,23). At turn 170, turn+1=171 is a laser turn → -140 for those. My debug5 formula includes -140. Let's see: MOVE_U to (8,22): score -212 including -140 + -12 + cycle? Hmm. MOVE_R to (9,23): score -123, no beam, but recent=True → cycle penalty -60. So MOVE_R should be chosen (-123 > -212). But the actual chosen was MOVE_U. So my debug5's replicated scoring ≠ actual scoring. The difference likely: wander=True, so the score uses exploration terms, and recent_all includes (9,23) → -60 (cycle). Hmm, debug5 does include those. Hmm.
+
+Wait — perhaps the actual code's cycle is computed differently, or beam includes something else. Let me not chase this too far. Instead, let me add a hard safety rule: on the turn before a laser turn, if the hero's HP is low (≤55) and a candidate result is an exact beam cell, apply a massive penalty (e.g., -10000) so it never ends there unless all options do. That directly prevents the death. More generally, even at HP 100, ending on an exact beam cell before a laser turn guarantees a 50 hit; -140 is already large but can be outweighed by other terms (like recent/cycle -60, blocked_goal -400, etc.). Let me make it a near-absolute constraint: if (turn+1)%3==0 and p in beam_cells (exact) → subtract 2000 (not just 140). Similarly, on a laser turn, if the start cell is a beam cell, all candidates are equally hit — no help. But at least we prevent stepping onto beams right before.
+
+Hmm, but there's a risk: if the hero is already on a beam cell on a non-laser turn, and the next turn is a laser turn, all candidate moves might be beam cells too (e.g., a long beam corridor). Then all get -2000 equally → still picks the best progress → could stay on beam. But that's unavoidable anyway.
+
+Actually, a cleverer approach: avoid beam cells at all times with a moderate penalty, and on the turn before laser turns with a very strong penalty. Let me set -800 for exact beam on laser-eve turns (instead of -140), and -150 for line-only cells. That's strong enough to dominate most other terms (except dead -1e6 and win +1e5). But it might cause the agent to take a big detour (e.g., -400 blocked_goal + -12*d). Hmm, -800 would dominate -400 → the agent would prefer a "blocked" cell over a beam cell. That could cause it to walk into walls? No — blocked_goal cells are cells from which the goal is unreachable in the known map (e.g., behind walls, or PIT/CHEST with clue). Wait, blocked_goal is INF dg — it includes known walls and PITs. But _simulate wouldn't allow moving into a wall (no movement → result is current cell). Stepping into a PIT → dead → -1e6. So the -400 applies mostly to cells like CHEST-with-clue or unreachable pockets. A -800 beam penalty would make the agent prefer a CHEST (45 damage, -135) over a beam cell. Hmm, that's bad: it would step on a MIMIC to avoid a laser. 45 damage vs 50 laser — roughly equal, but at low HP both are deadly. Hmm.
+
+Let me be smarter: instead of a flat large penalty, make it HP-aware: if hp - damage <= 0 → dead → -1e6. So at hp=50, a 50 laser hit is death. Let me predict the laser damage for the NEXT turn when evaluating candidate results on the turn before a laser turn. I.e., if (turn+1)%3==0 and p is an exact beam cell, then the hero will start the next turn on a beam cell and take 50*sources damage. Add that damage to r["damage"] (as a predicted future hit), which can trigger dead if hp ≤ 50. That's principled: incorporate the未来不可避免伤害. Let me implement:
+
+future_damage = 0
+if (turn+1)%3==0:
+    if p in beam_cells:
+        future_damage = 50 * len(beam_cells[p])   # sources lighting p
+    elif p in beam_lines:
+        future_damage = 25  # conservative estimate
+score -= 3.0 * future_damage
+if hp - r["damage"] - future_damage <= 0: score -= 100000.0 (near-dead penalty)
+Hmm, but r["damage"] is damage this turn; future damage is next turn. Combined. If hp=50 and future_damage=50 → would die next turn → strong penalty. Good.
+
+Actually simpler: just add future_damage into the r["damage"] used for scoring (and the dead check) via a local variable total_damage = r["damage"] + future_damage, and use score -= 3.0*total_damage. Keep r["dead"] for this turn. Then add if hp - total_damage <= 0: score -= 100000. That would strongly avoid ending on a beam cell before a laser turn when hp is low.
+
+But careful: this is a "future" prediction that may not materialize (e.g., the cannon gets destroyed, or the hero moves off on the laser turn — but no, starting on a beam cell on a laser turn guarantees a hit). So it's accurate.
+
+Let me implement this. Also keep the -140 penalty (or reduce it) — with the future damage penalty, -140 is somewhat redundant but fine. Actually, let me replace the -140 with the future-damage logic plus a smaller fixed -60.
+
+Let me restructure the beam scoring section:
+
+exact_beam = p in beam_cells
+line_beam = p in mem["beam_lines"]
+total_damage = r["damage"]
+future = 0.0
+if (turn+1)%3==0 and not r["win"]:
+    if exact_beam:
+        future = 50.0 * max(1, len(beam_cells[p]))
+    elif line_beam:
+        future = 25.0
+total_damage += future
+score -= 3.0 * r["damage"]   # keep current-turn damage penalty
+score -= 3.0 * future
+if exact_beam: score -= 12
+elif line_beam: score -= 5
+if (turn+1)%3==0 and exact_beam: score -= 60.0
+if hp - total_damage <= 0: score -= 100000.0
+Hmm, careful: r["dead"] already covers this-turn death. The near-death penalty for next turn is a heuristic; fine.
+
+Wait, but this double-counts: I currently have score -= 3.0*r["damage"] earlier. Let me keep that and add score -= 3.0*future and the near-death check.
+
+Let me modify the code accordingly. Also remove _frontier_goal dead code.
+
+Let me apply.
+
+我加入「下一回合激光必中伤害」的前瞻计算，让低血量时能主动避开已知炮线，避免被一次 50 伤带走。
+
+submission.py
+(修改)
++10
+-7
+查看变更
+重新统计前瞻激光伤害修复后的通关率与阵亡率
+
+cd d:/ai_work/hunyuan_lab; python bench.py 2>&1 | Select-Object -Last 25
+深度思考
+Avg HP improved from 85 to 87.5, avg T got slightly worse (93→99.5) — acceptable. Let me check the dense maps again.
+
+复查密集随机地图的阵亡率
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); from test import random_grid, play; for seed in range(10): g=random_grid(seed,100+30*seed); gm,el,wo=play(g,'BLIND'); print(seed,gm.status,'T',gm.win_turn or gm.turn-1,'hp',gm.hero['hp'],'keys',gm.hero['keys'],'D',gm.trap_damage)"
+深度思考
+Dense maps: no deaths now (seed 7 became TIMEOUT instead of DEAD), 8/10 cleared. Good — death avoided.
+
+Now let me consider the demon map quality. Currently spent 2585G, g = (3000-2585)/3000 ≈ 0.138. Path length 229 → opponents likely time out (P high) or take a long time. Let me evaluate my map against a few simulated "generic hero" strategies to estimate demon score. But my hero agent is probably stronger than most. Let me at least compute what a simple greedy agent would do, to see if my map kills them. Actually, more important: my map's author solution is validated. Demon score depends on opponents' agents. Let me consider whether to improve the map's "killing power" with more effective traps.
+
+Current map: 4 W barrier rows, 7 lasers, 8 PITs + 16 ICE, 38 CRACKs, 3 MIMICs. Let me visualize the map to see if it's actually a good trap design. Let me print an ASCII map.
+
+Also, one important consideration: my map's golden path is 229 steps; a smart hero that knows target coords and does BFS with fog might take ~240+ and time out. Good. But a hero could bomb through W barriers (2 bombs) to shorten the path by ~2 sweeps (74 steps), clearing in ~155 turns → demon case C = 2D + 120*(T-1)/239 ≈ 77 + 2D. With D maybe 0-100 → 77-277. Fine.
+
+Can I make the map more lethal cheaply? Let me think about the "D" (trap damage) — currently my own agent takes 0 damage on my map (it avoids all traps). Other agents might take some. The traps are off the golden path. Hmm.
+
+What about adding a laser beam that crosses the golden path but only on cells our author visits on non-laser turns? That would force heroes to time their movement. But adding risk to the author solution. Actually, I can compute the exact turn at which the author visits each path cell and place lasers whose beams cover path cells, then verify no author path cell is a beam cell on a laser turn. Since beams are static and fire on every turn%3==0, if the author is on a beam cell on a non-laser turn, it's safe. But the NEXT turn might be a laser turn while the author is still on that beam cell — since the author moves 1 cell per turn, it will leave. But exposed_cells includes the start cell — so if the author starts a laser turn on a beam cell, it's hit. So I need to ensure that for every turn t where t%3==0, the author's position at the start of turn t (i.e., after t-1 moves) is not a beam cell, and the destination cell at turn t is not a beam cell. Since the path is fixed, I can compute that. Actually simpler: ensure that no beam cell is visited on turns ≡ 0 or ≡ 2 mod 3 (because turn t+1 is laser if t≡2; the hero at end of turn t is on that cell at the start of turn t+1 → exposed includes it → hit). Wait, on turn t+1 (laser turn), exposed_cells = {start (position after turn t), destinations during turn t+1}. So if the hero's position after turn t is a beam cell, it gets hit on turn t+1. And if the hero's destination on turn t+1 is a beam cell, also hit. So for each turn t (1-indexed), if t%3==0, the hero's position at start of t (after t-1 moves) and the position after t moves must not be beam cells. Equivalently: for every path index i (0-based, position after i moves), if (i+1)%3==0 (start of laser turn i+1) or i%3==0 (end of laser turn i), the cell must not be a beam cell. Hmm, that means path indices i where i ≡ 0 or 2 mod 3... Let me define: path[i] = position after i moves (path[0]=spawn). Turn t=i+1 uses MOVE from path[i-1] to path[i]. Laser turns are t%3==0 → i ≡ 2 mod 3. On laser turn t, exposed = {path[i-1], path[i]} = {path[t-2], path[t-1]}. So path indices t-2 and t-1 = (i-1, i) for i≡2 mod3 → indices ≡1,2 mod3. So path cells with index ≡1 or 2 (mod 3) must avoid beam cells; cells with index ≡0 mod 3 can be beam cells safely! Hmm, that's 1/3 of cells. That would let lasers cover the path at 1/3 of cells without hurting the author. But it complicates the generator and verification (my local engine would verify it). Risk: if the judge's turn numbering or exposed_cells differs slightly, author could die → demon 0. Not worth the risk.
+
+Given the map already forces timeouts (likely) with zero risk to the author, I'll keep it. Actually, wait — there's a subtle issue: my map's lasers are placed in the open bands, and their beams are excluded from the golden path. But the golden path is 229 steps. If a hero follows a slightly different route, it may hit beams. Fine.
+
+Let me now visualize the map to check it's coherent (e.g., no accidental shortcuts, traps placed sensibly).
+
+可视化最终地图并统计各组件数量，核对配额
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import submission,engine; d=submission.build_dungeon(); g=d['grid']; sym={'EMPTY':'.','T_W':'#','W':'W','K1':'1','K2':'2','V':'V','PIT':'O','ICE':'~','CRACK':'c','MIMIC':'M','LASER_R':'>','LASER_L':'<','LASER_U':'^','LASER_D':'v'}; for y in range(26): print('%2d '%y+''.join(sym.get(g[y][x],'?') for x in range(40))) print('counts'); c={} for y in range(1,25): for x in range(1,39): c[g[y][x]]=c.get(g[y][x],0)+1 print(c)"
+深度思考
+Interesting: only 6 ICE cells (I expected 16) — because ICE placement requires cells not in golden and adjacent to PITs; many candidates were in golden or reserved. Also the traps are clustered in the left part of rows (x small) because cands.sort(key=_hash_key) — the hash seems to favor small x/y? Let me check: _hash_key((x,y)) = (x*7919 + y*104729 + x*y*31 + ...)%1000003. Sorted ascending — cells with small hash come first. It seems to cluster in specific rows. Actually looking at the map, traps are concentrated in rows 7, 9, 10, 18, 19, 20 and left side. That's because the golden path covers most cells? No — golden path is ~229 cells, but the map shows 699 EMPTY cells. Hmm, the traps are only 63 cells total. The cands list has ~699 cells, sorted by hash; the first 8 PITs + ICE + 38 CRACKs = ~52 cells taken from the beginning of the sorted list, which happens to cluster. That's fine but not ideal — traps should be spread out. Let me improve the distribution: use a stride-based selection or a better hash. Actually the clustering is not necessarily bad — it creates a dense minefield in some regions and clear areas elsewhere. But for a hero wandering around, spread traps are more likely to be encountered. Hmm.
+
+Wait, there's a more important issue: the map's open bands are mostly EMPTY (699 cells). A hero could walk through EMPTY areas freely (no traps). The maze barriers force the serpentine, but within each band there's a wide open area. The golden path is one specific route; a hero could take a different route through the same band (still must cross gaps). So the traps in some rows don't matter much.
+
+Actually, thinking about the demon score: the main mechanism is the long serpentine (229 steps) → timeouts. The traps are secondary. I think it's fine.
+
+But let me reconsider: could a hero bomb through the W barriers to drastically shorten the path? With 2 bombs, it can punch 2 holes. Each hole saves a 37-cell sweep. So path could be ~229-74 = 155. Then T≈155 → case C ≈ 77 + 2D. Hmm. Also, bombs could create holes at any x — a smart hero would place a bomb adjacent to a barrier at its current x, wait, then pass. That's ~5 turns per barrier. Yes.
+
+Can I make barriers bomb-resistant cheaply? Option: make barrier rows 2 cells thick with aligned gaps. Then one bomb at (x, B-1) destroys row B at columns x-1..x+1 but row B+1 remains; a second bomb placed at (x, B) (now EMPTY) destroys row B+1 → passage. So still 2 bombs for one barrier. With 4 barriers, 2 bombs can punch through only 1 barrier. That's better! And cost: doubling the W rows = 8 rows × 37 = 296 W → 1480G (vs 740G). Budget would increase by 740G → total 3325G > 3000. Need to cut traps.
+
+Alternatively, make barriers 3 cells thick at critical ones only (e.g., the two central barriers y=8 and y=17), costing +2375 = 370G per... hmm.
+
+Actually, wait: a bomb explosion destroys W in a 3x3 centered on the bomb. If barrier rows are at y=8 and y=9 (two adjacent W rows), a bomb at (x,7) covers rows 6,7,8 → destroys row 8 only. Then hero at (x,7) can move to (x,8) (now EMPTY), then place a second bomb at (x,8) → covers rows 7,8,9 → destroys row 9 → passage. So 2 bombs for one double-thick barrier. With 4 barriers (2 single, 2 double?), hmm.
+
+Let me think about the cost-benefit: increasing wall thickness costs 740G (all 4 barriers doubled), reducing g from 0.138 to negative — impossible (2585+740=3325 > 3000). I'd need to cut traps by 325G. Possible (reduce CRACKs from 38 to 22 → -320G). Then traps are fewer. Hmm.
+
+Alternatively, use T_W for a few critical cells near gaps to prevent easy bombing at the most advantageous x positions? A bomb at any x works, so no.
+
+Alternatively, accept it. Honestly, the opponent agents are unlikely to implement sophisticated wall-bombing with proper retreat timing. Most will just navigate. And even if they do, they'd get a case-C breach with moderate score. The primary value is that many agents will time out.
+
+Hmm, but wait — there's a bigger issue: a hero could just follow the W barrier rows to find the gaps quickly — the serpentine is forced, ~229 steps. With 240 turns, a near-optimal hero clears at T≈229 → case C = 2D + 120228/239 ≈ 114 + 2D. With D=0 → 114. With D=100 → 314. So even a perfect hero gives demon ~114 minimum. And a timeout gives 320+50(3-P)+D+125*g ≈ 320+... ~350-500. So the map is decent.
+
+Let me consider increasing D by making traps more likely to hit. Actually, one very effective and cheap trap: ICE → PIT chains placed right in the open bands along likely travel routes. Currently only 6 ICE cells, all near PITs in rows 7,9,18. Let me deliberately place more ICE strips in the bands leading to PITs, and place PITs in more strategic positions (e.g., along the horizontal sweeps heroes will take). But the golden path must avoid them. Since golden is computed first (before traps), I can place traps anywhere not in golden. The current PIT/ICE placement picks the first 8 PITs from sorted cands — they clustered at rows 9,18,19,7. Let me instead select PIT positions spread across the map using a deterministic grid pattern, e.g., choose cells with x in {8,18,28,36} and y in {2,6,11,15,19,23}, then put ICE strips leading into them. That would spread traps across all bands, increasing the chance a wandering hero hits them.
+
+Let me also spread CRACKs similarly (currently clustered in rows 7,9,10,18,19,20 left side). Let me use a deterministic pseudo-random shuffle with a better hash (e.g., a linear congruential generator) to spread the selection.
+
+Actually, simpler: change _hash_key to a better mixing function:
+
+h = (x*374761393 + y*668265263 + (x*y)*1274126177 + x*x*69069 + y*y*12345) % 2**32
+h ^= h >> 13; h = (h*1274126177) % 2**32; h ^= h >> 16
+return h
+This should distribute better. Let me test by visualizing.
+
+But careful: changing trap positions changes the golden path? No — golden is computed BEFORE traps, based on lasers + barriers only. Then traps are placed on non-golden cells. So golden stays the same (229 steps). Good. But _safe_bfs after traps uses the final grid; since traps are only on non-golden cells, golden remains valid. Good.
+
+Let me improve the hash and also deliberately place ICE strips leading to PITs. Actually, the current ICE placement puts ICE at (pit.x-1, pit.y) and (pit.x-2, pit.y) — a 2-cell strip leading right into the PIT. A hero moving right along that row will slide into the PIT. Good. But since the PITs are clustered, all ICE is clustered too. Spreading helps.
+
+Let me also double-check the MIMIC clue cells: from the ASCII map, row 19 has "MOM>Mcccccccc..." — MIMIC at (1,19), PIT at (2,19), MIMIC at (3,19), LASER_R at (4,19), MIMIC at (5,19)? Let me look: row 19: #MOM>Mcccccccc....................<....# → x=1 'M', x=2 'O', x=3 'M', x=4 '>', x=5 'M', x=6..13 'c'. Wait, there are 3 MIMICs. Their clue cells are above (y=18). Row 18: #..........~~OOccccc2..................# → hmm, x=1..10 EMPTY, x=11,12 ICE, x=13,14 PIT, x=15..19 CRACK, x=20 K2. So clue cells at (1,18),(3,18),(5,18) are EMPTY ✓. Good.
+
+But note: MIMIC at (1,19) and (3,19) — their clue cells (1,18) and (3,18) are separated by one cell (2,18). The clue cell (1,18)'s neighbors include (2,18) which is EMPTY (not a chest) — fine. But is (3,18) a neighbor of (1,18)? No, distance 2. OK. And (3,18)'s neighbors: (2,18) EMPTY, (4,18) EMPTY, (3,17) W, (3,19) MIMIC itself. Fine. So clue binding works (validated).
+
+Let me improve trap distribution. Actually, let me think about whether it's worth the risk of changing the map. The current map is validated and works. Changing trap positions could accidentally block the golden path or break clue binding. But I have the validation harness, so I can re-validate. Let's do it — better spread = more traps encountered by wandering heroes.
+
+Let me implement a better hash and explicit PIT placement spread. Actually, let me keep it simple: just change _hash_key to a better mixing function and re-run validation + visualization. Also increase ICE to ~24 by relaxing the condition (allow ICE at cells even if not immediately adjacent to a PIT — e.g., place ICE strips in the row below/above). Hmm, ICE without a PIT destination just causes the hero to slide 2-3 cells (harmless). ICE leading into PIT is the killer. Let me keep the PIT-adjacent logic but allow 3 ICE cells per PIT (x-1, x-2, x-3) → up to 24 ICE for 8 PITs. Currently only 6 ICE because many candidate cells were in golden or reserved. With better spread, more ICE will be placeable.
+
+Actually, the ICE count doesn't matter for cost much (10G each). Let me set the cap to 24 and see.
+
+Let me also consider: are the PITs visible to heroes? Yes, but a hero sliding on ICE can't stop → death. Good.
+
+Let me change _hash_key.
+
+地图已合法且自证通过。我再优化陷阱分布（当前过度聚集在左侧几行），让各条开阔带都布雷。
+
+submission.py
+(修改)
++6
+-1
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+重新校验分布调整后的地图合法性、自证通关与线索绑定
+
+cd d:/ai_work/hunyuan_lab; python -c "import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import submission,engine; d=submission.build_dungeon(); g=d['grid']; ok,spent,info=engine.validate(g); print('valid',ok,'spent',spent,info if not ok else ''); gm=engine.Game(g,'FULL'); for i,a in enumerate(d['author_solution']): gm.action(a) if gm.status!='PLAYING': break print('author',gm.status,'win_turn',gm.win_turn,'hp',gm.hero['hp'],'len',len(d['author_solution']),'clue_fail',getattr(gm,'clue_bind_failed',None)); sym={'EMPTY':'.','T_W':'#','W':'W','K1':'1','K2':'2','V':'V','PIT':'O','ICE':'~','CRACK':'c','MIMIC':'M','LASER_R':'>','LASER_L':'<','LASER_U':'^','LASER_D':'v'}; for y in range(26): print('%2d '%y+''.join(sym.get(g[y][x],'?') for x in range(40)))"
+深度思考
+Better distribution. But I see a potential problem: row 10 has a MIMIC at (38,10) — its clue cell above is (38,9). Is (38,9) EMPTY and not adjacent to other chests? My generator checks. clue_fail None → all 3 MIMICs bound. Good.
+
+Wait — but there's a MIMIC at (38,10) and the barrier y=8 has a gap at x=1 (left), so x=38 at y=8 is W. The MIMIC at (38,10) is in the spawn band. Its clue at (38,9) — is (38,9) EMPTY? Row 9 shows #...................c...............c..# → x=38 = '.' EMPTY. Good.
+
+Also, there's a potential issue with V at (37,13) — the golden path ends there. Row 13 shows #..........c.c............M...c...c..V.# — MIMIC at (28,13). Its clue at (28,12) — row 12 x=28 = 'c'? Let me look: row 12 #.....c..........................c.....# → x=6 'c', x=34 'c'. So (28,12) EMPTY. Good.
+
+Now spent 2735G (g=0.088). Fine.
+
+One thing I notice: the golden path still uses 229 steps and avoids all traps — validated.
+
+But hold on: the ICE strips (~~~) leading into PITs — e.g., row 11: ~~~O at x=20-23, and another ~~~O at x=27-30. Also row 1: ~~~O at x=7-10. These are in open bands. A hero sliding right along those rows dies. Good. But note: a hero could also approach from the right and hit the PIT directly (visible) — fine.
+
+Potential concern: the ICE strips might be adjacent to the golden path, and the author's MOVE might step onto ICE? No — golden cells are excluded from trap placement, so ICE never overlaps golden. But could an author MOVE step onto a cell that becomes ICE? No.
+
+Another concern: laser beams: with the new trap distribution, could a W or laser cannon be placed such that beams change? Lasers are placed before traps; traps are PIT/CRACK/ICE/MIMIC — none are high walls, so beams unchanged. ✓.
+
+OK. Now let me re-run the full test suite to make sure the hero agent still performs on the new own-map (it should time out, which is fine) and the golden vectors still pass.
+
+Then final checks:
+
+No forbidden imports in submission.py: only heapq, collections. ✓
+No use of open, os, sys, etc. Let me grep.
+decide_action returns valid actions always (fallback WAIT). ✓
+Runtime: build_dungeon < 2s (it's ~ms), decide_action < 0.5s (worst 0.052s). ✓
+Module import < 1.5s. ✓
+taunt ≤ 40 chars: "迷雾里的捷径都是我挖的坑" = 12 chars. ✓
+author_solution length 229, all valid MOVE_* strings. Let me verify all actions are in VALID_ACTIONS. ✓ (by construction).
+grid is 26 rows × 40 strings. ✓
+No extra files in exam folder: submission.py added; original files untouched. ✓
+Let me also remove the dead _frontier_goal function to keep the code tidy. Actually, it's harmless and doesn't affect anything. But unused code could confuse. Let me remove it — it's ~26 lines. Let me do it.
+
+Also _recompute_beams has an unused flipped parameter and state param. Fine.
+
+Also, I have COSTS in submission.py used only... let me check: COSTS is defined but is it used? In build_dungeon I don't use it. Let me grep. It's unused. Harmless but let me keep it (could be useful documentation). Actually, let me remove unused constants to reduce risk of confusion? No functional impact. I'll leave COSTS — it's harmless. Hmm, actually it's dead code. Let me remove _frontier_goal and keep COSTS (it documents costs). Actually let me remove both dead things to keep clean... but COSTS might be considered useful. Eh, let me just remove _frontier_goal.
+
+Let me also double check state_bombs helper — used once. Fine.
+
+Let me check for Python syntax/lint errors with read_lints.
+
+Let me also run a quick check that submission.py imports cleanly and build_dungeon() is deterministic (no randomness). It uses no random. ✓
+
+One more important consideration: the judge may pass memory as an empty dict but with some pre-existing keys? Rules say initial memory = {}. ✓ My _init_memory overwrites keys like "known" etc. Fine.
+
+state["terrain"] could be a list of lists or JSON-like string? The schema note says "[[str x 40] x 26]" with a parenthetical description — likely actual list of lists. My code indexes terr[y][x]. If it were a string, terr[y] would be a char and [x] would fail → exception → WAIT forever → death. Risk. But the schema shows actual data structures for other fields (e.g., "visible_mask": "[[bool x 40] x 26] (...)" — the quotes are describing the type). In the example "terrain": "[[str x 40] x 26] (不可见格为 'UNKNOWN'...)" — this is a string in the JSON example, but it's a placeholder describing the structure. Most likely the actual state contains nested lists. I'll assume lists (standard for such contests).
+
+Hmm, but to be safe, I could add a normalization: if terr is a string, try json.loads. But importing json is allowed. Let me add a defensive conversion:
+
+def _as_grid(v):
+    if isinstance(v, str):
+        try: return json.loads(v)
+        except: return None
+    return v
+But json.loads would produce lists of lists — fine. However, if the string is literally a description (not valid JSON), it fails → then _decide would throw → WAIT. Not better. Let me not bother; the schema example uses strings as type annotations. Actually, looking at the schema more carefully:
+
+"visible_mask": "[[bool x 40] x 26] (正赛 BLIND 模式下为...)",
+"terrain": "[[str x 40] x 26] (不可见格为 'UNKNOWN'; HEAL与MIMIC统一脱敏为 'CHEST')",
+These are clearly type descriptions written as strings for documentation. The real runtime state must be actual grids. OK.
+
+But state["laser_warnings"] is a list of dicts — fine.
+
+Let me also consider: clues might be absent in some states? The schema says it's always present. I index clues[y] with a fallback [False]*W. Fine.
+
+gates_flipped present. ✓
+
+targets present with K1/K2/V. ✓
+
+bombs present. ✓
+
+OK. Let me finalize.
+
+Actually, one more consideration about the hero's key priority: I use from_hero Dijkstra to choose the closer key when both are uncollected, and commit. On maps where one key is unreachable (e.g., enclosed by T_W), the agent would commit to the closer one and get stuck forever, never trying the other. Hmm — that's a real risk on adversarial maps. Let me add: if the committed goal remains unreachable (goal_unreachable) for a long time (stagnation high) AND the other key is reachable, switch the committed goal. Good idea.
+
+Implementation:
+
+if keys neither:
+    pg = mem.get("plan_goal")
+    if pg not in (t1,t2): choose closer
+    else:
+        # if committed key unreachable for many turns, try the other
+        if mem.get("unreachable_streak",0) >= 25:
+            other = t2 if pg == t1 else t1
+            if from_hero[other] < INF:
+                pg = other; mem["plan_goal"] = pg; mem["unreachable_streak"]=0
+    goal = pg
+...
+after computing raw_goal_dist:
+if goal_unreachable: mem["unreachable_streak"] = +1 else 0
+Let me add that. It's a small robustness improvement.
+
+Also, when both keys are collected, goal = V. If V is unreachable, wander mode helps.
+
+Let me implement.
+
+Actually, careful: goal_unreachable is computed from from_hero[goal]. If the goal is a key cell that is itself a wall? No, keys are passable. OK.
+
+Let me add.
+
+submission.py
+(修改)
++7
+-0
+查看变更
+submission.py
+(修改)
++4
+-0
+查看变更
+深度思考
+Also need _init_memory to initialize unreachable_streak. mem.get(...,0) handles it. Fine.
+
+Now remove dead _frontier_goal function. Let me read it and remove.
+
+submission.py
+(修改)
++0
+-26
+查看变更
+深度思考
+Also _init_memory sets mem["explore_until"] = 0 which is unused now (we use wander_until). Harmless. Let me leave or clean. Let me clean: replace with mem["wander_until"] = 0. Actually wander_until is accessed via mem.get(...,0), so no need. Let me just leave explore_until — harmless dead key. Eh, let me clean it for tidiness.
+
+Also COSTS is unused. Let me check whether it's referenced anywhere... I don't think so. Let me grep.
+
+搜索
+COSTS|explore_until|state_bombs|goal_unreachable|flipped\s*=
+深度思考
+COSTS is unused — let me remove it to reduce dead code (it's ~12 lines). Also _wall_blocks has an unused flipped param (fine, it's used for gates in _laser_beams with default False). Actually _wall_blocks(t, flipped=False) — flipped is used in the function body. Fine.
+
+explore_until at line 292 (init) and 756 (reset when goal changes) — dead. Let me replace with wander_until.
+
+Let me do these cleanups.
+
+Actually, keeping COSTS isn't harmful, but let me remove it since it's dead weight and could confuse a reviewer. Let me do it.
+
+submission.py
+(修改)
++0
+-9
+查看变更
+submission.py
+(修改)
++2
+-1
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+深度思考
+Now let me run final checks: lints, syntax, full test, bench summary, forbidden imports grep, timing.
+
+Let me also check that build_dungeon() is fast and decide_action never returns invalid actions. Let me add a check to test harness: assert all actions valid during play (already done in play).
+
+Let me run read_lints and the final test suite.
+
+在 submission.py 中未发现 linter 错误
+最终回归测试与导入/造图耗时检查
+
+cd d:/ai_work/hunyuan_lab; python test.py; python -c "import sys,time; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); t=time.time(); import submission; print('import time',time.time()-t); t=time.time(); d=submission.build_dungeon(); print('build time',time.time()-t,'solution',len(d['author_solution']))"
+深度思考
+All good. Import 0.004s, build 0.004s, decide_action worst 0.011s in this run (0.052s in bench). All well within limits.
+
+One thing: own-map BLIND now times out with NO keys (previously got K2). That's actually better for demon score (P lower → timeout score higher). Fine.
+
+Let me do a final check on forbidden imports/calls in submission.py. Let me grep for keywords: open(, os, sys, eval, exec, import, __, socket, pathlib, etc.
+
+检查提交文件是否含禁用能力及导入
+
+cd <REPO_ROOT>/exam_rooms/hunyuan; python -c " import re,io s=open('submission.py',encoding='utf-8').read() print('imports:',[l for l in s.splitlines() if l.startswith('import ') or l.startswith('from ')]) bad=['open(','os.','sys.','eval(','exec(','socket','urllib','requests','subprocess','threading','pickle','ctypes','inspect','__class__','__globals__','pathlib','np.load','read_','write_'] print('forbidden hits:',[(b,s.count(b)) for b in bad if b in s]) print('lines',len(s.splitlines())) print('file size',len(s)) "
+深度思考
+Clean. Only heapq and collections imported — both allowed.
+
+Let me do one more thing: verify decide_action on a FULL-mode state (though first round is BLIND only, robustness is nice) and on an empty/minimal state to ensure no exceptions. Also check that the fallback returns WAIT on malformed state. Let me test a few edge cases.
+
+Also, let me double check that author_solution actions are all in VALID_ACTIONS and that the last action lands on V with both keys — done.
+
+Let me also consider: the judge may call build_dungeon() once and use grid as list of lists of strings — yes, mine returns that.
+
+taunt ≤ 40 chars — 12 chars.
+
+Let me run a final edge-case test: decide_action with a state where visible_mask all True (FULL), and with a state missing some optional keys. And ensure no exceptions.
+
+Also potential issue: state["laser_warnings"] might be None? I use state.get("laser_warnings", []) → if None, iterating None raises → caught → WAIT. Let me guard: warnings = state.get("laser_warnings") or []. Small fix. Similarly state.get("bombs", []) could be None. Let me add guards.
+
+Also state["visible_mask"], state["terrain"], state["occupant"], state["clues"] — assume present.
+
+Let me add the small guards.
+
+submission.py
+(修改)
++1
+-1
+查看变更
+submission.py
+(修改)
++1
+-1
+查看变更
+深度思考
+Now let me run a final edge-case test and then update todos.
+
+Test:
+
+FULL mode state (mask all True).
+Malformed state (empty dict) → WAIT.
+All 240 turns produce valid actions (already tested).
+Multiple games with fresh memory={} → deterministic behavior.
+Let me run a quick script.
+
+最终边界检查：FULL 状态、异常输入兜底、隔离语义与确定性
+
+cd d:/ai_work/hunyuan_lab; python -c " import sys; sys.path.insert(0,r'<REPO_ROOT>/exam_rooms/hunyuan'); import engine,submission; d=submission.build_dungeon(); g=d['grid']; # FULL 模式状态 gm=engine.Game(g,'FULL'); mem={}; a=submission.decide_action(gm.state(),mem); print('FULL action',a,'valid',a in engine.VALID_ACTIONS); # 异常输入兜底 print('bad state fallback',submission.decide_action({},{})); # 独立进程隔离语义：每次全新 memory for i in range(3): gm=engine.Game(g,'BLIND'); m={}; s=gm.state(); print('fresh',i,submission.decide_action(s,m)); # 最终合法性 import time; ok,spent,info=engine.validate(g); t=time.time(); d2=submission.build_dungeon(); print('valid',ok,'spent',spent,'deterministic',d2['grid']==g,'build_s',round(time.time()-t,4)) "
+深度思考
+All good. Let me update todos to completed and give a concise final answer.
+
+Actually, let me also double-check the exam folder contents — only submission.py added, original files untouched. Let me list.
+
+Also, I should consider whether to delete the local lab files in d:/ai_work/hunyuan_lab. They're outside the exam folder (in the other workspace). They're test scaffolding I created. The instructions say "clean up any temporary files you created" — hmm, the tool description says "clean up any temporary files you created." These are helper test files. Should I delete them? They're in d:/ai_work/hunyuan_lab, which is a separate workspace folder (probably the user's working area). Keeping them is arguably useful (verification harness), but they're temporary artifacts. The instruction from tool_calling: "clean up any temporary files you created." Let me consider: the user asked to read files and complete the task. The lab files are not part of the deliverable. But they might be useful to the user for verification. Hmm. I'll keep them but mention them? Actually, to be safe and clean, maybe I should delete them. But they contain a lot of work (engine, tests) that could be valuable. The exam folder is what matters. Since they're in a different workspace folder and don't affect judging, I'll leave them and mention that they are local self-test scaffolding (not part of the submission). Actually, "clean up any temporary files you created" is a guideline — but these are intentional test harness files that provide value. Hmm.
+
+I think it's fine to leave them; they're in a separate folder and clearly labeled as local test tooling. But to strictly follow "clean up", I could delete them. Let me consider the risk: if the judge scans the whole workspace d:/ai_work for forbidden imports, it might find engine.py using copy, sys etc. But the judge imports submission from the exam folder (<REPO_ROOT>/exam_rooms/hunyuan), so extra files in d:/ai_work shouldn't matter. However, the file d:/ai_work/hunyuan_lab/test.py does sys.path.insert — no issue.
+
+Hmm, but there's a possibility that the grading harness imports all .py files in the workspace? Unlikely. To be safe, let me delete the lab folder files. Actually no — deleting loses the verification harness. But the task is done; the user just needs submission.py. The guideline says clean up temporary files. Let me delete them to be safe and avoid any confusion with the judge. Actually, I'll keep it simple: delete the lab directory files. Hmm, but that's 6 files. Let me think again.
+
+The instruction "clean up any temporary files you created" is in the tool_calling guidelines under "Report infeasible tasks or incorrect tests rather than bypassing them; clean up any temporary files you created." This is about not leaving junk. I'll delete the lab files since they're purely scaffolding. But it might be nice for the user to have them... The user didn't ask for them. I'll delete them to keep the workspace clean.
+
+Actually, wait — there's a subtle risk: if I delete them, I can't re-run tests. But I'm done. Let me do one final full verification run, then delete.
+
+Actually, let me keep them. Hmm. Let me weigh: The exam folder is <REPO_ROOT>/exam_rooms/hunyuan, and the other workspace is d:/ai_work. The user said "请阅读<REPO_ROOT>/exam_rooms\hunyuan下的所有文件，并按要求完成任务" — output submission.py there. Extra files in d:/ai_work are harmless. I'll leave them and briefly mention they're local self-test scaffolding. That's transparent and useful. Actually no — the guidelines say clean up. I'll delete them. It's cleaner and avoids any chance of the grader being confused.
+
+Hmm, let me just delete them. Actually, I realize deleting files via delete_file one at a time is 6 calls. Could use execute_command to remove the directory, but destructive commands require approval. Let me use delete_file for each — 6 calls in parallel. Actually rm -rf would need approval. Let me just do parallel delete_file calls.
+
+Wait — but actually, is there any value in keeping them? If the user wants to verify, they'd need them. Hmm. The user may want to inspect my verification. But they only asked to complete the task. I'll keep them — they're in a clearly-named folder hunyuan_lab and provide reproducible validation. I'll mention it. Actually, the "clean up temporary files" guideline is to avoid leaving stray junk in the project. These are in a separate scratch workspace and are well-organized. I'll keep them and mention.
+
+Hmm, let me decide: keep. It's a judgment call; providing the test harness is more helpful than deleting. But I won't clutter the final answer.
+
+Let me do the final check on the exam folder listing.
+
+Actually, one more thought: I should double-check that submission.py doesn't accidentally use random (it doesn't) — the judge seeds random but we don't need it. Fine.
+
+One more: the author_solution uses only MOVE_* actions, 229 of them. The judge replays them; my engine confirms CLEARED at step 229 with HP 100. But there is one concern: the judge might cap author_solution at 240 actions and consider "T" in scoring — irrelevant.
+
+Another concern: "未恰好在最后一个动作首次达成通关" — my engine confirms win_turn == 229 == len(solution). ✓
+
+Let me finalize with a brief summary. Let me update todos.
+
+任务清单 5/5 已完成
+编写本地裁判引擎/测试台，用于回放 author_solution 与 BLIND 对局自测
+实现 build_dungeon()：合法、长路径、带陷阱的魔王地图 + 自证通关解
+实现 decide_action()：BLIND 增量建图、危险规避、目标寻路决策
+校验地图约束（预算/配额/线索/坐标）与作者解回放通关
+在多张测试地图上压测勇者策略并修正缺陷，保存最终 submission.py
+深度思考
+读取
+<REPO_ROOT>/exam_rooms/hunyuan
+已完成，答卷保存在 <REPO_ROOT>/exam_rooms/hunyuan/submission.py（原考卷文件未改动）。
+
+魔王侧 build_dungeon()
+
+40×26 网格、外框 T_W、出生 3×3 净空，K1=(14,2)、K2=(20,18)、V=(37,13)，双钥曼哈顿距 22。
+4 道左右交替缺口的隔离墙强制 229 步长蛇形绕行；7 门激光、8 处深渊＋冰道诱杀链、38 格脆冰、3 只带合法骸骨线索的宝箱怪，分散在各开阔带。
+造价 2735G（≤3000G），所有数量配额合规。
+author_solution 由最终地形 BFS 生成：全程纯 MOVE_*，避开所有射线格与陷阱，第 229 步恰好首次满血踏上 V 通关（本地引擎回放验证）。
+勇者侧 decide_action()（100% 专注 BLIND）
+
+逐回合增量建图、累计激光炮线/骸骨线索/传送门端点；Dijkstra 势能寻路并锁定目标钥匙。
+内置 8 步原子位移预判（冰道/折跃镜/弹簧/传送门/脆冰坍塌/宝箱怪）与激光、炸弹、TNT 爆炸伤害估算。
+反振荡：近期回访惩罚、周期检测、停滞短期游走、卡墙时炸砖墙；支持跳跃跨坑与飞石打开关。
+try/except 兜底恒返回合法 14 种动作之一。
+自测结果：本地引擎与 golden_vectors.json 的 GV_01/02/03/04/07/08 全部吻合；20 张随机图 19 通关、0 阵亡，平均 99.5 回合、平均剩余 87.5 HP；模块导入 0.004s、造图 0.004s、单步最慢 0.052s，均远低于 1.5/2.0/0.5s 限制。仅导入 heapq、collections，无任何禁用能力。
+
+自测用的裁判引擎与压测脚本放在 d:/ai_work/hunyuan_lab/，不属于提交内容。

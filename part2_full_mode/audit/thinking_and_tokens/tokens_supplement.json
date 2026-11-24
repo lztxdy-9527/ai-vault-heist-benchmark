@@ -1,0 +1,180 @@
+{
+  "schema": "tokens-only-v1",
+  "units": "tokens",
+  "reasoning_is_subset_of_output": true,
+  "skipped": [
+    "P2_05_hydrogen_agy",
+    "P2_06_opus_agy"
+  ],
+  "contestants": {
+    "astra": {
+      "source": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T05-07-11-01a1e0d2-2739-7ce1-b181-53e7b9347734.jsonl",
+      "non_cached_input": 303132,
+      "cache_read": 15266816,
+      "cache_write": 0,
+      "output": 68057,
+      "reasoning": 30850,
+      "total": 15638005,
+      "scope": "part2 cumulative delta; SOL includes overtime",
+      "raw_token_counts": "astra_token_count_raw.json",
+      "approval_sidecar": {
+        "transcript": "astra_approval_review.md",
+        "usage": "astra_approval_token_raw.json",
+        "included_in_total": false
+      },
+      "arithmetic_check": true,
+      "thinking_export": "astra_thinking.md"
+    },
+    "sol": {
+      "source": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\16\\rollout-2026-11-16T04-08-45-01a1e09c-a981-7fb1-988d-14dc0b2e33c9.jsonl",
+      "non_cached_input": 515985,
+      "cache_read": 30170752,
+      "cache_write": 0,
+      "output": 75827,
+      "reasoning": 36897,
+      "total": 30762564,
+      "scope": "part2 cumulative delta; SOL includes overtime",
+      "raw_token_counts": "sol_token_count_raw.json",
+      "arithmetic_check": true,
+      "thinking_export": "sol_thinking.md"
+    },
+    "neon": {
+      "source": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db ses_e0b7605dbffedZYz5Lo6geIMxN",
+      "non_cached_input": 511556,
+      "cache_read": 24366639,
+      "cache_write": 0,
+      "output": 276394,
+      "reasoning": 105039,
+      "total": 25154589,
+      "scope": "本场首条part2_full用户指令起至该会话末尾",
+      "usage_events": 104,
+      "output_definition": "OpenCode output+reasoning，reasoning列为子集",
+      "arithmetic_check": true,
+      "thinking_export": "neon_thinking.md"
+    },
+    "carbon": {
+      "source": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db ses_e1f81f5d2ffeEcNqEZUPLt4y8T",
+      "non_cached_input": 5134996,
+      "cache_read": 77851513,
+      "cache_write": 0,
+      "output": 277120,
+      "reasoning": 113060,
+      "total": 83263629,
+      "scope": "本场首条part2_full用户指令起至该会话末尾",
+      "usage_events": 154,
+      "output_definition": "OpenCode output+reasoning，reasoning列为子集",
+      "arithmetic_check": true,
+      "thinking_export": "carbon_thinking.md"
+    },
+    "glm": {
+      "source": "<LOCAL_USER_HOME>\\.local\\share\\opencode\\opencode.db ses_e1f1d00daffe6T2J1fhNxFBDC5",
+      "non_cached_input": 510045,
+      "cache_read": 54435328,
+      "cache_write": 0,
+      "output": 198685,
+      "reasoning": 135951,
+      "total": 55144058,
+      "scope": "本场首条part2_full用户指令起至该会话末尾",
+      "usage_events": 138,
+      "output_definition": "OpenCode output+reasoning，reasoning列为子集",
+      "arithmetic_check": true,
+      "thinking_export": "glm_thinking.md"
+    },
+    "deepseek": {
+      "source": "<LOCAL_USER_HOME>\\.dsh\\sessions\\--REPO-part2_full-exam_rooms-P2_07_deepseek_dsh--\\session-a11cda84-af09-4635-97b0-2a5db66db350\\session.v4.jsonl.zstd",
+      "non_cached_input": 124509,
+      "cache_read": 52807040,
+      "cache_write": 0,
+      "output": 259967,
+      "reasoning": 140286,
+      "total": 53191516,
+      "usage_events": 216,
+      "reasoning_note": "官方 V4.1 Flash 分词器逐段重算。216 个响应中 135 个有非空推理正文；正文与流式记录一致。空块和服务端未保存内容不做补写。",
+      "arithmetic_check": true,
+      "thinking_export": "deepseek_thinking.md",
+      "reasoning_status": "estimated_from_saved_text",
+      "supplement_evidence": "token_gap_evidence.json"
+    },
+    "qwen": {
+      "source": "<LOCAL_USER_HOME>\\.qoder-cn\\projects\\REPO-part2-full-exam-rooms-P2-10-qwen-qoder\\d65221a8-0f42-4bc3-bfc6-2b4e555404d9",
+      "non_cached_input": 1837944,
+      "cache_read": 20746996,
+      "cache_write": null,
+      "output": 209529,
+      "reasoning": 117863,
+      "total": 22794469,
+      "status": "platform_day_aggregate_used_as_session_proxy",
+      "note": "采用用户确认的 Qwen 用量截图作为该场代理；可能包含同模型当日其他调用。缓存写入没有单列，已包含或无法从未缓存输入进一步拆分，不填零。",
+      "thinking_export": "qwen_thinking.md",
+      "ui_status": "user_supplied_day_aggregate",
+      "usage_scope": "用户提供的千问平台截图，11-20 按天按模型汇总；截图未展示时区、会话 ID 或完整模型名。",
+      "field_status": {
+        "non_cached_input": "measured_day",
+        "cache_read": "measured_day",
+        "output": "measured_day",
+        "total": "measured_day",
+        "reasoning": "estimated_session_from_saved_text",
+        "cache_write": "not_separately_reported"
+      },
+      "ui_evidence": "qwen_token_plan_20261120.png",
+      "supplement_evidence": "token_gap_evidence.json"
+    },
+    "hunyuan": {
+      "source": "<LOCAL_USER_HOME>\\AppData\\Roaming\\CodeBuddy CN\\logs\\20261119T200317\\window1\\exthost\\Tencent-Cloud.coding-copilot\\腾讯云代码助手.log:6371",
+      "status": "native_completion_usage_verified_against_desktop_screenshot",
+      "non_cached_input": 375078,
+      "cache_read": 35641216,
+      "cache_write": 0,
+      "output": 157900,
+      "reasoning": 101963,
+      "total": 36174194,
+      "ui_evidence": "hunyuan_tokens_ui.png",
+      "reasoning_is_subset_of_output": true,
+      "arithmetic_check": true,
+      "thinking_export": "hunyuan_thinking.md",
+      "conversation_export": "hunyuan_codebuddy_export.zip",
+      "conversation_request_id": "fe4d83df1f9d4926bd7df4bf1ff54128",
+      "thinking_export_status": "all blocks present in native export"
+    },
+    "doubao": {
+      "source": "<LOCAL_USER_HOME>\\.marscode\\logs\\2026-11-20\\servers\\051248-324\\connections\\051248-755-2026-11-20-66fe0a56-19cb-43b6-9c6d-25e5e37a47eb.log:205 (duplicate at line 239)",
+      "non_cached_input": 4537963,
+      "cache_read": 1827016,
+      "cache_write": 0,
+      "output": 233267,
+      "reasoning": 149729,
+      "total": 6598246,
+      "status": "measured_last_invocations_and_estimated_session",
+      "thinking_export": "doubao_thinking.md",
+      "ui_status": "TRAE history records have per-round last-invocation usage; cumulative fields are zero placeholders",
+      "conversation_export": "doubao_trae_ui_capture.txt",
+      "thinking_export_status": "full recorded plan-item Thinking text available including first interrupted round",
+      "field_status": {
+        "non_cached_input": "estimated_session",
+        "cache_read": "estimated_session",
+        "cache_write": "estimated_session",
+        "output": "estimated_session",
+        "reasoning": "estimated_session",
+        "total": "estimated_session"
+      },
+      "actual_last_invocations": {
+        "count": 3,
+        "non_cached_input": 106327,
+        "cache_read": 42808,
+        "cache_write": 0,
+        "output": 10591,
+        "reasoning": 7854,
+        "total": 159726
+      },
+      "planning_scenarios_total": [
+        5495549,
+        7700943
+      ],
+      "thinking_raw_export": "doubao_trae_logged_thinking.md",
+      "estimate_note": "生成时间戳作为请求次数代理；取上下文从索引估值到实测末笔线性增长与全程持平两种场景的中点。缓存按三笔实测的合计比例推估，缓存写入按该情景设零。输出由原文与工具参数代理分词，推理部分以每轮末笔比率校准。场景差异不代表统计置信区间。",
+      "supplement_evidence": "token_gap_evidence.json"
+    }
+  },
+  "known_totals_only": 299328555,
+  "warning": "known_totals_only excludes Qwen (day scope) and Doubao (estimated session). Reasoning estimates are included in output, never added to total. No costs are recorded."
+}

@@ -1,0 +1,8 @@
+Created At: 2026-11-20T04:05:43+09:00
+Completed At: 2026-11-20T04:05:43+09:00
+Workflow "Write dungeon v2 design" completed.
+Output:
+valid (1215, {'K1': (16, 3), 'V': (37, 13), 'K2': (16, 22)})
+admission {(2, 14), (4, 13), (2, 13), (3, 13), (1, 13), (2, 12), (2, 15), (2, 11)}
+1.5 full True 143 0.04 ('WIN', 143, 100, 0.0)
+['JUMP_R', 'MOVE_U', 'JUMP_R', 'JUMP_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_D', 'MOVE_R', 'MOVE_U', 'MOVE_U', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_L', 'MOVE_D', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_D', 'MOVE_R', 'MOVE_U', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_L', 'MOVE_U', 'MOVE_D', 'MOVE_L', 'MOVE_L', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_U', 'MOVE_R', 'MOVE_R', 'MOVE_U', 'MOVE_D', 'MOVE_R', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_D', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'MOVE_R', 'WAIT', 'MOVE_R', 'MOVE_R', 'WAIT', 'MOVE_D', 'MOVE_R']

@@ -1,0 +1,840 @@
+The user is asking me to read all the files under <REPO_ROOT>/exam_rooms\qwen and complete the task according to the requirements. Let me first explore that directory.
+
+Let me read all four files.
+
+Let me carefully understand the task. This is a 60-minute competitive coding exam, and I need to do the following:
+
+First, output a pre-match trash-talk declaration (50–100 characters) calling out the other 10 models by name.
+Write submission.py in the current working directory (<REPO_ROOT>/exam_rooms\opus1). Contents:
+build_dungeon() -> dict — demon builder with a self-verified author_solution
+decide_action(state, memory) -> str — hero decision-making specialized for BLIND mode
+Rules:
+
+No network, no external search. Purely my own ability. (So no websearch/webfetch. The browser tool was just added, but the exam forbids its use. I should not use the network tools.)
+No file I/O inside the submitted code, no os, sys, subprocess, threading, eval, exec, inspect, etc. Only pure algorithmic standard library + numpy/networkx/sympy are allowed.
+build_dungeon within 2.0 seconds, decide_action within 0.5 seconds per call, import within 1.5 seconds.
+Grid 40x26, boundary is T_W (free, 128 tiles), spawn clearance zone x∈[1,3], y∈[12,14] must be EMPTY.
+K1 at x∈[12,34], y∈[2,10]; K2 at x∈[12,34], y∈[15,23]; Manhattan distance between keys ≥ 12; V at x∈[33,37], y∈[4,21].
+Budget ≤ 3000G.
+MIMIC requires a valid dedicated clue tile (first EMPTY orthogonal neighbor in U,D,L,R order, not in spawn zone, no other chest adjacent to the clue tile, clue not already used).
+author_solution must clear on exactly the final action (first time reaching V alive with both keys on the last move).
+Hero scoring: survival clear = 600 + 1.5HP + 150(240-T)/239 + 100g. Failure = 200(k+r).
+Demon scoring: kill = 500 + 50*(3-P) + D + 250g; timeout = 320 + 50(3-P) + D + 125g; breached = 2D + 120*(T-1)/239.
+Strategy considerations:
+
+As demon (build_dungeon):
+
+Maximize demon score: kill the hero (500 base) or timeout (320 base), plus D (effective trap damage), plus g (vault retention = unspent budget).
+But wait — the demon score depends on how the opponent's hero performs against my map. I want a map that is hard for other models' heroes to solve, but that my own author_solution can clear (self-verification is required). Also, low spending → high g. So the ideal is: a cheap but nasty maze that kills or traps most heroes, with a known safe path for author_solution.
+Actually, the author_solution is replayed by the judge engine for verification — it must clear. Other heroes run decide_action on my map.
+Cheap approach: mostly walls (W 5G each) forming a maze, plus a few pits/lasers/TNT near the hero's likely path. Budget 3000 is quite generous. But g matters: kill score = 500 + 50*(3-P) + D + 250g. If hero dies early with P≈0, D≈100: 500+150+100+250g = 750+250g. Spending 0 → 1000. But a map with no traps won't kill anyone; hero just walks to keys and vault, getting a clear → demon gets 2D + 120*(T-1)/239 ≤ 320. So there's a tradeoff.
+Best demon strategy: build a maze that is confusing to BLIND-mode heroes, with lethal traps along likely routes, while keeping a verified path. Since all heroes are LLM-generated code with blind exploration, a complex maze with dead ends, cracks, pits disguised by ice, lasers, mimics will cause many deaths/timeouts.
+Key insight: heroes get target coordinates (K1, K2, V positions are in state["targets"]!). So heroes know where the keys are — they just need to pathfind through unknown terrain. A maze with long winding corridors wastes turns and exposes them to lasers. Pits hidden in fog are lethal if hero blindly walks. But heroes should be cautious... many will be aggressive.
+To maximize kill probability: place PITs on the direct routes between spawn/keys/vault, with ice that slides into pits, lasers covering corridors, TNT chains. Mimics with clues (heroes might learn to avoid chests with adjacent clues... actually clues mark mimics: clue tile adjacent to mimic. Smart heroes avoid chests with clues nearby).
+Also CRACK tiles: collapse when left. Heroes crossing a crack bridge leave a pit behind — no problem if they don't backtrack.
+Budget: want to spend moderately to make it nasty while keeping g decent. E.g., spend 1500-2000G, g≈0.33-0.5. Kill with D=100, P=0: 500+150+100+2500.4 = 850. Timeout: 320+150+100+1250.4 = 620. Hmm, kill is much better. But if most heroes clear, demon score is 2D + 120(T-1)/239; if T100, D50: 100+50 = 150. So a hard maze that delays clears also helps in breach case (T large → up to 120).
+Design goal: force long paths (T large), deal damage along the way, kill the reckless.
+Actually, let me think about what maximizes expected demon score across 10 opponent heroes. A really hard maze: many will timeout (320 + 50*(3-P) + D + 125g). If P≈1 (got 1 key), D≈60, g≈0.4: 320+100+60+50 = 530. If killed early: ~850. If cleared slowly with damage: ~200.
+
+I think a good approach is: a maze with a single long winding path (serpentine) to each key, guarded by lasers and pits, plus deceptive branches with mimics/TNT. Keep a verified solution path. Spend ~2000G.
+
+But honestly, the hero side is probably more important (hero score up to 1000, and all 11 heroes run against each other's maps — actually, cross-evaluation: each hero runs against all demons' maps). Hero score: clear fast with high HP on cheap maps. On nasty maps, survive and make progress.
+
+As hero (decide_action) in BLIND mode:
+
+State gives: turn, hero position/HP/keys/jumps/throws/bombs, gates_flipped, target coordinates (known!), visible_mask, terrain (UNKNOWN for invisible), occupant, bombs list, clues (visible only), laser_warnings (only on turn%3==0, cells of laser beams within visible mask computed from pre-action snapshot).
+Need incremental mapping in memory: remember all seen terrain, update when things change (cracks collapse, chests consumed, gates flip).
+Pathfinding: A*/BFS on known map, treat UNKNOWN as passable but risky (optimistic) or avoid. Standard approach: plan path to nearest key treating unknown as walkable but prefer known-safe tiles; replan every turn.
+Danger avoidance:
+PIT: never step on known pit. Unknown could be pit — risk. Use cautious expansion: prefer known tiles; when unknown is needed, step carefully (one step at a time, replan).
+ICE: sliding can carry into unknown/pits. Simulate momentum with known terrain; if slide path enters unknown or danger, avoid or use carefully.
+LASER: on turn%3==0, laser fires. laser_warnings gives beam cells visible this turn. To avoid: don't stand on beam cells on fire turns. Beam cells can be memorized: laser cannon position + direction is visible → compute ray ourselves with current map knowledge (walls block, TNT blocks, BOX blocks). Can predict danger cells for next fire turn. On turns where turn%3==0, if current cell is in beam, must move off (or ensure not exposed). Exposure includes all cells traversed this turn (exposed_cells), so sliding through beam on fire turn is also dangerous.
+Timing: fire happens after action (phase D). So on turn t where t%3==0, after moving, hero's exposure trace is checked against beams. Need to plan move such that no exposed cell intersects beam. Also, if hero is standing on beam cell at start of fire turn, must leave and not cross any beam cell.
+MIMIC vs HEAL: both show as CHEST. Clues: clue tile adjacent to mimic (bone clue). If a CHEST has an adjacent clue tile → it's a MIMIC (clue binds to exactly one mimic, adjacent orthogonally). Actually, clue tile is orthogonally adjacent to its mimic. So if we see a clue at (cx,cy), the mimic is one of its 4 neighbors. If a CHEST is adjacent to a visible clue → almost certainly mimic (could the clue belong to a different adjacent chest? Clue condition: clue tile has no other chest adjacent besides its own mimic. So if clue at c is adjacent to chest X and chest Y, that's impossible — clue requires no other chest adjacent. So a chest adjacent to a clue is definitely the mimic bound to that clue!). Great deduction: CHEST adjacent to visible clue = MIMIC, avoid. CHEST not adjacent to any clue... could be HEAL, or MIMIC whose clue is hidden/unseen. Clue is only visible when in visible_mask. When we see a chest, its clue neighbor might not be visible yet (LOS). Hmm, but clue is orthogonally adjacent to mimic; if mimic is visible, adjacent cells are... visibility: adjacent 8 cells always visible. So if we see a MIMIC (as CHEST), all 4 orthogonal neighbors are visible (near ring always visible). Therefore clue, if it exists, should be visible... unless clue tile was consumed? Clue is just a boolean layer on EMPTY tile, persists until mimic dies. So: any visible CHEST with visible clue adjacent → MIMIC. Any visible CHEST with all 4 orthogonal neighbors visible and no clue adjacent → HEAL! Wait — clue binding: each mimic must have a clue. Clue is on EMPTY terrain, orthogonally adjacent. When mimic is visible, its 4 neighbors are visible (adjacent ring always visible). If clue is on one of them, clues[ny][nx] is True and visible. So visible chest with no adjacent clue = HEAL (safe, +30 HP). This is a powerful deduction! Caveat: clues layer only shows True where visible_mask True and clue exists. Adjacent cells always visible, so yes.
+Edge case: what if clue tile is... clue condition requires terrain EMPTY and no occupant. It stays. OK.
+So hero can safely consume HEALs and avoid MIMICs with near-perfect accuracy.
+CRACK: stepping is fine, but leaving collapses it. Don't plan paths that require backtracking over crack. Also don't push box over crack (GV_02). When pathfinding, treat crack as one-way: after leaving, becomes pit. In planning, can model crack as passable but mark as pit after passage for future planning. Simpler: avoid crack unless necessary; if crossed, update memory to PIT when we observe... actually we know the rule: when we leave crack it becomes pit. Can update memory proactively. But note: we might not see it collapse if we leave and it's out of sight... we know the rule so we can infer.
+TNT: don't walk into TNT (blocks move). Can detonate with THROW (range 6) or BOMB (3x3, timer 3) or laser. Throwing stone at TNT from safe distance is useful to clear walls? TNT explosion destroys W walls, ICE, etc. Hero has 2 bombs, 3 throws, 3 jumps.
+BOX: pushable; boxes can trigger switches, fill pits, crush mimics. Pushing box into pit fills it → safe crossing! Hero has limited... boxes are map entities. Can use box to fill pit: push box into pit, both vanish, terrain EMPTY. Useful for crossing pit corridors.
+SWITCH: stepping flips gates. R_GATE initially closed (wall), B_GATE open. If path requires passing R_GATE, need switch flip. Track gates_flipped in memory/state (given in state).
+PORTAL: paired teleport; momentum continues. Can be shortcut or hazard. Simulate.
+SPRING: launches up to 3 tiles in direction, landing early if blocked. Dangerous: could land in pit (GV_03). Simulate with known terrain; unknown landing = risk.
+JUMP: crosses 1 tile, lands 2 tiles away. Useful for jumping over pit/laser/CRACK without triggering. p1 must not be HIGH_WALL, p2 must not be HIGH_WALL/BOX/TNT. Landing triggers effects. 3 jumps — precious, use for unavoidable pit or to save turns.
+BOMB: place at current position, timer 3 (explodes in phase C of turn+3... let me see: placed on turn t with timer=3; each phase C decrements: turn t (same turn? placed in phase A/B, then phase C decrements to 2), t+1 → 1, t+2 → 0 explodes. So explodes at end of turn t+2 (phase C). 3x3 damage 50 to hero if in range. Use to destroy W walls blocking path: place bomb adjacent to wall, retreat, wait 2 turns. Hero bombs=2.
+THROW: stone flies 6 tiles, breaks on wall/box, triggers switch/TNT/mimic, bends at mirror, portals. Use to flip switch from distance, detonate TNT, kill mimic from afar. 3 throws.
+Hero planning architecture:
+
+Maintain memory map: terrain knowledge (40x26), last-seen turn, plus inferred changes (crack we left → PIT; chest consumed → EMPTY; gate state from state).
+Each turn: update knowledge from state's visible cells. Track keys picked up (state.hero.keys). Target selection: if not k1 and not k2 → nearest key (Manhattan or path distance); if one key → other; if both → V.
+Build cost graph over known tiles:
+Known walls (W, T_W, laser, closed gate): impassable (W can be bombed but expensive).
+Known PIT: impassable (except via jump/box-fill).
+ICE/MIRROR/SPRING/PORTAL: simulate momentum to find final resting position and hazards; treat as edge to resting position if safe, else dangerous/impassable.
+UNKNOWN: passable with risk cost (optimistic planning), but prefer known. Two-layer approach: BFS on known-safe for path; if no path, allow unknown with penalty.
+Danger check for candidate action: simulate the full momentum chain with current knowledge; if any entered cell is known PIT/MIMIC → reject; if slide goes into unknown → risky (allow only if necessary, and only one step into unknown at a time — actually, sliding into unknown is inherently multi-cell; safer to avoid ice that leads to unknown).
+Laser safety: compute all laser beams from known laser cannons (with current gate/wall state). If turn%3==0 (fire this turn after action): candidate action's exposure trace must avoid beam cells; also, if we stay (WAIT), current cell must not be in beam. If turn%3==2 (next turn fires): prefer to end move on non-beam cell... actually, exposure on fire turn includes start cell. If we end turn t (t%3==2) on beam cell, then on turn t+1 (fire) we start there; we can move off, but start cell is in exposed_cells → hit! exposed_cells initialized with {(hx,hy)} at start of turn. So if we start fire turn on beam cell, we take damage no matter what (unless we clear before phase D, or... beam computed from snapshot after C; if we destroy laser with bomb... complex). So: never end turn on beam cell when next turn is fire turn (i.e., when (turn+1)%3==0). More generally, plan to be off beams at end of turns t where t%3==2. And on fire turns, ensure entire path avoids beams.
+Also laser_warnings provides actual beam cells this fire turn (visible portion) — use to validate/update our beam model.
+Beam model: from each known LASER_X cannon, extend up to 10 tiles, stop before HIGH_WALL/BOX, stop at TNT (inclusive). Use current knowledge; unknown cells — beam passes through (assumed). Conservatively: treat unknown as transparent for beams (worst case).
+Replan every turn (0.5s budget is plenty for 1040-cell BFS/A*).
+If stuck (no path even optimistically): explore — move toward nearest unknown frontier to gain info, prefer safe moves. Use WAIT if all moves dangerous and laser timing requires waiting? WAIT is safe if current cell safe and no laser this turn.
+Anti-stuck: track position history; if oscillating, pick alternative (e.g., different target key order, or explore).
+Use items wisely:
+JUMP over single pit when it's the only way, or to save many turns.
+BOMB to break W wall blocking otherwise long detour: place adjacent, move away ≥2 (Chebyshev >1), wait for explosion, then proceed. Need to ensure we're not in 3x3 at explosion turn (turn placed+2).
+THROW to hit distant SWITCH (flip gates) or TNT or MIMIC. Simulate stone path with mirror/portal. Only if clearly beneficial.
+HP management: seek HEAL when HP low and safe heal known. Avoid mimic (deduction above). If HP ≤ 45, extra cautious (mimic would kill... mimic -45; pit -100; laser -50).
+Also important: heroes run against maps built by other models, which may be nasty. Robustness: never throw exceptions; always return valid action; wrap logic in try/except and fallback to safe WAIT or simple move. Memory initialized {} each game.
+
+Also: turn limit 240. If can't clear, maximize progress P (get keys, approach next target). Scoring on failure: 200k + 200r, r = (d0-dmin)/d0 within current stage. So even getting 1 key and approaching the other is worth points. Prioritize key acquisition.
+
+Now, demon map design details. Let me think about what makes BLIND heroes fail:
+
+They know target coords. They'll head toward them. Walls force detours; fog hides pits.
+Long serpentine corridors with lasers at intervals: heroes must time movement; many will take damage.
+Pit clusters on direct lines: cautious heroes will detour once seen; reckless die.
+Ice slides into pits: heroes who don't simulate momentum die.
+Mimics: smart heroes deduce clue; naive ones step on chest → -45.
+CRACK bridges over pit fields: cross once, can't backtrack; heroes who need to backtrack fall.
+Gates + switches: heroes who don't understand gates get stuck (timeout).
+TNT near corridors: laser triggers chain.
+Given the cross-play, my map faces 10 different hero implementations. A solid, nasty-but-cheap design:
+
+Design: partition map into zones with W walls (cheap 5G). Force a long winding route: spawn (2,13) → K1 upper area → K2 lower area → V right side. Use T_W sparingly for critical blockers (25G, cap 120).
+
+Let me sketch a concrete layout. Grid 40x26, boundary T_W. Spawn clearance x1-3, y12-14 empty.
+
+Idea: build horizontal wall barriers at various y with a single gap, forcing serpentine traversal. Place lasers covering gaps, pits near gaps, ice leading into pit, mimics in tempting dead ends, crack bridges.
+
+But author_solution must clear — I'll compute the solution with my own simulator. Best approach: write a full physics simulator in submission.py (allowed, pure code), use it in build_dungeon to verify author_solution via search (BFS over safe actions). But build_dungeon has 2.0s limit. Full BFS over game state with momentum might be heavy, but for a mostly-deterministic maze with a known intended path, we can hand-construct the path and verify with simulator; if verification fails, fallback to simpler map. Actually safer: build map with a clearly-defined safe corridor (all EMPTY) that I can hand-compute the action sequence for, and verify with simulator at build time. If simulator says dead/not-cleared, fallback to trivial open map with straight-line solution (guaranteed valid). This ensures no 废标 (disqualification).
+
+Actually, to be safe against my own simulator bugs: fallback map = mostly empty with a few cheap decorations far from path, author_solution = simple Manhattan walk. Verify with simulator; even if simulator has bugs, the fallback walk on open map is trivially correct (no traps near path). The judge replays author_solution — must clear exactly on last action. On open map: from (2,13) MOVE_R ×(kx-2), MOVE_U/D to key row, etc. Ensure last action steps onto V with both keys. Easy.
+
+For the main nasty map, I'll design the safe path explicitly and simulate to confirm. Let me design carefully.
+
+Let me think about budget allocation for nasty map (~2500G spent, g≈0.17 → kill bonus 250*0.17≈42; hmm, g matters). Alternatively spend ~1200G (g=0.6 → kill +150). Kill score ≈ 500+150+100+150 = 900 if P=0, D=100. Timeout ≈ 320+150+100+75 = 645. Cheaper map with same lethality is better. Walls are 5G — 200 walls = 1000G. That's a lot of maze. Lasers 75G ×12 = 900G (max 12). Pits 40G. TNT 40G ×12=480. Mimic 60G×4=240. Ice 10G.
+
+Plan: ~150-200 W walls for maze structure (~800-1000G), 6-8 lasers (~500G), ~10 pits (400G), 4 mimics (240G), 2 heals (60G), some ice/crack/switch/gate (~300G), 2-4 TNT (120G). Total ~2400-2600. g≈0.15. Hmm. Or reduce lasers to 4-6. Let me aim ~2000G total, g=1/3.
+
+Actually wait — let me reconsider. Demon score on breach: 2D + 120*(T-1)/239. If heroes clear my map in T≈150 with D≈40: 80+75 = 155. On timeout with P≈1.5, D≈70: 320+75+70+125g ≈ 465+42 = 507. On kill: 500+50*(3-P)+D+250g; P≈0.5, D=100: 500+125+100+83 = 808. So killing is best, timeout second. A maze that's hard to navigate within 240 turns but has a solution ~180 turns long would cause many timeouts. And lethal traps for the reckless.
+
+240 turns is a lot; a serpentine path of length ~150 is solvable by decent pathfinders if they can see through fog incrementally. To cause timeouts, need confusing topology: gates requiring switches, portals, long detours. But too hard → my author_solution also hard to verify (I control it, so fine).
+
+Let me design a maze with 3 horizontal barriers forcing S-shape, plus gate/switch puzzle for vault area, lasers on main corridors, pit traps at corners, ice chutes, mimics in dead ends, crack bridge shortcut that's actually a trap.
+
+Honestly, given time constraint (60 min), I should keep the design manageable and verifiable. Let me write:
+
+Full simulator (hero physics only, no need for box AI beyond what's pushed; need box push, momentum, laser, bomb, TNT, switch, portal, spring, mirror, crack, clue) — for author_solution verification. This is substantial but doable. Actually, do I need full simulator? I can hand-design author path through all-EMPTY corridor and verify with simplified simulator that handles: move, wall block, ice/mirror/spring momentum, pit/laser/bomb/TNT damage, crack, keys, V, gates/switch, portals. If I keep author path on EMPTY tiles only (no ice etc. on path), then simple simulator suffices: just check each MOVE's target not wall/pit/laser-on-fire-turn etc. But lasers might fire on path cells on specific turns — I must time the path. I can compute laser schedule and insert WAITs. Simpler: keep author path entirely out of laser beams (lasers point into dead-end trap zones, not safe corridor). Then verification is trivial: walk the corridor, pick keys, reach V. Still, I'll write a decent simulator to double-check, with fallback.
+Let me design the map concretely. Coordinates: x 0..39, y 0..25. Boundary walls. Interior x1..38, y1..24.
+
+Spawn (2,13), clearance x1..3, y12..14.
+
+Keys: K1 at (16,4)? Must be x∈[12,34], y∈[2,10]. K2 at (28,21)? x∈[12,34], y∈[15,23]. Manhattan |16-28|+|4-21| = 12+17=29 ≥12 ✓. V at (36,13)? x∈[33,37], y∈[4,21] ✓.
+
+Hmm wait, let me think about the route structure. Let me do this:
+
+Zone A (left, x1..11): spawn area. Relatively open with some pits and a mimic dead end. Exit east through gap at y=13... but that's straight line to V. Better force vertical movement first.
+Serpentine barriers:
+
+Vertical wall at x=11, y=1..24, with gap at y=3 (top) → forces going up from spawn to cross.
+Vertical wall at x=23, y=1..24, with gap at y=22 (bottom) → forces going down.
+Vertical wall at x=32, y=1..24, with gap at y=6 → forces going up again; V at (36,13) behind it, approached from top-right area.
+Path: (2,13) → up to (10,3) → cross x=11 at y=3 → K1 somewhere in x12..22, y2..10, say (17,5) → down through middle zone to (22,22) → cross x=23 at y=22 → K2 at (28,21) → up through right zone to (31,6) → cross x=32 at y=6 → down to V (36,13).
+
+Path length ≈ (13-3)+(11-2) + ... let me estimate: spawn→(10,3): 8+10=18; →(17,5): 7+2=9; →(22,22): 5+17=22; →(28,21): 6+1=7; →(31,6): 3+15=18; →(36,13): 5+7=12. Total ≈ 86 moves + key pickups are on path. ~90 turns. That's not that long; decent heroes clear in ~100-130 with exploration. To make it harder, add internal walls in each zone forcing more winding, and gate puzzle.
+
+Add gate puzzle: wall x=32 with gap at y=6 blocked by R_GATE (closed initially). SWITCH somewhere in right-middle zone (x24..31) that hero must step on to flip gates → R_GATE opens (B_GATE closes). Place B_GATE on a shortcut that becomes closed — fine. So hero must find switch. Switch visible as SWITCH. Heroes who understand will step on it. Those who don't → stuck at gate → timeout. Good differentiator. But my author path must step on switch.
+
+Also add a second gate layer? Let me keep one switch puzzle, plus maybe gates blocking K2 area requiring the same flip... gates_flipped is global. One switch flips all. If hero steps on switch early (e.g., in zone 1), then R_GATE opens early — fine, they can pass later; but if they step again, it flips back. Heroes who don't track state might re-flip and get stuck. Nasty but fair.
+
+Lasers: place along corridors:
+
+LASER_D at (10,1) firing down column x=10, y2..11 — covers the route going up along x=10? Hero going up to gap at (11,3) would likely walk along x=10 → exposed. Beam length 10: y2..11. Hero must time crossing (fire every 3 turns). Damage 50.
+LASER_R at (12,3)? firing right along y=3, x13..22 — covers crossing corridor. Hmm, that's the only crossing; hero must time it. OK.
+LASER_U at (22,24) firing up column x=22, y23..14 — covers descent in middle zone.
+LASER_L at (31,22)? firing left along y=22, x30..21 — covers bottom crossing.
+LASER_D at (31,1)? firing down x=31, y2..11 — covers ascent in right zone to gap y=6.
+LASER_R at (33,13) firing right x34..38 y13 — covers final approach to V(36,13)! Hero must time final step. V is at (36,13): beam from (33,13) covers 34,35,36,37,38 (5 tiles ≤10). Stepping on V on fire turn with both keys → instant win before phase D (GV_08!). So clever hero can dash on fire turn. Others take 50.
+That's 6 lasers = 450G.
+
+Pits: place at tempting spots:
+
+In zone A, direct line from spawn to (10,3): pits at (6,8),(7,7)? Heroes going straight diagonal might hit. But fog: they'll see pits within radius ~3 and detour. Pits mainly punish ice slides and blind dashes.
+Ice chute: ICE row leading into pit. E.g., in middle zone, ice at (17,10)..(17,14) with pit at (17,15)? Hero stepping on ice slides down into pit unless they simulate. Actually, ice slides until blocked; place pit at end. Nasty.
+Near K2: pit ring with narrow safe entry.
+Mimics (4): in dead-end alcoves that look like shortcuts, each with valid clue. E.g., (5,5), (17,17), (26,10), (34,18). Ensure clue binding valid: U,D,L,R first EMPTY neighbor not in spawn zone, no other chest adjacent to clue, clue unused. I'll place mimics isolated (no other chests within 2) so binding trivially works. Also add 2 HEALs far from mimics (so heal's neighbors don't break mimic clue condition — condition is about clue tile's neighbors: clue tile must not be adjacent to any other chest. If mimic isolated with ≥2 spacing from heal, fine).
+
+TNT: a few near laser beams for chain explosions that destroy walls and open shortcuts (or trap heroes). E.g., TNT at (10,5) in laser column → explodes on first fire turn 3, destroys surrounding W walls, maybe opens alternate route... that could make map easier. Instead place TNT in dead-end trap zones with mimics: hero lured by chest, laser fires → TNT chain → -60. Or TNT blocking a corridor that hero must detonate with throw/bomb to pass (Walled off). Hmm, TNT is occupant layer, blocks movement; explosion clears it. If I place TNT in the only gap, hero must detonate (throw/bomb/laser) — extra puzzle. Might cause timeouts for heroes without throws left. Risky for author path too (I'd need to THROW in author solution — doable, simulator must handle). Let me keep TNT out of mandatory path; place in trap alcoves.
+
+CRACK: bridge over pit moat around K1? E.g., K1 at (17,5) surrounded by pit ring except crack bridge from south. Hero crosses crack (collapses behind), gets key, must exit... same bridge collapsed → trapped! Unless jump out (jumps=3) or another exit. That's a death trap for heroes without jump planning. But author path needs exit: use JUMP over pit. Hmm, author solution with jump: fine, simulator handles. But risky if hero uses jumps elsewhere. Let me make K1 island with 2 crack bridges (enter one, exit other). Each crack used once. Hero who backtracks falls. Author: enter via bridge A, exit via bridge B.
+
+Actually, let me simplify to reduce verification risk: K1 on peninsula with pit moat, single crack bridge in, and author exits via JUMP_D over moat (jump 2 tiles: from bridge edge... need precise geometry). Or: no moat around K1; instead crack bridge as optional shortcut over pit field that heroes might take and get stranded. Keep mandatory path all EMPTY. That's safest for author verification, and still nasty for heroes who take shortcuts.
+
+OK, refined plan: mandatory safe corridor is all EMPTY (with switch tile and gates on it). Traps (pits, ice, mimics, TNT, cracks, lasers) placed off the safe corridor but on tempting direct lines / shortcuts. Lasers cover safe corridor at specific points (timing challenge, not death: 50 damage each, hero has 100 HP + heals).
+
+Wait, but if lasers cover safe corridor, author must time WAITs. I'll compute fire schedule in simulator and insert WAITs as needed. Or place lasers such that safe corridor crosses beam only at points where author can cross on non-fire turns — since author controls timing, I'll just simulate and add WAITs when needed. Let me write simulator and a small search: BFS over (position, turn mod 3, keys, gates) with safe actions, avoiding damage, to find author solution. State space: 1040 × 3 × 4 × 2 ≈ 25k states — trivial. Actions: MOVE 4 + WAIT (+ JUMP if needed). Momentum: if corridor all EMPTY, no momentum issues. Laser damage: avoid beams on fire turns. This BFS gives me a damage-free author solution if one exists.
+
+But BFS must model gates/switch: gates_flipped toggles when stepping on switch. Include in state. R_GATE at (32,6) gap: initially closed; switch at say (27,13) in right-middle zone. Author path: ... K2 (28,21) → up to switch (27,13) → step (flip) → up to (31,6) → cross R_GATE (32,6) now open → down to V (36,13).
+
+Hmm wait, but if hero steps on switch multiple times (path crosses it twice), flips back. Author path crosses once. Other heroes might oscillate — their problem.
+
+Also B_GATE: place some B_GATE tiles on a tempting shortcut (initially open, closes after flip). E.g., shortcut from zone 2 to zone 3 at y=13 through x=32 wall: B_GATE at (32,13). Initially open → hero might rush through before getting K2... but they need keys anyway. After switch flip, closes. Fine, adds confusion. Actually, if hero crosses B_GATE shortcut early (before K2), they'd be in right zone without K2, need to come back... gate now closed if they flipped switch... could get stuck → timeout. Nasty. But ensure author doesn't need it.
+
+Let me also think: heroes know target coordinates, so they'll pathfind. With fog, they'll discover walls incrementally. Serpentine will cost them ~150-200 turns with exploration. Combined with laser damage and pit deaths, good demon scores expected.
+
+Now, let me also make sure map is valid:
+
+Boundary T_W ✓ (free).
+Spawn clearance EMPTY ✓ (keep zone A around spawn clear).
+K1 (17,5): x∈[12,34] ✓ y∈[2,10] ✓. K2 (28,21): ✓. Distance |17-28|+|5-21|=11+16=27≥12 ✓. V (36,13): x∈[33,37] ✓ y∈[4,21] ✓.
+Component caps: T_W inner ≤120 (I'll use ~0-20), mirrors ≤30 (~4), springs ≤20 (~2), lasers ≤12 (6), crack ≤40 (~10), switch ≤6 (1-2), gates ≤16 (~4), TNT ≤12 (~4), BOX ≤4 (0-2), HEAL ≤4 (2), MIMIC ≤4 (4), portals ≤2 pairs (0-1).
+Budget ≤3000.
+Mimic clue binding: verify with code at build time; if invalid, adjust/fallback.
+Let me reconsider whether to include BOX/portals/springs in demon map. Springs can launch hero into pit — nasty but hard to control. Portals: can create confusing shortcuts; hero entering portal teleports — might help them. Skip portals in demon map (save 80G), maybe 1 pair as trap: portal entrance on tempting path, exit in pit-locked island... exit must be enterable; hero teleports and momentum continues. If exit is surrounded by pits/walls, hero trapped → timeout/kill. But author must avoid. Could be powerful trap. But risk: hero might need to use portal... no, author avoids. Let me consider: PORTAL_1A at (14,13) (middle of zone 2, on direct line), PORTAL_1B at (35,22) in sealed pocket (walls around, no exit except... sealed = hero trapped forever → timeout). Wait, if pocket fully sealed, hero can't get out, can't reach V → timeout at best, or starve... no starvation, just timeout. That's a free trap for heroes who step on portal. But smart heroes simulate portals and avoid. Cost 80G. Worth it? Traps only heroes who blindly step on portal. Most decent heroes will treat portal as unknown risk. Let me include one sealed-pocket portal pair. Hmm, but pocket needs walls: ~8 W = 40G. Total 120G. OK.
+
+Actually wait — portal exit momentum: hero arrives at 1B with direction, tries to step forward 1 (portal_count==1). If blocked, stays at 1B. If 1B surrounded by walls, stays. Trapped. Yes.
+
+But also: can hero bomb walls to escape? W walls destructible with 2 bombs → can escape pocket if they have bombs. T_W not. Use T_W for pocket (8×25=200G — expensive). Or W pocket: hero with bombs escapes (2 bombs = 2 walls, need 1 to escape). Meh. Let me use W pocket; still wastes their bombs and turns. Or mix. Let me keep it cheap: W pocket.
+
+Hmm, I realize I should also think about hero-side robustness more, since hero score is likely the bigger differentiator. Let me allocate effort: ~40% demon, ~60% hero.
+
+Let me also reconsider demon budget vs g. Let me tally planned spend:
+
+W walls: 3 vertical barriers x=11 (y1..24 minus gap = 23), x=23 (23), x=32 (23 minus 2 gaps = 21) ≈ 67 W = 335G. Plus internal zone walls for winding: ~60 W = 300G. Plus pocket ~8 W = 40G. Plus mimic alcoves ~12 W = 60G. Total ~147 W ≈ 735G.
+Lasers 6 ×75 = 450G.
+Pits ~12 ×40 = 480G.
+Mimics 4 ×60 = 240G.
+Heals 2 ×30 = 60G.
+Ice ~10 ×10 = 100G.
+Crack ~8 ×20 = 160G.
+Switch 1 ×30 = 30G.
+Gates: R_GATE 1 + B_GATE 2 = 3×20 = 60G.
+TNT 3 ×40 = 120G.
+Springs 2 ×35 = 70G.
+Mirrors 2 ×25 = 50G.
+Portal pair 80G. Total ≈ 735+450+480+240+60+100+160+30+60+120+70+50+80 = 2635G. g = 365/3000 ≈ 0.12. Kill bonus 250*0.12=30. Hmm, low g. Let me trim: fewer pits (8→320), fewer internal walls, drop springs/mirrors/portal maybe. Target ~2000G, g=0.33, kill bonus 83.
+Actually, you know what, let me not over-optimize demon budget analytically; I'll build a solid nasty map ~2000-2400G and verify. The hero side matters more. Let me focus.
+
+Let me reconsider: is there a risk my demon map is TOO hard and author_solution BFS can't find damage-free path within turn limit? I'll ensure safe corridor exists and BFS finds it. If BFS fails (e.g., laser timing impossible), I'll allow minimal damage or adjust. Fallback guarantees validity.
+
+Alright, let me also handle: the judge runs author_solution replay — must clear exactly on last action, first time. My BFS returns path ending on V; I'll ensure no earlier V step (BFS stops at first V). Good. And no redundant actions after. Good.
+
+Now, hero decide_action — let me design the algorithm concretely and robustly.
+
+Data structures in memory:
+
+memory["map"]: 26×40 list of terrain strings as last known ("UNKNOWN" default). Update from state each turn for visible cells. Also track occupant knowledge separately (boxes/TNT move). Actually occupant given for visible; for invisible, occupant shown as None (but might actually have box). So I should remember occupants too, but they move. Track known TNT positions (static until exploded) and BOX positions (move when pushed — I can update when I see). For pathfinding, treat remembered TNT/BOX as blockers but with uncertainty.
+memory["clues_seen"]: set of clue coords seen (to deduce mimics). Actually I can recompute each turn from state.clues for visible, but clues persist; remember them.
+memory["laser_cannons"]: dict pos→dir, from seen LASER_* terrain (static unless destroyed). Update when seen destroyed (terrain becomes EMPTY).
+memory["visited"], position history for anti-stuck.
+memory["crack_collapsed"]: set of cracks we've left (infer PIT).
+memory["consumed_chests"]: set.
+memory["prev_state"] for detecting changes / inferring.
+memory["plan"]: cached path (replan each turn anyway).
+memory["bomb_plans"]: if I place bomb, track explosion turn and safe retreat.
+Each turn:
+
+Parse state. hx,hy,hp,keys,jumps,throws,bombs,gates_flipped,turn.
+Update knowledge map from visible terrain/occupant/clues. Record laser cannons. Mark consumed chests (if I remember chest at pos and now EMPTY → consumed). Infer crack collapse: if I was on crack last turn and moved off, mark PIT.
+Actually simpler: trust state's visible terrain as ground truth for visible cells; for invisible, keep last known. Apply logical overrides: gates state from state.gates_flipped (I know gate positions from map). Crack I left → PIT. Chest I consumed → EMPTY.
+Determine target: if not keys[0] and not keys[1]: choose nearer key by estimated path distance (or Manhattan). If one key: other. If both: V.
+To avoid oscillation between two keys, commit to a target in memory until reached or clearly blocked; pick nearer first.
+Compute laser danger cells for this turn and next:
+For each known laser cannon, ray up to 10, stop before high wall/box (known), stop at TNT. Use current gate state. Unknown cells transparent.
+danger_now = beam cells if turn%3==0 (fire this turn after action). Also use state.laser_warnings to add/confirm.
+danger_next = beam cells if (turn+1)%3==0 (fire next turn; avoid ending there).
+Actually, exposure on fire turn includes start + all traversed. So for action selection on fire turn, simulate path and ensure no cell in beam. On non-fire turn, just ensure destination not in beam if next turn fires (so we don't start fire turn on beam). Also if turn%3==1, next turn is %3==2 (no fire), so no constraint; if turn%3==2, next is fire → avoid ending on beam.
+Wait, more precisely: fire turns are t where t%3==0. If current turn t%3==0, fire after this action. If t%3==2, next turn t+1 fires; we must not be on beam at end of this turn (because start of next turn is exposed). If t%3==1, next turn no fire, safe to be on beam temporarily (but then turn after fires, we'll move off).
+Build movement graph / do action search:
+I'll do a BFS/A* over positions with "safe step" simulation. But momentum makes single MOVE lead to multi-cell slide. I'll implement simulate_move(pos, dir, knowledge) → returns (final_pos, path_cells, hazards, valid). Hazards: known pit/mimic encountered, laser exposure on fire turn, slide into unknown (risky).
+For planning, I want a path to target. Approach: A* where nodes are positions, edges are "one action that results in resting at neighbor-ish position". Simpler: compute a shortest path on a static cost grid (ignoring momentum), then execute first step but validate with full momentum simulation; if unsafe, choose alternative.
+Given complexity, I'll do: A* on grid with per-cell traversal cost and passability, treating momentum tiles specially by precomputing their "exit" via simulation. Then reconstruct path, take first action, but re-simulate that action fully to ensure safety (pit/mimic/laser/unknown). If first action unsafe, try alternatives (other directions, WAIT, JUMP, etc.) ranked.
+To keep it robust and within 0.5s, I'll implement a focused search: BFS from hero over "safe resting positions" reachable by one action (MOVE×4, JUMP×4 if available, WAIT), expanding with momentum simulation, avoiding known hazards and laser timing, preferring steps that reduce distance to target. Actually a full A* to target each turn is fine (1040 cells). Let me do A* where each edge = one action, cost = 1 (turns), and I simulate momentum to find resting cell. Heuristic = Manhattan to target. Passability: known walls/pits block; unknown allowed with penalty; momentum simulated. Laser: on fire turn, reject actions whose exposure intersects beam; also reject resting on beam if next turn fires. This gives a safe path. Take first action.
+But simulating momentum inside A* for every expansion could be costly if ice chains long; cap at 32 steps (rule). 1040 nodes × 4 actions × up to 32 steps = ~133k ops, fine in 0.5s in Python? Maybe ~0.1-0.3s. Acceptable. I'll optimize by only simulating momentum when landing on momentum tile.
+Unknown handling: I'll allow unknown cells but with extra cost (e.g., +2) so known-safe paths preferred. But sliding into unknown is dangerous (can't verify). I'll mark momentum paths that enter unknown as "risky" and only use if no safe alternative, and then only commit to the action if the first unknown is adjacent (so we gain info). Hmm, complex. Simpler: treat unknown as passable for planning but when executing, if the action's momentum would enter unknown beyond the first cell, treat as risky and prefer alternatives; if forced, take it (exploration). To avoid sliding blindly into pit, I'll avoid initiating slides (ICE/MIRROR/SPRING/PORTAL) whose path enters unknown, unless no other option. Walking into a single unknown cell (normal move) is acceptable exploration risk.
+Actually, walking into unknown could be pit → death. Cautious heroes avoid unknown when possible, but must explore to reach target. Tradeoff. I'll prefer known paths; when must enter unknown, do single-step moves (not slides), and prefer directions toward target / frontier. Since pit is instant death, maybe I should be more cautious: only enter unknown if there's no known path and the unknown is "likely safe" (e.g., surrounded by known EMPTY). But that could stall. Given scoring rewards progress, I'll accept calculated risk: enter unknown via single step when needed, but never slide into unknown. Also use THROW to scout? Stones don't reveal terrain. No scouting. So exploration = walking. I'll accept single-step unknown risk but bias toward cells adjacent to more known-empty (openness) and away from pit clusters.
+To reduce pit death risk in unknown: I can infer pits from context? No. Accept risk. Most maps have pits sparsely; single-step into unknown rarely hits pit. Slides are the big killer → avoid sliding into unknown. Good.
+Item usage:
+JUMP: use to cross a known pit/laser/crack that blocks the only path, or to save ≥3 turns. In A*, include JUMP edges (land 2 ahead, skip 1) when jumps>0, with cost 1 but limited resource (penalize to conserve). Validate landing safety.
+BOMB: if a W wall blocks and detour is long, consider bombing. Complex; I'll implement a simple heuristic: if target unreachable through known walls but a single W wall separates us from a large known-open region toward target, and bombs>0, place bomb adjacent, retreat, wait. This is advanced; maybe skip to reduce bug risk, or implement conservatively. Given time, I'll implement a basic version: if A* with walls-as-passable-at-cost finds path that goes through exactly few W tiles and bombs available, bomb them. Hmm. Let me keep BOMB usage minimal/optional to avoid self-kill. Actually bombs are valuable for breaking walls. I'll implement: detect if best path requires passing a W tile; if so and bombs>0, plan to bomb it (move adjacent, BOMB, retreat to Chebyshev≥2, WAIT until exploded, proceed). I'll add this as a special-case planner. Risk of bugs → wrap in try. If unsure, don't bomb.
+THROW: use to flip a SWITCH that's blocking (gate closed) from distance, or detonate TNT blocking path, or kill a MIMIC blocking path. Simulate stone; if it hits desired target safely, throw. Conserve (3). I'll implement switch-flip and TNT-detonate heuristics.
+HEAL: if hp<100 and a known safe HEAL (deduced) is nearby and on path, step on it.
+Anti-stuck / fallback: if A* finds no path (target unreachable with current knowledge), explore toward nearest unknown frontier adjacent to known reachable area, preferring direction of target. If literally no safe move, WAIT (if not on laser). Track repeated positions; if stuck oscillating, force exploration move or random safe move. Always return a valid action; wrap everything in try/except → fallback to a simple safe move (e.g., toward target avoiding known walls/pits/laser, else WAIT).
+Ensure returned action ∈ VALID_ACTIONS. Never raise.
+This is a lot. Let me write clean, modular code. I'll implement a shared physics helper used by both demon verification and hero planning (but hero uses partial knowledge). Actually hero planning simulation can be a lighter version. Let me write one simulate function parameterized by a "world" (terrain grid, occupant grid, gates_flipped, hero pos, hp, keys) that executes an action and returns outcome. Use it for demon author verification (full knowledge) and hero action validation (partial knowledge, treating UNKNOWN specially).
+
+Given the 0.5s per-step and complexity, I'll keep hero simulation lightweight and cache.
+
+Let me be pragmatic about time. I'll:
+
+Write submission.py with constants, a physics simulator, build_dungeon (designed map + BFS author verification + fallback), decide_action (knowledge update + A* with momentum + laser timing + item heuristics + robust fallback).
+Test locally by running a self-play: build_dungeon, then run decide_action on the built map in BLIND mode (I'll implement a BLIND visibility function per rules) to ensure hero can clear my own map and doesn't crash. Also run against fallback open map. Also validate golden-vector-ish behaviors in my simulator.
+I can run Python locally via shell to test (that's allowed — the restriction is on the submitted code's imports and on me using network; running my own code locally for testing is fine and expected). I must not use network tools. I'll use shell to run python tests.
+Wait — the exam says "严禁调用任何联网搜索工具... 严禁查询外部代码库或调用外部 API". Running local python to test my own code is not network/external. It's fine. Also "调用禁止的系统/文件/网络/进程/反射能力直接判0分" refers to the submitted code's capabilities. My testing harness can use file I/O (it's not the submission). But to be safe, I'll keep submission.py free of forbidden imports, and do testing in a separate script that imports submission and simulates. The separate test script can use whatever (it's not submitted). Good.
+
+Let me check python availability.
+
+Let me also reconsider the "赛前垃圾话" requirement: output 50-100 Chinese characters calling out the other 10 models by name. The other 10: ASTRA, SOL, ARGON, CARBON, HYDROGEN, Claude Opus 5.5, DeepSeek, Qwen, GLM, 混元 HY4, 豆包 (Doubao) — wait that's 11 listed including... let me count the list: ASTRA, SOL, ARGON, CARBON, HYDROGEN, Claude Opus 5.5 (6), DeepSeek, Qwen, GLM, 混元 HY4, 豆包 (5) = 11 total. I am one of them (the prompt says 11 models, and I'm playing). Actually I'm "Claude Opus 5.5"? The working dir is opus1. The model name given is Qwen4 Max Preview though. Hmm, confusing. The contestant list includes both "Claude Opus 5.5" and "Qwen". I'll just trash-talk all the others generically by naming them, not worrying about which I am. I'll name the other 10. Since I don't know exactly which I am, I'll call out all listed names as opponents. The requirement: "点名道姓向同场的其他 10 位大模型放狠话". I'll name them. Let me write ~80 chars.
+
+Let me draft trash talk (Chinese, 50-100 chars): "ASTRA、SOL、ARGON、CARBON、HYDROGEN、DeepSeek、Qwen、GLM、混元HY4、豆包，还有Claude Opus——迷雾之下，你们的勇者将成片倒在激光与深渊里，而我的金库固若金汤。 sixty 分钟，够我送你们全部出局。" That's roughly within range. Let me count and trim to 50-100 Chinese chars (names count loosely). I'll keep it punchy. Actually including all names makes it long. Let me count characters. I'll aim ~90. I'll finalize later.
+
+Let me start by checking environment and then write code. Given the size, I'll write submission.py in one go, then test and iterate.
+
+Let me first check python and numpy availability.
+
+Actually, let me reconsider time budget. This is a big implementation. Let me be efficient: write a robust but not over-engineered solution. Priorities:
+
+Valid build_dungeon with verified author_solution (avoid 0). → highest priority, must not fail.
+Robust decide_action that clears easy maps and survives/progresses on hard ones, never crashes. → high priority.
+Nasty demon design. → medium.
+Advanced hero items. → lower (nice to have).
+I'll make build_dungeon produce a genuinely tricky map but with a guaranteed verified solution, and a bulletproof fallback. For hero, solid A* + momentum + laser + mimic deduction + cautious exploration + conservative items.
+
+Let me write. I'll check python first.
+
+Let me go.
+
+Actually, I realize I should think carefully about the hero A* with momentum and the "unknown" risk to avoid the most common death: sliding into pit. Let me make the hero quite cautious:
+
+Prefer known-safe paths strongly.
+When no known-safe path to target exists, do targeted exploration: pick frontier unknown cells reachable via known-safe cells, step toward them one at a time (single MOVE into unknown only when the cell is the frontier and we accept risk). Never initiate a slide whose trajectory touches unknown.
+Actually even single MOVE into unknown could be pit. To mitigate, I can choose to enter unknown cells that are adjacent to ≥2 known EMPTY cells (openness heuristic) — pits are often placed in clusters/lines though. Hard. I'll accept it but weight by "how much progress" and prefer to reveal via moving along known edges.
+Hmm, let me reconsider: In BLIND, visibility radius ~3 (37 cells). As hero moves, they reveal a lot. Pits are visible before stepping (within radius). So hero rarely steps into an adjacent unknown pit because adjacent cells are always visible! Key insight: the 8 neighbors are always visible. So when hero considers a MOVE to an adjacent cell, that cell is always visible (near ring). Therefore hero always knows the terrain of the immediate destination of a single MOVE! Unknown only matters for cells beyond adjacency (slide trajectories, jump landing at distance 2 — is distance 2 visible? (±2,0) is outer orthogonal, visible if open(dx-sx,...) i.e., the intermediate cell open. Usually visible). So single-step MOVE destination is always known → no blind pit death from normal walking! The danger is momentum (ice/mirror/spring/portal) carrying hero beyond visible range into unknown, and JUMP landing 2 away (usually visible).
+
+Great, this simplifies: normal walking is safe w.r.t. pits (destination visible). So hero can confidently walk; the risk is slides. So my hero should: walk normally (A* on known+visible), and carefully simulate any momentum tile before stepping on it; if slide leads to unknown/hazard, avoid that tile (route around) unless no alternative. Since adjacent destination always visible, I always know if it's ICE/MIRROR/SPRING/PORTAL and can simulate the slide using known map; if slide enters unknown, treat as dangerous and avoid if possible.
+
+Also lasers: beam cells computed from known cannons; but cannons might be unknown (not yet seen). laser_warnings on fire turn reveals visible beam cells. For unseen cannons, hero can't predict — but beams only matter on fire turn and hero can react to laser_warnings? laser_warnings is given in state at start of fire turn (pre-action snapshot), so hero knows beam cells this turn and can avoid them in action selection. For future fire turns, hero uses known cannons. Unseen cannons are a risk but hero will see them as they explore (laser cannon is high wall, visible). Reasonable.
+
+So hero algorithm simplifies to:
+
+Update map (visible cells always include 8 neighbors, so local terrain known).
+A* to target over grid; passable = not high wall, not pit, not TNT/BOX (unless pushing), treat momentum tiles via simulation to resting pos; unknown cells passable with penalty but avoid initiating slides into unknown.
+Since walking destination always visible, unknown mainly affects long-range planning; A* can route through unknown optimistically but execution only does one action at a time, and each single-step destination is visible → safe. Slides validated.
+Laser timing as above.
+Mimic deduction via clues.
+Items conservative.
+This is clean. Let me implement A* where I expand by single MOVE actions but collapse momentum: when I step onto a momentum tile, I simulate to resting cell and that's the node reached (cost 1). For unknown momentum trajectories, mark risky. For planning through unknown region, I'll allow unknown EMPTY-assumed cells as walkable (cost penalty) since single-step is safe anyway. Good.
+
+Let me now also handle BOX pushing in A* minimally: treat BOX as blocker unless I specifically plan a push. For simplicity, treat BOX/TNT as impassable in normal A*; add special push actions only if needed (e.g., box blocks only path). I'll keep boxes as obstacles mostly; heroes can route around. If a box must be moved (rare), I'll add push edge. To limit complexity, treat BOX as obstacle and TNT as obstacle; rely on routing around. If truly stuck, consider THROW to clear TNT or BOMB. Fine.
+
+Alright, writing now. Let me check python availability and then create the file.
+
+One more: import time limit 1.5s — avoid heavy imports; numpy import ~0.2s fine but I'll mostly use pure Python to be safe and fast. I'll import only stdlib (heapq, collections, math). Avoid numpy to keep import fast and avoid any np forbidden functions. Pure Python is enough for 1040 cells.
+
+Let me write the code.
+
+For the demon author BFS, I'll implement a search over (x,y,turn_mod3,has_k1,has_k2,gates_flipped) using safe MOVE/WAIT (and JUMP if needed), with full-knowledge simulation, avoiding any damage, reaching V. Since corridor is EMPTY, simulation is simple. I'll cap turns at 240. Return action list. Then verify by full replay. If fails → fallback.
+
+Let me implement simulate_action(world, action) for verification that returns new world + status. I'll write a reasonably complete physics engine. This is the riskiest part for correctness; I'll test against golden vectors.
+
+Given time, let me write a focused engine handling: MOVE (with box push), WAIT, BOMB, JUMP, THROW, momentum (ice/mirror/spring/portal), crack, switch/gates, pit/mimic/heal, keys/V, laser phase D, bomb/TNT phase C. I'll test GV_02,03,04,07,08 at least.
+
+Let me write it all. This will be long. I'll create submission.py.
+
+Let me begin.
+I've read all four exam files. Let me check the environment, then give my declaration and build the solution.
+Python 3.11.1 is available. The working directory is <REPO_ROOT>/exam_rooms\opus1, and submission_template.py exists there. submission.py needs to be created in the working directory (opus1).
+
+First, following Step 1, output the pre-match trash talk (50–100 characters, naming the other 10 models). Then write the code.
+
+Trash talk draft (Chinese character count 50–100, names are proper nouns so counted loosely): "ASTRA、SOL、ARGON、CARBON、HYDROGEN、DeepSeek、Qwen、GLM、混元HY4、豆包听好：迷雾里你们的勇者会成批栽进深渊与激光，我的金库你们碰都碰不到。六十分钟，足够送你们全员出局！"
+
+Counting the Chinese characters: roughly 60+ Chinese characters plus names. Should be fine (50–100 characters). Good.
+
+Now let's write the code. Plan the file structure:
+
+"""submission"""
+import heapq, math, collections (only what's needed)
+
+constants...
+
+# ---------- physics engine (full knowledge, for author verification) ----------
+class World: terrain, occupant, hero(x,y,hp,k1,k2,jumps,throws,bombs), gates_flipped, bombs list, tnt_armed, clues, turn, status, exposed, trap_damage...
+
+def simulate(world, action) -> mutates world, returns status
+Actually, for the author BFS I want a fast, lightweight simulation. Let me write a function step(terrain, occ, hero, gates, bombs, action, turn) that returns the updated state. For BFS, clone via tuples/copy. 25k states × copy of 1040 grid = too heavy (25k × 1040 = 26M cell copies… actually each state expansion copies the grid: 25k states × 4 actions × 1040 = 100M operations — too slow for 2 seconds).
+
+Better approach: author path corridor is all EMPTY except SWITCH and gates. So I can write a simplified verifier for the author path: no ice/mirror/spring/portal/box on the path, so momentum never triggers. What the verifier needs: walls/gates block, pit/mimic/heal effects, crack collapse, switch flip, key pickup, V win, laser phase D damage, bomb/TNT explosions (author uses neither… TNT might be adjacent to path? Explosion radius could reach path — I'll place TNT away from corridor).
+
+So simplified author verifier: for each action in sequence:
+
+MOVE: check target cell passability (high wall including closed gates, TNT occupant, BOX occupant → block; author path has no boxes). Move hero. Apply arrival effects: PIT → hp-100; MIMIC → hp-45; HEAL → +30; SWITCH → flip; K1/K2 pickup; V → win if both keys. CRACK departure → becomes PIT.
+WAIT: nothing.
+JUMP: if needed (I'll try to avoid).
+Phase C: bomb timers (author has no bombs) — skip if none; TNT armed — none.
+Phase D: if turn%3==0: compute laser rays from current terrain; if hero position in ray → hp-50 per laser. (exposed_cells = {start, end} — author moves 1 cell per turn, no momentum, so exposed = {prev_pos, new_pos}. Both need to be checked! Hero starting turn on a beam cell gets hit even if they move off. So the BFS state must track turn mod 3 and avoid being on a beam at the start of a fire turn, i.e., avoid ending the previous turn on a beam.)
+So BFS over (x, y, k1, k2, gates, turn_mod3), transitions are MOVE/WAIT, cost = turn count; constraints:
+
+After moving on turn t (t%3==0): neither prev_pos nor new_pos in any beam (computed with post-move terrain/gates).
+hp tracking: BFS avoids all damage, so hp stays 100.
+Win: reach V with both keys.
+Beam computation depends on gates_flipped (closed gates block rays) and terrain changes (crack→pit doesn't block; switch doesn't block). Author path has no destruction, so beams are static per gate state. Precompute beam sets for gates=False and gates=True.
+
+BFS state space: 1040 × 4 (keys) × 2 (gates) × 3 (mod) = 24960. Trivial.
+
+But wait: beam check on fire turn needs to check both start cell and end cell against beams computed with post-move gate state. If author steps on SWITCH on a fire turn, gates flip and beams change. Handle: compute beams with new gate state, check {start, end}.
+
+Also, laser hits TNT → explosion could damage author. Place TNT far from corridor and beams… actually, if a beam hits TNT, the TNT explodes, and the 3x3 could reach the corridor. I'll place TNT such that its 3x3 doesn't touch the corridor, or ensure beams don't hit TNT. Easiest: don't put TNT in any laser ray path. Check at build time: for each TNT, ensure no laser ray reaches it (else remove/relocate). Or just place TNT in alcoves not aligned with lasers.
+
+OK, this simplified verifier is sound given the corridor design constraints (no momentum tiles, no boxes, no TNT near corridor, no bombs used by author). I'll assert these constraints at build time (scan corridor cells from BFS path: ensure all EMPTY/SWITCH/K1/K2/V/R_GATE/B_GATE). Then run the verifier. If OK → submit. Else fallback.
+
+Additionally, I'll write a full engine for testing hero logic in self-play (test harness needs full engine + BLIND visibility to run decide_action against my map). The test harness can live in a separate file (not submitted) and can be more complete. Actually, I can put the full engine in submission.py too (it's allowed), use it for author verification (more robust), and reuse in tests. But hero's decide_action shouldn't need the full engine — just lightweight simulation. Hmm, having the full engine in submission is fine (pure code). Let me include a compact full engine and use it for author verification via actual replay (not BFS — BFS for pathfinding, then full replay for verification). That's most robust: BFS finds candidate path with simplified model, full engine replays to confirm; if mismatch, fallback.
+
+Let me write the full engine carefully. Key mechanics to implement (from rules):
+
+World state: terrain[26][40], occ[26][40], hero {x,y,hp,k1,k2,jumps,throws,bombs}, gates_flipped, bombs [{x,y,timer,id}], clues[26][40], mimic_clue mapping, turn, status ('ALIVE','DEAD','CLEARED'), exposed set, trap_damage accumulate, tnt_armed set.
+
+HIGH_WALL(t): t in {W,T_W,LASER_*} or (R_GATE and not flipped) or (B_GATE and flipped).
+
+can_enter(pos, entity): not HIGH_WALL, occ not BOX/TNT; for BOX: also not hero pos, terrain not K1/K2/V.
+
+atomic_move(entity, p0, p1, dir, steps, portal_count, suppress_portal): steps += 1 leave hook: if terrain[p0]==CRACK → terrain[p0]=PIT update occ/hero pos; if hero: exposed.add(p1) arrive hook: BOX: PIT → fill (occ None, terrain EMPTY, chain end); MIMIC → clear+clue; SWITCH → flip hero: PIT → hp-100; MIMIC → hp-45, clear, stop_momentum; HEAL → +30 cap 100, clear; SWITCH → flip if hero hp<=0 → DEAD, end hero key pickup / V win → CLEARED end if steps>=32 or stop_momentum → stop momentum by terrain[p1]: ICE: next = p1+dir; if can_enter → recurse; else stop MIRROR: dir = map[terrain][dir]; next; if can_enter recurse else stop SPRING_X: dir = X; probe k=1..3: block if HIGH_WALL or occ BOX/TNT (for BOX: hero/K/V). First block at k: if BOX and occ TNT → tnt_armed.add; if k==1 stay p1 stop; else land p_{k-1} (atomic_move p1→p_{k-1}, dir). No block → land p3. PORTAL (if not suppressed): find pair; if enterable (occ None; for BOX not hero) → teleport: portal_count+=1; atomic steps 1-7 p1→pair; then if portal_count>=2 stop; else try step pair+dir (normal move, continue momentum). If not enterable → stay p1 stop. else stop.
+
+For hero MOVE action: p1 = hero+dir if HIGH_WALL(p1) or occ[p1]==TNT → stay (no move) elif occ[p1]==BOX: p2 = hero+2dir; if box can_enter(p2): run box chain p1→p2 (hero pos blocks box); after, recheck hero can_enter(p1) → hero chain hero→p1 else stay else: hero chain hero→p1
+
+JUMP_X: if jumps==0 → WAIT. jumps-=1. p1=hero+dir, p2=hero+2dir. If HIGH_WALL(p1) or HIGH_WALL(p2) or occ[p2] in {BOX,TNT} → fail, stay (no leave hook). Else atomic hero hero→p2 dir (steps=0,portal=0).
+
+THROW_X: if throws==0 → WAIT. throws-=1. Stone from hero pos, dir, range=6, stone_portals=0. loop while range>0: pn = s+dir; range-=1; s=pn if HIGH_WALL(pn) or occ BOX → break (shatter) if occ TNT → tnt_armed.add(pn); break if terrain SWITCH → flip; break if terrain MIMIC → clear+clue; break if MIRROR → dir=map; continue (if range>0) if PORTAL and stone_portals<2: pair enterable (occ not BOX/TNT)? → s=pair; stone_portals+=1; if ==2 break; else continue else continue (transparent) if range==0 and not shattered: if terrain[s] in ICE/MIRROR: ground slide up to 32: each step s+=dir; if HIGH_WALL/BOX shatter; TNT arm+shatter; SWITCH flip+shatter; MIMIC clear+shatter; MIRROR turn continue; ICE continue; PORTAL teleport (remaining); else stop. (hero stays)
+
+BOMB: if bombs>0 and no bomb at hero pos: bombs-=1; append {x,y,timer:3}. Else WAIT.
+
+WAIT: nothing.
+
+Phase C: for b in bombs: timer-=1 sources = [b for b if timer==0] + tnt_armed if sources: chain BFS over 3x3, collect all TNT/bombs in range (chain). Compute damage: for each source affecting hero pos (Chebyshev<=1): TNT→a+=60, BOMB→b+=50. If a+b>0: trap_damage += min(hp, a+b)a/(a+b); hp -= (a+b). Remove exploded bombs/TNT. For each cell in union of 3x3: occ BOX → destroy; terrain: immune {T_W,K1,K2,V,PORTAL_,PIT} keep; CRACK→PIT; else {W,ICE,MIRROR,SPRING,LASER,SWITCH,R_GATE,B_GATE,HEAL,MIMIC}→EMPTY (MIMIC clear clue). Post: BOX on new PIT → fill; hero alive on PIT → hp-100 (trap_damage+=min(hp,100)). If hp<=0 DEAD. Clear tnt_armed.
+
+Phase D (turn%3==0): Snapshot terrain/occ. For each LASER cannon: ray dir up to 10: for d=1..10: cell; if HIGH_WALL or occ BOX → stop (exclude); if occ TNT → include? Rules: "若该格 occupant==TNT：射线在此格截断，并将该TNT标记入laser_tnt_armed" — the TNT cell: is it an active ray cell? "射线在此格截断" and mark armed. I think the TNT cell is included as ray cell (it's where it stops) but for hero damage only matters if hero there (hero can't be on TNT cell since occ). For beam danger set, include up to and including TNT? For hero avoidance, hero can't stand on TNT anyway. I'll include cells before blocker; for TNT, include the TNT cell in armed but for ray set include it too (harmless). Actually to match "激活射线格", the TNT cell is where it truncates; I'll add it to ray set and arm it. m = number of cannons whose ray set intersects exposed_cells. If m>0: trap_damage += min(hp,50m); hp -= 50m; if hp<=0 DEAD. If laser_tnt_armed: run explosion closure (Phase C steps 3-4) with those sources (no bomb tick).
+
+Win check happens in atomic step 6 (immediate). Timeout at turn 240 after D.
+
+That's the engine. I'll implement it as a class with methods, operating on lists. For BFS author search I'll use the simplified model; for verification I'll replay with full engine.
+
+For hero decide_action, I'll implement a lightweight simulator simulate_hero_action(kmap, occ, gates, hero, action, turn, beams) returning (final_pos, path, hp_delta, safe, ...) using the same momentum logic but on knowledge grid, treating UNKNOWN as: for passability, UNKNOWN is passable (assume empty) but flagged; for hazard, UNKNOWN is not a known hazard but slides into UNKNOWN are risky. I'll reuse momentum code via a shared function parameterized by grid accessor. To avoid duplication, I'll write momentum as a function taking get_terrain(pos), get_occ(pos), is_high_wall(pos), can_enter(pos,entity), and callbacks for effects. That's complex; simpler to write two versions (full engine for verification, light for hero). Some duplication acceptable.
+
+Given time, let me write the full engine once and also use it for hero planning by constructing a "belief world" where UNKNOWN cells are treated as EMPTY for simulation but I track whether the trajectory touched UNKNOWN. Actually I can run the full engine on a belief grid (UNKNOWN replaced by EMPTY) to get the trajectory and outcome, then check if any trajectory cell was UNKNOWN in the real knowledge → risky. And known hazards (PIT/MIMIC) in belief grid will correctly kill in simulation → reject. Lasers: run phase D with belief beams. This reuses the engine! Nice. So hero planning: build belief world from knowledge (UNKNOWN→EMPTY, but keep known walls/pits/etc.), simulate candidate action, get outcome + exposed cells + whether touched unknown. Reject if DEAD or touched unknown via momentum (risky) or laser hit on fire turn. This is clean and reuses code.
+
+But running full engine per candidate in A* (1040×4) might be slow (each sim copies grids). For A* I need speed. Let me instead do A* on a static graph (no per-edge full sim), then validate the chosen first action with full engine. Static graph: passable cells, momentum tiles approximated by precomputed resting position (simulate once per momentum tile per direction). Precompute momentum exits for all momentum tiles using belief grid (1040 cells, only momentum tiles need sim). Then A* edges: normal move to adjacent passable cell; if adjacent is momentum tile, edge goes to its precomputed rest pos (if safe). This is fast. Then take first action of A* path, validate with full engine; if unsafe, fallback to next best / safe alternative.
+
+Precomputing momentum rest: for each momentum tile and each incoming dir, simulate slide on belief grid to rest, record (rest_pos, touched_unknown, hit_hazard). Cache. Since belief grid changes each turn (new visibility), recompute each turn but only momentum tiles (~few dozen). Fine.
+
+OK let me just write it. I'll aim for correctness and robustness. Let me write the file now.
+
+I'll structure:
+
+constants
+helper: high_wall(terrain_tile, gates), in_bounds
+class Engine (full physics) with .step(action) and .run(actions)
+build_dungeon: construct grid, compute author via BFS (simplified) then verify with Engine; fallback.
+decide_action: knowledge update, belief grid, beams, momentum cache, A*, item heuristics, validate, fallback.
+Let me write. I'll keep Engine reusable for hero belief simulation too.
+
+For hero, I'll create an Engine from belief world each turn? That's heavy per candidate. Instead, for validating the single chosen action, create one Engine copy and step. For A* I use static graph. Good — only 1 full sim per turn (for chosen action) plus momentum precompute (light).
+
+Let me implement momentum precompute with a light function (not full Engine) to avoid overhead. I'll write slide_rest(terrain, occ, gates, start, dir, hero_pos) returning rest + flags, handling ice/mirror/spring/portal. Reuse in A* graph and in validation.
+
+Alright, writing now. Let me be careful with the mirror map and spring.
+
+Let me write the file.
+
+Actually, to manage complexity and time, let me make decide_action's core a robust A* that:
+
+treats momentum tiles by computing rest via slide function; if rest is hazard/unknown-touched, mark tile as blocked (avoid) unless no alternative.
+Then pathfind. Execute first MOVE. Validate via slide that the actual landing is safe (no known pit/mimic, no laser on fire turn, and if momentum touched unknown → reconsider). Since first step destination is always visible, and slides precomputed, validation is consistent.
+I'll also add: if chosen action is a normal move onto EMPTY/etc (no momentum), it's safe by construction (destination visible, not pit/wall). Laser check applied.
+
+Let me write slide function to also return the list of cells traversed (for laser exposure check and unknown detection).
+
+Now writing.
+
+For laser beams hero-side: compute from known cannons. But also incorporate laser_warnings (authoritative for this turn). I'll compute beam set for gates current. For fire-turn avoidance, use union(computed_beams, laser_warnings cells). For next-turn, use computed_beams.
+
+Let me code.
+
+I'll write a fairly long file. Let me go.
+
+Regarding A* treating unknown: I'll set cost of UNKNOWN cell higher (e.g., 3) vs known EMPTY (1), so paths prefer known. Walls/pits blocked. Momentum tiles: cost 1 but edge to rest. This encourages revealing known routes first. Since single-step dest always visible, walking into "unknown" on the planned path actually becomes visible when we get adjacent — but A* plans ahead through unknown; that's fine, we replan each turn. The risk of a planned path through unknown is only if it uses momentum there; I block momentum-into-unknown. Normal walking through unknown is safe step-by-step. Good.
+
+Let me also make sure hero doesn't step on MIMIC: deduce via clues. Mark chest cells: if adjacent clue → MIMIC (blocked). Else if all 4 neighbors visible and no clue → HEAL (passable, beneficial). Else unknown chest → treat as risky (blocked unless hp high and needed). I'll store chest classification in memory.
+
+Now, clues visibility: state.clues[y][x] True only if visible and clue. Since mimic's neighbors always visible when mimic visible, clue will be visible. I'll accumulate clues_seen in memory (they persist). For a chest at c, check if any orthogonal neighbor in clues_seen → MIMIC. Good.
+
+Let me write everything.
+
+I need to be mindful of the 0.5s. A* over 1040 with heapq is fast. Momentum precompute per turn for ~dozens of tiles fine. One full validation sim fine. Should be well under 0.5s.
+
+Let me write the code now.
+Python 3.11 is ready and I understand the full spec. Per the exam's Step 1, here's my declaration before I write code:
+
+【赛前宣言】 ASTRA、SOL、ARGON、CARBON、HYDROGEN、DeepSeek、Qwen、GLM、混元HY4、豆包，还有Claude Opus——迷雾之下，你们的勇者会成批栽进深渊与激光，我的金库你们连门都摸不到。六十分钟，足够送你们全员出局！
+
+Now let me build the solution. I'll start with the physics engine and demon builder, then the blind-mode hero. Let me write the core file.
+Alright, let's create a test harness (a separate file, not to be submitted). Contents:
+
+Import submission, call build_dungeon, and verify constraints (budget, landmarks, spawn zone, mimic clues, upper limits).
+Replay author_solution in my own independent engine (submission's Engine — but I should also write an independent check... using the same engine for both construction and verification carries the risk of common-mode bugs. At minimum, I'll manually verify some golden vectors against the Engine).
+Implement BLIND visibility according to the rules, run a full game with decide_action against the built dungeon, and confirm that the hero can clear it (or at least survive and make progress) without any interface errors.
+Test golden vectors GV_02, GV_03, GV_04, GV_07, GV_08 against the Engine.
+First, let's check the timing of build_dungeon and whether the main map passes or falls back.
+Now let me create a test harness (separate from the submission) to validate the build, golden vectors, and hero self-play:
+Note: The test harness uses open and eval, but since this is not a submission, it's fine. Let's run it.
+
+Found two bugs:
+
+GV_02 failure: When pushing a BOX off a CRACK, the crack should collapse into a PIT, and then the hero entering should die. In my test, the box is at (7,10), terrain(6,10)=EMPTY, hero hp=100. Wait — terrain became EMPTY instead of PIT? Let me look at _atomic for BOX: the leave hook checks self.terrain[y0][x0] == "CRACK" → sets to PIT. Then the hero moves into (6,10)... but the result shows terrain EMPTY and hp 100. Hmm, wait — actually looking at the result: hero is at (6,10) with hp=100, terrain EMPTY. So the leave hook didn't fire? Let me check _move: box at p1=(6,10), p2=(7,10). can_enter(7,10,"BOX") → true. _atomic("BOX", 6,10, 7,10, ...) — leave hook: terrain[10][6] == "CRACK" → should become PIT.
+Oh wait — found it. In the test harness's grid_from_local, the occupant handling: g[y][x] = val["terrain"], then if there's an occupant, g[y][x] = val["occupant"]. So grid[10][6] = "BOX" (overwriting CRACK!). Then Engine decodes BOX → terrain EMPTY, occ BOX. The CRACK terrain under the box is lost! This is a harness bug: the single-layer grid format can't represent BOX-on-CRACK... but GV_02's initial state has terrain CRACK + occupant BOX at (6,10). The judge's 4-layer model is decoded from a single-layer grid, so BOX-on-CRACK can't be expressed in the grid... but the golden vector defines the initial state directly with 4 layers. So my harness needs to construct the Engine and then override terrain/occ directly. The Engine itself might be correct. Let me fix the harness to set eng.terrain/eng.occ directly for GV_02.
+
+THROW_U/D/L/R parsing: action[5:] for "THROW_R" returns "R" because "THROW" is 5 chars + "" at index 5. "MOVE_" is 5 chars so action[5:] works for MOVE. "JUMP_" is also 5 chars. "THROW_" is 6 chars → need action[6:]. Fix in step().
+Let me fix both. Also, GV_02's hero death check needs to be re-run after the harness fix.
+
+Also, GV_04's portal count check — I wasn't properly tracking portal_count; the position check passed, so no problem.
+
+Let me fix the submission's THROW slicing and the harness's GV_02 setup.
+I found two bugs: incorrect action prefix slicing for THROW_ and an issue with the test harness where it can't properly layer BOX-on-CRACK. I'll fix both now.
+Also, GV_05 uses grid_from_local, and there's a TNT occupant at (8,8) on top of EMPTY terrain — since the terrain is EMPTY, this works fine. GV_07 is all terrain, so no problem there.
+
+Re-running the tests.
+
+All golden vectors pass. But there's a big problem: build_dungeon returned the fallback (spent=0, components only K1/K2/V). That means either _author_bfs returned None, or the replay failed on the main map. The hero cleared in 63 turns — that's the fallback open map.
+
+Need to debug why the main map failed. Possible causes:
+
+_author_bfs couldn't find a path (laser timing, or walls blocking the intended route).
+Replay failed (engine inconsistency with the simplified BFS model).
+Let me debug: build the main grid (refactor so I can inspect it), run _author_bfs, and see what happens. Let me write a quick debug script that reconstructs the main map construction. Actually, an easier approach: temporarily modify build_dungeon to print the reason… but I shouldn't leave print in the submission (print itself isn't forbidden, but it's noisy; actually print is fine — it's not file I/O. stdout is allowed? print writes to stdout, not to a file — allowed. But better to keep it clean).
+
+Let me extract the map construction into a helper _main_grid() so I can test it separately. Refactor: build_dungeon calls _main_grid(), then validates. Then debug with the harness.
+
+Possible issues with the main map:
+
+Wall at x=11, gap only at y=3. K1 at (17,5). Left zone: spawn (2,13). Walls: h(8, x2..9, gap 5), h(17, x2..9, gap 8), v(6, y3..7), v(6, y18..23, gap 20).
+Path from spawn to (10,3): need to go up. Wall y=8 spans x2..9, gap at x=5. So from spawn go up to y=8 via x=5, then continue up. Wall v x=6 y3..7 blocks eastward movement at y3..7; to reach x=10 at y≤7, need to go around via y≤2 or via y=8 gap… at y=8, x=6 is EMPTY (v wall only y3..7). So can cross x=6 at y=8, then go up along x=7..10 to y=3. But PIT at (7,6),(8,5),(4,9) — detour needed. BFS should handle it.
+LASER_D at (10,1) fires down x=10, y2..11. To cross wall x=11 at y=3, hero must stand at (10,3) — which is in the beam! On a fire turn, can't be there; BFS avoids being there at end of turn when next turn is fire… my BFS only checks beam on fire turns (start+end). Hero can stand at (10,3) on non-fire turns and cross on non-fire turns. Crossing from (10,3) to (11,3): turn t, start (10,3) in beam, end (11,3) — wall x=11 has gap at y=3 so (11,3) is EMPTY. Is (11,3) in beam? Beam is only x=10. So crossing on non-fire turn is fine. BFS should find it.
+LASER_R at (12,3) fires right along y=3, x13..22. So after crossing (11,3), moving right along y=3 passes through the beam x13..22. Hero must time it. K1 at (17,5): approach from y=3 down to y=5 at some x. (17,4),(17,5): beam is only y=3. Fine.
+Middle zone: wall x=23, gap y=22. LASER_U at (22,24) fires up x=22, y23..14. Descent along x=22 passes through beam. K1 (17,5) → go down to y=22, cross at (23,22).
+Middle zone walls: h(10, x13..21, gap 17), h(15, x13..21, gap 15), v(18, y11..14), v(18, y16..21, gap 19). PIT (16,12),(17,13),(20,18). ICE (17,11),(17,12) — wait, (17,12) is ICE and (17,13) is PIT. Also h wall y=10 gap x=17: so (17,10) is gap (EMPTY), (17,11) ICE, (17,12) ICE, (17,13) PIT. Hero going down through gap x=17 at y=10 steps onto ICE at (17,11) → slides down: (17,12) ICE → (17,13) PIT → death! So the "obvious" gap at x=17 in wall y=10 is a death trap. BFS avoids momentum tiles entirely (skips them), so BFS needs another route down: h(15, x13..21, gap 15) — gap at x=15. To reach (15,15) from K1 area… v wall x=18 y11..14 blocks. Route: from (17,5) go down along x=15 or x=13..15 to y=15 gap, then continue down. But h wall y=10 spans x13..21, only gap x=17 (death ice). So to get below y=10 in middle zone, must pass x=17 gap (ice trap) or go around wall ends: wall y=10 spans x13..21; x=12 is wall x=11? No, x=11 is the first barrier (y1..24, gap 3). x=12 is EMPTY. So can go down along x=12 (between barrier x=11 and wall start x=13)! x=12, y4..24 is open (except LASER_R at (12,3)). So descent route: after K1, go left to x=12, down to y=22, right to (23,22). But LASER_U at (22,24) beam is x=22 y14..23 — crossing at y=22 along x=12→23 passes (22,22) in beam; time it.
+Wait, but the BFS skips momentum tiles — fine, x=12 route has no momentum.
+K2 at (28,21): after crossing (23,22), go right/up to (28,21). PIT (25,20) — detour. TNT (20,23) is in middle zone bottom, fine.
+Switch at (26,13): right-middle zone walls: h(9, x25..30, gap 27), h(17, x25..30, gap 29), v(27, y10..16, gap 13). To reach switch (26,13) from K2 (28,21): go up… h wall y=17 x25..30 gap x=29: pass at (29,17), then up to y=13. v wall x=27 y10..16 gap y=13: (27,13) is gap. Switch at (26,13) is west of that gap. From (29,17) go up to (29,13), left to (27,13) gap, (26,13) switch. OK.
+After switch flip (gates=True), R_GATE at (32,6) opens. Route to (31,6): from (26,13) go up… h wall y=9 x25..30 gap x=27: pass (27,9), up to y=6, right to (31,6), cross (32,6) R_GATE (now open), then to V (36,13).
+LASER_D at (31,1) fires down x=31, y2..11: ascent along x=31 passes through beam; time it.
+LASER_R at (33,13) fires right x34..38 y13: V at (36,13) in beam! Final approach along y=13 from (33,13)… wait (33,13) is the laser cannon itself (high wall). Approach V from (34,13)? (34,13),(35,13),(36,13) all in beam. Hero must step onto V on a fire turn to win before phase D (GV_08), or… on non-fire turn, step onto V: win immediately in phase B, phase D never runs. So stepping onto V on non-fire turn is safe! Beam only matters on fire turns, and winning skips phase D. But my BFS checks if fire: start/end in beam → skip. On non-fire turn, stepping onto V is allowed → win. But to reach (35,13) (adjacent to V), hero travels along y=13 through beam cells (34,13),(35,13) — must do so on non-fire turns, and not end turn on beam when next turn is fire. My BFS doesn't check "end on beam when next turn fire" — it only checks beam on fire turns (start+end). If hero ends turn t (t%3==2) on beam cell (35,13), then turn t+1 is fire: start (35,13) in beam → BFS skips all actions from that state on fire turn (start in beam → all skipped) → dead-end state, BFS backtracks. So effectively BFS won't end on beam before fire turn, because such states have no valid continuation… except if the action is winning (step onto V on fire turn: start (35,13) in beam → skipped even though winning would skip phase D!). Hmm — my BFS is overly conservative: on fire turn, stepping from beam cell onto V would actually win before laser. But BFS skips it. That's fine for finding a path (just more conservative), as long as some path exists. Hero can wait off-beam and approach on non-fire turns.
+But wait: is there a problem reaching (34,13)/(35,13)? From (32,6) go down along x=33..35 to y=13. PIT (34,8),(35,18), MIMIC (35,20), MIRROR_NE (34,16), TNT (36,4). Route down x=33: (33,7)..(33,12) EMPTY? (33,13) is LASER_R cannon — blocked. So go down x=33 to y=12, then right to (34,12),(35,12), down to (35,13), right to V (36,13). Or down x=34: (34,8) PIT — avoid. x=35: (35,18) PIT but that's lower. Fine, BFS will find it.
+So why did BFS fail? Let me actually debug. Maybe the issue is: BFS turn/mod bookkeeping. Start state mod=0 means 0 turns executed. Next action is turn 1, next_mod=1, fire=(1%3==0)=False. Good. Fire turns are when next_mod==0, i.e., turns 3,6,9. Correct.
+
+Hmm wait, there's a subtle bug: BFS beam check on fire turn uses beam(ng) — new gate state. But laser rays are also blocked by… the BFS precomputed beam_false/beam_true from the initial grid. During the author path, terrain doesn't change except CRACK→PIT (author doesn't step on CRACK — BFS skips momentum but CRACK isn't momentum; BFS allows CRACK! If author steps on CRACK and leaves, it becomes PIT — doesn't affect beams. And SWITCH flip is handled by ng. Keys picked up → EMPTY, doesn't affect beams. So beams are static per gate state. OK.
+
+But: BFS allows stepping on CRACK, HEAL, etc. Fine.
+
+Another potential issue: BFS skips tt in ("PIT","MIMIC","TNT","BOX") — but TNT/BOX are occupant layer, not terrain! In eng0.terrain, TNT/BOX cells are EMPTY. So BFS doesn't skip them (tt=="EMPTY"), and the author path might walk into TNT/BOX → replay blocked or killed. Did I place TNT on the route? TNT at (3,3),(20,23),(36,4). (36,4) is near V approach? V is (36,13); (36,4) is upper right. Portal pocket walls around (36,22). Author path probably doesn't hit TNT. BOX: none. So probably fine.
+
+Let me just debug directly. Refactor build_dungeon to expose _main_grid, then run BFS + replay with diagnostics.
+
+Actually, let me think about another likely failure: the switch/gate ordering. R_GATE at (32,6) is closed initially. B_GATE at (32,13) is open initially. BFS can cross B_GATE at (32,13) before flipping switch (gates=False → B_GATE open). Then in right zone without switch… switch at (26,13) is west of x=32 barrier. If hero crosses to right zone (x>32) via B_GATE before flipping, can they reach switch? Switch is x=26 < 32, so need to cross back west through (32,13) B_GATE (still open if not flipped) — fine, can go back. But once flipped (gates=True), B_GATE closes and R_GATE opens. BFS handles gates in state. Should be fine.
+
+Hmm, but here's a real trap: to reach V, hero needs to cross x=32 barrier. Only gaps at y=6 (R_GATE) and y=13 (B_GATE). If gates=False: R closed, B open → can cross at y=13. If gates=True: R open, B closed → cross at y=6. Either way crossable. V at (36,13). So hero could just cross B_GATE at y=13 early (gates=False) and reach V without switch! But needs both keys first. K2 at (28,21) is in middle-right zone (x24..31), accessible without crossing x=32. So route: get K1, K2, then cross B_GATE (32,13) (still gates=False if never stepped on switch), reach V. Switch is optional! That makes the map easier than intended, but still valid. BFS would find this shorter route. Fine — but then why did BFS fail?
+
+Wait, if switch is optional, the gate puzzle doesn't force anything. I wanted to force switch. Let me reconsider: I should make B_GATE not a free pass. Options: remove B_GATE gap (wall x=32 only gap y=6 R_GATE), forcing switch flip. Then hero must find switch. That's the intended puzzle. Let me remove B_GATE at (32,13) → make it W. But then I lose the "gate confusion" element; that's fine, switch puzzle is enough. Actually, keeping B_GATE as a decoy that closes is nice, but if it provides a free pass it defeats the puzzle. Let me make x=32 barrier only gap y=6 with R_GATE, and place B_GATE elsewhere as a decoy shortcut that closes after flip (e.g., B_GATE in middle zone wall). Simpler: just remove B_GATE, keep R_GATE puzzle.
+
+But that still doesn't explain BFS failure. Let me debug empirically. Refactor and run.
+
+Let me also reconsider: maybe BFS failed because the only routes require momentum tiles that BFS skips, and no pure-EMPTY route exists. E.g., middle zone descent: I argued x=12 corridor works. Let me verify x=12 is fully open y1..24: wall x=11 (barrier) is x=11 not 12. h walls y=10 and y=15 span x13..21 (start x=13), so x=12 open. v wall x=18. So x=12 column y1..24 all EMPTY except (12,3) LASER_R. So descent via x=12 works, no momentum. Good.
+
+Left zone ascent to (10,3): x=10 column — LASER_D at (10,1). (10,2)..(10,24) EMPTY? h wall y=8 spans x2..9 (ends x=9), so x=10 open at y=8. h wall y=17 spans x2..9, x=10 open. v wall x=6. So x=10 column open. Ascent via x=10 to y=3, cross (11,3). But PIT (7,6),(8,5) not on x=10. Good. To reach x=10 from spawn (2,13): go right along y=13 to x=10 (spawn zone clear, x4..10 y13 EMPTY? CRACK at (14,13) etc. are x≥14; x4..10 y13 EMPTY). Then up x=10. But h wall y=8 x2..9 doesn't block x=10. So straight right then up.
+
+So a pure-EMPTY route exists. BFS should find it. Unless… my BFS has a bug. Let me check the BFS goal condition: if (x,y)==v and hk1 and hk2. When hero steps onto V, nk1/nk2 already true, and we set nst and add to queue; goal detected when popped. Fine. But stepping onto V requires tt=="V" not blocked — V isn't high wall, not in skip set, not momentum. Good.
+
+Wait — maybe the issue is the replay, not BFS. Let me check: BFS returns path, then eng.run(sol) must be CLEARED. If BFS model diverges from engine (e.g., laser damage), replay dies. Let me check laser timing consistency. BFS fire check: on fire turn, start and end not in beam(ng). Engine phase D: exposed = {start, end} (no momentum), checks intersection with rays. Should match. But engine computes rays with current terrain/gates after move; BFS uses precomputed beam(ng). If author steps on SWITCH on fire turn, ng flips, beam(ng) used — engine also flips gates on arrival then phase D uses new gates. Match.
+
+But: engine ray computation stops at BOX/TNT/high wall. Precomputed beams from initial grid. If author path destroys nothing, same. OK.
+
+Hmm, another divergence: BFS allows WAIT and MOVE, but engine _move checks self.occ[y1][x1]=="TNT" blocks. BFS doesn't check occupant (TNT/BOX decoded to EMPTY terrain). If author path steps on a TNT cell, engine blocks (hero stays), but BFS assumed move → divergence → replay goes off path → probably dies or doesn't clear. Are any TNT on the BFS route? TNT (3,3): left zone upper. Route via x=10 doesn't hit (3,3). TNT (20,23): middle bottom, route via x=12 then y=22 crossing — (20,23) is y=23 not 22. Probably not hit. TNT (36,4): right upper, route to V via y=13 — not hit. So probably fine.
+
+I really need to debug empirically. Let me refactor to expose the main grid and add a debug entry. Let me modify build_dungeon to call _main_grid() and keep validation, then in harness call S._main_grid() and S._author_bfs() and replay with verbose.
+
+Let me refactor.
+All 8 golden vectors pass and the hero clears cleanly. But build_dungeon fell back to the empty map (spent=0) — my main maze failed self-verification. Let me refactor to expose the main grid and debug why.
+Let's try running the inspector.
+
+Now I can see the map. Exit gap (11,3) is EMPTY, (10,3) is EMPTY. So why can't the debug BFS reach it? Let me look at row y=3: B..t..#.....L..........#........#......B. Positions: x0=B, x1=., x2=., x3=t, x4=., x5=., x6=#, x7=., x8=., x9=., x10=., x11=., x12=L, ...
+
+Wait, x6 at y=3 is "#" (W). That's wall_line_v(6,3,7). And x11 at y=3 is "." — gap. x10 is ".". So from spawn, going right along y=13 to x=10, then up along x=10 to y=3, then right to (11,3). Should work!
+
+But wait — let me look at column x=10. Row y=8: B.###.####.#..P........#........#.o....B. Let me index x=10: x0=B,x1=.,x2=#,x3=#,x4=#,x5=.,x6=#,x7=#,x8=#,x9=#,x10=.,x11=#,... So (10,8)="." good. Row y=13 x=10=".".
+
+Hmm, so x=10 column is open. Let me re-examine the debug BFS. Oh wait — maybe the issue is that my debug BFS treats PIT as blocked but also... no. Let me re-run reachability but print whether (10,3) and (11,3) are in seen, and trace.
+
+Actually, wait. Let me reconsider. The debug reachability got 213 cells. Let me reconsider whether spawn can even move right. Row y=13: B..........#..cc.o#cc..#..s.....bL..V..B. x0=B, x1..x10="." (10 dots), x11="#". So y=13, x1..10 open, x11 wall. Good, spawn (2,13) can go right to (10,13). Then up x=10.
+
+Let me check x=10 for all y: y1: row1 B.........L#... x10=L? Let me index row1: x0=B,x1=.,x2=.,x3=.,x4=.,x5=.,x6=.,x7=.,x8=.,x9=.,x10=L,x11=#. So (10,1)=LASER_D (L). y2: B..........#... x10="." y3: x10="." y4: B...m.#....#... x0=B,x1=.,x2=.,x3=.,x4=m,x5=.,x6=#,x7=.,x8=.,x9=.,x10=.,x11=#. x10="." y5: x10="." (row5 B.....#.o..#.....1.....#... x10=".") y6: x10="." y7: x10="." y8: x10="." ... so x=10 open from y2 down. So (10,3) reachable, (11,3) reachable.
+
+So why did debug say K1 not reachable and only 213 cells? Let me re-run the debug reachability but it must be a bug in my debug script. Let me look:
+
+seen = {(2, 13)}
+q = deque([(2, 13)])
+while q:
+    x, y = q.popleft()
+    for d in S.DIR_NAMES:
+        dx, dy = S.DIRS[d]
+        nx, ny = x+dx, y+dy
+        if not S.in_bounds(nx, ny): continue
+        tt = eng.terrain[ny][nx]
+        if S.is_high_wall(tt, False): continue
+        if tt in ("PIT",): continue
+        if (nx, ny) not in seen:
+            seen.add((nx, ny))
+            q.append((nx, ny))
+This looks correct. eng.terrain decodes grid. (11,3) EMPTY. Hmm. Unless eng.terrain[3][11] is not EMPTY. Wait — the Engine decodes BOX/TNT to EMPTY+occ. (11,3) is EMPTY in grid. So terrain EMPTY.
+
+Wait, could it be that S.DIRS or S.DIR_NAMES... DIR_NAMES=("U","D","L","R"), DIRS maps correctly.
+
+Let me actually just re-run with explicit checks. Maybe I misread and the reachability DID cross but K1 is blocked by something else. K1 at (17,5). After crossing (11,3), to reach (17,5): go right along y=3 but (12,3)=LASER_R (high wall!) blocks. So can't go right along y=3 past x=12. Need to go around: from (11,3) go down? (11,4)=# (barrier x=11 only gap y=3). So (11,3) is a dead-end pocket! To its right (12,3) is LASER_R wall, up (11,2)=# , down (11,4)=#, left (10,3) open. So (11,3) connects only back to (10,3). The gap at y=3 in barrier x=11 leads to (11,3) which is blocked on the right by LASER_R at (12,3)!
+
+That's the bug. The LASER_R at (12,3) sits right next to the gap, sealing it. The laser cannon is a high wall. So the "gap" at (11,3) is useless because (12,3) is a laser wall. I need to move the laser or the gap.
+
+So the left zone is sealed because the only gap (11,3) exits into (12,3)=LASER_R wall. Fix: move LASER_R from (12,3) to somewhere else, OR move the gap to a different y, OR place the laser so it doesn't block the gap.
+
+The intent was LASER_R at (12,3) firing right along y=3 to cover the crossing corridor. But the crossing corridor IS y=3, and the laser occupies (12,3) blocking it. I should place the laser OFF the corridor, e.g., at (12,2) firing... no, LASER_R fires right along its row. To cover y=3 corridor without occupying it, I can't use LASER_R on y=3. Instead place LASER_D or LASER_U to fire across the corridor vertically. E.g., LASER_D at (15,1) firing down column x=15 crossing y=3. Or place LASER_R at (12,4) firing right along y=4 (parallel, covers approach).
+
+Simplest fix: move the top crossing laser to fire DOWN across the y=3 corridor: put LASER_D at (16,1) (fires down x=16, y2..11, crossing y=3 at (16,3)). Then (12,3) becomes EMPTY, gap works. Let me change setc(12,3,"LASER_R") → setc(16,1,"LASER_D"). But (16,1) — is that free? Row1 x16 currently ".". Yes. And it fires down covering the corridor where hero walks right along y=3. Good.
+
+But wait, also need to make sure the corridor y=3 from x=11 to x=22 (barrier x=23) is passable. Row y=3: after removing (12,3) laser, x12..22 should be EMPTY except barrier x=23. Let me check row3 currently: B..t..#.....L..........#........#......B — x12=L (the laser), x13..22="." (10 dots), x23=#. So removing laser at x12 makes x12..22 open. Good. K1 at (17,5) reached by going down from y=3 at x=17. (17,4) row4 x17="."? row4 B...m.#....#...........#..m.....#...t..B x17=".". (17,5)=K1. Good.
+
+Now also check other barriers for similar laser-blocking-gap issues:
+
+Barrier x=23 gap y=22. LASER_U at (22,24) fires up x=22 (not blocking gap at x=23). LASER_L at (31,22) fires left along y=22 — occupies (31,22), which is in the right zone, not the gap (23,22). The gap (23,22): is (24,22) open? Row22: B.....#....#...................L#..#P#.B. Let me index: x0=B,x1..5=.,x6=#,x7..10=.,x11=#,x12..? Let me count carefully. Actually the gap is x=23,y=22. (24,22) should be open to continue right. LASER_L at (31,22) is far right. So gap (23,22) → (24,22) open. Good, no blockage there. But let me verify (24,22) isn't a wall. I'll trust and re-run reachability.
+Barrier x=32 gaps y=6 (R_GATE) and y=13 (B_GATE). LASER_D at (31,1) fires down x=31 (not blocking). LASER_R at (33,13) fires right along y=13, occupies (33,13). The B_GATE gap is (32,13); to its right (33,13)=LASER_R wall! Same bug — the y=13 gap exits into laser wall. And R_GATE gap (32,6): to its right (33,6) open? Row6 x33="."? row6 B.....#o...#...........#........R......B x32=R,x33=".". So (33,6) open, R_GATE gap works (when open). But B_GATE gap (32,13) blocked by (33,13) laser.
+So the final approach laser LASER_R at (33,13) blocks the B_GATE gap. Since I want to force the switch/R_GATE puzzle anyway, let me remove the B_GATE free pass: make (32,13) a W wall (no gap), and move LASER_R to cover the V approach differently. Actually V is at (36,13). The final approach to V along y=13 — I want a laser covering it. If I keep LASER_R at (33,13), it blocks y=13 corridor at x=33, so hero can't walk along y=13 from x=32 to V. They'd approach V from above/below. That's fine but let me make the approach sensible.
+
+Let me redesign the right zone (x33..38) cleanly:
+
+Barrier x=32 with ONLY gap y=6 = R_GATE (requires switch). Remove B_GATE gap → set (32,13)="W".
+V at (36,13).
+After crossing R_GATE (32,6), hero is at (33,6). Navigate down to V (36,13).
+Place final laser to cover the descent, e.g., LASER_D at (36,4)? fires down x=36 y5..14, covering V at (36,13)! But then V is in the beam — stepping on V on non-fire turn wins (phase B before D). On fire turn, stepping on V also wins before D. So V in beam is fine for winning, but approaching cells (36,5..12) in beam require timing. Actually that's a nice final gauntlet. But (36,4) currently TNT. Let me move TNT. Alternatively LASER_R at (33,13) covering y=13 x34..38 (V in beam) — but it blocks (33,13) which is fine now since we approach V from above (36,12)→(36,13) not along y=13 from left. Let me keep LASER_R at (33,13): it covers (34,13),(35,13),(36,13)=V,(37,13),(38,13). Hero approaches V from (36,12) moving down onto V. (36,12) not in beam (beam is y=13). Stepping onto V wins. So the laser only matters if hero walks along y=13. It's a mild trap. Fine, keep it but ensure it doesn't block a needed gap. Since (32,13) is now W, no gap there, so (33,13) laser blocking is fine.
+Let me also reconsider: with only R_GATE gap at y=6, hero MUST flip switch. Switch at (26,13). Good, forces the puzzle.
+
+Let me also double check the switch is reachable and the route after flipping works. After switch (gates=True), R_GATE (32,6) opens. Hero goes from switch (26,13) up to y=6, right to (31,6), cross (32,6), to (33,6), down to V. LASER_D at (31,1) fires down x=31 y2..11 — covers (31,6) where hero crosses. Timing needed. Good.
+
+Now let me also verify middle zone descent and K2 reachability after fixing left exit. Let me just make the fixes and re-run reachability + BFS.
+
+Fixes:
+
+setc(12,3,"LASER_R") → setc(16,1,"LASER_D") [move top laser off the gap] But wait, is (16,1) going to block anything? It's a laser wall at (16,1), top row area, fine. Fires down x=16. Does it block K1 approach? K1 (17,5), approach from y=3 down x=17, not x=16. Fine.
+setc(32,13,"B_GATE") → setc(32,13,"W") [remove free pass, force switch] Actually I set wall_line_v(32,1,24,gaps=(6,13)) then setc(32,6,"R_GATE"), setc(32,13,"B_GATE"). Change gaps to (6,) and remove B_GATE line, OR keep gaps=(6,13) and set (32,13)="W". Let me change wall_line_v(32,...) gaps to (6,) and delete the B_GATE setc. Cleaner.
+Keep LASER_R at (33,13) (now harmless to gaps).
+Let me also reconsider: are there other laser-blocked gaps? Barrier x=23 gap y=22, check (24,22). And the left internal walls. Let me just re-run reachability after fixes.
+
+Let me make the edits.
+
+Found it: the laser cannons are high walls, and I placed them directly adjacent to the barrier gaps, sealing them. (12,3) LASER_R blocks the (11,3) gap; (33,13) LASER_R blocks the (32,13) gap. Let me fix the topology — move the top laser off the corridor and make the vault require the switch puzzle.
+
+Wait, if I completely remove B_GATE, the gate mechanism loses its "inversion" flavor — after the switch is flipped, R_GATE opens and stays open (unless the hero steps on the switch again). That's still fine. But actually, keeping B_GATE somewhere as a closing shortcut would add nastiness. Let me add B_GATE to the internal wall gap of the central zone: for example, the gap at x=15 in wall y=15 (central zone) — initially open (B_GATE), closes after switch flip. The hero's author path passes through there before the flip (on the way to K2), so it's open at that point. After the flip it closes — if the hero needs to backtrack through there, they get stuck. The author path: K1 → descend x=12 → y=22 → K2 (28,21) → switch (26,13) → ascend → R_GATE → V. Does the author pass through the y=15 wall gap at x=15? Descending along x=12 avoids it entirely. So placing B_GATE at (15,15) doesn't affect the author. It's a trap for heroes taking the "obvious" central route. Let me add it.
+
+Also, fix the laser at (12,3) → move it to (16,1) as LASER_D. Wait, but there's already LASER_D at (10,1) covering x=10, and the new one at (16,1) covers x=16 y2..11. The hero walks right along y=3 from x=11 to x=17, then descends to K1 — crossing the x=16 beam at (16,3). Timing challenge. Good.
+
+Hmm, wait, actually there's a subtle point: the beam from LASER_D at (16,1) extends downward from y=2 to y=11 (10 cells). Is there anything blocking it? (16,5)? K1 is at (17,5), not 16. (16,8)? Row 8: B.###.####.#..P........#... x16=".". (16,10)? Wall y=10 spans x13..21, with a gap at 17 → (16,10)=W! So the beam stops before (16,10): covers y2..9. No problem.
+
+Wait a moment — the B_GATE at (15,15) is in the gap of the central zone's wall y=15. But the author's BFS route descends along x=12, so it doesn't pass through there. However, hmm — the author's BFS might choose a route that passes through (15,15) while gates=False (open) — that's fine, it's passable. After flipping the switch, it closes. The BFS handles the gate state. OK.
+
+But wait, there's an issue with the B_GATE at (15,15) and the author's path: if the author passes through (15,15) before the switch, no problem. The BFS verifies with the engine. OK.
+
+Also, I need to re-check the gap at (23,22) and the laser at (31,22): LASER_L fires leftward along y=22 from x=30 down to x=21. It covers the crossing corridor y=22 — the hero walks along y=22 from x=23 to x=28 (K2 is at (28,21)). The beam covers x21..30 at y=22. Timing challenge, no blockage (the laser is at x=31, and the hero doesn't need to step there). Good.
+
+Now, let me re-run the debug.
+
+Progress: K1, K2, SWITCH are reachable. V is unreachable with gates=False (as expected — R_GATE is closed, and that's the only gap). But BFS still returns None. BFS should be able to handle gates: step on SWITCH → gates=True → R_GATE opens → V. Why does BFS fail?
+
+Possible reasons:
+
+Laser timing makes the path impossible under my conservative BFS rules (e.g., a corridor where you must inevitably stand on a beam tile at the start of a firing turn).
+A bug in BFS's gate/key handling.
+Let me think about critical beam constraints. LASER_D at (10,1): beam is x=10, y2..11. The author must ascend x=10 from y=13 to y=3 (the only exit). That's 10 moves through beam tiles y11..2 (y12,13 are outside the beam: beam is y2..11). Ascending from (10,13): (10,12) safe, (10,11) beam, ..., (10,2) beam, then (10,3) beam, then right to (11,3).
+
+The hero moves 1 tile per turn. Beam tiles are y2..11 (10 tiles). Traversing 10 beam tiles takes 10 turns; firing every 3 turns. On a firing turn, both the start and end tiles must be outside the beam. While traversing a 10-tile beam corridor, you're inside the beam for about 10 consecutive turns — inevitably a firing turn occurs while inside → hit. Unless you can WAIT outside the beam... but you can't pause inside the beam (WAIT on a beam tile on a firing turn = hit; and ending a turn on a beam tile right before a firing turn = hit at the start of the next turn).
+
+So: a 10-tile beam corridor with 1-tile-per-turn movement is lethal — you can't cross without taking a hit! Crossing takes 10 turns, firing every 3 turns → at least 3 firings during the crossing. Each firing while inside the beam = 50 damage. 3 hits = 150 > 100 HP. Death.
+
+Wait, but you can enter the beam right after a firing and exit before the next... beam length 10, speed 1 → 10 turns inside, firing period 3 → impossible. So my laser placement makes the map uncleavable without damage! That's why BFS (which avoids all damage) fails.
+
+Hmm. But wait — is that really true? exposed_cells includes the start tile. Let me think: firing turns are 3, 6, 9... Suppose you enter the beam at (10,11) on turn 4 (right after firing on turn 3). Turn 4: (10,12)→(10,11). Turn 5: →(10,10). Turn 6 (firing): start (10,10) is inside beam → hit. Yes, unavoidable.
+
+So a length-10 beam along the only path = guaranteed 50+ damage per crossing. With 6 lasers, the author path takes many hits → BFS's no-damage requirement fails.
+
+Options: A. Allow damage in the author BFS (track HP, allow hits as long as HP>0, use HEAL). More complex but doable: include HP in state... HP is continuous (multiples of 50/45 etc.). State (x,y,k1,k2,gates,mod,hp) — hp ∈ {100,50,0,...}. With heals +30: values like 100,50,80,30,60... bounded. Feasible but expands state space; still small.
+
+B. Shorten beams so corridors can be crossed between firings: beam length ≤ 2 means crossing takes ≤ 2 turns... entering right after a firing: turn t+1 enter tile 1, t+2 tile 2 (exit), t+3 firing — must be outside beam by the start of t+3. If beam is 2 tiles: enter on t+1, exit on t+2 → safe. So beams of length ≤ 2 crossing the path are survivable with timing. But lasers fire up to 10 tiles unless blocked. I can block beams with walls to shorten the effective length! E.g., place W 3 tiles from the laser in the firing direction → beam only covers 2 tiles.
+
+C. Reposition lasers so beams cross the path perpendicularly at a single point (1 tile wide): the hero crosses 1 beam tile in 1 turn — enter and exit between firings: on turn t (non-firing) step onto the beam tile, on turn t+1 step off. If t+1 is a firing turn, the start tile is the beam tile → hit! So crossing a 1-tile beam takes 2 turns (enter, exit); must ensure neither turn is a firing turn and you don't start a firing turn on it. Enter on turn t (t%3==1), exit on t+1 (t+1%3==2), next firing is t+2 — you're already out. Safe! So a 1-tile-wide beam crossing is fine with timing. My LASER_D at (16,1) crosses y=3 at a single tile (16,3) — but the beam continues down to y=9; if the hero only crosses at y=3, they're only on (16,3) for 1 turn. No problem.
+
+The problem is beams along the path (parallel): x=10 ascent (beam along the corridor), x=22 descent, x=31 ascent, y=22 crossing (LASER_L at (31,22) fires along y=22 which is the walking corridor!). These are the killers.
+
+Fix: reposition lasers so beams cross the path perpendicularly rather than running along it:
+
+Left ascent x=10: instead of LASER_D at (10,1) firing along x=10, place LASER_R at (1,5)? Firing right along y=5, crossing x=10 at (10,5) — 1-tile crossing. But y=5 x2..9: wall v x=6 y3..7 blocks the beam at x=6 → beam covers x2..5, doesn't reach x=10. Place LASER_R at (7,5)? (7,5) is currently EMPTY (pit is at (8,5)). Beam from (7,5) rightward: (8,5)=PIT (transparent), (9,5) EMPTY, (10,5) EMPTY, (11,5)=W barrier → stops. Covers (8,5),(9,5),(10,5) — 3 tiles, crossing x=10 at 1 tile. Hero ascending x=10 crosses (10,5) — 1 tile. But wait, the hero might walk along y=5... no, they ascend x=10. OK. Hmm, but the beam also covers (8,5),(9,5) — the hero might detour through there (pits at (7,6),(8,5) — (8,5) is a pit! Beams over pits are meaningless). Let me simplify: LASER_R at (9,5)? Then beam is (10,5) only (stops at (11,5) wall). 1-tile beam at (10,5).
+Actually simpler: keep LASER_D at (10,1) but block the beam after 1-2 tiles: place W at (10,4)? Then beam covers (10,2),(10,3) — 2 tiles. Hero ascending x=10 crosses those 2 tiles: enter (10,3) on turn t, (10,2) on t+1, then (10,1) is the laser wall — can't pass! Wait, the hero needs to reach (10,3) then go right to (11,3). They don't need (10,2). Beam tiles (10,2),(10,3): hero steps onto (10,3) (1 beam tile), then right to (11,3). 1 turn on the beam. Safe with timing. And the W at (10,4) blocks ascent along x=10 above y=4 — hero must detour... hmm, that changes the route: ascending x=10 blocked at y=4; need to reach (10,3) via (9,3)? (9,3) EMPTY, (9,4) EMPTY... hero can go up x=9 to y=3 then right to (10,3),(11,3). But (9,3): beam? Beam is x=10 only. OK, works but adds confusion.
+
+Cleaner: remove LASER_D at (10,1) entirely and place LASER_R at (9,3) firing right: beam (10,3) then stops at (11,3)? (11,3) is the gap (EMPTY) → beam continues (12,3) EMPTY, (13,3)... all the way to (22,3), stops at (23,3)=W. That's a 13-tile beam along y=3 — but limited to 10: (10,3)..(19,3). Hero walks along y=3 → parallel beam again. No good.
+
+OK, the point is: I want beams that cross the path at 1-2 tiles. For the left ascent, the path is along x=10 (vertical). A horizontal beam crossing it at one y is ideal: LASER_R at (9,5) → beam (10,5), stops at (11,5)=W. 1 tile.
+
+Top crossing y=3 (x11..22): LASER_D at (16,1) crosses at (16,3) — perpendicular, 1 tile. Keep. But the beam continues to (16,4)..(16,9) — hero descending to K1 at x=17 avoids it. OK.
+Middle descent: path along x=12 (vertical, y5..22). LASER_U at (22,24) fires along x=22 — parallel to nothing on the author path (author is at x=12). But heroes taking the x=17 ice route or x=22 route get hit. Actually, for the author, the x=22 laser is irrelevant. But wait — the author crosses y=22 horizontally from x=12 to x=23 (to reach gap (23,22)). LASER_L at (31,22) fires left along y=22: beam x30..21. Author walks along y=22 from x=12 to x=23 → enters beam at x=21, walks x21,22,23 — 3 beam tiles, then exits the corridor at (23,22)→(24,22)... (24,22) is also in the beam (x24 ≤30)! Continues to K2 (28,21): leaves y=22 at some x. Walking along y=22 through x21..28 = 8 beam tiles → lethal parallel beam again!
+Fix: block the y=22 beam with a wall so it only covers 1-2 tiles near the crossing. E.g., place W at (25,22)? Then beam from (31,22) leftward: (30,22),(29,22),(28,22),(27,22),(26,22), stops before (25,22)=W. Covers x26..30 — 5 tiles. Author crosses gap (23,22)→(24,22) then goes up to K2 (28,21) — if they leave y=22 at x=24, they only touch (24,22) (outside beam). Then no beam exposure. But heroes walking along y=22 to x=28 get hit. Hmm, but the author BFS finds the safe route. Actually wait — I want the laser to threaten the author path too (for timing pressure) but remain survivable. A 1-2 tile crossing is ideal.
+
+Let me place W at (26,22): beam covers (30,22)..(27,22) = 4 tiles (x27,28,29,30). Author: cross (23,22),(24,22),(25,22) — outside beam — then up at x=25 to K2? (25,21),(25,20)=PIT! Detour. Or continue to (26,22)=W blocked. Go up at x=24 or 25. K2 (28,21): from (25,22) up to (25,21), right (26,21),(27,21),(28,21). All outside beam (beam is y=22). Safe, no timing needed. Fine — the laser threatens heroes who stay on y=22.
+
+Actually, hmm, wait: LASER_L at (31,22) — is (31,22) on the author path? Author ascends x=31 from y=13 to y=6 later (right zone). (31,22) is the laser wall itself; author passes through (31,21)? No wait, author route after K2: K2 (28,21) → switch (26,13) → up to y=6 → right to (31,6) → cross (32,6). To reach x=31 at y=6, ascend x=31 from y=13 or so? Right-middle zone: v wall x=27 y10..16 gap 13; h wall y=9 x25..30 gap 27; h wall y=17 x25..30 gap 29. From switch (26,13): up x=26 to y=9? (26,12)..(26,10) EMPTY? v wall x=27 doesn't block x=26. h wall y=9 gap x=27 → (26,9)=W! So ascend x=26 blocked at y=9; detour via gap (27,9): right to (27,13)... wait (27,13) is the v wall gap. From (26,13) right to (27,13), up (27,12)..(27,10), (27,9) gap, (27,8)..(27,6), right (28,6)..(31,6), cross (32,6). LASER_D at (31,1) beam is x=31 y2..11: author steps onto (31,6) — 1 beam tile — then right to (32,6). 1 turn on beam. Safe with timing.
+
+Right zone descent to V: from (33,6) down to (36,13). LASER_R at (33,13) beam is y=13 x34..38. Author descends x=33? (33,7)..(33,12) EMPTY, (33,13)=LASER wall. So descend x=33 to y=12, right (34,12),(35,12),(36,12), down (36,13)=V. Beam is y=13 — author only steps on V (win before D). No beam exposure except V itself. Safe.
+So the fixes needed:
+
+Replace LASER_D at (10,1) with LASER_R at (9,5) [1-tile beam at (10,5)]. Wait — check (9,5): currently EMPTY? Row 5: B.....#.o..#.....1.....#... x9=".". Yes. And (8,5)=PIT is to its left — irrelevant, laser fires right. Beam: (10,5) EMPTY, (11,5)=W → stops. Covers only (10,5). Hmm wait, but the hero ascending x=10 crosses (10,5). Also, the hero might approach the exit via x=9... (9,5) is now the laser wall; route up x=9 blocked at y=5, detour via x=8 or x=10. No problem.
+Block LASER_L at (31,22) beam: add W at (26,22). Beam covers x27..30 at y=22. Author path crosses y=22 at x23..25 → safe. Wait, actually — hmm, (26,22): currently EMPTY? Row 22: B.....#....#...................L#..#P#.B x26=".". Yes. Add W.
+LASER_U at (22,24): beam x=22 y23..14. Author path: walks along y=22 (not 23), crosses x=22 at (22,22) — outside beam (beam starts y=23). Wait, LASER_U at (22,24) fires up: (22,23),(22,22),...,(22,14). (22,22) is in the beam! Author crosses (22,22) walking along y=22 → 1 beam tile. Then (23,22) gap. 1 turn. Safe with timing. But wait — I added W at (26,22) for the other laser; (22,22) is still EMPTY. Author crosses (22,22) — 1 tile of LASER_U beam. OK, survivable. Hmm, but actually the author might cross y=22 at x=22 — both LASER_U beam (22,22) and... LASER_L beam now x27..30, so (22,22) only LASER_U. 1 tile. No problem.
+LASER_D at (16,1): crosses y=3 at (16,3), 1 tile. No problem.
+LASER_D at (31,1): (31,6) 1 tile. No problem.
+LASER_R at (33,13): V approach, no problem.
+Now, all beam exposures on the author path are 1-tile crossings → BFS with timing should find a no-damage path.
+
+But wait — one more: the 1-tile crossing requires entering on turn t (non-firing), exiting on t+1 (non-firing), and not starting a firing turn on the beam tile. Enter on t%3==1, exit on t+1 (t+1%3==2), firing at t+2 — already out. Or enter on t%3==2? Then t+1 is firing, start tile = beam tile → hit. So must enter on t%3==1. BFS handles this via state mod. Since WAIT is allowed, the hero can always wait for the correct phase.
+
+Also, the beam at (10,5): hero ascending x=10 must step onto (10,5) on turn%3==1, then (10,4) on %3==2. WAITs before that are outside the beam ((10,6) is outside). No problem.
+
+Let me also re-check that the W at (26,22) doesn't break K2 access: K2 (28,21) approached from (25,21)/(27,21) etc. No problem. And TNT at (20,23): LASER_U beam x=22 doesn't hit it. LASER_L beam y=22 x27..30: TNT? None there. Good — no laser-triggered TNT explosions near the author path. TNT (36,4): beam? LASER_D (31,1) is x=31; LASER_R (33,13) is y=13. No. TNT (3,3): LASER_R (9,5) is y=5. No. Good.
+
+Also: portal pocket at (36,22) with PORTAL_1B — walls around it. Author doesn't go there. PORTAL_1A at (14,8): author path? Middle zone... author descends x=12, (14,8) is east of x=12, behind wall y=10? (14,8) is above wall y=10. Author route from K1 (17,5) to x=12: walks left along y=5 or so, doesn't step on (14,8). BFS avoids momentum tiles anyway (PORTAL is momentum). Good.
+
+Let me apply the fixes.
+I found that the laser beams create unavoidable damage zones along the corridors, making a no-damage path impossible. I'll reposition the lasers to fire across the corridors instead, creating timed 1-tile crossings that are actually survivable.
+Wait a sec — the W at (26,22) truncates the LASER_L beam to x27..30. But the author crosses y=22 at x23..25 — safe. However, hmm, the LASER_U beam at (22,22) is still a 1-tile crossing. OK.
+
+But wait, one more thing to consider: the W at (26,22) — doesn't this block the author's route along y=22 heading toward K2? The author crosses the barrier at (23,22), moves right to (24,22),(25,22), then goes up at x=25 or x=24 to reach K2 (28,21). (26,22)=W blocks further rightward movement along y=22, but the author turns upward before that. The BFS will find it.
+
+Re-running the debug.
+
+BFS found a 109-action solution, and the replay reached CLEARED at action 109 with hp=100. The "divergence" output is actually a success — my debug script flags st != "ALIVE" which includes CLEARED. The final action MOVE_D steps onto V and clears.
+
+So the main map is now working: spend=2355g, 109 actions, no damage. Let me run the full harness to confirm build_dungeon returns the main map and the hero can self-play it.
+
+Note: g = (3000-2355)/3000 = 0.215. Kill score ≈ 500 + 50*(3-P) + D + 250*0.215 ≈ 500+150+100+54 = 804 (P=0, D=100). Not bad. Timeout ≈ 320+150+100+27 = 597.
+
+Hmm, spend 2355 is a bit high. Can I trim it? Let me look at the components after running. But first, let me confirm everything passes.
+The BFS found a 109-action no-damage solution and the replay cleared it — that "divergence" line is actually the win. Let me run the full harness.
+The map is valid, and the author clears it. But my hero died at turn 105 on my own map — fell into a PIT at (22,15) (trap_damage 100). Let me investigate. Position (22,15): what's there? Looking at the map, (22,15)... row 15: B..........#.##.######.#...#.o..#......B. x22 = ? Let me count: x0=B, x1-10=., x11=#, x12=., x13=#, x14=#, x15=., x16=#, x17=#, x18=#, x19=#, x20=#, x21=#, x22=., x23=#... hmm, wait, wall_line_h(15, 13, 21, gaps=(15,)) sets y=15, x13..21 to W except x=15 (which is now B_GATE). So (22,15) should be EMPTY. But the hero died there from a PIT (trap_damage 100).
+
+Wait — the hero was at (21,14) at turn 100, then at (22,15) at turn 105 with hp=0. So between turns 100-105 it moved to (22,15) and fell into a pit. But (22,15) is EMPTY on the static map... unless a CRACK collapsed there. Is there a CRACK near (22,15)? CRACKs are at (14,13),(15,13),(19,13),(20,13). Not (22,15).
+
+Hmm, or did the hero slide on ICE/MIRROR into a pit? (21,12) is MIRROR_SW. Let me think. Actually, the hero might have slid on ice. Let me trace more carefully. Actually, trap_damage=100 means a single PIT fall (-100). The hero's final position is (22,15).
+
+Wait, maybe (22,15) isn't what I think. Let me check: is there a pit that the hero slid into? Let me look at what's around (22,15). Actually, let me reconsider — the hero died, but the reported position is (22,15). Let me check the terrain there and how it got there. Let me add detailed tracing around turns 95-105.
+
+Actually, more importantly: my hero should be able to clear my own map reasonably well. Dying at turn 105 with 1 key is not good — it means there's a bug in the hero's hazard avoidance. Let me investigate the death. Let me write a tracer that prints every action and position from turns 90-105, plus the local terrain.
+
+Let me reconsider the hero's logic regarding potential bugs:
+
+The hero uses _validate_action, which runs the full Engine on the belief grid. If the belief grid is wrong (e.g., UNKNOWN→EMPTY hides a pit), validation passes but the actual move kills. But the destination of a single MOVE is always visible, so the belief should have the correct terrain for adjacent cells. Unless visibility in my harness differs from what the hero assumes.
+Momentum: the hero might step onto a MIRROR/ICE and slide into a pit that was UNKNOWN in the belief. _light_slide flags unk and A* adds extra_risk=6, but doesn't strictly forbid it. And _validate_action runs the engine on the belief (UNKNOWN→EMPTY), so a slide into an unknown pit looks safe in simulation (belief shows EMPTY) but is actually a pit. This is the bug: validation on the belief grid can't catch hazards in UNKNOWN cells.
+But wait — the destination of the first step is visible, and slides extend beyond it. If the hero steps onto a visible MIRROR and slides into an UNKNOWN region that's actually a pit, belief validation says OK but reality kills. My A* penalizes unk slides (extra_risk=6) but will still take them if there's no alternative. And validation doesn't reject them.
+
+Let me check: at (21,14)→? The hero was at (21,14) at turn 100. (21,12) is MIRROR_SW, (20,18) is PIT, (21,14) is... let me see. Actually, let me trace. Let me write a detailed tracer.
+
+Actually, let me reconsider the death position (22,15). Hmm, is (22,15) really EMPTY? Let me recompute row 15. wall_line_h(15, 13, 21, gaps=(15,)): x13..21 = W, except x15. So x22 is not set by this. x22, y15: default EMPTY. But wait, is there anything else at (22,15)? No. So (22,15) is EMPTY. Then how did the hero die there from a pit?
+
+Unless the hero didn't die at (22,15) but the engine reports the position after falling... no, PIT keeps you at the pit's position. If hp=0 and trap_damage=100 at (22,15), then (22,15) must be a PIT at that moment. So (22,15) became a PIT dynamically. The only way: a CRACK collapsed there. But there's no CRACK at (22,15) initially.
+
+Wait — maybe my harness's visibility or the hero's memory corrupted the belief, and the hero actually moved somewhere else, but the engine's real position is (22,15)... no, the engine is ground truth. Let me check: did a BOX get pushed and fill... no.
+
+Hmm, let me reconsider: maybe there's a CRACK I forgot. Let me grep CRACK placements: (14,13),(15,13),(19,13),(20,13). And the ice at (17,11),(17,12) with pit (17,13).
+
+Actually, wait. Let me reconsider whether (22,15) could be reached by a slide and be a pit in the real map but I misread. Let me just print the real terrain around the death and trace the last 15 moves. Let me write the tracer.
+
+Let me also reconsider: the hero might have a bug where it steps onto a known PIT because the belief/kmap got out of sync. Let me trace.
+
+Let me write a tracer that replays and prints turns 90-105 with action, position, hp, and the terrain of the destination.
+Map is valid and the author clears it, but my hero died at turn 105 on my own map — a hazard-avoidance bug I need to fix. Let me trace the death.
+Let's try running the tracer.
+
+Interesting! Cause of death:
+
+t102: MOVE_U (22,14)→(22,13), hp 100→50. Laser hit! Turn 102 is divisible by 3 (102=3×34). (22,13) — wait, is this inside a beam? LASER_U at (22,24) fires upward along x=22: y23..14. (22,13) is y=13 — outside the beam (beam is y14..23). Hmm, but hp dropped by 50 at t102. Which laser? Let me think: (22,13)... LASER_L at (31,22)? No, that's y=22. Hmm, wait — exposed cells at t102 = {(22,14), (22,13)}. (22,14) is inside the LASER_U beam (x=22, y14..23)! Hero started turn 102 at (22,14) — a beam cell — and fired. So the hero ended turn 101 at (22,14), which is a beam cell, and turn 102 fired → hit at the start cell.
+My hero's fire_next check: at turn 101, (101+1)%3==0 → fire_next=True → A* should avoid resting on beams_now. But the hero moved to (22,14) at t101! Why? Either beams_now didn't include (22,14), or the chosen action bypassed the check (e.g., _explore_move or fallback), or the beam computation was wrong.
+
+LASER_U at (22,24): has the hero seen it? At t101 the hero is at (21,14). Visibility radius ~3: (22,24) is dy=10 away — not visible. Has the hero ever been near (22,24)? The hero descended along x=22 from y=9 (t94-98): at (22,12), (22,24) is 12 away — not visible. So the hero has never seen the LASER_U cannon at (22,24)! beams_now computed from known cannons doesn't include this beam. Hence no avoidance. And laser_warnings at turn 102: beam cells within visible_mask — hero at (22,14) at start of t102... wait, warnings are computed with the pre-action snapshot of turn 102, hero at (22,14). Beam cells (22,14)..(22,23): which are visible from (22,14)? (22,15),(22,16),(22,17) within radius 3 → warnings should include (22,15),(22,16),(22,17) and (22,14) itself (dx=0,dy=0 always visible). So at t102, state.laser_warnings includes (22,14) — hero knows it's standing on a beam cell on a fire turn. _validate_action for MOVE_U: eng.exposed={(22,14),(22,13)} intersects fire_beams (which includes warnings) → should reject! Then try other directions... all moves from (22,14) expose (22,14) → all rejected → fallback: if not fire_this or (hx,hy) not in fire_beams: return WAIT — fire_this and on beam → _safe_fallback. _safe_fallback: beams from warnings; tries moves where (nx,ny) not in beams... but doesn't check the start cell (hx,hy) in beams for MOVE candidates! Look: if turn % 3 == 0 and ((nx, ny) in beams or (hx, hy) in beams): continue — actually it does check (hx,hy) in beams → all moves skipped → best="WAIT". Then if turn%3==0 and (hx,hy) in beams and best=="WAIT": tries any move to a non-beam cell regardless of walls? Checks not is_high_wall(tt,gates) and tt not in ("PIT",) → returns MOVE_U (to (22,13)). So the hero moved and took the hit — unavoidable since it started on the beam. 50 damage taken, fine, survived.
+
+Then t103: MOVE_D back to (22,14) — beam cell again! Turn 103: 103%3=1, no fire. t104: MOVE_D to (22,15). Turn 104%3=2 → next turn 105 fires! (22,15) is inside the beam (x=22, y14..23). At t104 the hero still doesn't know about the cannon at (22,24)? Hero at (22,14) at t103: visibility radius ~3 → (22,17) visible, (22,24) not visible (distance 10). At t104 hero at (22,15): (22,24) distance 9 — not visible. So the cannon is still unknown! beams_now empty for that laser. fire_next check passes. Hero rests at (22,15).
+t105: fire turn. Warnings now: hero at (22,15), beam cells (22,14)..(22,23); visible: (22,14),(22,15),(22,16),(22,17),(22,18) (radius 3, but LOS: (22,16),(22,17),(22,18) — orthogonal straight line, open). Warnings include (22,15) → hero on beam at fire turn → all actions expose start → 50 damage → hp 50-50=0 → death.
+Root cause: unknown laser cannons. Hero can't predict beams from cannons it hasn't seen. It walked into the beam corridor of an unseen laser and got caught by two consecutive fire turns.
+
+Mitigations:
+
+Use laser_warnings history to infer cannons: warnings give beam cells with direction. If on a fire turn we see beam cells along x=22 with dir="U", we can infer there's a LASER_U somewhere below the max beam cell (within 10). We can reconstruct the beam line: cells (22,14..18) dir U → cannon at (22, y>18), beam extends up to 10 from cannon. Conservatively: mark the entire column segment as dangerous (extend the observed beam line up to 10 cells in the reverse direction, plus the forward direction). Save inferred beams in memory with decay (they persist until walls change).
+Better: infer cannon position candidates: for dir U, cannon is at (x, y_max+k) for some k... actually the beam starts adjacent to the cannon: beam cells are cannon+1..cannon+10 (or until blocked). Observed cells (22,14)..(22,18) dir U: cannon is at (22,19+?) — the lowest observed beam cell is (22,18); cannon could be at (22,19) (if beam continues past visible range) — beam cells continue downward from the cannon... wait, dir U means firing upward: cannon at bottom, beam extends up. Beam cells are (22, cy-1),(22,cy-2),...,(22,cy-10). Observed (22,14..18): cannon at (22,19) or below (if beam truncated by wall, cannon could be at (22,19)... if no truncation, the lowest beam cell is cy-1, so cy = lowest+1 = 19; but if truncated by a wall below... no, truncation happens at the far end (top). The near end is always adjacent to the cannon. But we only see part of the beam — the lowest visible cell (22,18) might not be the lowest beam cell; the beam might extend to (22,19),(22,20)... which are invisible. So cannon is at (22, y) for y ∈ [19, 28]∩grid... beam length ≤10: topmost beam cell ≥ cy-10. Observed topmost (22,14): cy-10 ≤ 14 → cy ≤ 24. And cy ≥ 19. So cannon ∈ (22,19..24). Conservative danger zone: all cells (22, cy-10..cy-1) for any candidate cy → (22, 9..23). Mark this whole segment as potential beam in memory.
+
+Simpler and effective: from warnings, for each dir, extend the observed beam cells by 10 in the reverse direction (toward the cannon) and mark as "potential beam". Also extend forward? The observed cells are part of the beam; the beam continues forward (in dir) up to 10 total from the cannon. Since cannon position is uncertain, the safest is: mark the entire line from (min observed - 10 in dir direction) to (max observed + 10 opposite)... let me think again: dir U beam goes upward. Observed cells y∈[14,18]. Cannon below at cy∈[19,24]. Beam spans [cy-10, cy-1] ⊆ [9,23]. So potential beam = column x=22, y∈[9,23]. In general: potential beam = observed line extended 10 cells in the direction opposite to dir (past the lowest cell, toward possible cannon positions, and beyond to cover the full beam reach). Extension: from the extreme observed cell in the -dir direction, go 10 more cells in -dir; and from the extreme in +dir... the beam can't extend past the observed +dir extreme? It can: we might only see the middle of the beam. Observed [14,18], actual beam [9,23] — extends both beyond 14 (upward, +dir=U) and beyond 18 (downward, toward cannon). So extend 10 in both directions along the line from the observed extremes. That gives [4,28]→clamped. Overly conservative but safe. Actually, extending 10 in +dir from topmost observed: beam top ≥ cy-10, cy ≤ lowest_obs+1... hmm, let me just do this: potential segment = [min_obs - 10, max_obs + 10] along the axis (clamped to grid and known walls). Conservative but might block routes unnecessarily. Since beams are only dangerous on fire turns, marking a wide segment as "avoid resting there when fire_next" is a reasonable caution.
+
+Even simpler and very effective: remember warning cells persistently as "laser danger zones" — any cell that was ever a warning cell is likely part of a recurring beam (lasers fire every 3 turns from the same cannon unless destroyed). Avoid resting on known warning cells when fire_next, and avoid crossing them on fire turns. Plus extend along the line to cover unseen parts. This handles the (22,15) death: at t102, warnings included (22,14),(22,15),(22,16),(22,17),(22,18) — hero memorizes them; at t104 (fire_next), avoids resting on (22,15).
+
+Also fix _safe_fallback's laser logic (it's OK-ish).
+More generally, the hero oscillated at t99-104 ((22,13)↔(22,14)) — a sign of indecision. The hero was heading down... target K2 at (28,21). From (22,13), route: down x=22 to y=22, then right. But (22,15)... wall y=15 spans x13..21 — x=22 is open. Why did the hero go back up at t102? Because of the laser hit, then replanned... anyway, with beam memory it should avoid the x=22 corridor below y=13 once warned. Actually, after the t102 hit, the hero knows (22,14..18) is dangerous; route to K2 should detour via x=24 or so... wall y=15 x13..21, x=22 open, x=23 barrier (gap y=22), x=24 open. From (22,13) go right? (23,13)=W barrier. Down x=22 is the beam corridor. Alternative: back up and cross via y=9 gap? Hmm, middle zone: to reach the right side (x≥24), must cross barrier x=23 at y=22 (only gap). To reach y=22 from (22,13): descend x=22 (beam!) or detour left to x=12 and descend (long). Or descend x=24? Can't reach x=24 without crossing barrier x=23 (only gap y=22). So must descend x=22 (or x=21? Wall y=15 blocks x13..21 except x=15 B_GATE; x=21 blocked at y=15; x=22 open). So the x=22 descent is mandatory, and it's a beam corridor y14..23 — 10 cells! Same lethal parallel beam problem as the author faced!
+Wait — but the author's BFS path crossed y=22 horizontally... how did the author descend from K1 to y=22? Author descended x=12 (left of wall y=10 x13..21), then went right along y=22, crossing x=22 at (22,22) — 1 beam cell. The author never descended x=22! My hero chose to descend x=22 (through the ice trap area at x=17? No, x=22). The hero's route: K1 (17,5) → ... → (22,9) → descend x=22. At (22,14) enters the beam corridor, 10 beam cells to y=23... but the hero only needs to reach y=22 and turn right — still 9 beam cells (y14..22). Lethal with 1 move/turn and fire every 3.
+
+So my map has a lethal beam corridor for heroes who descend x=22 — great for the demon side! But my hero needs to pick the author's route (descend x=12). With beam memory, after the first hit the hero will learn x=22 y14+ is dangerous and reroute via x=12. That costs ~30 turns but survives. Alternatively, the hero could infer the danger before entering: at (22,13), looking down — (22,14),(22,15),(22,16) visible and EMPTY, cannon not visible. No way to know. First hit is unavoidable unless the hero is paranoid about long straight corridors. Acceptable: take 1 hit (50), learn, reroute. But the second hit killed because the hero rested on a beam cell before a fire turn. With warning memory, the second hit is avoided. HP 50 → survive, reroute, get K2, continue. Might take more hits elsewhere... let me implement and test.
+
+Another improvement: when hp ≤ 50, seek HEALs. There's a HEAL at (29,7) (right zone, near the route) and (9,21) (left zone). Hero passes near (29,7)? Route to switch goes through (27,9)... (29,7) is close. If hp<100 and a known HEAL is within a small detour, grab it. Let me add: if hp ≤ 60 and a known safe HEAL exists, target it first (detour budget ~15 turns). Simple: override target with nearest known HEAL when hp ≤ 50.
+Also, the hero wasted turns 92-98 descending x=22 from y=9 — why was it at (22,9)? From K1 (17,5), the hero went right along y=9? h wall y=9 is x25..30 (right zone). Middle zone: (17,5)→(22,9): route via y=5..9, x=18 wall y11..14 doesn't block y≤10. Wall y=10 x13..21 gap 17: hero crossed at... (22,9) is east of wall y=10's span (x13..21), so descended x=22 past y=10 freely. Then beam corridor. OK.
+
+So let me implement the fixes: A. Memory "beam_zones": set of cells inferred from laser_warnings (persistent) + line extension. Use in fire_next avoidance and fire-turn crossing avoidance (as additional beams). Decay: if a cannon is seen destroyed, remove... simpler: keep forever (conservative). Also add actual computed beams from known cannons.
+
+Implementation: on fire turns, for each warning cell with dir, add the cell and extend along the axis: 10 cells in both directions from each warning cell? That's too wide. Better: group warnings by (axis, dir): for dir U/D, column x; collect ys; extend [min_y-10, max_y+10]... hmm wait, actually the beam is at most 10 cells total, so the full beam ⊆ [max_obs-10+1... let me think: beam is a contiguous segment of length ≤10 containing all observed cells. So full beam ⊆ [min_obs-9, max_obs+9] (segment of length ≤10 containing [min_obs,max_obs] can start at most 9 before min_obs... if obs span is s = max-min+1, beam length ≤10, beam start ∈ [max_obs-9, min_obs], beam end ∈ [max_obs, min_obs+9]. Union of all possible beams = [max_obs-9, min_obs+9]. For obs [14,18]: [18-9, 14+9] = [9,23]. Exactly matches my earlier calculation! Great: potential beam segment = [max_obs-9, min_obs+9] along the axis.
+For dir L/R: row y, xs; segment [max_x-9, min_x+9].
+Add all cells in the segment to memory["beam_zones"] (they're potential beam cells). But walls block beams — clip segment at known high walls? The observed beam already stops at walls; the extension toward the cannon shouldn't cross walls between the cannon and observed cells... actually, if there were a wall between, the beam wouldn't reach the observed cells. So no walls within the actual beam; but our conservative segment might extend past walls on the far side. Clip at known high walls when extending. Simple: extend cell by cell, stop at known high wall. B. fire_next check: avoid resting on (beams_now | beam_zones). fire_this check: avoid exposing (fire_beams | beam_zones). C. In A*, treat beam_zones like beams for timing. D. HEAL seeking when hp low. E. Also: _validate_action should reject actions that expose beam_zones on fire turns (pass the combined set).
+Also, the hero's early game: turns 1-90 to get K1 — quite slow (K1 at turn ~95). Author did the whole map in 109. Hero exploration overhead is expected, but let me check for pathological wandering. Turns 20-40: hero at (10,9) for 20 turns?! t20 (10,9), t40 (10,9) — stuck for 20+ turns! Something's wrong — oscillation or stuck. Then t60 (5,6) — went back left?! Then t80 (14,5), K1 by t100. The hero wandered a lot. Let me investigate the stuck behavior at (10,9).
+
+(10,9): near the left exit route. Hero should go up x=10 to y=3. Why stuck? LASER_R at (9,5) — beam (10,5). Hero at (10,9) wants to go up: (10,8),(10,7),(10,6),(10,5 beam),(10,4),(10,3). Has the hero seen the laser at (9,5)? From (10,9): distance to (9,5) = sqrt(1+16)=4.1 > 3 — not visible initially. As the hero approaches... beam cell (10,5): hero at (10,6) sees (9,5) (adjacent diagonal). Before that, warnings on fire turns reveal (10,5) when visible.
+
+Why stuck at (10,9) for 20 turns? Maybe A* can't find a path due to overly conservative beam avoidance, or the target lock oscillates. Or the hero keeps replanning and picking moves that cancel out. Let me trace turns 1-60 to see. Actually, let me first implement the beam memory + heal fixes, then trace the early game if still slow.
+
+Actually wait — there might be a more fundamental bug: at t20 and t40 the hero is at (10,9) — maybe it's stuck in a loop where A* returns a path but _validate_action rejects the first action, then alternatives are also rejected, then WAIT or explore oscillates. Let me trace turns 1-60 in detail with the current code to understand. Let me do that first, then fix everything at once.
+I found that the hero dies from an unseen laser cannon and gets stuck oscillating at a specific position for 20 turns. I'll trace the early game to understand both issues.
+All green with the validator in place. Final determinism + compile check:
+
+Everything is complete and verified. Let me summarize what I've accomplished for the user.
+
+The submission is at <REPO_ROOT>/exam_rooms\opus1\submission.py. Let me provide a concise summary of the solution, the test results, and the strategy.
+
+Let me write a clear final summary in Chinese (matching the user's language).
+
+I should mention:
+
+The pre-game declaration (already given).
+The two functions implemented.
+Demon map strategy + self-verification.
+Hero BLIND strategy.
+Test results (golden vectors, stress tests, edge cases, timing).
+Let me keep it concise but informative.
+完成。`submission.py` 已保存至工作目录 `<REPO_ROOT>/exam_rooms\opus1\submission.py`，编译通过、确定性输出，两个入口函数齐全，仅用 `heapq / math / collections` 纯标准库，无任何文件/网络/进程/反射能力。
+
+## 交付总结
+
+**🏰 魔王 `build_dungeon()`** — 花费 2355G（留存 g=0.215），`author_solution` 109 步无伤自证通关。
+- 三条纵向屏障强制 S 形长路线 + 区间迷宫墙；红门金库需踩开关翻转才可入。
+- 杀招：冰道滑向深渊、`x=22` 致命激光走廊、4 只伪装宝箱怪（均带合法专属骸骨线索）、封死小室的传送门陷阱、弹簧弹射坠坑、脆冰断桥。
+- 激光改为**横切单格射线**（需卡时序通过），保证 author 有无伤解。
+- 内置 `_layout_ok()` 全量硬约束自检 + 完整物理引擎回放自证，任一不符自动回退到保证合法的备用图，**杜绝废标**。
+
+**🗡️ 勇者 `decide_action()`** — 100% 专注 BLIND 迷雾。
+- 增量建图记忆；**相位感知 A\***（状态=坐标×turn%3，含 WAIT 调相）规划激光时序穿越。
+- 激光威胁由「可见炮座射线 + 预警反推延伸段」合成；**禁止在开火前夜停留射线格、禁止踏入无前向出口的射线死路**。
+- 宝箱怪识别：邻接骸骨线索=MIMIC 必避，四邻全可见无线索=HEAL 可捡；低血量自动寻补给。
+- 动量（冰/镜/弹簧/传送门）滑行预演，拒绝滑入未知；推箱填坑、飞石引爆 TNT/触发开关、**炸弹破墙+自动撤退**、JUMP 越坑。
+- 计划承诺执行避免震荡；多层 try/except 兜底，永不抛异常、恒返回合法动作。
+
+## 测试结果
+| 项目 | 结果 |
+|---|---|
+| 黄金向量 GV_01–08 | 7 项精确复现 OK（GV_06 环形冰道几何未给全，32 步熔断已实现） |
+| 自图 BLIND  self-play | **166 回合通关，100 HP，0 伤 0 错误** |
+| 8 张对抗图（坑海/冰道/激光阵/箱TNT/动量混合/墙迷宫/宝箱海/脆冰桥） | **全部通关，多数 100 HP，0 错误** |
+| 边界（封死钥匙/需炸墙/推箱填坑/开关门金库） | 优雅超时或通关，0 错误 |
+| 密集动量+12 激光极限图 | 通关，单步峰值 **0.017s**（≪0.5s） |
+| 耗时 | import 0.007s、build 0.036s、单步≤0.024s |
+
+魔王图对弱勇者有实杀/困死能力，对强勇者也能靠长迷宫拖满回合；勇者侧在各类阴间图上稳定存活通关，攻防两端都留了足量冗余。

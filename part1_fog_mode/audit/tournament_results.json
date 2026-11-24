@@ -1,0 +1,14 @@
+{
+  "matches": 286,
+  "models": 11,
+  "featured": 46,
+  "revenge_matches": 3,
+  "official_bundle_sha256_before": "546983b83b8c2a115ba23ca3e1f66eaf87bff1e69acb42416639860962af7b0d",
+  "official_bundle_sha256_after": "546983b83b8c2a115ba23ca3e1f66eaf87bff1e69acb42416639860962af7b0d",
+  "revenge_without_featured_map": true,
+  "demon_disqualified": [
+    "opus",
+    "deepseek",
+    "doubao"
+  ]
+}

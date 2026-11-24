@@ -1,0 +1,18 @@
+Output:
+BENCH_WEAK WIN 66 100 (True, True) w1 0.048 w 0.001 score 938.2
+BENCH_STRONG ALIVE 240 100 (True, True) w1 1.568 w 0.368 score 400.0
+OFFICIAL_01 WIN 31 100 (True, True) w1 0.007 w 0.001 score 966.5
+OFFICIAL_02 ALIVE 240 100 (False, False) w1 0.584 w 0.37 score 0.0
+OFFICIAL_03 WIN 61 100 (True, True) w1 0.008 w 0.002 score 953.3
+argon WIN 69 100 (True, True) w1 0.782 w 0.001 score 920.8
+astra WIN 57 100 (True, True) w1 0.014 w 0.001 score 945.7
+carbon WIN 145 100 (True, True) w1 1.554 w 0.369 score 836.5
+deepseek WIN 63 50 (True, True) w1 0.016 w 0.002 score 861.3
+doubao WIN 31 100 (True, True) w1 0.007 w 0.001 score 966.5
+glm DEAD 72 0 (True, True) w1 1.555 w 0.369 score 400.0
+hunyuan DEAD 27 0 (False, False) w1 1.564 w 0.37 score 0.0
+hydrogen ALIVE 240 100 (False, True) w1 1.556 w 0.386 score 200.0
+opus WIN 31 100 (True, True) w1 0.009 w 0.002 score 966.5
+qwen ALIVE 240 100 (True, True) w1 1.561 w 0.378 score 400.0
+sol ALIVE 240 100 (True, True) w1 1.556 w 0.369 score 400.0
+MINE WIN 115 100 (True, True) w1 0.023 w 0.002 score 898.5

@@ -1,0 +1,14 @@
+--- D:\publish\part2_full\exam_rooms\P2_08_glm_opencode\submission.py
++++ D:\publish\part2_full\audit\retest_20261119\submissions\glm\submission.py
+@@ -178,10 +178,7 @@
+ # v2.2 精确前向模拟器（世界 = 静态基图 + 小型覆盖层, 求解器与自证共用）
+ # ==============================================================================
+ 
+-class _World(object):
+-    __slots__ = ("base", "ovl", "occ", "hx", "hy", "hp", "k1", "k2",
+-                 "jumps", "bombs", "gates", "bl", "turn", "status",
+-                 "cannons", "plates", "portals", "_ck", "_zk")
++class _World:
+ 
+     def __init__(self, base, ovl, occ, hx, hy, hp, k1, k2, jumps, bombs,
+                  gates, bl, turn, status, cannons=None, plates=None, portals=None):

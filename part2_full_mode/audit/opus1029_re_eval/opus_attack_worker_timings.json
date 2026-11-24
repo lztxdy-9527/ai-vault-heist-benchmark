@@ -1,0 +1,180 @@
+{
+  "wave2_60m_reinforcements": {
+    "wave2_60m_reinforcements_OFF01_opus": {
+      "first": 0.26971010002307594,
+      "later_max": 0.0010839999886229634,
+      "calls": 84,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_OFF02_opus": {
+      "first": 0.13152439997065812,
+      "later_max": 0.001327300094999373,
+      "calls": 63,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_OFF03_opus": {
+      "first": 0.07813690009061247,
+      "later_max": 0.0007929999846965075,
+      "calls": 43,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M006_opus_vs_astra": {
+      "first": 1.3526568999513984,
+      "later_max": 0.3646386000327766,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M015_opus_vs_sol": {
+      "first": 1.3536606000270694,
+      "later_max": 0.3638931999448687,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M024_opus_vs_neon": {
+      "first": 1.3544136999407783,
+      "later_max": 0.36536729999352247,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M033_opus_vs_hunyuan": {
+      "first": 0.7328893000958487,
+      "later_max": 0.0008755999151617289,
+      "calls": 98,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M042_opus_vs_hydrogen": {
+      "first": 1.3527194999624044,
+      "later_max": 0.36560000001918525,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M051_opus_vs_glm": {
+      "first": 1.3551439999137074,
+      "later_max": 0.3763409999664873,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M070_opus_vs_deepseek": {
+      "first": 0.08219819993246347,
+      "later_max": 0.0008061000844463706,
+      "calls": 70,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M079_opus_vs_qwen": {
+      "first": 0.07536990009248257,
+      "later_max": 0.0009352000197395682,
+      "calls": 60,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_M088_opus_vs_doubao": {
+      "first": 0.4429526999592781,
+      "later_max": 0.0008971999632194638,
+      "calls": 62,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_BENCH_BENCHMARK_WEAK_DEF_opus": {
+      "first": 0.4113459000363946,
+      "later_max": 0.000923600047826767,
+      "calls": 71,
+      "over_limit": 0
+    },
+    "wave2_60m_reinforcements_BENCH_BENCHMARK_STRONG_DEF_opus": {
+      "first": 0.6181446000700817,
+      "later_max": 0.0009238999336957932,
+      "calls": 117,
+      "over_limit": 0
+    }
+  },
+  "wave3_final_11seats": {
+    "wave3_final_11seats_OFF01_opus": {
+      "first": 0.26971010002307594,
+      "later_max": 0.0010839999886229634,
+      "calls": 84,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_OFF02_opus": {
+      "first": 0.13152439997065812,
+      "later_max": 0.001327300094999373,
+      "calls": 63,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_OFF03_opus": {
+      "first": 0.07813690009061247,
+      "later_max": 0.0007929999846965075,
+      "calls": 43,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M005_opus_vs_astra": {
+      "first": 1.3526568999513984,
+      "later_max": 0.3646386000327766,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M015_opus_vs_sol": {
+      "first": 1.3536606000270694,
+      "later_max": 0.3638931999448687,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M025_opus_vs_neon": {
+      "first": 1.3544136999407783,
+      "later_max": 0.36536729999352247,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M035_opus_vs_carbon": {
+      "first": 1.3545845999615267,
+      "later_max": 0.36854749999474734,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M045_opus_vs_hydrogen": {
+      "first": 1.3527194999624044,
+      "later_max": 0.36560000001918525,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M066_opus_vs_deepseek": {
+      "first": 0.1737130000256002,
+      "later_max": 0.0008317000465467572,
+      "calls": 105,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M076_opus_vs_glm": {
+      "first": 1.3551439999137074,
+      "later_max": 0.3763409999664873,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M086_opus_vs_hunyuan": {
+      "first": 0.7328893000958487,
+      "later_max": 0.0008755999151617289,
+      "calls": 98,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M096_opus_vs_qwen": {
+      "first": 1.3558928000275046,
+      "later_max": 0.37047700001858175,
+      "calls": 240,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_M106_opus_vs_doubao": {
+      "first": 0.08219819993246347,
+      "later_max": 0.0008061000844463706,
+      "calls": 70,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_BENCH_BENCHMARK_WEAK_DEF_opus": {
+      "first": 0.4113459000363946,
+      "later_max": 0.000923600047826767,
+      "calls": 71,
+      "over_limit": 0
+    },
+    "wave3_final_11seats_BENCH_BENCHMARK_STRONG_DEF_opus": {
+      "first": 0.6181446000700817,
+      "later_max": 0.0009238999336957932,
+      "calls": 117,
+      "over_limit": 0
+    }
+  }
+}

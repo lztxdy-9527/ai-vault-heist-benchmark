@@ -1,0 +1,149 @@
+{
+  "sha256": "38a8b7f3e77d7a45266f91fe7e87673a7f7c9a29fc199c7ebbeeb0b4bf91ebe4",
+  "results": {
+    "OFFICIAL_01": {
+      "status": "CLEARED",
+      "turn": 32,
+      "hp": 100,
+      "keys": 2,
+      "score": 965.877,
+      "first_ms": 28.27,
+      "later_max_ms": 1.38
+    },
+    "OFFICIAL_02": {
+      "status": "CLEARED",
+      "turn": 70,
+      "hp": 100,
+      "keys": 2,
+      "score": 953.195,
+      "first_ms": 227.29,
+      "later_max_ms": 1.03
+    },
+    "OFFICIAL_03": {
+      "status": "CLEARED",
+      "turn": 38,
+      "hp": 100,
+      "keys": 2,
+      "score": 967.778,
+      "first_ms": 25.93,
+      "later_max_ms": 1.08
+    },
+    "argon": {
+      "status": "CLEARED",
+      "turn": 71,
+      "hp": 100,
+      "keys": 2,
+      "score": 919.567,
+      "first_ms": 431.75,
+      "later_max_ms": 1.07
+    },
+    "astra": {
+      "status": "CLEARED",
+      "turn": 56,
+      "hp": 100,
+      "keys": 2,
+      "score": 946.315,
+      "first_ms": 29.79,
+      "later_max_ms": 1.38
+    },
+    "carbon": {
+      "status": "CLEARED",
+      "turn": 148,
+      "hp": 100,
+      "keys": 2,
+      "score": 834.574,
+      "first_ms": 388.16,
+      "later_max_ms": 1.49
+    },
+    "deepseek": {
+      "status": "CLEARED",
+      "turn": 62,
+      "hp": 50,
+      "keys": 2,
+      "score": 861.882,
+      "first_ms": 38.35,
+      "later_max_ms": 1.27
+    },
+    "doubao": {
+      "status": "CLEARED",
+      "turn": 32,
+      "hp": 100,
+      "keys": 2,
+      "score": 965.877,
+      "first_ms": 28.77,
+      "later_max_ms": 1.24
+    },
+    "glm": {
+      "status": "CLEARED",
+      "turn": 78,
+      "hp": 100,
+      "keys": 2,
+      "score": 880.34,
+      "first_ms": 1559.55,
+      "later_max_ms": 344.67
+    },
+    "hunyuan": {
+      "status": "CLEARED",
+      "turn": 113,
+      "hp": 100,
+      "keys": 2,
+      "score": 838.54,
+      "first_ms": 1540.92,
+      "later_max_ms": 348.27
+    },
+    "hydrogen": {
+      "status": "CLEARED",
+      "turn": 66,
+      "hp": 100,
+      "keys": 2,
+      "score": 869.705,
+      "first_ms": 305.02,
+      "later_max_ms": 2.26
+    },
+    "opus": {
+      "status": "CLEARED",
+      "turn": 32,
+      "hp": 100,
+      "keys": 2,
+      "score": 965.877,
+      "first_ms": 41.05,
+      "later_max_ms": 9.6
+    },
+    "qwen": {
+      "status": "CLEARED",
+      "turn": 75,
+      "hp": 100,
+      "keys": 2,
+      "score": 875.056,
+      "first_ms": 449.49,
+      "later_max_ms": 1.67
+    },
+    "sol": {
+      "status": "CLEARED",
+      "turn": 60,
+      "hp": 100,
+      "keys": 2,
+      "score": 923.971,
+      "first_ms": 872.48,
+      "later_max_ms": 2.08
+    },
+    "BENCH_WEAK": {
+      "status": "CLEARED",
+      "turn": 68,
+      "hp": 100,
+      "keys": 2,
+      "score": 936.95,
+      "first_ms": 262.17,
+      "later_max_ms": 2.21
+    },
+    "BENCH_STRONG": {
+      "status": "CLEARED",
+      "turn": 110,
+      "hp": 100,
+      "keys": 2,
+      "score": 846.423,
+      "first_ms": 1501.67,
+      "later_max_ms": 2.0
+    }
+  }
+}

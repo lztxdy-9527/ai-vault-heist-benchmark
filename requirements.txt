@@ -1,0 +1,3 @@
+# Core tournament engines (engine.py / engine_full.py) use Python 3.11+ standard library only!
+# Optional dependency for some audit/token-harvesting helper scripts:
+zstandard>=0.23.0

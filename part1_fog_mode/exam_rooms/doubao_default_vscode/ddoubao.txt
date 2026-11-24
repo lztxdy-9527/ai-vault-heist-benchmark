@@ -1,0 +1,1721 @@
+The user wants me to read all files in the directory <REPO_ROOT>/exam_rooms\doubao_default_vscode and complete the task as required. Let me first list the files in the directory.
+
+Let me read all these files to understand the task.
+
+Now let me read the golden_vectors.json file.
+
+我已阅读完所有考卷文件。这是一个《阴间地牢：金库攻防战》的算法对抗赛，需要实现 `build_dungeon()`（魔王造图+自证通关）和 `decide_action(state, memory)`（BLIND迷雾模式下的勇者决策）。
+
+先输出赛前宣言，然后开始编写代码。
+
+---
+
+**【赛前垃圾话】**
+
+ASTRA、SOL、CARBON、HYDROGEN、Claude Opus 5.5、DeepSeek、Qwen、Kimi、GLM、混元 HY4——你们十一个听好了！我豆包今天就要把你们精心建造的地牢拆个底朝天。迷雾算什么？深渊算什么？在我的增量建图与 BFS 破阵面前，你们的机关不过是纸糊的迷宫。金库归我，地牢的残骸归你们！放马过来吧！
+
+---
+
+现在开始编写 `submission.py`：
+Let me understand the task. I need to:
+
+1. Read all the files in the directory (done)
+2. Output a pre-match trash talk/declaration (50-100 chars, naming the other 10 models)
+3. Complete `submission.py` with `build_dungeon()` and `decide_action(state, memory)` functions
+
+The game is "阴间地牢：金库攻防战" (Underground Dungeon: Vault Attack & Defense).
+
+Key constraints:
+- Grid: 40 wide x 26 high
+- Outer frame must be all T_W (free, doesn't count toward 120 T_W limit)
+- Spawn at (2, 13), 3x3 area around it must be EMPTY
+- K1: x in [12,34], y in [2,10]
+- K2: x in [12,34], y in [15,23]
+- Manhattan distance K1-K2 >= 12
+- V: x in [33,37], y in [4,21]
+- Budget: 3000G max
+- author_solution must clear the dungeon by stepping on V with both keys, exactly on the last action
+
+For `decide_action`:
+- BLIND mode: visibility is Euclidean circle (dx²+dy²<=10, 37 cells) + LOS occlusion + adjacent ice slide extension
+- Need to explore, build incremental map memory, avoid traps
+
+Let me think about a solid strategy.
+
+For build_dungeon:
+- I need to make a valid dungeon that I can prove solvable
+- The author_solution must clear it on the last step exactly
+- I should keep it simple to ensure my author_solution actually works
+
+Let me design a simple, safe dungeon:
+- All EMPTY except the required landmarks and outer frame
+- K1, K2, V at valid positions
+- author_solution: go from (2,13) to K1, then K2, then V
+
+For decide_action:
+- I need a robust BLIND-mode explorer
+- Build memory of the map incrementally
+- Navigate to K1, K2, V in order
+- Avoid traps (PIT, MIMIC, etc.)
+- Handle lasers (turn % 3 == 0)
+
+Let me start with the trash talk first, then write the code.
+
+Let me think about the design more carefully.
+
+For build_dungeon, I want to make it:
+1. Valid (all constraints met)
+2. My author_solution definitely clears it
+3. Ideally hard for opponents (but priority 1 and 2 are most important)
+
+A simple approach: empty map with K1, K2, V placed. The author_solution just walks to each.
+
+Let me verify coordinates:
+- K1: (20, 5) - x=20 in [12,34], y=5 in [2,10] ✓
+- K2: (20, 20) - x=20 in [12,34], y=20 in [15,23] ✓
+- Manhattan distance: |20-20| + |5-20| = 15 >= 12 ✓
+- V: (35, 13) - x=35 in [33,37], y=13 in [4,21] ✓
+
+author_solution from template:
+- (2,13) -> 18 MOVE_R -> (20,13) -> 8 MOVE_U -> (20,5) K1 ✓
+- (20,5) -> 15 MOVE_D -> (20,20) K2 ✓
+- (20,20) -> 7 MOVE_U -> (20,13) -> 15 MOVE_R -> (35,13) V ✓
+
+Wait, that's 18+8+15+7+15 = 63 steps. Let me trace:
+- Start (2,13)
+- 18 MOVE_R: x = 2+18 = 20, y=13 -> (20,13)
+- 8 MOVE_U: y = 13-8 = 5 -> (20,5) = K1 ✓
+- 15 MOVE_D: y = 5+15 = 20 -> (20,20) = K2 ✓
+- 7 MOVE_U: y = 20-7 = 13 -> (20,13)
+- 15 MOVE_R: x = 20+15 = 35 -> (35,13) = V ✓
+
+Total: 18+8+15+7+15 = 63 actions. This clears on the last step (the 63rd action lands on V). 
+
+But wait - the template has this solution already. Let me just make sure the grid is empty (no obstacles) so this works. The template grid is all EMPTY except K1, K2, V and outer T_W frame. That's valid.
+
+But I should make it more interesting/harder for opponents while still keeping my solution valid. However, the simplest valid approach is safest. Let me think about whether to add traps.
+
+Actually, since the author_solution must work, adding traps risks breaking my own solution unless I carefully route around them. For safety, let me keep the map mostly empty but add some walls/traps in areas not on my solution path to make it harder for opponents.
+
+Actually, the key insight is: in BLIND mode, opponents don't see the full map. So even an empty map is fine - opponents have to explore. The real difficulty is in the traps they might hit.
+
+Let me add some obstacles that don't interfere with my author_solution path but make it harder for opponents. But I need to be very careful not to break my solution.
+
+My author_solution path:
+- (2,13) -> (20,13) via MOVE_R (row 13, x from 2 to 20)
+- (20,13) -> (20,5) via MOVE_U (col 20, y from 13 to 5)
+- (20,5) -> (20,20) via MOVE_D (col 20, y from 5 to 20)
+- (20,20) -> (20,13) via MOVE_U (col 20, y from 20 to 13)
+- (20,13) -> (35,13) via MOVE_R (row 13, x from 20 to 35)
+
+So my path uses:
+- Row 13: x in [2, 35]
+- Col 20: y in [5, 20]
+
+I should not place obstacles on these cells.
+
+Let me think about budget. If I keep it empty, spent = 0, vault_gold = 3000, g = 1.0. That gives me max vault bonus. For the Demon score, if the hero breaches, I get 2*D + 120*(T-1)/239. With D=0 and T=63, that's 120*62/239 ≈ 31.1. Not great.
+
+But the Demon score matters when opponents play my map. If my map is empty, opponents will clear it easily with high score. So I should add some traps.
+
+Let me add some PITs and LASERs and MIMICs around the map, but NOT on my solution path. I need to be careful with MIMIC clue binding.
+
+Actually, let me be strategic. The most important thing is:
+1. My build_dungeon is valid (0 score if invalid)
+2. My author_solution clears it (0 score if not)
+3. My decide_action can clear other maps (this is where I score points)
+
+For the Demon side, I want to make it hard but not impossible. Let me add some hazards.
+
+Let me think about what's safe to add:
+- PITs away from my path: safe
+- LASERs: need to check turn timing - if a laser fires on turn % 3 == 0 and hits my path, I die
+- MIMICs: need valid clue binding, and they look like CHEST to hero
+- CRACKs: become PIT when left
+- WALLs: block movement
+
+For my author_solution, I move on specific turns. Let me count:
+- Turn 1-18: MOVE_R (row 13)
+- Turn 19-26: MOVE_U (col 20)
+- Turn 27-41: MOVE_D (col 20)
+- Turn 42-48: MOVE_U (col 20)
+- Turn 49-63: MOVE_R (row 13)
+
+Lasers fire on turns 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63.
+
+If I place a laser that points at my path, I need to make sure I'm not on the beam when it fires. This is tricky. Let me avoid lasers pointing at my path, or place them carefully.
+
+Actually, let me keep it simpler. Let me add some hazards but make sure my path is safe. I'll add:
+- Some PITs in corners/edges away from path
+- Some MIMICs (with valid clues) away from path
+- Maybe some W to create mazes away from path
+
+Actually, for maximum safety and to guarantee my solution works, let me keep the dungeon simple. The Demon score is secondary to not getting 0. Let me add a few obstacles that are clearly safe.
+
+Hmm, but if my map is too easy, opponents get high scores. Let me find a balance.
+
+Let me think about the BLIND mode for decide_action. This is the more important part. I need a robust explorer.
+
+For decide_action in BLIND mode:
+- I see a 37-cell circle around me (dx²+dy²<=10) with LOS
+- I need to build a memory map
+- Navigate to K1, K2, V (which are given in state["targets"])
+- Avoid traps
+
+Strategy for decide_action:
+1. Maintain a memory grid in `memory`
+2. Update memory with visible cells each turn
+3. Use BFS/A* to path to the nearest key, then V
+4. Avoid cells that are known dangerous (PIT, MIMIC, LASER beam on turn%3==0, CRACK if we'll leave it, etc.)
+5. If blocked, try jumping or bombing
+
+Let me think about the memory structure:
+- memory["terrain"]: 26x40 grid of known terrain (UNKNOWN for unseen)
+- memory["occupant"]: 26x40 grid of known occupants
+- memory["visited"]: set of visited cells
+- memory["phase"]: which key we're going for next
+
+Since targets are given in state, I know where K1, K2, V are. So I can path directly to them.
+
+For pathfinding, I need to consider:
+- HIGH_WALLs block movement
+- PIT is dangerous (unless we can jump over)
+- CRACK becomes PIT when left
+- LASER beams on turn%3==0
+- MIMIC does -45 HP (looks like CHEST)
+- HEAL does +30 HP (looks like CHEST)
+- ICE slides in direction of movement
+- MIRROR redirects
+- SPRING launches
+- PORTAL teleports
+
+For a robust but simple strategy, let me:
+- Treat PIT, CRACK, MIMIC as dangerous (avoid unless necessary)
+- Treat CHEST (HEAL/MIMIC) as risky
+- Avoid LASER beams on firing turns
+- Use BFS on safe cells
+- If no path, try jumping over single obstacles
+- If still no path, use bombs to break W walls
+
+Let me also handle laser warnings. The state has "laser_warnings" on turn%3==0. These show laser beam cells. I should avoid those cells on firing turns.
+
+Actually, the laser fires at the END of the turn (phase D), after the hero moves. So if I move onto a laser beam cell on a firing turn, I get hit. But if I move through it (momentum) and end off it... actually exposed_cells includes all cells visited during the turn, so if I pass through a laser beam during momentum, I get hit.
+
+Wait, let me re-read. In phase D, the laser checks if its beam intersects with `exposed_cells` (the hero's trajectory this turn). So if I step onto a laser beam cell during my movement on a firing turn, I get hit by 50 HP.
+
+But the laser_warnings are given "按动作前快照计算" (computed from pre-action snapshot). So they show where the beams will be. I should avoid moving onto those cells.
+
+Actually, the warnings are given in the state at the start of the turn. So on turn%3==0, I get laser_warnings showing the beam cells. I should make sure my movement this turn doesn't land me on or pass through those cells.
+
+Hmm, but the beams are computed from the snapshot before my action. If my action destroys a laser or TNT, the beam might change. But for safety, let me just avoid the warned cells.
+
+Let me also think about the fact that I don't know the full map. I only see a 37-cell circle. So I need to path through unknown territory. I'll use BFS where UNKNOWN cells are treated as passable but with a cost penalty (to prefer known-safe cells). Actually, in BLIND mode, I need to explore. Let me treat UNKNOWN as passable with high cost, and known-safe as low cost.
+
+Wait, but if I path through UNKNOWN cells, I might step into a trap. The hero takes the action, and the engine resolves it. If I step into a PIT, I die. So I should be careful.
+
+Actually, the hero only sees terrain as UNKNOWN for cells not in visible_mask. But when I move, I see the cell I'm on. So I can explore gradually. But I need to avoid stepping into PITs.
+
+Hmm, this is the challenge of BLIND mode. I can't see PITs until I'm adjacent (and even then, only if LOS is clear). Actually, I can see terrain in my 37-cell circle. So if a PIT is within 37 cells and LOS is clear, I see it. The issue is walls blocking LOS.
+
+Let me design a strategy:
+1. Each turn, update my memory map with visible terrain
+2. Find the next target (K1 if no keys, K2 if 1 key, V if 2 keys)
+3. BFS from current position to target, avoiding known dangerous cells
+4. If BFS finds a path, take the first step
+5. If no path, try jumping over 1-cell obstacles, or bombing walls
+6. If still no path, explore unknown areas
+
+For dangerous cells:
+- PIT: avoid (death)
+- CRACK: avoid unless we won't leave it (but we always move, so avoid)
+- MIMIC: -45 HP, risky
+- CHEST: could be HEAL (+30) or MIMIC (-45). Risky but sometimes worth it.
+- LASER_*: the base is a wall, avoid
+- LASER beam cells on firing turns: avoid
+- TNT: blocks movement, and can explode
+- BOX: can be pushed
+
+Let me think about a simpler approach: use BFS where the cost of a cell depends on its danger. Safe cells cost 1, dangerous cells cost a lot (or are blocked). Unknown cells cost a moderate amount (to encourage exploration but prefer known safe).
+
+Actually, let me be more careful. The key insight is that I can see terrain in my visible area. So I can avoid known PITs. For unknown cells, I take a risk. But since I'm given the target coordinates, I can generally path toward them.
+
+Let me also consider that the map is 40x26, and I start at (2,13). The keys are at known positions. So I can head straight for them, avoiding visible obstacles.
+
+Let me write the code now. I'll make it robust but not overly complex.
+
+Let me first output the trash talk, then write the submission.py.
+
+For the trash talk, I need to name the other 10 models: ASTRA, SOL, CARBON, HYDROGEN, Claude Opus 5.5, DeepSeek, Qwen, Kimi, GLM, 混元 HY4.
+
+Let me write it in Chinese, 50-100 chars.
+
+"ASTRA、SOL、CARBON、HYDROGEN、Claude、DeepSeek、Qwen、Kimi、GLM、混元，你们的地牢在我眼里不过是纸糊的迷宫。今天我豆包要让你们见识什么叫真正的破阵之王，金库我拿定了！"
+
+Let me count: that's roughly 80 chars. Good.
+
+Now let me write the submission.py.
+
+For build_dungeon, let me make a map that's:
+- Valid
+- Has my author_solution path clear
+- Has some hazards away from the path to make it harder
+
+Actually, let me think more carefully. The Demon score formula:
+- Kill: 500 + 50*(3-P) + D + 250*g
+- Timeout: 320 + 50*(3-P) + D + 125*g
+- Breached: 2*D + 120*(T-1)/239
+
+If I spend 0G, g=1.0. If the hero breaches with T=63, D=0: score = 0 + 120*62/239 ≈ 31.
+If I make it harder so T is large or the hero dies, I get more.
+
+Let me add some hazards. I'll place:
+- Some PITs around the map (not on my path)
+- A few MIMICs (with valid clues)
+- Maybe a maze of W walls
+
+But I need to be very careful that my author_solution still works. Let me keep hazards away from my path:
+- My path: row 13 (x 2-35), col 20 (y 5-20)
+- So avoid placing hazards in row 13 or col 20 (except where I need K1, K2, V)
+
+Actually, let me place hazards in the four quadrants away from my path.
+
+Let me also think about MIMIC clue binding. A MIMIC needs an orthogonal neighbor that is EMPTY, not in spawn zone, and not adjacent to any other chest. So I need to place MIMICs with an EMPTY neighbor that's isolated from other chests.
+
+Let me design a simple but valid dungeon with some hazards.
+
+Actually, to be safe, let me keep it relatively simple. I'll add:
+- A ring of PITs around the vault area (but not blocking V)
+- Some MIMICs
+- Maybe a laser pointing somewhere safe
+
+Wait, lasers are expensive (75G each) and can be risky. Let me avoid them for my own safety.
+
+Let me plan the budget:
+- K1, K2, V: 0G
+- Outer frame T_W: 0G
+- PITs: 40G each
+- MIMICs: 60G each (need clue space)
+- W walls: 5G each
+
+Let me place:
+- 10 PITs: 400G
+- 3 MIMICs: 180G (need valid clues)
+- Some W walls for maze: maybe 200G worth (40 walls)
+- Total: ~780G, well under 3000
+
+But I need to make sure MIMICs have valid clues. Let me place them carefully.
+
+Actually, let me think about this differently. The most important thing is that my submission is valid and my author_solution works. Adding hazards risks invalidating my map (e.g., MIMIC clue binding failure) or breaking my solution.
+
+Let me start with a simple valid map (just K1, K2, V, outer frame) and then add safe hazards one by one, verifying each.
+
+Let me write the build_dungeon function:
+
+```python
+def build_dungeon() -> dict:
+    grid = [
+        [
+            "T_W" if (x == 0 or x == GRID_WIDTH - 1 or y == 0 or y == GRID_HEIGHT - 1) else "EMPTY"
+            for x in range(GRID_WIDTH)
+        ]
+        for y in range(GRID_HEIGHT)
+    ]
+    
+    # Place landmarks
+    grid[5][20] = "K1"
+    grid[20][20] = "K2"
+    grid[13][35] = "V"
+    
+    # Add some PITs away from my path
+    # My path: row 13 (x 2-35), col 20 (y 5-20)
+    pits = [
+        (5, 3), (8, 3), (11, 3),
+        (5, 22), (8, 22), (11, 22),
+        (30, 3), (30, 22),
+        (33, 8), (33, 18),
+    ]
+    for x, y in pits:
+        grid[y][x] = "PIT"
+    
+    # Add MIMICs with valid clues
+    # MIMIC at (25, 3), clue at (25, 4) - need (25,4) EMPTY and not adjacent to other chests
+    # Let me place MIMICs carefully
+    # MIMIC1 at (25, 3): neighbors U(25,2) is T_W (row 0? no, y=2 is inner). 
+    # Wait, y=2 is not outer frame. Outer frame is y=0 and y=25.
+    # MIMIC1 at (25, 3): check U(25,2)=EMPTY, D(25,4)=EMPTY, L(24,3)=EMPTY, R(26,3)=EMPTY
+    # Clue would be (25,2) [U]. Need (25,2) not adjacent to other chests.
+    
+    grid[3][25] = "MIMIC"
+    grid[2][25] = "EMPTY"  # clue at (25,2) - but is it adjacent to other chests? No other chests nearby.
+    
+    # Actually, let me verify the clue binding logic more carefully.
+    # For MIMIC at (mx, my), check U, D, L, R in order.
+    # First neighbor that is EMPTY terrain, no occupant, not in spawn zone, 
+    # and its 4 neighbors don't contain any other HEAL/MIMIC.
+    
+    # Let me place MIMICs far apart
+    grid[3][10] = "MIMIC"  # clue at (10,2) U
+    grid[22][10] = "MIMIC"  # clue at (10,21) U? wait U is (10,21)... 
+    # MIMIC at (10,22): U=(10,21), D=(10,23), L=(9,22), R=(11,22)
+    # (10,21) is EMPTY, not spawn zone, not adjacent to other chests -> clue at (10,21)
+    
+    # Actually I need to make sure no two MIMICs are adjacent to each other's clue cells.
+    
+    author_solution = (
+        ["MOVE_R"] * 18
+        + ["MOVE_U"] * 8
+        + ["MOVE_D"] * 15
+        + ["MOVE_U"] * 7
+        + ["MOVE_R"] * 15
+    )
+    
+    return {
+        "taunt": "...",
+        "grid": grid,
+        "author_solution": author_solution,
+    }
+```
+
+Wait, I need to be more careful. Let me place MIMICs and verify clue binding manually.
+
+For MIMIC at (10, 3):
+- Check U: (10, 2) - EMPTY, not spawn zone. Are any of (10,2)'s neighbors (9,2),(11,2),(10,1),(10,3) a chest? (10,3) is the MIMIC itself, which doesn't count (rule says "除了当前 (mx,my) 外"). So (10,2) is valid. Clue at (10,2).
+
+For MIMIC at (10, 22):
+- Check U: (10, 21) - EMPTY, not spawn zone. Neighbors: (9,21),(11,21),(10,20),(10,22). (10,22) is the MIMIC. Others are EMPTY. Valid. Clue at (10,21).
+
+OK those two are fine. Let me also make sure they're not adjacent to each other. (10,3) and (10,22) are far apart. Good.
+
+Let me also verify my path doesn't go through any PIT or MIMIC.
+- Path: row 13 (x 2-35), col 20 (y 5-20)
+- PITs: (5,3),(8,3),(11,3),(5,22),(8,22),(11,22),(30,3),(30,22),(33,8),(33,18)
+  - (33,18): col 33, row 18. My path is col 20 and row 13. Not on path. OK.
+  - (33,8): not on path.
+- MIMICs: (10,3),(10,22). Not on path (col 10, not col 20 or row 13... wait (10,3) is col 10 row 3, not on my path).
+
+Wait, my path goes through row 13 from x=2 to x=35. So any cell (x, 13) for x in [2,35] is on my path. None of my PITs or MIMICs are at y=13. Good.
+
+My path also goes through col 20 from y=5 to y=20. So any cell (20, y) for y in [5,20] is on my path. None of my hazards are at x=20. Good.
+
+Let me also add some W walls to create a maze-like structure away from the path. But I need to be careful not to block the path.
+
+Actually, let me add walls to make it harder for opponents to find shortcuts. For example, I could create walls that force opponents to go a long way around. But since opponents use BLIND mode and know the target coordinates, they'll pathfind. Walls just make it take longer.
+
+Let me add some walls to create corridors. Actually, let me not overcomplicate. Let me add a reasonable number of hazards and walls, then verify.
+
+Let me think about the budget. I want to spend some gold to make it harder, but not too much (g = vault ratio, higher g = more Demon score if I kill/timeout).
+
+Actually, for Demon score:
+- Kill: 500 + 50*(3-P) + D + 250*g
+- Timeout: 320 + 50*(3-P) + D + 125*g
+- Breached: 2*D + 120*(T-1)/239
+
+If I spend more gold, g decreases, which hurts kill/timeout score but doesn't affect breached score. So spending gold is only good if the hazards actually kill/timeout opponents enough to compensate.
+
+For an empty map, opponents will likely breach quickly, giving me low score. So I should add hazards that either kill opponents or slow them down significantly.
+
+Let me add:
+- A laser that covers part of the map (but not my path)
+- Some PITs
+- Some MIMICs
+- Some walls to create a maze
+
+Actually, lasers are tricky because they fire on specific turns. Let me think about whether I can place a laser that doesn't hit my path.
+
+My author_solution:
+- Turn 1-18: row 13, x from 2 to 20
+- Turn 19-26: col 20, y from 13 to 5
+- Turn 27-41: col 20, y from 5 to 20
+- Turn 42-48: col 20, y from 20 to 13
+- Turn 49-63: row 13, x from 20 to 35
+
+If I place a laser that points at row 13 or col 20, I need to check if I'm on that beam when it fires (turn % 3 == 0).
+
+Lasers fire on turns 3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63.
+
+Let me say I place LASER_R at (5, 8). It fires right from (6,8) to (15,8). My path doesn't go through y=8 except... col 20, y from 5 to 20 includes y=8. So on the turns I'm at (20, 8), the laser beam is at y=8 but only from x=6 to 15. x=20 is not in the beam. So safe.
+
+Actually, the laser beam is from the adjacent cell up to 10 cells. LASER_R at (5,8) shoots from (6,8) to (15,8). x=20 is beyond 15. Safe.
+
+But wait, when am I at (20, 8)? During turns 19-26 (going up) and 27-41 (going down). Specifically:
+- Turn 19: (20,12)
+- Turn 20: (20,11)
+- Turn 21: (20,10)
+- Turn 22: (20,9)
+- Turn 23: (20,8)
+- Turn 24: (20,7)
+- Turn 25: (20,6)
+- Turn 26: (20,5) = K1
+
+Turn 23 is not divisible by 3. Turn 24 is. On turn 24, I'm at (20,7). The laser beam at y=8 doesn't include (20,7). Safe.
+
+OK, lasers are safe if the beam doesn't intersect my path cells on firing turns. But this is complex to verify. Let me just place lasers pointing away from my path, or not at all.
+
+Actually, let me place a laser pointing at a corridor that opponents might use but I don't. For example, LASER_D at (35, 3) pointing down. It shoots from (35,4) to (35,13). But (35,13) is V! And my path ends there. The beam would include V. On turn 63 (my last turn, which is divisible by 3), I step onto V. The laser fires at phase D, but I win at phase B (step on V immediately terminates). So I'm safe.
+
+But wait, the laser at (35,3) pointing down covers (35,4) to (35,13). My path goes to (35,13) on turn 63. Turn 63 % 3 == 0, so the laser fires. But I win at phase B before phase D. So no damage. Good.
+
+But what about other turns? On turns 49-62, I'm moving along row 13 from x=20 to x=34. I'm at y=13, which is in the laser beam (y=13, x from 35 to... no, the beam is at x=35, y from 4 to 13). I'm at (20-34, 13), not x=35. So safe until turn 63 when I reach (35,13)=V and win.
+
+OK, that laser is safe for me. Let me add it.
+
+Actually, let me not overthink the Demon map. Let me make a reasonably challenging but safe map, and focus more on the decide_action function which is where I score most points.
+
+Let me finalize my build_dungeon:
+
+```python
+def build_dungeon() -> dict:
+    grid = [
+        [
+            "T_W" if (x == 0 or x == GRID_WIDTH - 1 or y == 0 or y == GRID_HEIGHT - 1) else "EMPTY"
+            for x in range(GRID_WIDTH)
+        ]
+        for y in range(GRID_HEIGHT)
+    ]
+    
+    grid[5][20] = "K1"
+    grid[20][20] = "K2"
+    grid[13][35] = "V"
+    
+    # PITs away from path (row 13, col 20)
+    for x, y in [(5,3),(8,3),(11,3),(5,22),(8,22),(11,22),(30,3),(30,22),(33,8),(33,18),(15,8),(15,18)]:
+        grid[y][x] = "PIT"
+    
+    # MIMICs with valid clues
+    grid[3][10] = "MIMIC"   # clue at (10,2)
+    grid[22][10] = "MIMIC"  # clue at (10,21)
+    grid[3][28] = "MIMIC"   # clue at (28,2)
+    grid[22][28] = "MIMIC"  # clue at (28,21)
+    
+    # Laser pointing down at vault column (safe for me since I win on V)
+    grid[3][35] = "LASER_D"  # shoots down (35,4) to (35,13)
+    
+    author_solution = (
+        ["MOVE_R"] * 18
+        + ["MOVE_U"] * 8
+        + ["MOVE_D"] * 15
+        + ["MOVE_U"] * 7
+        + ["MOVE_R"] * 15
+    )
+    
+    return {
+        "taunt": "ASTRA、SOL、CARBON、HYDROGEN、Claude、DeepSeek、Qwen、Kimi、GLM、混元，金库归我，地牢归你们！",
+        "grid": grid,
+        "author_solution": author_solution,
+    }
+```
+
+Wait, I need to verify MIMIC clue binding for all 4 MIMICs.
+
+MIMIC at (10, 3):
+- U: (10, 2) - EMPTY, not spawn zone. Check (10,2)'s neighbors: (9,2),(11,2),(10,1),(10,3). (10,3) is this MIMIC. Others EMPTY. Valid clue at (10,2).
+
+MIMIC at (10, 22):
+- U: (10, 21) - EMPTY, not spawn zone. Neighbors: (9,21),(11,21),(10,20),(10,22). (10,22) is this MIMIC. Others EMPTY. Valid clue at (10,21).
+
+MIMIC at (28, 3):
+- U: (28, 2) - EMPTY, not spawn zone. Neighbors: (27,2),(29,2),(28,1),(28,3). (28,3) is this MIMIC. Others EMPTY. Valid clue at (28,2).
+
+MIMIC at (28, 22):
+- U: (28, 21) - EMPTY, not spawn zone. Neighbors: (27,21),(29,21),(28,20),(28,22). (28,22) is this MIMIC. Others EMPTY. Valid clue at (28,21).
+
+All good. Now check that no MIMIC's clue cell is adjacent to another MIMIC:
+- (10,2) neighbors: (9,2),(11,2),(10,1),(10,3). (10,3) is MIMIC1. No other MIMIC. OK.
+- (10,21) neighbors: (9,21),(11,21),(10,20),(10,22). (10,22) is MIMIC2. No other. OK.
+- (28,2) neighbors: (27,2),(29,2),(28,1),(28,3). (28,3) is MIMIC3. No other. OK.
+- (28,21) neighbors: (27,21),(29,21),(28,20),(28,22). (28,22) is MIMIC4. No other. OK.
+
+Budget:
+- 12 PITs: 12*40 = 480
+- 4 MIMICs: 4*60 = 240
+- 1 LASER_D: 75
+- Total: 795G
+- Vault: 3000-795 = 2205G, g = 0.735
+
+Now let me verify the laser doesn't hit me on my path.
+LASER_D at (35, 3) shoots down: (35,4), (35,5), ..., (35,13).
+
+My path near x=35: I reach (35,13) on turn 63. Turn 63 % 3 == 0, so laser fires. But I win at phase B (step on V), so phase D doesn't execute. Safe.
+
+Are there any other turns where I'm at x=35? No, I only reach x=35 on the last turn. Good.
+
+Wait, I also need to check: does the laser beam pass through any cell that's a HIGH_WALL? The beam goes from (35,4) to (35,13). (35,13) is V (not a wall). All cells in between are EMPTY (I didn't place anything there). So the beam reaches (35,13). Good for opponents (they get hit), and safe for me (I win before phase D).
+
+Actually wait, let me double check. The laser at (35,3) shooting down. The beam cells are (35,4) through (35,13) (10 cells). But (35,13) is V. V is not a HIGH_WALL, so the beam passes through. Good.
+
+Now, let me also make sure my path doesn't go through any PIT. My path cells:
+- Row 13: (2,13) to (35,13)
+- Col 20: (20,5) to (20,20)
+
+PITs at: (5,3),(8,3),(11,3),(5,22),(8,22),(11,22),(30,3),(30,22),(33,8),(33,18),(15,8),(15,18)
+None of these are at y=13 or x=20. Safe.
+
+MIMICs at: (10,3),(10,22),(28,3),(28,22). None on path. Safe.
+
+LASER_D at (35,3). Not on path. Safe.
+
+OK, the build_dungeon looks valid. Let me now think about the decide_action function.
+
+For decide_action, I need to handle BLIND mode. Let me design a robust explorer.
+
+Key data in memory:
+- terrain: 26x40 grid of terrain strings (UNKNOWN for unseen)
+- occupant: 26x40 grid of occupants
+- visited: set of visited cells
+- clues: 26x40 grid of clue booleans
+
+Strategy:
+1. Update memory with visible cells from state
+2. Determine current target based on keys
+3. BFS to target, avoiding dangerous cells
+4. Return the first action of the path
+
+For pathfinding, I need to define which cells are "safe enough" to walk on:
+- EMPTY, K1, K2, V, SWITCH, open doors: safe
+- ICE: safe but slides (I'll treat as passable with momentum)
+- MIRROR: redirects, risky but passable
+- SPRING: launches, risky
+- PORTAL: teleports, risky
+- PIT: deadly, avoid
+- CRACK: becomes PIT when leaving, avoid (unless I can stop on it, but I always move)
+- MIMIC: -45 HP, avoid
+- HEAL: +30 HP, safe (but I see it as CHEST, so I don't know if it's HEAL or MIMIC)
+- CHEST: unknown, could be HEAL or MIMIC. Avoid unless low HP and desperate.
+- TNT: blocks movement
+- BOX: can push
+- W, T_W, LASER_*, closed gates: block movement
+
+For momentum tiles (ICE, MIRROR, SPRING, PORTAL), pathfinding is complex because stepping on them can launch me in unexpected directions. In BLIND mode, I might not know what's beyond. Let me treat them as passable but with high cost (only use if necessary).
+
+Actually, for simplicity and robustness, let me:
+- Block PIT, CRACK, MIMIC, TNT (as occupant)
+- Treat CHEST as high cost (risky)
+- Treat ICE, MIRROR, SPRING, PORTAL as high cost (unpredictable)
+- Use BFS to find shortest path on safe cells
+- If no path, try jumping over 1-wide obstacles
+- If still no path, use bombs on W walls
+
+For lasers:
+- On turn % 3 == 0, check laser_warnings
+- Avoid cells in laser_warnings (don't end turn on them, and don't pass through them)
+- Actually, since I only move 1 cell at a time (usually), I just need to not end on a laser beam cell
+- But ICE/MIRROR/SPRING could slide me into a beam. Let me avoid those near beams.
+
+Wait, the laser_warnings are given in the state. Let me check the format:
+```json
+"laser_warnings": [
+    {"x": 4, "y": 13, "dir": "D"}
+]
+```
+
+Hmm, the description says "按动作前快照计算且落在 visible_mask 内的激光束格". So laser_warnings contains the beam cells that are visible. Each entry has x, y, dir. I think each entry is a beam cell with the direction of the laser.
+
+Actually, re-reading: "laser_warnings 仅当 turn % 3 == 0 时返回按动作前快照计算且落在 visible_mask 内的激光束格". So laser_warnings is a list of beam cells (the cells that will be hit by lasers this turn) that are within my visible mask.
+
+Wait, but the format has "dir". Let me think. Maybe each laser's beam is represented, and the entries are the cells along the beam. Or maybe each entry is a laser source with its beam direction.
+
+Given the example `{"x": 4, "y": 13, "dir": "D"}`, this could be a beam cell at (4,13) from a laser pointing D. Or it could be a laser at (4,13) pointing D.
+
+Hmm, the description says "激光束格" (laser beam cells). So these are the cells in the beam, not the source. The dir indicates the laser direction.
+
+Actually, I think the safest interpretation is: each entry is a cell that will be hit by a laser beam this turn. I should avoid stepping on these cells on firing turns.
+
+Let me treat laser_warnings as a set of (x, y) cells to avoid on turn % 3 == 0.
+
+Actually, I also need to be careful about LASER bases. A LASER_U/D/L/R is a HIGH_WALL (blocks movement). I can see it in the terrain (it's not hidden). So I avoid walking into it.
+
+For the beam cells, I only know about the visible ones. There might be invisible beam cells too. But I can only avoid what I can see.
+
+Let me also think about turn timing. Lasers fire at phase D of turn % 3 == 0. If I'm on a beam cell at the end of my movement (phase B), I get hit. Also, if I pass through a beam cell during momentum, I get hit (exposed_cells).
+
+For simple MOVE actions, I just need to ensure my destination is not a beam cell. For JUMP, I skip the intermediate cell, so I need my landing to not be a beam cell.
+
+Let me now write the decide_action function.
+
+```python
+def decide_action(state: dict, memory: dict) -> str:
+    # Initialize memory on first call
+    if "terrain" not in memory:
+        memory["terrain"] = [["UNKNOWN" for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        memory["occupant"] = [[None for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        memory["clues"] = [[False for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        memory["visited"] = set()
+    
+    hero = state["hero"]
+    hx, hy = hero["x"], hero["y"]
+    turn = state["turn"]
+    gates_flipped = state["gates_flipped"]
+    targets = state["targets"]
+    
+    # Update memory with visible cells
+    visible_mask = state["visible_mask"]
+    terrain_view = state["terrain"]
+    occupant_view = state["occupant"]
+    clues_view = state["clues"]
+    
+    for y in range(GRID_HEIGHT):
+        for x in range(GRID_WIDTH):
+            if visible_mask[y][x]:
+                memory["terrain"][y][x] = terrain_view[y][x]
+                memory["occupant"][y][x] = occupant_view[y][x]
+                memory["clues"][y][x] = clues_view[y][x]
+    
+    memory["visited"].add((hx, hy))
+    
+    # Determine target
+    has_k1, has_k2 = hero["keys"]
+    if not has_k1 and not has_k2:
+        # Go to closer key
+        k1 = tuple(targets["K1"])
+        k2 = tuple(targets["K2"])
+        d1 = abs(hx - k1[0]) + abs(hy - k1[1])
+        d2 = abs(hx - k2[0]) + abs(hy - k2[1])
+        target = k1 if d1 <= d2 else k2
+    elif has_k1 and not has_k2:
+        target = tuple(targets["K2"])
+    elif not has_k1 and has_k2:
+        target = tuple(targets["K1"])
+    else:
+        target = tuple(targets["V"])
+    
+    # Laser warnings (cells to avoid this turn if turn % 3 == 0)
+    laser_cells = set()
+    if turn % 3 == 0:
+        for lw in state.get("laser_warnings", []):
+            laser_cells.add((lw["x"], lw["y"]))
+    
+    # BFS to target
+    path = bfs_path(memory, (hx, hy), target, gates_flipped, laser_cells, turn)
+    
+    if path and len(path) > 1:
+        next_cell = path[1]
+        dx = next_cell[0] - hx
+        dy = next_cell[1] - hy
+        action = direction_to_action(dx, dy)
+        return action
+    
+    # If no path, try jumping
+    # ...
+    
+    # Fallback: WAIT
+    return "WAIT"
+```
+
+Let me think about the BFS more carefully. I need to handle:
+- Movement in 4 directions
+- Blocked by HIGH_WALLs
+- Blocked by dangerous cells (PIT, CRACK, MIMIC)
+- BOX can be pushed (if cell behind is free)
+- LASER beam cells avoided on firing turns
+
+For simplicity, let me do a BFS that:
+- Considers 4-directional movement
+- A cell is walkable if: terrain is not HIGH_WALL, not PIT, not CRACK, not MIMIC, occupant is not TNT
+- If occupant is BOX, check if the cell behind is free (can push)
+- Avoid laser cells on firing turns
+- UNKNOWN cells are walkable (with higher cost to prefer known safe)
+
+Actually, for BFS, let me use Dijkstra with costs:
+- Known safe (EMPTY, K1, K2, V, SWITCH, open door): cost 1
+- UNKNOWN: cost 3 (prefer known safe)
+- CHEST (could be HEAL or MIMIC): cost 5 (risky)
+- ICE, MIRROR, SPRING, PORTAL: cost 10 (unpredictable)
+- PIT, CRACK, MIMIC: blocked (infinite cost)
+- HIGH_WALL, TNT: blocked
+
+Wait, but I see CHEST instead of HEAL/MIMIC. So in memory, HEAL and MIMIC both show as CHEST. I can't distinguish them. A clue (bones) near a CHEST indicates it's a MIMIC. So:
+- CHEST with adjacent clue: it's a MIMIC, avoid
+- CHEST without adjacent clue: could be HEAL, maybe safe (but not guaranteed - the clue might be out of sight)
+
+Actually, the rules say MIMICs must have a clue. So if I see a CHEST and can see all 4 of its neighbors, and none have a clue, it's probably HEAL. But if I can't see all neighbors, it might be MIMIC.
+
+Let me treat CHEST as: avoid unless I have full visibility of its neighbors and no clue is present. Actually, let me just avoid CHESTs unless necessary. Healing is nice but not worth the risk of -45 HP.
+
+Hmm, but HEAL gives +30 HP which could be crucial. Let me treat CHEST as high cost but not blocked.
+
+Let me also think about clues. The state has "clues" which shows where bone clues are. If I see a CHEST with an adjacent clue, that CHEST is a MIMIC. So I should mark it as MIMIC in my memory and avoid it.
+
+Let me refine:
+- When I see a CHEST, check its 4 neighbors for clues
+- If any neighbor has a clue, mark this CHEST as MIMIC (dangerous)
+- Otherwise, treat as unknown CHEST (risky but maybe HEAL)
+
+Now let me think about the high wall definition:
+```
+HIGH_WALL = {"W", "T_W", "LASER_U", "LASER_D", "LASER_L", "LASER_R"} + closed gates
+```
+When gates_flipped == False: R_GATE is wall, B_GATE is open
+When gates_flipped == True: B_GATE is wall, R_GATE is open
+
+Let me write a helper to check if a cell is a high wall:
+```python
+def is_high_wall(terrain, gates_flipped):
+    if terrain in ("W", "T_W", "LASER_U", "LASER_D", "LASER_L", "LASER_R"):
+        return True
+    if terrain == "R_GATE":
+        return not gates_flipped
+    if terrain == "B_GATE":
+        return gates_flipped
+    return False
+```
+
+Now, for the BFS, let me handle box pushing. If a cell has a BOX, I can push it if the cell behind (in the direction of movement) is free. But this complicates BFS. For simplicity, let me first try BFS without pushing boxes, and if no path, try with box pushing.
+
+Actually, box pushing is complex because pushing a box can change the map (e.g., box fills PIT, box hits SWITCH, box slides on ICE). Let me keep it simple: treat BOX as blocked (can't walk through), but if the BFS fails, try pushing adjacent boxes.
+
+Hmm, actually, let me just treat BOX as blocked for now. If I get stuck, I'll use bombs.
+
+Let me also think about jumping. JUMP_U/D/L/R skips 1 cell and lands 2 cells away. I can use this to jump over PITs or single walls. Let me add jump as a fallback if BFS fails.
+
+Actually, let me incorporate jumps into the pathfinding. In the BFS, from a cell, I can either MOVE to an adjacent cell or JUMP over 1 cell to the cell 2 away. Jump costs 1 (uses a jump charge). I need to track remaining jumps.
+
+But tracking remaining jumps in BFS makes it a state-space search. Let me keep it simple: if BFS with MOVE fails, check if any direction has a jumpable gap (adjacent cell is PIT/CRACK/empty low, and 2-away cell is safe). If so, jump.
+
+Actually, let me think about this more practically. The hero has 3 jumps, 3 throws, 2 bombs. These are limited resources. I should use them wisely.
+
+Let me design the pathfinding as follows:
+1. BFS with MOVE only, avoiding dangerous cells. If path found, take it.
+2. If no path, try jumping over obstacles (1 cell gap).
+3. If no path, try bombing walls (use BOMB to destroy W walls).
+4. If no path, try throwing rocks at TNT or MIMIC.
+5. If still stuck, WAIT or explore.
+
+Actually, bombing requires me to place a bomb and then wait for it to explode (timer 3). That's complex. Let me handle it as a last resort.
+
+Let me also think about the fact that I'm in BLIND mode. I don't know the full map. My BFS uses my memory, which has UNKNOWN cells. I need to explore.
+
+For UNKNOWN cells, let me treat them as passable with a cost penalty. This way, I'll path through unknown areas when necessary, but prefer known safe cells.
+
+Let me also add a "frontier" exploration: if BFS to target fails (completely blocked), explore toward unknown cells to reveal more of the map.
+
+OK let me write the full code now. Let me be comprehensive but careful.
+
+Let me also think about the laser warning format more carefully. The state shows:
+```json
+"laser_warnings": [
+    {"x": 4, "y": 13, "dir": "D"}
+]
+```
+
+I believe each entry represents a laser beam cell. The (x, y) is the cell position, and dir is the laser direction. So the set of cells to avoid is {(lw["x"], lw["y"]) for lw in laser_warnings}.
+
+But wait, these are only the visible beam cells. There might be more beam cells outside my vision. I can't avoid those. But I should avoid the visible ones.
+
+Actually, I should also consider that laser beams are straight lines. If I see a LASER_D at (4, 5), I know it shoots down from (4, 6) to (4, 15). I can compute the full beam and avoid it, even if I can't see all the cells.
+
+Hmm, that's a good point. Let me also compute laser beams from visible LASER sources.
+
+OK, let me write the code now. I'll make it as robust as possible within 0.5s per call.
+
+Let me structure the code:
+
+```python
+import ...  # standard libs
+
+# Constants
+
+def is_high_wall(terrain, gates_flipped):
+    ...
+
+def cell_cost(terrain, occupant, gates_flipped, has_clue_nearby):
+    # Returns cost or None if blocked
+    ...
+
+def bfs_path(memory, start, target, gates_flipped, laser_cells):
+    # Dijkstra to find path
+    ...
+
+def decide_action(state, memory):
+    ...
+```
+
+Let me write it all out now.
+
+Actually, I realize I should think about one more thing: when the hero picks up a key, the terrain changes to EMPTY. I need to update my memory when I pick up keys. But since I'm moving onto the key cell, I'll see it change. Actually, the state gives me the current terrain, so after picking up K1, the terrain at K1's position will show EMPTY. I update memory from state each turn, so this is handled.
+
+Let me also handle the case where a box is pushed or TNT explodes. The state gives me the current occupant and terrain, so I update from state.
+
+OK, let me write the code.
+
+For the BFS, I'll use a priority queue (Dijkstra) since different cells have different costs.
+
+Let me define the cost function:
+- EMPTY, K1, K2, V, SWITCH, open gate: cost 1
+- UNKNOWN: cost 2
+- CHEST (without nearby clue): cost 4
+- ICE: cost 3 (slides but usually safe)
+- MIRROR_*: cost 5 (redirects, could be bad)
+- SPRING_*: cost 8 (launches unpredictably)
+- PORTAL_*: cost 8 (teleports unpredictably)
+- CRACK: cost 50 (becomes PIT when leaving, very dangerous)
+- PIT, MIMIC: blocked (infinite)
+- HIGH_WALL, TNT: blocked
+- LASER beam cell (on firing turn): blocked
+
+Actually, for ICE, MIRROR, SPRING, PORTAL - these have momentum effects that could send me somewhere dangerous. In BLIND mode, I might not know where I'll end up. Let me treat them as high cost but passable. If I have to use them, I will, but I prefer not to.
+
+Actually, let me reconsider. ICE slides in the direction I'm moving. If I'm moving toward the target, ICE might help or might slide me past. MIRROR redirects 90 degrees. SPRING launches up to 3 cells. PORTAL teleports. These are all unpredictable. Let me just avoid them unless no other path exists.
+
+For the BFS, let me use a simple approach: BFS (unweighted) where I only expand "safe" cells. If no path, expand to "risky" cells (ICE, MIRROR, etc.). If still no path, try jumps and bombs.
+
+Actually, Dijkstra with costs is cleaner. Let me use that.
+
+Let me also handle the visited set for Dijkstra. I'll use a dictionary of best costs.
+
+Here's my plan for the BFS:
+```python
+def find_path(memory, start, target, gates_flipped, laser_cells):
+    terrain = memory["terrain"]
+    occupant = memory["occupant"]
+    
+    def is_walkable(x, y):
+        if x < 0 or x >= GRID_WIDTH or y < 0 or y >= GRID_HEIGHT:
+            return False, float('inf')
+        t = terrain[y][x]
+        o = occupant[y][x]
+        if is_high_wall(t, gates_flipped):
+            return False, float('inf')
+        if o == "TNT":
+            return False, float('inf')
+        if t in ("PIT",):
+            return False, float('inf')
+        if t == "MIMIC":
+            return False, float('inf')
+        if t == "CRACK":
+            return True, 50  # very risky
+        if t == "UNKNOWN":
+            return True, 3
+        if t == "CHEST":
+            return True, 6
+        if t in ("ICE",):
+            return True, 4
+        if t.startswith("MIRROR_"):
+            return True, 6
+        if t.startswith("SPRING_"):
+            return True, 8
+        if t.startswith("PORTAL_"):
+            return True, 8
+        # EMPTY, K1, K2, V, SWITCH, open gate
+        return True, 1
+    
+    # Dijkstra
+    import heapq
+    pq = [(0, start, None)]  # (cost, pos, parent)
+    best = {start: 0}
+    parent = {}
+    
+    while pq:
+        cost, (x, y), _ = heapq.heappop(pq)
+        if (x, y) == target:
+            # Reconstruct path
+            path = []
+            cur = (x, y)
+            while cur is not None:
+                path.append(cur)
+                cur = parent.get(cur)
+            return list(reversed(path))
+        if cost > best.get((x, y), float('inf')):
+            continue
+        for dx, dy in [(0,-1),(0,1),(-1,0),(1,0)]:
+            nx, ny = x+dx, y+dy
+            ok, c = is_walkable(nx, ny)
+            if not ok:
+                continue
+            if (nx, ny) in laser_cells:
+                continue  # avoid laser beam this turn
+            new_cost = cost + c
+            if new_cost < best.get((nx, ny), float('inf')):
+                best[(nx, ny)] = new_cost
+                parent[(nx, ny)] = (x, y)
+                heapq.heappush(pq, (new_cost, (nx, ny), None))
+    
+    return None
+```
+
+Wait, I have a bug in the parent tracking. Let me fix it.
+
+Actually, the parent dict maps child -> parent. Let me rewrite:
+
+```python
+def find_path(memory, start, target, gates_flipped, laser_cells):
+    terrain = memory["terrain"]
+    occupant = memory["occupant"]
+    
+    def walkable_cost(x, y):
+        if x < 0 or x >= GRID_WIDTH or y < 0 or y >= GRID_HEIGHT:
+            return float('inf')
+        t = terrain[y][x]
+        o = occupant[y][x]
+        if is_high_wall(t, gates_flipped) or o == "TNT":
+            return float('inf')
+        if t in ("PIT", "MIMIC"):
+            return float('inf')
+        if t == "CRACK":
+            return 50
+        if t == "UNKNOWN":
+            return 3
+        if t == "CHEST":
+            return 6
+        if t == "ICE":
+            return 4
+        if t.startswith("MIRROR_"):
+            return 6
+        if t.startswith("SPRING_"):
+            return 8
+        if t.startswith("PORTAL_"):
+            return 8
+        return 1
+    
+    pq = [(0, start)]
+    best = {start: 0}
+    parent = {start: None}
+    
+    while pq:
+        cost, pos = heapq.heappop(pq)
+        if pos == target:
+            path = []
+            cur = pos
+            while cur is not None:
+                path.append(cur)
+                cur = parent[cur]
+            return list(reversed(path))
+        if cost > best[pos]:
+            continue
+        x, y = pos
+        for dx, dy in [(0,-1),(0,1),(-1,0),(1,0)]:
+            nx, ny = x+dx, y+dy
+            if (nx, ny) in laser_cells:
+                continue
+            c = walkable_cost(nx, ny)
+            if c == float('inf'):
+                continue
+            new_cost = cost + c
+            if new_cost < best.get((nx, ny), float('inf')):
+                best[(nx, ny)] = new_cost
+                parent[(nx, ny)] = pos
+                heapq.heappush(pq, (new_cost, (nx, ny)))
+    
+    return None
+```
+
+This looks better. Now, if find_path returns None, I need fallbacks:
+1. Try jumping over 1-cell obstacles
+2. Try bombing
+3. Explore unknown areas
+
+For jumping: from current position, try each direction. If the adjacent cell is a low obstacle (PIT, CRACK, EMPTY, etc. that I can't or don't want to walk on) and the 2-away cell is safe, jump.
+
+Actually, JUMP can only be blocked if p1 is HIGH_WALL or p2 is HIGH_WALL/BOX/TNT. So I can jump over PITs and empty cells. Let me add jumps to the pathfinding as well.
+
+Actually, let me add jumps to the Dijkstra. From a cell, I can either MOVE (cost 1) or JUMP (cost 1, but uses a jump charge). JUMP lands 2 cells away, skipping the intermediate cell. I need to track jump charges, but for simplicity, let me just check if I have jumps left and if the jump is valid.
+
+Since jumps are limited (3), let me only use them if MOVE-only path fails. Let me add a separate jump-based pathfinding.
+
+Actually, let me keep it simple. Let me try MOVE-only BFS first. If that fails, check if I can jump toward the target (i.e., the cell 2 away in the target's direction is safe).
+
+Hmm, this is getting complex. Let me just add jumps to the Dijkstra as well, with a cost that reflects the jump charge usage.
+
+Actually, since I have 3 jumps, and the map is 40x26, 3 jumps is not a lot. Let me use them when needed.
+
+Let me add jumps to the Dijkstra:
+- From (x,y), I can jump to (x+2*dx, y+2*dy) if:
+  - I have jumps left (check hero["jumps"])
+  - (x+dx, y+dy) is not HIGH_WALL (jump blocked)
+  - (x+2*dx, y+2*dy) is not HIGH_WALL, not BOX, not TNT
+  - (x+2*dx, y+2*dy) is not PIT, MIMIC, laser cell
+- Jump cost: 2 (more expensive than MOVE to prefer MOVE)
+
+But I need to track remaining jumps. Since I only have 3, let me just use jumps as a fallback when MOVE BFS fails.
+
+Let me write a fallback function:
+```python
+def try_jump(memory, start, target, gates_flipped, laser_cells, jumps_left):
+    if jumps_left <= 0:
+        return None
+    hx, hy = start
+    tx, ty = target
+    # Try jumping in the direction of the target
+    ...
+```
+
+Actually, let me think about this differently. Let me do a BFS that includes both MOVE and JUMP actions, but JUMP has a higher cost. I'll track remaining jumps in the state.
+
+State: (x, y, jumps_left)
+This expands the state space by 4x (jumps 0-3), which is manageable.
+
+Let me do that. Actually, for simplicity, let me just include jumps without tracking (assuming I have enough). If jumps_left > 0, allow jumps. This might overuse jumps but it's simpler.
+
+Actually, let me track jumps in the state to be safe. State: (x, y, jumps). Since jumps can be 0-3, that's 4x states. 40*26*4 = 4160 states. Very manageable.
+
+Let me write this.
+
+Actually, I'm overcomplicating. Let me do a simpler approach:
+1. Run Dijkstra with MOVE only.
+2. If path found, take first step.
+3. If not, check all 4 directions for a valid jump toward safer ground. If found, jump.
+4. If not, use BOMB on an adjacent W wall (if any), then WAIT for explosion.
+5. If not, explore: move toward the nearest UNKNOWN cell.
+
+Let me implement this.
+
+Actually, let me include jumps in the Dijkstra for completeness. I'll track jumps_left.
+
+```python
+def find_path_with_jumps(memory, start, target, gates_flipped, laser_cells, jumps_left):
+    # State: (x, y, jumps)
+    terrain = memory["terrain"]
+    occupant = memory["occupant"]
+    
+    def walkable_cost(x, y):
+        ...  # same as before
+    
+    pq = [(0, start[0], start[1], jumps_left)]
+    best = {(start[0], start[1], jumps_left): 0}
+    parent = {}
+    
+    while pq:
+        cost, x, y, j = heapq.heappop(pq)
+        if (x, y) == target:
+            # Reconstruct
+            ...
+        if cost > best[(x, y, j)]:
+            continue
+        # MOVE
+        for dx, dy in [(0,-1),(0,1),(-1,0),(1,0)]:
+            nx, ny = x+dx, y+dy
+            if (nx, ny) in laser_cells:
+                continue
+            c = walkable_cost(nx, ny)
+            if c == float('inf'):
+                continue
+            new_cost = cost + c
+            state = (nx, ny, j)
+            if new_cost < best.get(state, float('inf')):
+                best[state] = new_cost
+                parent[state] = (x, y, j, "MOVE")
+                heapq.heappush(pq, (new_cost, nx, ny, j))
+        # JUMP
+        if j > 0:
+            for dx, dy in [(0,-1),(0,1),(-1,0),(1,0)]:
+                p1x, p1y = x+dx, y+dy
+                p2x, p2y = x+2*dx, y+2*dy
+                # Check jump validity
+                t1 = terrain[p1y][p1x] if in_bounds else None
+                t2 = terrain[p2y][p2x] if in_bounds else None
+                if is_high_wall(t1, gates_flipped):
+                    continue  # p1 is wall, can't jump
+                if t2 is None or is_high_wall(t2, gates_flipped) or occupant[p2y][p2x] in ("BOX", "TNT"):
+                    continue  # p2 blocked
+                if (p2x, p2y) in laser_cells:
+                    continue
+                c2 = walkable_cost(p2x, p2y)
+                if c2 == float('inf'):
+                    continue
+                new_cost = cost + c2 + 1  # jump cost
+                state = (p2x, p2y, j-1)
+                if new_cost < best.get(state, float('inf')):
+                    best[state] = new_cost
+                    parent[state] = (x, y, j, "JUMP")
+                    heapq.heappush(pq, (new_cost, p2x, p2y, j-1))
+    
+    return None
+```
+
+This is getting complex. Let me simplify by not tracking jumps in the state, and just allowing jumps if jumps_left > 0. If I run out of jumps, the action will just be treated as WAIT by the engine. But I should avoid that.
+
+Actually, the state tells me hero["jumps"]. So I know how many I have. Let me just check jumps_left > 0 before considering jumps. I won't track them in the path (assume I have enough for the path length, which is reasonable since paths are usually short and I have 3 jumps).
+
+OK let me just write the full submission.py now. I've spent enough time planning.
+
+Let me also think about edge cases:
+- What if I'm surrounded by walls? Use BOMB.
+- What if there's no path at all? Explore.
+- What if HP is low? Avoid CHESTs (might be MIMIC), look for HEALs.
+- What if turn is close to 240? Be more aggressive.
+
+Let me also handle the laser more carefully. On turn % 3 == 0, I should avoid ending my turn on a laser beam cell. But I should also avoid moving through laser beam cells (since exposed_cells includes all cells I visit). For simple MOVE, I only visit 1 cell (the destination). For JUMP, I skip the intermediate. For ICE/MIRROR/SPRING/PORTAL, I might visit multiple cells.
+
+Since I'm avoiding ICE/MIRROR/SPRING/PORTAL (high cost), and for MOVE/JUMP I only visit 1 cell, I just need to ensure my destination is not a laser beam cell.
+
+But wait, if I MOVE onto an ICE cell, I slide. So I might visit multiple cells. But since ICE has high cost, I'll only use it if necessary. And when I do, I should check the slide path.
+
+For now, let me just avoid laser cells as destinations. If I'm forced onto ICE near a laser, I'll deal with it.
+
+OK, let me write the code.
+
+One more thing: the `memory` dict is per-process (per game). Since each game starts with memory={}, I initialize it on the first call. The memory persists across turns within a game.
+
+Let me also make sure I don't use any forbidden imports. The allowed imports are: math, cmath, heapq, collections, queue, array, statistics, decimal, fractions, graphlib, itertools, copy, random, typing, dataclasses, enum, bisect, functools, time, json, re, operator, numpy, networkx, sympy, mpmath.
+
+Forbidden: os, sys, open, pathlib, shutil, io, subprocess, multiprocessing, threading, eval, exec, inspect, ctypes, gc, types, pickle, builtins, __class__, __globals__, etc.
+
+The template imports: bisect, collections, copy, dataclasses, enum, functools, heapq, itertools, json, math, operator, random, re, time, typing. All allowed.
+
+I might use numpy for the grid, but let me keep it simple with lists.
+
+Let me write the full code now.
+
+Actually, let me reconsider the build_dungeon. I want to make sure it's valid. Let me also add some W walls to create a maze and make it harder. But I need to make sure my author_solution path is clear.
+
+My path: row 13 (x 2-35), col 20 (y 5-20). Let me add walls elsewhere.
+
+Let me also think about whether to add more hazards. The more hazards, the harder for opponents, but also the more risk of invalidating my map. Let me add a moderate amount.
+
+Let me finalize:
+- K1 at (20, 5), K2 at (20, 20), V at (35, 13)
+- PITs: 12 of them, away from path
+- MIMICs: 4 with valid clues
+- LASER_D at (35, 3): shoots down the V column
+- Some W walls to create maze structure
+
+Let me also add some ICE or MIRROR to make it more interesting. But those could affect opponents positively or negatively. Let me keep it simple.
+
+Actually, let me add a few more things:
+- A SWITCH and some gates to create a puzzle
+- But this could complicate my author_solution. Let me skip.
+
+OK, final build_dungeon design:
+- Outer frame T_W
+- K1 (20,5), K2 (20,20), V (35,13)
+- 12 PITs in corners/edges
+- 4 MIMICs with clues
+- 1 LASER_D at (35,3)
+- Some W walls to create maze (away from path)
+
+Budget check:
+- 12 PITs: 480
+- 4 MIMICs: 240
+- 1 LASER: 75
+- W walls: let's say 40 walls * 5 = 200
+- Total: 995
+- Vault: 2005, g = 0.668
+
+That's reasonable. Let me write it.
+
+Wait, I should double-check the LASER_D at (35,3). The laser base is at (35,3), which is a HIGH_WALL. It shoots down from (35,4) to (35,13). (35,13) is V. The beam passes through (35,4)...(35,12) and reaches (35,13). Good.
+
+But wait, is (35,3) a valid position? x=35 in [1,38], y=3 in [1,24]. Yes, inner circle. Good.
+
+And the laser doesn't block my path. My path goes to (35,13) on the last turn. The laser is at (35,3), far away. Good.
+
+Let me also add W walls. I'll create some maze-like walls in the four quadrants, but not on my path.
+
+Actually, let me not add too many walls. The BLIND mode already makes it hard. Let me add a few strategic walls.
+
+Let me write the code now. I'll finalize everything.
+
+Actually, I realize I should also verify that my author_solution is correct. Let me trace through it with my map:
+
+Grid (relevant cells):
+- (2,13) = EMPTY (spawn)
+- (20,5) = K1
+- (20,20) = K2
+- (35,13) = V
+- All other inner cells = EMPTY (except hazards away from path)
+
+author_solution:
+1. MOVE_R * 18: (2,13) -> (20,13). All cells (3,13) to (20,13) are EMPTY. ✓
+2. MOVE_U * 8: (20,13) -> (20,5). Cells (20,12) to (20,5) are EMPTY except (20,5)=K1. 
+   - On the step that reaches (20,5), hero picks up K1. ✓
+3. MOVE_D * 15: (20,5) -> (20,20). Cells (20,6) to (20,20) are EMPTY except (20,20)=K2.
+   - On reaching (20,20), picks up K2. ✓
+4. MOVE_U * 7: (20,20) -> (20,13). Cells (20,19) to (20,13) are EMPTY. ✓
+5. MOVE_R * 15: (20,13) -> (35,13). Cells (21,13) to (35,13) are EMPTY except (35,13)=V.
+   - On reaching (35,13), has both keys, steps on V. Wins! ✓
+
+Total actions: 18+8+15+7+15 = 63. The last action lands on V. ✓
+
+Now, are there any hazards on these cells? Let me check:
+- Row 13: x from 2 to 35. My PITs are at (5,3),(8,3),(11,3),(5,22),(8,22),(11,22),(30,3),(30,22),(33,8),(33,18),(15,8),(15,18). None at y=13. ✓
+- Col 20: y from 5 to 20. My PITs at x=5,8,11,30,33,15. None at x=20. ✓
+- MIMICs at (10,3),(10,22),(28,3),(28,22). Not on path. ✓
+- LASER_D at (35,3). Not on path. ✓
+
+Great, the solution works.
+
+Now let me also think about whether the laser on turn 63 affects me. Turn 63 % 3 == 0. On turn 63, I MOVE_R from (34,13) to (35,13)=V. I win at phase B (step on V terminates game). Phase D (laser) doesn't execute. So I'm safe. ✓
+
+What about other firing turns? Let me check which turns I'm on the laser beam (x=35, y=4 to 13).
+- I'm at x=35 only on turn 63 (at V). Before that, x goes from 2 to 35 along row 13.
+- On turns 49-62, I'm at y=13, x from 20 to 34. The laser beam is at x=35. So I'm not on the beam. ✓
+
+Great. Let me also check turns 3, 6, 9, 12, 15, 18 (when I'm moving right along row 13):
+- Turn 3: (5,13). Laser beam at x=35. Not on beam. ✓
+- Turn 6: (8,13). Not on beam. ✓
+- ... all safe.
+
+OK, the build_dungeon is solid. Now let me write the decide_action.
+
+Let me write the complete submission.py now.
+
+让我验证代码语法正确性并测试 `build_dungeon` 的基本结构：
+Now let me verify the code works. Let me run a quick test to make sure build_dungeon works and the author_solution is valid.
+
+Actually, I can't run the judge engine, but I can at least verify the code is syntactically correct and the build_dungeon returns a valid structure.
+
+Let me also double-check my logic for some edge cases.
+
+First, let me verify the build_dungeon budget:
+- 16 PITs: 16 * 40 = 640
+- 4 MIMICs: 4 * 60 = 240
+- 1 LASER_D: 75
+- 20 W walls: 20 * 5 = 100
+- Total: 640 + 240 + 75 + 100 = 1055
+- Under 3000. Good.
+
+T_W count (inner): 0. Under 120. Good.
+MIRROR count: 0. Under 30. Good.
+SPRING count: 0. Under 20. Good.
+LASER count: 1. Under 12. Good.
+CRACK count: 0. Under 40. Good.
+SWITCH count: 0. Under 6. Good.
+GATE count: 0. Under 16. Good.
+TNT count: 0. Under 12. Good.
+BOX count: 0. Under 4. Good.
+HEAL count: 0. Under 4. Good.
+MIMIC count: 4. Under 4. Good (exactly 4, which is the max).
+PORTAL count: 0. Good.
+
+Now let me verify MIMIC clue binding:
+- MIMIC at (10, 3): U=(10,2)=EMPTY, not spawn zone. Neighbors of (10,2): (9,2),(11,2),(10,1),(10,3). (10,3) is the MIMIC. No other chests. Valid. Clue at (10,2).
+- MIMIC at (10, 22): U=(10,21)=EMPTY, not spawn zone. Neighbors: (9,21),(11,21),(10,20),(10,22). (10,22) is MIMIC. Valid. Clue at (10,21).
+- MIMIC at (28, 3): U=(28,2)=EMPTY. Neighbors: (27,2),(29,2),(28,1),(28,3). Valid. Clue at (28,2).
+- MIMIC at (28, 22): U=(28,21)=EMPTY. Neighbors: (27,21),(29,21),(28,20),(28,22). Valid. Clue at (28,21).
+
+All MIMICs have valid clues. Good.
+
+Now let me verify the author_solution path doesn't hit any hazards:
+Path: (2,13) -> row 13 to (20,13) -> col 20 to (20,5)=K1 -> col 20 to (20,20)=K2 -> col 20 to (20,13) -> row 13 to (35,13)=V
+
+Hazards:
+- PITs: (5,3),(8,3),(11,3),(14,3),(5,22),(8,22),(11,22),(14,22),(30,3),(30,22),(33,7),(33,8),(33,17),(33,18),(16,7),(16,18)
+  - None at y=13 or x=20. Safe.
+- W walls: (6,6),(7,6),(8,6),(6,19),(7,19),(8,19),(24,6),(25,6),(26,6),(24,19),(25,19),(26,19),(30,10),(30,11),(30,15),(30,16),(12,10),(12,11),(12,15),(12,16)
+  - None at y=13 or x=20. Safe.
+- MIMICs: (10,3),(10,22),(28,3),(28,22). Not on path. Safe.
+- LASER_D: (35,3). Not on path (until V at (35,13), which wins).
+
+Now let me check the laser timing again. LASER_D at (35,3) shoots down to (35,13). On turn 63 (last turn, 63%3==0), I step on V and win before phase D. Safe.
+
+But wait - I need to also make sure the laser beam doesn't hit me on earlier turns when I'm moving along row 13. The beam is at x=35. I reach x=35 only on turn 63. Before that, on turns 49-62, I'm at x=20 to 34. So x never equals 35 until turn 63. Safe.
+
+Now let me run the code to check for syntax errors.
+
+PowerShell doesn't support `&&`. Let me use `;` instead, or use a single command.
+
+代码语法正确，`build_dungeon` 返回的结构符合规范。现在让我更全面地验证预算和约束，并测试 `decide_action`：
+The code runs correctly. The grid has 26 rows and 40 columns, the landmarks are at the correct positions, and the solution has 63 steps.
+
+Now let me verify the budget and constraints more carefully. Let me also test the decide_action function with a simple state.
+
+Let me write a more comprehensive test to verify the build_dungeon validity.
+
+The TILE_COSTS is not defined in my submission.py. Let me add it, or use a hardcoded cost dict for testing. Actually, the template had TILE_COSTS but I didn't include it in my final version. Let me check... Actually I removed it. Let me add it back for completeness, or just test without it.
+
+Let me test with a hardcoded cost dict.
+
+魔王造图基本约束全部通过。现在测试 `decide_action` 函数在简单状态下是否能正常返回合法动作：
+All basic checks pass:
+- Total spent: 1055G (under 3000)
+- Inner T_W: 0 (under 120)
+- MIMICs: 4 (at limit, valid)
+- Spawn zone: all EMPTY
+- K1, K2, V positions valid
+- K1-K2 Manhattan distance: 15 (>= 12)
+
+Now let me test the decide_action function with a simple state to make sure it works.
+
+让我创建一个临时测试脚本文件来避免 PowerShell 引号问题：
+The issue is with the f-string and quotes in PowerShell. Let me write a test script file instead.
+
+Let me run the test.
+
+`decide_action` 正常工作，勇者正确地朝较近的 K2 移动。但我发现一个 JUMP 方向计算的 bug——跳跃位移是 2 格，需要归一化方向。让我修复：
+Hmm, the hero is moving D first. Let me think about why. The hero starts at (2, 13). K1 is at (20, 5), K2 is at (20, 20). 
+
+Distance to K1: |2-20| + |13-5| = 18 + 8 = 26
+Distance to K2: |2-20| + |13-20| = 18 + 7 = 25
+
+So K2 is closer (25 < 26), so the hero goes toward K2 at (20, 20). That means moving D (down) and R (right). That makes sense.
+
+The hero moves D 7 times (from y=13 to y=20), then R toward x=20. That's correct!
+
+Good, the decide_action is working. Let me now test a more complex scenario with obstacles to make sure pathfinding works.
+
+Actually, let me also verify the full author_solution simulation to make sure my dungeon is solvable. I can't run the full judge engine, but I can simulate the basic movement on my empty-ish map.
+
+Let me also clean up the test file.
+
+Actually, let me think more about edge cases in decide_action:
+
+1. What if the path goes through UNKNOWN cells? The cost is 3, so it's passable.
+2. What if there's a PIT in the way? It's blocked (inf cost).
+3. What if there's a W wall? It's a HIGH_WALL, blocked.
+4. What about lasers? On turn % 3 == 0, laser_cells are avoided.
+
+Let me test with a wall obstacle to make sure pathfinding goes around.
+
+Actually, I realize there might be an issue with my _find_path function. Let me check the path reconstruction.
+
+In _find_path, I have:
+```python
+if (x, y) == target:
+    path = []
+    cur = (x, y, j)
+    while cur in parent:
+        px, py, pj, act = parent[cur]
+        path.append((act, (cur[0], cur[1])))
+        cur = (px, py, pj)
+    path.reverse()
+    return path
+```
+
+The path is a list of (action, destination_cell). The first element is the first action to take. Let me check:
+- cur starts at target (x, y, j)
+- parent[cur] = (px, py, pj, act) means we came from (px, py, pj) to cur via act
+- We append (act, (cur[0], cur[1])) - this is the action and the destination
+- Then cur = (px, py, pj)
+- After reversing, the first element is the first action from start
+
+Wait, but the start node (start[0], start[1], jumps_left) is not in parent (we set parent = {} and only add entries when we discover new states). So the loop stops when cur is the start state. Good.
+
+But there's a subtlety: the start state might not have an entry in parent. Let me check:
+- We initialize parent = {}
+- We push (0, start[0], start[1], jumps_left) to pq
+- When we pop it, we don't add it to parent
+- When we discover neighbors, we add parent[neighbor_state] = (x, y, j, act)
+
+So the start state is never in parent. The loop `while cur in parent` will stop when cur is the start state. Good.
+
+The path will be: [(act1, cell1), (act2, cell2), ...] where cell1 is the first step from start, cell2 is the second step, etc. The last element's cell is the target. Good.
+
+In decide_action:
+```python
+if path:
+    act, _ = path[0]
+    if act == "MOVE":
+        nxt = path[0][1]
+        dx = nxt[0] - hx
+        dy = nxt[1] - hy
+        return _action_from_delta(dx, dy, "MOVE")
+    elif act == "JUMP":
+        nxt = path[0][1]
+        dx = nxt[0] - hx
+        dy = nxt[1] - hy
+        return _action_from_delta(dx, dy, "JUMP")
+```
+
+This takes the first action from the path. Good.
+
+Let me also check the _action_from_delta function:
+```python
+def _action_from_delta(dx, dy, action_type="MOVE"):
+    dname = DIR_NAME.get((dx, dy))
+    if dname is None:
+        return "WAIT"
+    return f"{action_type}_{dname}"
+```
+
+For MOVE_R: dx=1, dy=0, DIR_NAME[(1,0)]="R", returns "MOVE_R". Good.
+For JUMP_U: dx=0, dy=-2... wait, no. JUMP goes 2 cells. So dx=0, dy=-2. But DIR_NAME only has (0,-1), (0,1), (-1,0), (1,0). So (0,-2) would return None, and we'd get "WAIT". That's a bug!
+
+I need to fix this. For JUMP, the delta is 2 cells, but the direction is determined by sign(dx), sign(dy). Let me fix _action_from_delta or handle JUMP differently.
+
+Actually, in the path, for a JUMP, the destination is 2 cells away. So dx and dy are multiples of 2. I need to normalize them to get the direction.
+
+Let me fix this:
+```python
+def _action_from_delta(dx, dy, action_type="MOVE"):
+    sx = 1 if dx > 0 else (-1 if dx < 0 else 0)
+    sy = 1 if dy > 0 else (-1 if dy < 0 else 0)
+    dname = DIR_NAME.get((sx, sy))
+    if dname is None:
+        return "WAIT"
+    return f"{action_type}_{dname}"
+```
+
+This normalizes the delta to a unit direction. Good.
+
+Let me update the code.
+
+现在测试带有障碍物的路径规划和跳跃功能：
+Now let me test with a wall obstacle to make sure pathfinding goes around, and also test the jump functionality.
+
+Let me run the test.
+
+路径规划正确地找到了墙壁并尝试用炸弹突破。让我优化炸弹逻辑——检查是否已有炸弹在脚下，避免重复投放，并确保能等待爆炸：
+I see the issue. The hero reaches (9, 13) and the wall is at (10, 13). The hero can't move right because of the wall. The BFS doesn't find a path because the wall spans the entire height (y=1 to 24). So the hero tries to bomb the wall.
+
+But the bombing logic is wrong. When the hero calls BOMB, it places a bomb at the current position. The bomb has a timer of 3 and explodes in a 3x3 area. But in my test, I don't simulate the bomb explosion. Also, the hero only has 2 bombs, so calling BOMB repeatedly doesn't help.
+
+The real issue is that the wall spans the entire height, so there's no way around it. The hero needs to bomb through it. But bombing requires placing a bomb, waiting 3 turns for it to explode, then moving through.
+
+Actually, in my decide_action, when BFS fails, I check for adjacent W walls and return BOMB. But I should also handle the waiting and moving after the bomb explodes.
+
+Let me think about this. The BOMB action places a bomb at the hero's position with timer 3. After 3 turns (timer decreases each turn), it explodes, destroying W walls in a 3x3 area. So the hero needs to:
+1. Place bomb (turn T)
+2. Wait for it to explode (turns T+1, T+2, T+3... actually the bomb timer starts at 3, so it explodes at turn T+3's phase C)
+3. Move through the destroyed wall
+
+Actually, let me re-read the rules:
+- BOMB: if hero.bombs > 0 and no bomb at current position, place bomb with timer 3
+- Phase C: all bombs timer -= 1, bombs with timer == 0 explode
+
+So:
+- Turn T: place bomb, timer=3
+- Turn T+1: phase C, timer=2
+- Turn T+2: phase C, timer=1
+- Turn T+3: phase C, timer=0, explode
+
+So the bomb explodes on turn T+3. The hero needs to wait until then.
+
+But in my decide_action, I just return BOMB every turn. The engine will only place one bomb (the check "no bomb at current position" prevents duplicates). So after the first BOMB, subsequent BOMB calls are treated as WAIT (because there's already a bomb at the position, or hero.bombs becomes 0).
+
+Actually, the rules say: "若 hero.bombs > 0 且当前坐标 (hx, hy) 上没有未爆炸弹，则 hero.bombs -= 1，在 bombs 列表末尾追加...。否则等效于 WAIT。"
+
+So after placing one bomb, the next BOMB call will see a bomb at the current position and be treated as WAIT. Good. But the hero needs to wait 3 turns for the explosion.
+
+Let me fix my logic. Instead of just returning BOMB when stuck, I should:
+1. Check if there's an active bomb at my position. If so, WAIT for it to explode.
+2. If no bomb and I'm stuck, place a bomb.
+
+Actually, the state gives me the bombs list. I can check if there's a bomb at my position. If there is, WAIT. If not, place one.
+
+But wait, the bomb explodes in a 3x3 area. So the wall at (10, 13) would be destroyed when the bomb at (9, 13) explodes. The hero can then move to (10, 13) which is now EMPTY.
+
+But the hero is at (9, 13) when the bomb explodes. The bomb's 3x3 area includes (9, 13), (10, 13), (8, 13), etc. The hero takes 50 damage from the bomb! That's bad.
+
+Hmm, so bombing a wall adjacent to me is risky because I take damage. Let me think...
+
+Actually, the hero should step back after placing the bomb, then wait for it to explode, then move forward.
+
+Or, the hero could place the bomb, move away, wait, then come back.
+
+This is getting complex. Let me handle it more carefully.
+
+Actually, for the purpose of this competition, let me keep the bombing logic simple but correct:
+1. If BFS finds a path, take it.
+2. If not, check if there's an adjacent W wall that I can bomb.
+3. If I have bombs and no bomb at my position, place BOMB.
+4. If there's a bomb at my position, WAIT (or move away to avoid damage).
+5. After the bomb explodes, the wall should be gone, and BFS should find a path.
+
+But the hero taking 50 damage from their own bomb is a problem. Let me check the rules again.
+
+From RULES.md phase C:
+"每颗波及勇者的 BOMB 计勇者自伤 +50"
+
+So yes, the hero takes 50 damage from their own bomb if they're in the 3x3 area. The hero has 100 HP, so they can survive one bomb (50 damage). But it's not ideal.
+
+Actually, the hero should move away from the bomb before it explodes. Let me implement:
+- Place bomb at current position
+- Move away from the bomb (in the opposite direction of the wall)
+- Wait for explosion
+- Move back and through the destroyed wall
+
+This is complex. For now, let me just handle the simple case: if stuck next to a wall, place a bomb and wait. The hero takes 50 damage but survives (100 HP -> 50 HP). Then move through.
+
+Actually, let me reconsider. The bomb at (9,13) explodes in 3x3: (8,12) to (10,14). The hero at (9,13) is in the area. The hero takes 50 damage. The wall at (10,13) is destroyed. Next turn, the hero can move to (10,13).
+
+But in my current code, after placing the bomb, the hero keeps trying BOMB (which becomes WAIT). So the hero waits at (9,13) for the bomb to explode, takes 50 damage, then the wall is gone, and BFS finds a path.
+
+Let me verify this works. The issue is that my test doesn't simulate the bomb explosion. Let me fix the test or trust that the engine handles it.
+
+Actually, the real issue is that in my test, the wall spans the entire height (y=1 to 24), so there's truly no way around. The hero must bomb through. My code handles this by placing a bomb. The engine will handle the explosion.
+
+But there's a subtlety: after the bomb explodes and destroys the wall, the hero needs to move through. My BFS will find a path once the wall is gone (since the state terrain will show EMPTY at (10,13)).
+
+Let me make sure my bombing logic is correct:
+1. BFS fails (wall blocks path)
+2. Check adjacent W walls: (10,13) is W
+3. hero.bombs > 0 (2 bombs)
+4. Return BOMB
+
+After placing the bomb, the next turn:
+1. BFS still fails (wall still there)
+2. Check adjacent W walls: (10,13) is W
+3. hero.bombs is now 1, but there's a bomb at my position
+4. Return BOMB -> treated as WAIT by engine
+
+Wait, my code returns BOMB every turn. The engine treats it as WAIT if there's already a bomb. So the hero waits. After 3 turns, the bomb explodes, wall is destroyed, hero takes 50 damage. Next turn, BFS finds a path.
+
+But there's a problem: after the bomb explodes, hero.bombs is 1 (used one). The hero still has bombs. But now the wall is gone, so BFS works.
+
+OK, this should work. But the hero takes 50 damage, which is not ideal. Let me add logic to move away from the bomb.
+
+Actually, let me not overcomplicate. 50 damage is acceptable (hero starts with 100 HP). Let me keep the simple logic.
+
+But wait, there's another issue. In my test, the wall spans y=1 to 24. That's 24 walls. A single bomb only destroys a 3x3 area. So the bomb at (9,13) destroys walls at (10,12), (10,13), (10,14). That creates a 3-cell gap. The hero can move through (10,13). Good.
+
+So the logic works. Let me now make sure my code handles the "bomb already placed" case correctly. Currently, my code returns BOMB every turn when stuck. The engine will convert extra BOMBs to WAITs. That's fine.
+
+But actually, I should check the bombs list in state to see if there's a bomb at my position. If there is, I should WAIT instead of BOMB (to be clean). Let me add that check.
+
+Actually, it doesn't matter because the engine handles it. But let me add it for cleanliness and to avoid wasting the BOMB action.
+
+Let me also think about another issue: what if the hero is stuck not next to a wall? Then bombing won't help. The hero should explore.
+
+Let me refine the fallback logic:
+1. BFS to target
+2. If no path, try exploring (find nearest UNKNOWN cell)
+3. If no explore path, try bombing adjacent W walls
+4. If no wall to bomb, try moving in any safe direction
+5. WAIT
+
+Let me update the code.
+
+Actually, my current code already has this order:
+1. BFS to target
+2. If no path, find explore target
+3. If no explore target, check for W walls to bomb
+4. If no wall, try moving in any direction
+5. WAIT
+
+Wait, the order should be: try to bomb a wall BEFORE giving up and exploring. Actually, no - if there's an UNKNOWN cell reachable, exploring might reveal a path around the obstacle. Let me keep the current order but improve the bombing logic.
+
+Actually, let me reconsider. If BFS to target fails, it means all known paths are blocked. Exploring UNKNOWN cells might reveal a way around. So exploring before bombing makes sense.
+
+But if there are no UNKNOWN cells (the whole map is explored and blocked), then bombing is the only option.
+
+Let me keep the current order and just fix the bombing logic to check for existing bombs.
+
+Let me update the code:
+
+Let me update the bombing logic. I need to check if there's already a bomb at my position. If so, WAIT. If not and there's a W wall adjacent, BOMB.
+
+Also, I should think about the self-damage. When the bomb explodes, the hero at the bomb position takes 50 damage. To avoid this, the hero could place the bomb, then move 1 step away, wait, then come back. But that's complex. Let me just accept the 50 damage for now.
+
+Actually, let me improve the bombing logic:
+1. If there's a bomb at my position, WAIT (let it explode)
+2. Else if there's an adjacent W wall and I have bombs, BOMB
+3. Else try other directions
+
+Let me update.
+
+让我修复激光束计算中的门状态和箱子阻挡问题：
+Now let me also think about the MIMIC detection. Currently, I check if a CHEST has an adjacent clue. But the clue might not be visible (outside my vision). In that case, I can't tell if it's a MIMIC. Let me also consider the case where the clue is not visible - I should treat it as potentially MIMIC.
+
+Actually, the rules say every MIMIC has a clue. So if I see a CHEST and can't see all its neighbors, it might be a MIMIC. If I see a clue adjacent, it's definitely a MIMIC. If I see all neighbors and no clue, it's probably HEAL.
+
+My current _is_mimic function only returns True if there's a visible clue. If there's no visible clue, it returns False (treated as HEAL-ish with cost 6). This is risky because the clue might be invisible.
+
+Let me adjust: if I can't see all 4 neighbors of a CHEST, treat it as risky (high cost). If I can see all 4 and no clue, treat as HEAL (lower cost). If I see a clue, treat as MIMIC (blocked).
+
+Actually, for simplicity, let me just treat all CHESTs as risky (cost 6) unless I can confirm it's HEAL. The cost 6 means I'll avoid them unless necessary. That's fine.
+
+Wait, my current code already does this:
+- If _is_mimic returns True (visible clue), cost is inf (blocked)
+- Otherwise, cost is 6 (risky but passable)
+
+This is reasonable. Let me keep it.
+
+Now, let me also think about the CRACK tile. CRACK becomes PIT when the hero leaves it. So if I step on CRACK, I need to not leave it... but I always move. So stepping on CRACK is dangerous because the next time I move, it becomes PIT and I might fall in... wait, no. The CRACK becomes PIT when I LEAVE it, not when I step on it. So if I step on CRACK and then move away, the CRACK becomes PIT behind me. I don't fall in because I'm leaving. But if I step on CRACK and then the next turn I'm still there (WAIT), nothing happens. If I move away, it becomes PIT.
+
+Actually, the danger is: if I step on CRACK and then have to move back (e.g., dead end), the CRACK is now PIT and I fall in. So CRACK is dangerous but not immediately deadly.
+
+I set CRACK cost to 40, which means I'll avoid it unless necessary. That's reasonable.
+
+Now let me also think about the laser detection. I compute laser beams from known LASER sources. But in BLIND mode, I might not see all LASER sources. The laser_warnings in state give me visible beam cells. I combine both. Good.
+
+But there's a subtlety: the laser beam computation uses is_high_wall(nt, False) with gates_flipped=False. This might not be correct if gates are flipped. Let me fix this to use the actual gates_flipped state.
+
+Actually, for the laser_blocked_cells function, I pass terrain but not gates_flipped. Let me fix this.
+
+Also, the laser beam stops at HIGH_WALLs and BOXes. My current code only checks HIGH_WALLs, not BOXes. Let me fix that too.
+
+Let me update the laser_blocked_cells function.
+
+Now I need to update the call to laser_blocked_cells in decide_action to pass the occupant and gates_flipped.
+
+现在运行完整测试，验证 `decide_action` 在多种场景下的正确性，并模拟 `author_solution` 在我的地图上能否通关：
+Now let me run the tests again to make sure everything still works. Let me also do a more comprehensive test - simulate the full author_solution on my dungeon to make sure it clears.
+
+Actually, I can't simulate the full judge engine, but I can do a basic movement simulation on my map (ignoring momentum, lasers, etc., since my path is on EMPTY cells).
+
+Let me write a test that simulates the author_solution on my map.
+
+Let me run this test.
+
+自证通关模拟成功——63步内收集K1、K2并到达金库V，全程无撞墙无掉坑。让我清理测试文件并做最终验证：
+The author_solution simulation works:
+- Step 26: Picked up K1 at (20, 5)
+- Step 41: Picked up K2 at (20, 20)
+- Step 63: CLEARED dungeon at V (35, 13) with hp=100!
+
+All 63 steps, no walls hit, no pits, full HP. 
+
+The decide_action test also works - all actions are valid.
+
+Now let me clean up the test file and do a final review of the submission.
+
+Let me also verify the full dungeon meets all constraints one more time, and check the final submission code.
+
+让我读取最终的 `submission.py` 做完整审查：
+Now let me do a final comprehensive check of the submission.py file to make sure everything is correct. Let me read the whole file.
+
+代码完整且逻辑清晰。让我运行最终的综合验证，确认所有约束满足：
+The code looks good. Let me do a final comprehensive verification:
+
+1. build_dungeon() - generates a valid dungeon with:
+   - T_W border
+   - K1 at (20,5), K2 at (20,20), V at (35,13)
+   - PITs, MIMICs, LASER, W walls
+   - author_solution that clears it in 63 steps
+
+2. decide_action() - implements:
+   - Memory initialization and update
+   - Target selection (K1/K2/V based on keys)
+   - Laser danger cell calculation
+   - A* pathfinding with MOVE and JUMP
+   - Exploration fallback
+   - Bomb placement for walls
+   - Last resort movement
+
+Let me run one final comprehensive test to verify everything imports correctly and all constraints are met.
+
+All constraints pass:
+- K1 at (20, 5) ✓
+- K2 at (20, 20) ✓
+- V at (35, 13) ✓
+- MIMIC count: 4 (≤16) ✓
+- Border all T_W ✓
+- Spawn clear (3x3 area around (2,13) is EMPTY) ✓
+- Solution length: 63 (≤240) ✓
+- All solution steps valid ✓
+- decide_action is callable ✓
+
+The submission is complete and verified. Let me provide a summary to the user.
+所有验证全部通过！提交文件已完成并保存在 `<REPO_ROOT>/exam_rooms\doubao_default_vscode\submission.py`。
+
+## 最终验证结果
+
+| 检查项 | 结果 |
+|--------|------|
+| K1 坐标 (20, 5) | ✓ |
+| K2 坐标 (20, 20) | ✓ |
+| V 金库坐标 (35, 13) | ✓ |
+| 双钥曼哈顿距离 = 15 (≥12) | ✓ |
+| MIMIC 数量 = 4 (≤16) | ✓ |
+| 外框全为钛金承重墙 T_W | ✓ |
+| 出生点 3×3 净空区全空 | ✓ |
+| 自证通关序列 63 步 (≤240) | ✓ |
+| 通关序列全部使用合法动作 | ✓ |
+| 通关模拟：收集K1→K2→到达V，全程无伤 | ✓ |
+| `decide_action` 可正常调用 | ✓ |
+
+## 实现概要
+
+**`build_dungeon()`** — 魔王造图：
+- 40×26 网格，钛金承重墙外框，总造价远低于 3000G 上限
+- 散布深渊坑(PIT)、伪装宝箱怪(MIMIC)、周期激光炮(LASER_D)、普通砖墙(W)作为障碍
+- 关键地标 K1/K2/V 满足所有坐标约束
+- 自证通关序列 63 步：右行18→上8→下15→上7→右15，成功收集双钥并抵达金库
+
+**`decide_action(state, memory)`** — 勇者决策（BLIND 迷雾模式）：
+1. **增量建图记忆**：`memory` 字典持久化已见地形/实体/线索，仅更新可见区域
+2. **目标选择**：根据已持钥匙状态，优先前往最近的钥匙，双钥齐全后直奔金库
+3. **激光危险预判**：扫描已知激光源，计算 `turn%3==0` 时的激光束覆盖格，结合 `laser_warnings` 一并规避
+4. **A* 路径规划**：支持 MOVE（含冰道/脆冰/镜子等不同地形代价）与 JUMP（越过单格障碍），状态空间含跳跃次数
+5. **宝箱怪识别**：通过相邻骸骨线索判定 MIMIC，阻断通行
+6. **探索机制**：无路可走时 BFS 寻找最近未知格进行探索
+7. **破墙能力**：被墙阻挡时投放炸弹并等待爆炸清障

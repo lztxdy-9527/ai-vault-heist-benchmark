@@ -1,0 +1,50 @@
+{
+  "source": "<LOCAL_USER_HOME>\\.codex\\sessions\\2026\\11\\20\\rollout-2026-11-20T03-50-37-01a1f525-7f64-76a3-8680-91711678f603.jsonl:66",
+  "timestamp": "2026-11-19T18:58:02.284Z",
+  "payload": {
+    "type": "token_count",
+    "info": {
+      "total_token_usage": {
+        "input_tokens": 168685,
+        "cached_input_tokens": 124288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 576,
+        "reasoning_output_tokens": 177,
+        "total_tokens": 169261
+      },
+      "last_token_usage": {
+        "input_tokens": 43740,
+        "cached_input_tokens": 40960,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 92,
+        "reasoning_output_tokens": 14,
+        "total_tokens": 43832
+      },
+      "last_usage_includes_reasoning": true,
+      "model_context_window": 258400
+    },
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 38.0,
+        "window_minutes": 300,
+        "resets_at": 1795131646
+      },
+      "secondary": {
+        "used_percent": 53.0,
+        "window_minutes": 10080,
+        "resets_at": 1795551304
+      },
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "plus",
+      "rate_limit_reached_type": null
+    }
+  }
+}

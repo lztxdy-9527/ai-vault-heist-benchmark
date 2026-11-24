@@ -1,0 +1,8 @@
+Created At: 2026-11-20T04:04:33+09:00
+Completed At: 2026-11-20T04:04:38+09:00
+Workflow "Search tests after fix" completed.
+Output:
+BENCH_WEAK 1.5 full True 66 0.04 ('WIN', 66, 100, 0.0)
+BENCH_STRONG 1.5 full False 102 1.51 
+BENCH_STRONG 6.0 full True 111 2.37 ('WIN', 111, 100, 0.0)
+MINE 1.5 full True 115 0.01 ('WIN', 115, 100, 0.0)

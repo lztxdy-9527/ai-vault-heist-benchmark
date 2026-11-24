@@ -1,0 +1,15 @@
+{
+  "part2_full_mode/audit\\three_waves_20261120\\versions_manifest.json": "9e1c191127392d01af15272fcf8b9b6df5ed17b2c6dea1a3d9a44c96a90f87a1",
+  "part2_full_mode/audit\\three_waves_20261120\\all_waves_summary.json": "69475af28eef269b4b77dd1053b18c1e6934098c36f261733087ddfa98917fa1",
+  "part2_full_mode/audit\\three_waves_20261120\\all_unique_matches.jsonl.gz": "d64c8acfa2a9e321b26b5803491df0dd9df2d801cd77c630ec24583a439c990c",
+  "part2_full_mode/audit\\three_waves_20261120\\version_diffs_summary.json": "08a60661accd1518f3fb6befee0c1cd8ec2582ce88dcbc1777e80eae9faad029",
+  "part2_full_mode/audit\\three_waves_20261120\\run_three_waves.py": "2366a85e9c1083e3319e6dd34dcba240e17a9c2731130baeff1ff91abdae9c50",
+  "part2_full_mode/audit\\three_waves_20261120\\wave1_40m_settled\\matches.json": "6f097755eecac519a92c59bf511e6624cfa2654806cc4cc86e1a04bbaed13dce",
+  "part2_full_mode/audit\\three_waves_20261120\\wave1_40m_settled\\leaderboard.json": "2c21df7c319e249bac4e0ad3d209435d7c2a68a8ec3de5ed5bee4d323ed90de9",
+  "part2_full_mode/audit\\three_waves_20261120\\wave1_early_21m17m\\matches.json": "3c71ee5b1fb8afb36288c29b36b2f194804e16da18019ec2d48c9b39335ddd04",
+  "part2_full_mode/audit\\three_waves_20261120\\wave1_early_21m17m\\leaderboard.json": "644bc6007147bd831b20660dc2dea18125d159eff3ab6d14edb513a9ebb12d33",
+  "part2_full_mode/audit\\three_waves_20261120\\wave2_60m_reinforcements\\matches.json": "446d76210a04cb69a3c1dfef6471bc594d53cb9c5e16c97789ec2fe0f4a41563",
+  "part2_full_mode/audit\\three_waves_20261120\\wave2_60m_reinforcements\\leaderboard.json": "ad28ef94336fa45e61f81b3a532fa5031db9ac60034f75ee48f79ab4e5a4b826",
+  "part2_full_mode/audit\\three_waves_20261120\\wave3_final_11seats\\matches.json": "14223c3c19f625dded6336a9e604ad44d3c4af51935cd8093b9a75152d5f220a",
+  "part2_full_mode/audit\\three_waves_20261120\\wave3_final_11seats\\leaderboard.json": "fb77f8dfe7bfcb86bdccbf8b26b785d9f2532acfa7c7a41435e9edfb69bb1b28"
+}
